@@ -12,6 +12,7 @@ struct DeveloperOptionsScreen: View {
     
     @State private var showConfetti = false
     @State private var elementCallURLOverrideString: String
+    @State private var isShowingColorPlayground = false
     
     init(context: DeveloperOptionsScreenViewModel.Context) {
         self.context = context
@@ -39,6 +40,11 @@ struct DeveloperOptionsScreen: View {
                 Toggle(isOn: $context.spacesEnabled) {
                     Text("Spaces")
                 }
+                Button("Colour playground") {
+                    isShowingColorPlayground = true
+                }
+                .foregroundStyle(LinearGradient(colors: [.red, .orange, .yellow, .green, .blue, .indigo, .purple],
+                                                startPoint: .leading, endPoint: .trailing))
             }
             
             Section("Room List") {
@@ -138,9 +144,9 @@ struct DeveloperOptionsScreen: View {
             }
         }
         .overlay(effectsView)
-        .compoundList()
         .navigationTitle(L10n.commonDeveloperOptions)
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(isPresented: $isShowingColorPlayground) { ColorPlaygroundScreen(appHooks: context.viewState.appHooks) }
     }
 
     @ViewBuilder
@@ -197,7 +203,8 @@ private extension Set<TraceLogPack> {
 
 struct DeveloperOptionsScreen_Previews: PreviewProvider {
     static let viewModel = DeveloperOptionsScreenViewModel(developerOptions: ServiceLocator.shared.settings,
-                                                           elementCallBaseURL: ServiceLocator.shared.settings.elementCallBaseURL)
+                                                           elementCallBaseURL: ServiceLocator.shared.settings.elementCallBaseURL,
+                                                           appHooks: AppHooks())
     static var previews: some View {
         NavigationStack {
             DeveloperOptionsScreen(context: viewModel.context)
