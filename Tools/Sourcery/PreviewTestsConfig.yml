@@ -1,6 +1,6 @@
 sources:
   include:
-    - ../../ElementX
+    - ../../Clap
 templates:
   - PreviewTests.stencil
 output:

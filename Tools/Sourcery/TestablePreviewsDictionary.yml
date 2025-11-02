@@ -1,7 +1,7 @@
 sources:
   include:
-    - ../../ElementX
+    - ../../Clap
 templates:
   - TestablePreviewsDictionary.stencil
 output:
-  ../../ElementX/Sources/Other/TestablePreview/TestablePreviewsDictionary.swift
+  ../../Clap/Sources/Other/TestablePreview/TestablePreviewsDictionary.swift
