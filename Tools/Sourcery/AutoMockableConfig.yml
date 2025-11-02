@@ -1,9 +1,9 @@
 sources:
   include:
-    - ../../ElementX
+    - ../../Clap
   exclude:
-    - ../../ElementX/Sources/Mocks/SDK
+    - ../../Clap/Sources/Mocks/SDK
 templates:
   - AutoMockable.stencil
 output:
-  ../../ElementX/Sources/Mocks/Generated/GeneratedMocks.swift
+  ../../Clap/Sources/Mocks/Generated/GeneratedMocks.swift
