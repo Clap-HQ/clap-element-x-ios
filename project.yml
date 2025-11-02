@@ -1,7 +1,7 @@
 ---
-name: ElementX
+name: Clap
 attributes:
-  ORGANIZATIONNAME: Element
+  ORGANIZATIONNAME: Clap
 
 fileGroups:
 - project.yml
@@ -11,11 +11,11 @@ options:
   groupSortPosition: bottom
   createIntermediateGroups: true
   deploymentTarget:
-    iOS: '17.5'
+    iOS: '17.6'
     macOS: '14.5'
   groupOrdering:
   - order:
-    - ElementX
+    - Clap
     - NSE
     - ShareExtension
     - UnitTests
@@ -26,7 +26,7 @@ options:
     - DevelopmentAssets
     - Secrets
     - Tools
-  - pattern: ElementX
+  - pattern: Clap
     order:
     - Sources
     - Resources
@@ -49,15 +49,15 @@ options:
 settings:
   CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: true
   ENABLE_BITCODE: false
-  APP_NAME: ElementX
+  APP_NAME: Clap
   KEYCHAIN_ACCESS_GROUP_IDENTIFIER: "$(DEVELOPMENT_TEAM).$(BASE_BUNDLE_IDENTIFIER)"
-  MARKETING_VERSION: 25.10.2
-  CURRENT_PROJECT_VERSION: 1
+  MARKETING_VERSION: 0.0.1
+  CURRENT_PROJECT_VERSION: 2025110201
   SUPPORTS_MACCATALYST: false
 
 include:
 - path: app.yml
-- path: ElementX/SupportingFiles/target.yml
+- path: Clap/SupportingFiles/target.yml
 - path: UnitTests/SupportingFiles/target.yml
 - path: PreviewTests/SupportingFiles/target.yml
 - path: UITests/SupportingFiles/target.yml

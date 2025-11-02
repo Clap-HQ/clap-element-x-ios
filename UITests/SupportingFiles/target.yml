@@ -26,7 +26,7 @@ targets:
     platform: iOS
 
     dependencies:
-    - target: ElementX
+    - target: Clap
     - package: MatrixRustSDK
     - package: AnalyticsEvents
     - package: DeviceKit
@@ -62,8 +62,8 @@ targets:
       excludes:
         - "**/__Snapshots__/**"
     - path: ../SupportingFiles
-    - path: ../../ElementX/Sources/Other/AccessibilityIdentifiers.swift
-    - path: ../../ElementX/Sources/Other/Extensions/Bundle.swift
-    - path: ../../ElementX/Sources/Other/Extensions/XCUIElement.swift
-    - path: ../../ElementX/Sources/UITests/UITestsScreenIdentifier.swift
-    - path: ../../ElementX/Sources/UITests/UITestsSignalling.swift
+    - path: ../../Clap/Sources/Other/AccessibilityIdentifiers.swift
+    - path: ../../Clap/Sources/Other/Extensions/Bundle.swift
+    - path: ../../Clap/Sources/Other/Extensions/XCUIElement.swift
+    - path: ../../Clap/Sources/UITests/UITestsScreenIdentifier.swift
+    - path: ../../Clap/Sources/UITests/UITestsSignalling.swift

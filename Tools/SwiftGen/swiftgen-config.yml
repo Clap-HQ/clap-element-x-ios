@@ -1,5 +1,5 @@
-input_dir: ../../ElementX/
-output_dir: ../../ElementX/Sources/Generated/
+input_dir: ../../Clap
+output_dir: ../../Clap/Sources/Generated
 xcassets:
   inputs:
     - Resources/Assets.xcassets

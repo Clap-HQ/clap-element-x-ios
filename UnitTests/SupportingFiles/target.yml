@@ -19,7 +19,7 @@ schemes:
       disableMainThreadChecker: false
       gatherCoverageData: true
       coverageTargets:
-        - ElementX
+        - Clap
       testPlans:
         - path: UnitTests.xctestplan
           defaultPlan: true
@@ -30,7 +30,7 @@ targets:
     platform: iOS
 
     dependencies:
-    - target: ElementX
+    - target: Clap
     - package: MatrixRustSDK
     - package: AsyncAlgorithms
 
@@ -48,8 +48,8 @@ targets:
     - path: ../Sources
     - path: ../SupportingFiles
     - path: ../../DevelopmentAssets
-    - path: ../../ElementX/Sources/Other/Extensions/Publisher.swift
-    - path: ../../ElementX/Sources/Other/Extensions/XCTestCase.swift
-    - path: ../../ElementX/Sources/Other/InfoPlistReader.swift
+    - path: ../../Clap/Sources/Other/Extensions/Publisher.swift
+    - path: ../../Clap/Sources/Other/Extensions/XCTestCase.swift
+    - path: ../../Clap/Sources/Other/InfoPlistReader.swift
     - path: ../../Tools/Scripts/Templates/SimpleScreenExample/Tests/Unit
     

@@ -19,7 +19,7 @@ schemes:
       disableMainThreadChecker: false
       gatherCoverageData: true
       coverageTargets:
-        - ElementX
+        - Clap
       testPlans:
         - path: IntegrationTests.xctestplan
           defaultPlan: true
@@ -30,7 +30,7 @@ targets:
     platform: iOS
 
     dependencies:
-    - target: ElementX
+    - target: Clap
     - package: MatrixRustSDK
     - package: DeviceKit
     - package: DTCoreText
@@ -54,7 +54,7 @@ targets:
     sources:
     - path: ../Sources
     - path: ../SupportingFiles
-    - path: ../../ElementX/Sources/Other/AccessibilityIdentifiers.swift
-    - path: ../../ElementX/Sources/Other/Extensions/NSRegularExpresion.swift
-    - path: ../../ElementX/Sources/Other/Extensions/XCUIElement.swift
-    - path: ../../ElementX/Sources/Services/Analytics/Signposter.swift
+    - path: ../../Clap/Sources/Other/AccessibilityIdentifiers.swift
+    - path: ../../Clap/Sources/Other/Extensions/NSRegularExpresion.swift
+    - path: ../../Clap/Sources/Other/Extensions/XCUIElement.swift
+    - path: ../../Clap/Sources/Services/Analytics/Signposter.swift

@@ -79,26 +79,26 @@ targets:
     sources:
     - path: ../Sources
     - path: ../SupportingFiles
-    - path: ../../ElementX/Sources/ShareExtension
-    - path: ../../ElementX/Sources/AppHooks/AppHooks.swift
-    - path: ../../ElementX/Sources/AppHooks/Hooks/TracingHook.swift
-    - path: ../../ElementX/Sources/AppHooks/Hooks/ClientBuilderHook.swift
-    - path: ../../ElementX/Sources/AppHooks/Hooks/RemoteSettingsHook.swift
+    - path: ../../Clap/Sources/ShareExtension
+    - path: ../../Clap/Sources/AppHooks/AppHooks.swift
+    - path: ../../Clap/Sources/AppHooks/Hooks/TracingHook.swift
+    - path: ../../Clap/Sources/AppHooks/Hooks/ClientBuilderHook.swift
+    - path: ../../Clap/Sources/AppHooks/Hooks/RemoteSettingsHook.swift
     - path: ../../Secrets/Secrets.swift
-    - path: ../../ElementX/Sources/Application/Settings
-    - path: ../../ElementX/Sources/Application/TargetConfiguration.swift
-    - path: ../../ElementX/Sources/Services/Keychain/KeychainController.swift
-    - path: ../../ElementX/Sources/Services/Keychain/KeychainControllerProtocol.swift
-    - path: ../../ElementX/Sources/Services/UserSession/RestorationToken.swift
-    - path: ../../ElementX/Sources/Services/UserSession/SessionDirectories.swift
-    - path: ../../ElementX/Sources/Other/Extensions/Bundle.swift
-    - path: ../../ElementX/Sources/Other/Extensions/Dictionary.swift
-    - path: ../../ElementX/Sources/Other/Extensions/FileManager.swift
-    - path: ../../ElementX/Sources/Other/Extensions/NSItemProvider.swift
-    - path: ../../ElementX/Sources/Other/Extensions/ProcessInfo.swift
-    - path: ../../ElementX/Sources/Other/Extensions/UIView.swift
-    - path: ../../ElementX/Sources/Other/Extensions/URL.swift
-    - path: ../../ElementX/Sources/Other/InfoPlistReader.swift
-    - path: ../../ElementX/Sources/Other/CurrentValuePublisher.swift
-    - path: ../../ElementX/Sources/Other/Logging
-    - path: ../../ElementX/Sources/UITests/UITestsScreenIdentifier.swift
+    - path: ../../Clap/Sources/Application/Settings
+    - path: ../../Clap/Sources/Application/TargetConfiguration.swift
+    - path: ../../Clap/Sources/Services/Keychain/KeychainController.swift
+    - path: ../../Clap/Sources/Services/Keychain/KeychainControllerProtocol.swift
+    - path: ../../Clap/Sources/Services/UserSession/RestorationToken.swift
+    - path: ../../Clap/Sources/Services/UserSession/SessionDirectories.swift
+    - path: ../../Clap/Sources/Other/Extensions/Bundle.swift
+    - path: ../../Clap/Sources/Other/Extensions/Dictionary.swift
+    - path: ../../Clap/Sources/Other/Extensions/FileManager.swift
+    - path: ../../Clap/Sources/Other/Extensions/NSItemProvider.swift
+    - path: ../../Clap/Sources/Other/Extensions/ProcessInfo.swift
+    - path: ../../Clap/Sources/Other/Extensions/UIView.swift
+    - path: ../../Clap/Sources/Other/Extensions/URL.swift
+    - path: ../../Clap/Sources/Other/InfoPlistReader.swift
+    - path: ../../Clap/Sources/Other/CurrentValuePublisher.swift
+    - path: ../../Clap/Sources/Other/Logging
+    - path: ../../Clap/Sources/UITests/UITestsScreenIdentifier.swift

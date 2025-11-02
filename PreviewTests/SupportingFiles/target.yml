@@ -19,7 +19,7 @@ schemes:
       disableMainThreadChecker: false
       gatherCoverageData: true
       coverageTargets:
-        - ElementX
+        - Clap
       testPlans:
         - path: PreviewTests.xctestplan
           defaultPlan: true
@@ -30,7 +30,7 @@ targets:
     platform: iOS
     
     dependencies:
-    - target: ElementX
+    - target: Clap
     - package: MatrixRustSDK
     - package: SnapshotTesting
 
@@ -49,4 +49,4 @@ targets:
       excludes:
         - "**/__Snapshots__/**"
     - path: ../SupportingFiles
-    - path: ../../ElementX/Sources/Other/Extensions/XCTestCase.swift
+    - path: ../../Clap/Sources/Other/Extensions/XCTestCase.swift
