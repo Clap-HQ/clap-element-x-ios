@@ -15,17 +15,32 @@ enum CompoundThemeOverride {
     static func apply() {
         let newBgCanvasDefault = Color(UIColor { trait in
             if trait.userInterfaceStyle == .dark {
-                return UIColor(hex: "0B0B0B")   // 다크 모드 배경
+                return UIColor(hex: "EBEAE3", opacity: 0.6)
             } else {
-                return UIColor(hex: "EBEAE3", opacity: 0.6)   // 라이트 모드 배경
+                return UIColor(hex: "EBEAE3", opacity: 0.6)
+            }
+        })
+        
+        let newBgBubbleOutgoing = Color(UIColor { trait in
+            if trait.userInterfaceStyle == .dark {
+                return UIColor(CompoundCoreColorTokens.gray500)
+            } else {
+                return UIColor(hex: "292524")
             }
         })
 
-        // 전역 토큰 오버라이드 (bgCanvasDefault를 쓰는 모든 곳에 반영)
+        
+        let newBgBubbleIncoming = Color(UIColor { trait in
+            if trait.userInterfaceStyle == .dark {
+                return UIColor(CompoundCoreColorTokens.gray400)
+            } else {
+                return UIColor.white
+            }
+        })
+        
+        // 전역 토큰 오버라이드
         Color.compound.override(\.bgCanvasDefault, with: newBgCanvasDefault)
-
-        // 필요하면 같이 맞추세요 (앱에 따라 톤이 더 자연스러워집니다)
-        // Color.compound.override(\.bgCanvasDefaultLevel1, with: newBgCanvasDefault)
-        // Color.compound.override(\.bgCanvasDefaultLevel2, with: newBgCanvasDefault)
+        Color.compound.override(\._bgBubbleOutgoing, with: newBgBubbleOutgoing)
+        Color.compound.override(\._bgBubbleIncoming, with: newBgBubbleIncoming)
     }
 }
