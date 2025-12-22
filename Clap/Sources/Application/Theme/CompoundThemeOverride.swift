@@ -15,9 +15,9 @@ enum CompoundThemeOverride {
     static func apply() {
         let newBgCanvasDefault = Color(UIColor { trait in
             if trait.userInterfaceStyle == .dark {
-                return UIColor(hex: "EBEAE3", opacity: 0.6)
+                return UIColor(hex: "EFEEEA")
             } else {
-                return UIColor(hex: "EBEAE3", opacity: 0.6)
+                return UIColor(hex: "EFEEEA")
             }
         })
         
