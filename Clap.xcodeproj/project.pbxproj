@@ -1144,6 +1144,8 @@
 		CD08870740A283D74D73150C /* ComposerDraftServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485E8FEE6093C5C5B33EE9A0 /* ComposerDraftServiceProtocol.swift */; };
 		CD271C339F7AF4E09FDC00A1 /* AppLockSetupSettingsScreenCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0ED6A5A37F90B1FAE9193D /* AppLockSetupSettingsScreenCoordinator.swift */; };
 		CD400338E3EECCBFB6A5ED16 /* RoomPreviewProxyProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F418B9104B3B93E4EE698DA /* RoomPreviewProxyProtocol.swift */; };
+		CD5E36602EF9440F002AFD5A /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5E365F2EF9440D002AFD5A /* Color.swift */; };
+		CD5E36622EF9444B002AFD5A /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5E36612EF94446002AFD5A /* UIColor.swift */; };
 		CD6162F8EAB9B7136D0C9223 /* UITestsSignalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21382A0576A9385E74337F55 /* UITestsSignalling.swift */; };
 		CDA5A587CDA1CF394C5269FE /* UserAgentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB3148A501AAACFE457C4CB /* UserAgentBuilder.swift */; };
 		CDA9C397B1DEC3DB3427CB0E /* AppMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8256085A76657D8765A11E3 /* AppMediator.swift */; };
@@ -2573,6 +2575,8 @@
 		CC26D1ECB37DFC0F72539B38 /* EffectsScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsScene.swift; sourceTree = "<group>"; };
 		CCAED1C25BFFEC4B6AF32FDB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		CD0872E47655CA03E3D2DD8A /* GlobalSearchScreenModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSearchScreenModels.swift; sourceTree = "<group>"; };
+		CD5E365F2EF9440D002AFD5A /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		CD5E36612EF94446002AFD5A /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		CDF2AF163FA1E18F694E459D /* InviteUsersScreenCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteUsersScreenCoordinator.swift; sourceTree = "<group>"; };
 		CE2816E70BEA409F228E3739 /* RoomMemberDetailsScreenCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomMemberDetailsScreenCoordinator.swift; sourceTree = "<group>"; };
 		CF04A6C9D40D831B1C3DA0CD /* ServerConfigurationScreenViewStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigurationScreenViewStateTests.swift; sourceTree = "<group>"; };
@@ -3112,6 +3116,7 @@
 				45FCE92679056E76525D8081 /* CharacterSet.swift */,
 				2B4A1C76EB31D7FA3B52023C /* ClientBuilder.swift */,
 				30EF610D6FFB96B66A1E83E1 /* Collection.swift */,
+				CD5E365F2EF9440D002AFD5A /* Color.swift */,
 				0574A09A4CEE1BEA379E2425 /* Comparable.swift */,
 				68E7CD729F17F66D075B42A8 /* CompoundIcon.swift */,
 				A7EC92F72996C1FC469FA117 /* ConfirmationDialog.swift */,
@@ -3137,6 +3142,7 @@
 				6AC2262C327034F4D27DA705 /* Snapshotting.swift */,
 				DBE20FD19CB52D0BC31F3D76 /* String.swift */,
 				4037B62545E72BD27B695D32 /* Task.swift */,
+				CD5E36612EF94446002AFD5A /* UIColor.swift */,
 				BE5A6CED7311A23EBA6898C0 /* UIDevice.swift */,
 				C00F738DF3AF0E2C8457CCF0 /* UIView.swift */,
 				0D3D476C658B25297D5A1D26 /* UNNotificationContent.swift */,
@@ -7901,6 +7907,7 @@
 				B4E6E0074CB8FDCF7E539FBB /* PinnedItemsIndicatorView.swift in Sources */,
 				88E12D61250B088D4AF04F0A /* PlaceholderAvatarImage.swift in Sources */,
 				194733AEAF9F2BEBCA6C1B81 /* PlaceholderScreenCoordinator.swift in Sources */,
+				CD5E36602EF9440F002AFD5A /* Color.swift in Sources */,
 				D47B248551AF0EB80E5800F1 /* PlainMentionBuilder.swift in Sources */,
 				5A4424941A7C1CC6E7B22101 /* PollFormScreen.swift in Sources */,
 				75890099F31D3D4D3E900C49 /* PollFormScreenCoordinator.swift in Sources */,
@@ -8236,6 +8243,7 @@
 				751C881617212D22495F62C2 /* TimelineDeliveryStatusView.swift in Sources */,
 				1CCF42654319FD634640A6B8 /* TimelineEventContent.swift in Sources */,
 				C694D6C6793AAA72845FAF58 /* TimelineInteractionHandler.swift in Sources */,
+				CD5E36622EF9444B002AFD5A /* UIColor.swift in Sources */,
 				35C4720706E0742D86673337 /* TimelineItemAccessibilityModifier.swift in Sources */,
 				EF984136074C7C76240D153A /* TimelineItemBubbleBackground.swift in Sources */,
 				AF4322DE114E44278DBBBB96 /* TimelineItemBubbledStylerView.swift in Sources */,
