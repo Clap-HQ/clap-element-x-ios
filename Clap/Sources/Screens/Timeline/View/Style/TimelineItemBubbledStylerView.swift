@@ -197,7 +197,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                     .padding(4.0)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color.compound.bgCanvasDefault)
-                    .cornerRadius(8)
+                    .cornerRadius(14)
                     .layoutPriority(TimelineBubbleLayout.Priority.visibleQuote)
                     .onTapGesture {
                         context.send(viewAction: .focusOnEventID(replyDetails.eventID))
@@ -249,7 +249,7 @@ private extension EventBasedTimelineItemProtocol {
     /// The insets for the full bubble content.
     /// Padding affecting just the "send info" should be added inside `TimelineItemSendInfoView`
     var bubbleInsets: EdgeInsets {
-        let defaultInsets: EdgeInsets = .init(around: 8)
+        let defaultInsets: EdgeInsets = .init(top: 10, leading: 12, bottom: 10, trailing: 12)
 
         switch self {
         case is StickerRoomTimelineItem:
