@@ -173,6 +173,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     
     var messageBubble: some View {
         contentWithReply
+            .timelineBubbleTextColor(isOutgoing: timelineItem.isOutgoing)
             .timelineItemSendInfo(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus, context: context)
             .bubbleBackground(isOutgoing: timelineItem.isOutgoing,
                               insets: timelineItem.bubbleInsets,
@@ -182,12 +183,13 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     @ViewBuilder
     var contentWithReply: some View {
         TimelineBubbleLayout(spacing: 8) {
-            if !context.viewState.timelineKind.isThread, timelineItem.properties.isThreaded {
-                ThreadDecorator()
-                    .padding(.leading, 4)
-                    .layoutPriority(TimelineBubbleLayout.Priority.regularText)
-            }
-            
+            // 스레드 데코레이터 제거
+//            if !context.viewState.timelineKind.isThread, timelineItem.properties.isThreaded {
+//                ThreadDecorator()
+//                    .padding(.leading, 4)
+//                    .layoutPriority(TimelineBubbleLayout.Priority.regularText)
+//            }
+//            
             if let replyDetails = timelineItem.properties.replyDetails {
                 // The rendered reply bubble with a greedy width. The custom layout prevents
                 // the infinite width from increasing the overall width of the view.

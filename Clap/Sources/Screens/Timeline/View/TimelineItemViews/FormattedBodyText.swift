@@ -11,27 +11,28 @@ import SwiftUI
 struct FormattedBodyText: View {
     @Environment(\.layoutDirection) private var layoutDirection
     
+    @Environment(\.timelineBubbleTextUIColor) private var bubbleTextUIColor
+    @Environment(\.timelineBubbleIsOutgoing) private var bubbleIsOutgoing
+    
     private let attributedString: AttributedString
     private let additionalWhitespacesCount: Int
     private let boostFontSize: Bool
     
-    private let defaultAttributesContainer: AttributeContainer = {
+    private var defaultAttributesContainer: AttributeContainer {
         var container = AttributeContainer()
-        // Equivalent to compound's bodyLG
         container.font = UIFont.preferredFont(forTextStyle: .body)
-        container.foregroundColor = UIColor.compound.textPrimary
+        container.foregroundColor = bubbleTextUIColor
         return container
-    }()
-        
+    }
+    
     private var attributedComponents: [AttributedStringBuilderComponent] {
         var adjustedAttributedString = attributedString + AttributedString(additionalWhitespacesSuffix)
-        
-        // If this is not a list, force the writing direction by adding the correct unicode character.
+
         if !String(attributedString.characters).starts(with: "\t") {
             adjustedAttributedString = AttributedString(layoutDirection.isolateLayoutUnicodeString) + adjustedAttributedString
         }
-        
-        // Required to allow the underlying TextView to use  body font when no font is specifie in the AttributedString.
+
+        // 기본 텍스트 컬러/폰트 강제 주입
         adjustedAttributedString.mergeAttributes(defaultAttributesContainer, mergePolicy: .keepCurrent)
         
         let string = String(attributedString.characters)
@@ -39,7 +40,7 @@ struct FormattedBodyText: View {
         if boostFontSize, let range = adjustedAttributedString.range(of: string) {
             adjustedAttributedString[range].font = UIFont.systemFont(ofSize: 48.0)
         }
-        
+
         return adjustedAttributedString.formattedComponents
     }
     
@@ -74,6 +75,14 @@ struct FormattedBodyText: View {
             .tint(.compound.textLinkExternal)
     }
     
+    private var blockquoteUIColor: UIColor {
+        bubbleIsOutgoing ? UIColor.white.withAlphaComponent(0.85) : UIColor.compound.textSecondary
+    }
+    
+    private var blockquoteBarColor: Color {
+        Color(uiColor: bubbleIsOutgoing ? UIColor.white.withAlphaComponent(0.55) : UIColor.compound.textSecondary)
+    }
+    
     /// The attributed components laid out for the bubbles timeline style.
     var layout: some View {
         TimelineBubbleLayout(spacing: 8) {
@@ -93,7 +102,7 @@ struct FormattedBodyText: View {
                             Capsule()
                                 .frame(width: 2.0)
                                 .padding(.leading, 5.0)
-                                .foregroundColor(.compound.textSecondary)
+                                .foregroundColor(blockquoteBarColor)
                                 .padding(.vertical, 2)
                         }
                         .layoutPriority(TimelineBubbleLayout.Priority.visibleQuote)
@@ -125,7 +134,7 @@ struct FormattedBodyText: View {
         var container = AttributeContainer([.paragraphStyle: NSParagraphStyle.default])
         // Sadly setting SwiftUI fonts do not work so we would need UIFont equivalents for compound, this one is bodyMD
         container.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        container.foregroundColor = UIColor.compound.textSecondary
+        container.foregroundColor = blockquoteUIColor
         
         return container
     }
