@@ -6,13 +6,12 @@
 // Please see LICENSE files in the repository root for full details.
 //
 
+import Compound
 import SwiftUI
 
 struct FormattedBodyText: View {
     @Environment(\.layoutDirection) private var layoutDirection
-    
-    @Environment(\.timelineBubbleTextUIColor) private var bubbleTextUIColor
-    @Environment(\.timelineBubbleIsOutgoing) private var bubbleIsOutgoing
+    @Environment(\.timelineBubbleIsOutgoing) private var isOutgoing
     
     private let attributedString: AttributedString
     private let additionalWhitespacesCount: Int
@@ -21,7 +20,7 @@ struct FormattedBodyText: View {
     private var defaultAttributesContainer: AttributeContainer {
         var container = AttributeContainer()
         container.font = UIFont.preferredFont(forTextStyle: .body)
-        container.foregroundColor = bubbleTextUIColor
+        container.foregroundColor = UIColor.compound.textBubble(isOutgoing: isOutgoing)
         return container
     }
     
@@ -32,7 +31,6 @@ struct FormattedBodyText: View {
             adjustedAttributedString = AttributedString(layoutDirection.isolateLayoutUnicodeString) + adjustedAttributedString
         }
 
-        // 기본 텍스트 컬러/폰트 강제 주입
         adjustedAttributedString.mergeAttributes(defaultAttributesContainer, mergePolicy: .keepCurrent)
         
         let string = String(attributedString.characters)
@@ -76,11 +74,11 @@ struct FormattedBodyText: View {
     }
     
     private var blockquoteUIColor: UIColor {
-        bubbleIsOutgoing ? UIColor.white.withAlphaComponent(0.85) : UIColor.compound.textSecondary
+        UIColor.compound.textBubbleSecondary(isOutgoing: isOutgoing)
     }
     
     private var blockquoteBarColor: Color {
-        Color(uiColor: bubbleIsOutgoing ? UIColor.white.withAlphaComponent(0.55) : UIColor.compound.textSecondary)
+        Color.compound.textBubbleSecondary(isOutgoing: isOutgoing)
     }
     
     /// The attributed components laid out for the bubbles timeline style.

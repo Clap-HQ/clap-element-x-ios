@@ -1,35 +1,69 @@
-import SwiftUI
-import UIKit
+//
+// Copyright 2025 Clap.
+//
+// SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
+// Please see LICENSE files in the repository root for full details.
+//
+
 import Compound
+import SwiftUI
+
+// MARK: - Environment Key
 
 private struct TimelineBubbleIsOutgoingKey: EnvironmentKey {
     static let defaultValue: Bool = false
 }
 
-private struct TimelineBubbleTextUIColorKey: EnvironmentKey {
-    static let defaultValue: UIColor = UIColor.compound.textPrimary
-}
-
 extension EnvironmentValues {
+    /// Indicates whether the current bubble is an outgoing message.
     var timelineBubbleIsOutgoing: Bool {
         get { self[TimelineBubbleIsOutgoingKey.self] }
         set { self[TimelineBubbleIsOutgoingKey.self] = newValue }
     }
+}
 
-    var timelineBubbleTextUIColor: UIColor {
-        get { self[TimelineBubbleTextUIColorKey.self] }
-        set { self[TimelineBubbleTextUIColorKey.self] = newValue }
+// MARK: - View Modifier
+
+extension View {
+    /// Sets the bubble style context for the view hierarchy.
+    /// Call this once at the bubble's root to propagate the outgoing state to all children.
+    func timelineBubbleStyle(isOutgoing: Bool) -> some View {
+        environment(\.timelineBubbleIsOutgoing, isOutgoing)
     }
 }
 
-extension View {
-    /// 버블 최상단에서 1번만 호출하면, 하위(FormattedBodyText/MessageText 포함) 전체가 따라가게 만들기
-    func timelineBubbleTextColor(isOutgoing: Bool) -> some View {
-        let uiColor: UIColor = isOutgoing ? .white : UIColor(hex: "1C1917")
-        return self
-            .environment(\.timelineBubbleIsOutgoing, isOutgoing)
-            .environment(\.timelineBubbleTextUIColor, uiColor)
-            // SwiftUI Text 계열이 먹을 수 있는 경우 대비
-            .foregroundStyle(Color(uiColor: uiColor))
+// MARK: - Color Helpers
+
+extension CompoundColors {
+    /// Returns the appropriate text color for bubble content based on outgoing state.
+    public func textBubble(isOutgoing: Bool) -> Color {
+        isOutgoing ? _textBubbleOutgoing : _textBubbleIncoming
+    }
+    
+    /// Returns the appropriate secondary text color for bubble content based on outgoing state.
+    public func textBubbleSecondary(isOutgoing: Bool) -> Color {
+        isOutgoing ? _textBubbleSecondaryOutgoing : _textBubbleSecondaryIncoming
+    }
+    
+    /// Returns the appropriate icon color for bubble content based on outgoing state.
+    public func iconBubble(isOutgoing: Bool) -> Color {
+        isOutgoing ? _iconBubbleOutgoing : _iconBubbleIncoming
+    }
+}
+
+extension CompoundUIColors {
+    /// Returns the appropriate text color for bubble content based on outgoing state.
+    public func textBubble(isOutgoing: Bool) -> UIColor {
+        isOutgoing ? _textBubbleOutgoing : _textBubbleIncoming
+    }
+    
+    /// Returns the appropriate secondary text color for bubble content based on outgoing state.
+    public func textBubbleSecondary(isOutgoing: Bool) -> UIColor {
+        isOutgoing ? _textBubbleSecondaryOutgoing : _textBubbleSecondaryIncoming
+    }
+    
+    /// Returns the appropriate icon color for bubble content based on outgoing state.
+    public func iconBubble(isOutgoing: Bool) -> UIColor {
+        isOutgoing ? _iconBubbleOutgoing : _iconBubbleIncoming
     }
 }

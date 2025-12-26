@@ -173,7 +173,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     
     var messageBubble: some View {
         contentWithReply
-            .timelineBubbleTextColor(isOutgoing: timelineItem.isOutgoing)
+            .timelineBubbleStyle(isOutgoing: timelineItem.isOutgoing)
             .timelineItemSendInfo(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus, context: context)
             .bubbleBackground(isOutgoing: timelineItem.isOutgoing,
                               insets: timelineItem.bubbleInsets,
