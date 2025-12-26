@@ -186,7 +186,9 @@ struct HomeScreenRoom: Identifiable, Equatable {
     }
     
     let name: String
-    
+
+    let memberCount: Int
+
     let isDirect: Bool
     
     let isHighlighted: Bool
@@ -217,6 +219,7 @@ struct HomeScreenRoom: Identifiable, Equatable {
                        type: .placeholder,
                        badges: .init(isDotShown: false, isMentionShown: false, isMuteShown: false, isCallShown: false),
                        name: "Placeholder room name",
+                       memberCount: 0,
                        isDirect: false,
                        isHighlighted: false,
                        isFavourite: false,
@@ -255,6 +258,7 @@ extension HomeScreenRoom {
                                 isMuteShown: isMuteShown,
                                 isCallShown: isCallShown),
                   name: summary.name,
+                  memberCount: Int(summary.activeMembersCount),
                   isDirect: summary.isDirect,
                   isHighlighted: isHighlighted,
                   isFavourite: summary.isFavourite,

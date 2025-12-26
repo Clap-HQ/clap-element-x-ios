@@ -79,12 +79,21 @@ struct HomeScreenRoomCell: View {
     @ViewBuilder
     private var header: some View {
         HStack(alignment: .top, spacing: 16) {
-            Text(room.name)
-                .font(.compound.bodyLGSemibold)
-                .foregroundColor(.compound.textPrimary)
-                .lineLimit(1)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
+            HStack(spacing: 4) {
+                Text(room.name)
+                    .font(.compound.bodyLGSemibold)
+                    .foregroundColor(.compound.textPrimary)
+                    .lineLimit(1)
+
+                if !room.isDirect, room.memberCount > 0 {
+                    Text("\(room.memberCount)")
+                        .font(.compound.bodyMD)
+                        .foregroundColor(.compound.textSecondary)
+                        .lineLimit(1)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
             if let timestamp = room.timestamp {
                 Text(timestamp)
                     .font(room.isHighlighted ? .compound.bodySMSemibold : .compound.bodySM)
