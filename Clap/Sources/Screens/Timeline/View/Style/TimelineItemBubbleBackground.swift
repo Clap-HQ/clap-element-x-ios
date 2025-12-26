@@ -29,7 +29,7 @@ private struct TimelineItemBubbleBackgroundModifier: ViewModifier {
     let isOutgoing: Bool
     let insets: EdgeInsets
     var color: Color?
-    
+
     func body(content: Content) -> some View {
         content
             .padding(insets)
@@ -42,19 +42,11 @@ private struct TimelineItemBubbleBackgroundModifier: ViewModifier {
         case .single:
             return .allCorners
         case .first:
-            if isOutgoing {
-                return [.topLeft, .topRight, .bottomLeft]
-            } else {
-                return [.topLeft, .topRight, .bottomRight]
-            }
+            return .allCorners
         case .middle:
-            return isOutgoing ? [.topLeft, .bottomLeft] : [.topRight, .bottomRight]
+            return .allCorners
         case .last:
-            if isOutgoing {
-                return [.topLeft, .bottomLeft, .bottomRight]
-            } else {
-                return [.topRight, .bottomLeft, .bottomRight]
-            }
+            return .allCorners
         }
     }
 }

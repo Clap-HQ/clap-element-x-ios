@@ -32,75 +32,104 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     ///
     /// **Note:** This is on top of the insets applied to the cells by the table view.
     private let bubbleHorizontalPadding: CGFloat = 8
-    /// Additional padding applied to outgoing bubbles when the avatar is shown
-    private var bubbleAvatarPadding: CGFloat {
-        guard !timelineItem.isOutgoing, !isDirectOneToOneRoom else { return 0 }
-        return 8
-    }
+
+    /// Padding to align incoming messages without avatar with those that have avatar
+    /// Avatar size (32) + HStack spacing (4) = 36
+    private let avatarAlignmentPadding: CGFloat = 36
     
     var body: some View {
         ZStack(alignment: .trailingFirstTextBaseline) {
-            VStack(alignment: alignment, spacing: -12) {
-                if !timelineItem.isOutgoing, !isDirectOneToOneRoom {
-                    header
-                        .zIndex(1)
-                }
+            if !timelineItem.isOutgoing, !isDirectOneToOneRoom, shouldShowSenderDetails {
+                // Incoming message with sender details: avatar on left, nickname + bubble on right
+                HStack(alignment: .top, spacing: 4) {
+                    TimelineSenderAvatarView(timelineItem: timelineItem)
+                        .onTapGesture {
+                            context.send(viewAction: .tappedOnSenderDetails(sender: timelineItem.sender))
+                        }
 
+                    VStack(alignment: .leading, spacing: 2) {
+                        senderNameHeader
+
+                        incomingMessageContent
+                    }
+                }
+                .padding(.top, 8)
+            } else if !timelineItem.isOutgoing, !isDirectOneToOneRoom {
+                // Incoming message without sender details (grouped messages)
+                // Align with avatar position from messages that show sender details
+                incomingMessageContent
+                    .padding(.leading, avatarAlignmentPadding)
+            } else {
+                // Outgoing message or DM
                 VStack(alignment: alignment, spacing: 0) {
-                    HStack(spacing: 0) {
-                        if timelineItem.isOutgoing {
-                            Spacer()
-                        }
+                    VStack(alignment: alignment, spacing: 0) {
+                        HStack(spacing: 0) {
+                            if timelineItem.isOutgoing {
+                                Spacer()
+                            }
 
-                        messageBubbleWithReactions
-                    }
-                    .padding(timelineItem.isOutgoing ? .leading : .trailing, 48) // Additional padding to differentiate alignment.
-
-                    HStack(spacing: 0) {
-                        if !timelineItem.isOutgoing {
-                            Spacer()
+                            messageBubbleWithReactions
                         }
-                        TimelineItemStatusView(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus)
-                            .environmentObject(context)
-                            .padding(.top, 8)
-                            .padding(.bottom, 3)
+                        .padding(timelineItem.isOutgoing ? .leading : .trailing, 48)
+
+                        HStack(spacing: 0) {
+                            if !timelineItem.isOutgoing {
+                                Spacer()
+                            }
+                            TimelineItemStatusView(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus)
+                                .environmentObject(context)
+                                .padding(.top, 8)
+                                .padding(.bottom, 3)
+                        }
                     }
+                    .padding(.horizontal, bubbleHorizontalPadding)
                 }
-                .padding(.horizontal, bubbleHorizontalPadding)
-                .padding(.leading, bubbleAvatarPadding)
+                .padding(.top, messageBubbleTopPadding)
             }
         }
-        .padding(EdgeInsets(top: 1, leading: 8, bottom: 1, trailing: 8))
+        .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
         .highlightedTimelineItem(isFocussed)
     }
-    
+
     @ViewBuilder
-    private var header: some View {
-        if shouldShowSenderDetails {
-            HStack(alignment: .top, spacing: 4) {
-                TimelineSenderAvatarView(timelineItem: timelineItem)
-                HStack(alignment: .center, spacing: 4) {
-                    Text(timelineItem.sender.displayName ?? timelineItem.sender.id)
-                        .font(.compound.bodySMSemibold)
-                        .foregroundColor(.compound.decorativeColor(for: timelineItem.sender.id).text)
-                    
-                    if timelineItem.sender.displayName != nil, timelineItem.sender.isDisplayNameAmbiguous {
-                        Text(timelineItem.sender.id)
-                            .font(.compound.bodyXS)
-                            .foregroundColor(.compound.textSecondary)
-                    }
-                }
-                .lineLimit(1)
-                .scaledPadding(.vertical, 3)
+    private var senderNameHeader: some View {
+        HStack(alignment: .center, spacing: 4) {
+            Text(timelineItem.sender.displayName ?? timelineItem.sender.id)
+                .font(.compound.bodySMSemibold)
+                .foregroundColor(.compound.decorativeColor(for: timelineItem.sender.id).text)
+
+            if timelineItem.sender.displayName != nil, timelineItem.sender.isDisplayNameAmbiguous {
+                Text(timelineItem.sender.id)
+                    .font(.compound.bodyXS)
+                    .foregroundColor(.compound.textSecondary)
             }
-            // sender info are read inside the `TimelineAccessibilityModifier`
-            .accessibilityHidden(true)
-            .onTapGesture {
-                context.send(viewAction: .tappedOnSenderDetails(sender: timelineItem.sender))
-            }
-            .padding(.top, 8)
+        }
+        .lineLimit(1)
+        .scaledPadding(.vertical, 3)
+        .accessibilityHidden(true)
+        .onTapGesture {
+            context.send(viewAction: .tappedOnSenderDetails(sender: timelineItem.sender))
         }
     }
+
+    @ViewBuilder
+    private var incomingMessageContent: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 0) {
+                messageBubbleWithReactions
+            }
+            .padding(.trailing, 48)
+
+            HStack(spacing: 0) {
+                Spacer()
+                TimelineItemStatusView(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus)
+                    .environmentObject(context)
+                    .padding(.top, 8)
+                    .padding(.bottom, 3)
+            }
+        }
+    }
+    
     
     private var messageBubbleWithReactions: some View {
         // Figma overlaps reactions by 3
