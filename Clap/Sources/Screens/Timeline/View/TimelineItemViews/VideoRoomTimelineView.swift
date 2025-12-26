@@ -31,11 +31,9 @@ struct VideoRoomTimelineView: View {
                 
                 if let attributedCaption = timelineItem.content.formattedCaption {
                     FormattedBodyText(attributedString: attributedCaption,
-                                      additionalWhitespacesCount: timelineItem.additionalWhitespaces(),
                                       boostFontSize: timelineItem.shouldBoost)
                 } else if let caption = timelineItem.content.caption {
                     FormattedBodyText(text: caption,
-                                      additionalWhitespacesCount: timelineItem.additionalWhitespaces(),
                                       boostFontSize: timelineItem.shouldBoost)
                 }
             }

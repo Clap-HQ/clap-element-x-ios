@@ -62,27 +62,27 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
             } else {
                 // Outgoing message or DM
                 VStack(alignment: alignment, spacing: 0) {
-                    VStack(alignment: alignment, spacing: 0) {
-                        HStack(spacing: 0) {
-                            if timelineItem.isOutgoing {
-                                Spacer()
-                            }
-
-                            messageBubbleWithReactions
+                    HStack(spacing: 0) {
+                        if timelineItem.isOutgoing {
+                            Spacer()
                         }
-                        .padding(timelineItem.isOutgoing ? .leading : .trailing, 48)
 
-                        HStack(spacing: 0) {
-                            if !timelineItem.isOutgoing {
-                                Spacer()
-                            }
-                            TimelineItemStatusView(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus)
-                                .environmentObject(context)
-                                .padding(.top, 8)
-                                .padding(.bottom, 3)
+                        messageBubbleWithReactions
+
+                        if !timelineItem.isOutgoing {
+                            Spacer()
                         }
                     }
-                    .padding(.horizontal, bubbleHorizontalPadding)
+
+                    HStack(spacing: 0) {
+                        if !timelineItem.isOutgoing {
+                            Spacer()
+                        }
+                        TimelineItemStatusView(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus)
+                            .environmentObject(context)
+                            .padding(.top, 8)
+                            .padding(.bottom, 3)
+                    }
                 }
                 .padding(.top, messageBubbleTopPadding)
             }
@@ -117,8 +117,8 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 0) {
                 messageBubbleWithReactions
+                Spacer()
             }
-            .padding(.trailing, 48)
 
             HStack(spacing: 0) {
                 Spacer()
@@ -134,11 +134,8 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     private var messageBubbleWithReactions: some View {
         // Figma overlaps reactions by 3
         VStack(alignment: alignment, spacing: -3) {
-            messageBubbleWithActions
-                .timelineItemAccessibility(timelineItem) {
-                    context.send(viewAction: .displayTimelineItemMenu(itemID: timelineItem.id))
-                }
-            
+            bubbleWithTimestamp
+
             // Do not display reactions in the pinned events timeline
             if context.viewState.timelineKind != .pinned,
                !timelineItem.properties.reactions.isEmpty {
@@ -149,7 +146,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                     // Workaround to stop the message long press stealing the touch from the reaction buttons
                     .onTapGesture { }
             }
-            
+
             if context.viewState.areThreadsEnabled,
                !context.viewState.timelineKind.isThread,
                let threadSummary = timelineItem.properties.threadSummary {
@@ -203,10 +200,34 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     var messageBubble: some View {
         contentWithReply
             .timelineBubbleStyle(isOutgoing: timelineItem.isOutgoing)
-            .timelineItemSendInfo(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus, context: context)
             .bubbleBackground(isOutgoing: timelineItem.isOutgoing,
                               insets: timelineItem.bubbleInsets,
                               color: timelineItem.bubbleBackgroundColor)
+    }
+
+    /// Space reserved for timestamp label outside the bubble
+    private let timestampSpacing: CGFloat = 48
+
+    @ViewBuilder
+    private var bubbleWithTimestamp: some View {
+        messageBubbleWithActions
+            .timelineItemAccessibility(timelineItem) {
+                context.send(viewAction: .displayTimelineItemMenu(itemID: timelineItem.id))
+            }
+            .overlay(alignment: timelineItem.isOutgoing ? .bottomLeading : .bottomTrailing) {
+                timestampLabel
+                    .alignmentGuide(timelineItem.isOutgoing ? .leading : .trailing) { d in
+                        timelineItem.isOutgoing ? d[.trailing] + 4 : d[.leading] - 4
+                    }
+            }
+            .padding(timelineItem.isOutgoing ? .leading : .trailing, timestampSpacing)
+    }
+
+    @ViewBuilder
+    private var timestampLabel: some View {
+        Text(timelineItem.localizedSendInfo)
+            .font(.compound.bodyXS)
+            .foregroundStyle(.compound.textSecondary)
     }
     
     @ViewBuilder
@@ -218,7 +239,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
 //                    .padding(.leading, 4)
 //                    .layoutPriority(TimelineBubbleLayout.Priority.regularText)
 //            }
-//            
+//
             if let replyDetails = timelineItem.properties.replyDetails {
                 // The rendered reply bubble with a greedy width. The custom layout prevents
                 // the infinite width from increasing the overall width of the view.
@@ -280,7 +301,7 @@ private extension EventBasedTimelineItemProtocol {
     /// The insets for the full bubble content.
     /// Padding affecting just the "send info" should be added inside `TimelineItemSendInfoView`
     var bubbleInsets: EdgeInsets {
-        let defaultInsets: EdgeInsets = .init(top: 10, leading: 12, bottom: 10, trailing: 12)
+        let defaultInsets: EdgeInsets = .init(top: 9.5, leading: 12, bottom: 9.5, trailing: 12)
 
         switch self {
         case is StickerRoomTimelineItem:

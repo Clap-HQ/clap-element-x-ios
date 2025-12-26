@@ -29,11 +29,9 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
             VStack(alignment: .leading, spacing: 8) {
                 if let attributedString = timelineItem.content.formattedBody {
                     FormattedBodyText(attributedString: attributedString,
-                                      additionalWhitespacesCount: timelineItem.additionalWhitespaces(),
                                       boostFontSize: timelineItem.shouldBoost)
                 } else {
                     FormattedBodyText(text: timelineItem.body,
-                                      additionalWhitespacesCount: timelineItem.additionalWhitespaces(),
                                       boostFontSize: timelineItem.shouldBoost)
                 }
                 
