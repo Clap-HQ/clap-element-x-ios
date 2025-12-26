@@ -124,16 +124,9 @@ public struct CompoundButtonStyle: ButtonStyle {
         switch kind {
         case .super:
             if isEnabled {
-                ZStack {
-                    Capsule().fill(.compound.bgCanvasDefault)
-                    Capsule().fill(LinearGradient(gradient: .compound.action,
-                                                  startPoint: .top, endPoint: .bottom))
-                        .opacity(0.04)
-                    Capsule().strokeBorder(LinearGradient(gradient: .compound.action,
-                                                          startPoint: .top, endPoint: .bottom))
-                }
-                .compositingGroup()
-                .opacity(configuration.isPressed ? pressedOpacity : 1)
+                Capsule()
+                    .strokeBorder(.compound.borderInteractivePrimary)
+                    .opacity(configuration.isPressed ? pressedOpacity : 1)
             } else {
                 Capsule().strokeBorder(strokeColor(configuration: configuration))
             }
