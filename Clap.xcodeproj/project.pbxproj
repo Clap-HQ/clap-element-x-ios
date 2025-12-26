@@ -1147,7 +1147,6 @@
 		CD5E365E2EF9420E002AFD5A /* TimelineBubbleTextStyle+Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5E365D2EF941FE002AFD5A /* TimelineBubbleTextStyle+Environment.swift */; };
 		CD5E36602EF9440F002AFD5A /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5E365F2EF9440D002AFD5A /* Color.swift */; };
 		CD5E36622EF9444B002AFD5A /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5E36612EF94446002AFD5A /* UIColor.swift */; };
-		CD5E36642EF94CC7002AFD5A /* CompoundThemeOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5E36632EF94CC7002AFD5A /* CompoundThemeOverride.swift */; };
 		CD6162F8EAB9B7136D0C9223 /* UITestsSignalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21382A0576A9385E74337F55 /* UITestsSignalling.swift */; };
 		CDA5A587CDA1CF394C5269FE /* UserAgentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB3148A501AAACFE457C4CB /* UserAgentBuilder.swift */; };
 		CDA9C397B1DEC3DB3427CB0E /* AppMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8256085A76657D8765A11E3 /* AppMediator.swift */; };
@@ -2580,7 +2579,6 @@
 		CD5E365D2EF941FE002AFD5A /* TimelineBubbleTextStyle+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimelineBubbleTextStyle+Environment.swift"; sourceTree = "<group>"; };
 		CD5E365F2EF9440D002AFD5A /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		CD5E36612EF94446002AFD5A /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
-		CD5E36632EF94CC7002AFD5A /* CompoundThemeOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompoundThemeOverride.swift; sourceTree = "<group>"; };
 		CDF2AF163FA1E18F694E459D /* InviteUsersScreenCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteUsersScreenCoordinator.swift; sourceTree = "<group>"; };
 		CE2816E70BEA409F228E3739 /* RoomMemberDetailsScreenCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomMemberDetailsScreenCoordinator.swift; sourceTree = "<group>"; };
 		CF04A6C9D40D831B1C3DA0CD /* ServerConfigurationScreenViewStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigurationScreenViewStateTests.swift; sourceTree = "<group>"; };
@@ -3325,7 +3323,6 @@
 		1DB4B30C831971610CE49302 /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				CD5E36652EF94D5E002AFD5A /* Theme */,
 				212BD196E9114FF87A69EDF2 /* AppCoordinator.swift */,
 				B21CE3E21F43425B1E4EE62B /* AppCoordinatorProtocol.swift */,
 				E8F8A984871DB58F27044912 /* AppCoordinatorStateMachine.swift */,
@@ -5887,14 +5884,6 @@
 			path = ElementCall;
 			sourceTree = "<group>";
 		};
-		CD5E36652EF94D5E002AFD5A /* Theme */ = {
-			isa = PBXGroup;
-			children = (
-				CD5E36632EF94CC7002AFD5A /* CompoundThemeOverride.swift */,
-			);
-			path = Theme;
-			sourceTree = "<group>";
-		};
 		CDBA7A336072E20BB522B058 /* UITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -7823,7 +7812,6 @@
 				BC8E62B875C6F1BB379F2CA4 /* MediaLoader.swift in Sources */,
 				27496F9832E8D802E5F91E88 /* MediaLoaderProtocol.swift in Sources */,
 				E6BFDFF83C76DEB850154076 /* MediaPickerScreenCoordinator.swift in Sources */,
-				CD5E36642EF94CC7002AFD5A /* CompoundThemeOverride.swift in Sources */,
 				3BACDA7EB3873C3CC46E2CD1 /* MediaPlayerProvider.swift in Sources */,
 				8C5828E00778509660A03DBC /* MediaPlayerProviderProtocol.swift in Sources */,
 				4CA64240FB6E5F05C8A91B27 /* MediaProvider.swift in Sources */,

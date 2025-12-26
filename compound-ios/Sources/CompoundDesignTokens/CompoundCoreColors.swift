@@ -319,6 +319,14 @@ public class CompoundCoreUIColorTokens {
     public static let alphaPink1300 = UIColor(named: "alphaPink1300", in: Bundle.module, compatibleWith: nil)!
     public static let alphaPink1400 = UIColor(named: "alphaPink1400", in: Bundle.module, compatibleWith: nil)!
     public static let transparent = UIColor(named: "transparent", in: Bundle.module, compatibleWith: nil)!
+    
+    // MARK: - Clap Custom Colors
+    public static let clapThemeBg = UIColor(named: "clapThemeBg", in: Bundle.module, compatibleWith: nil)!
+    public static let clapBgBubbleIncoming = UIColor(named: "clapBgBubbleIncoming", in: Bundle.module, compatibleWith: nil)!
+    public static let clapBgBubbleOutgoing = UIColor(named: "clapBgBubbleOutgoing", in: Bundle.module, compatibleWith: nil)!
+    public static let clapBgSubtleSecondary = UIColor(named: "clapBgSubtleSecondary", in: Bundle.module, compatibleWith: nil)!
+    public static let clapTextPrimary = UIColor(named: "clapTextPrimary", in: Bundle.module, compatibleWith: nil)!
+    public static let clapTextSecondary = UIColor(named: "clapTextSecondary", in: Bundle.module, compatibleWith: nil)!
 }
 
 // MARK: - SwiftUI Color (Derived from UIColor)
@@ -634,5 +642,13 @@ public class CompoundCoreColorTokens {
     public static var alphaPink1300: Color { Color(uiColor: CompoundCoreUIColorTokens.alphaPink1300) }
     public static var alphaPink1400: Color { Color(uiColor: CompoundCoreUIColorTokens.alphaPink1400) }
     public static var transparent: Color { Color(uiColor: CompoundCoreUIColorTokens.transparent) }
+    
+    // MARK: - Clap Custom Colors
+    public static var clapThemeBg: Color { Color(uiColor: CompoundCoreUIColorTokens.clapThemeBg) }
+    public static var clapBgBubbleIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgBubbleIncoming) }
+    public static var clapBgBubbleOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgBubbleOutgoing) }
+    public static var clapBgSubtleSecondary: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgSubtleSecondary) }
+    public static var clapTextPrimary: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextPrimary) }
+    public static var clapTextSecondary: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextSecondary) }
 }
 

@@ -23,7 +23,8 @@ public class CompoundUIColorTokens {
     public let bgBadgeAccent = UIColor(named: "bgBadgeAccent", in: Bundle.module, compatibleWith: nil)!
     public let bgBadgeDefault = UIColor(named: "bgBadgeDefault", in: Bundle.module, compatibleWith: nil)!
     public let bgBadgeInfo = UIColor(named: "bgBadgeInfo", in: Bundle.module, compatibleWith: nil)!
-    public let bgCanvasDefault = CompoundCoreUIColorTokens.themeBg
+//    public let bgCanvasDefault = CompoundCoreUIColorTokens.themeBg
+    public let bgCanvasDefault = CompoundCoreUIColorTokens.clapThemeBg
     public let bgCanvasDefaultLevel1 = UIColor(named: "bgCanvasDefaultLevel1", in: Bundle.module, compatibleWith: nil)!
     public let bgCanvasDisabled = CompoundCoreUIColorTokens.gray200
     public let bgCriticalHovered = CompoundCoreUIColorTokens.red1000
@@ -38,7 +39,8 @@ public class CompoundUIColorTokens {
     public let bgDecorative6 = CompoundCoreUIColorTokens.orange300
     public let bgInfoSubtle = CompoundCoreUIColorTokens.blue200
     public let bgSubtlePrimary = CompoundCoreUIColorTokens.gray400
-    public let bgSubtleSecondary = CompoundCoreUIColorTokens.gray300
+//    public let bgSubtleSecondary = CompoundCoreUIColorTokens.gray300
+    public let bgSubtleSecondary = CompoundCoreUIColorTokens.clapBgSubtleSecondary
     public let bgSubtleSecondaryLevel0 = UIColor(named: "bgSubtleSecondaryLevel0", in: Bundle.module, compatibleWith: nil)!
     public let bgSuccessSubtle = CompoundCoreUIColorTokens.green200
     public let borderAccentSubtle = CompoundCoreUIColorTokens.green700
@@ -98,8 +100,10 @@ public class CompoundUIColorTokens {
     public let textInfoPrimary = CompoundCoreUIColorTokens.blue900
     public let textLinkExternal = CompoundCoreUIColorTokens.blue900
     public let textOnSolidPrimary = CompoundCoreUIColorTokens.themeBg
-    public let textPrimary = CompoundCoreUIColorTokens.gray1400
-    public let textSecondary = CompoundCoreUIColorTokens.gray900
+//    public let textPrimary = CompoundCoreUIColorTokens.gray1400
+    public let textPrimary = CompoundCoreUIColorTokens.clapTextPrimary
+//    public let textSecondary = CompoundCoreUIColorTokens.gray900
+    public let textSecondary = CompoundCoreUIColorTokens.clapTextSecondary
     public let textSuccessPrimary = CompoundCoreUIColorTokens.green900
     public init() { }
 }
