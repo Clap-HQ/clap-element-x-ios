@@ -20,26 +20,29 @@ public struct SendButton: View {
         return colorScheme == .light ? .compound.iconOnSolidPrimary : .compound.iconPrimary
     }
     
-    private var gradient: Gradient { isEnabled ? .compound.action : .init(colors: [.clear]) }
-    
+    private var backgroundColor: Color {
+        isEnabled ? .compound.iconAccentTertiary : .clear
+    }
+
     /// Creates a send button that performs the provided action.
     public init(action: @escaping () -> Void) {
         self.action = action
     }
-    
+
     public var body: some View {
         Button(action: action) {
-            CompoundIcon(\.sendSolid, size: .medium, relativeTo: .compound.headingLG)
+            CompoundIcon(\.sendSolid, size: .custom(22), relativeTo: .compound.headingLG)
                 .foregroundStyle(iconColor)
-                .scaledPadding(6, relativeTo: .compound.headingLG)
+                .frame(width: 34, height: 34)
                 .background { buttonShape }
                 .compositingGroup()
         }
     }
-    
+
     var buttonShape: some View {
         Circle()
-            .fill(LinearGradient(gradient: gradient, startPoint: .top, endPoint: .bottom))
+            .fill(backgroundColor)
+            .frame(width: 34, height: 34)
     }
 }
 
