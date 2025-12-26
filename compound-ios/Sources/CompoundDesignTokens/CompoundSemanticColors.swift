@@ -71,7 +71,8 @@ public class CompoundUIColorTokens {
     public let gradientSubtleStop5 = CompoundCoreUIColorTokens.alphaGreen100
     public let gradientSubtleStop6 = CompoundCoreUIColorTokens.transparent
     public let iconAccentPrimary = CompoundCoreUIColorTokens.green900
-    public let iconAccentTertiary = CompoundCoreUIColorTokens.green800
+    // public let iconAccentTertiary = CompoundCoreUIColorTokens.green800
+    public let iconAccentTertiary = CompoundCoreUIColorTokens.clapIconAccentTertiary
     public let iconCriticalPrimary = CompoundCoreUIColorTokens.red900
     public let iconDisabled = CompoundCoreUIColorTokens.gray700
     public let iconInfoPrimary = CompoundCoreUIColorTokens.blue900

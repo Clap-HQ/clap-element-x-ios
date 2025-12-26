@@ -327,14 +327,13 @@ public class CompoundCoreUIColorTokens {
     public static let clapBgSubtleSecondary = UIColor(named: "clapBgSubtleSecondary", in: Bundle.module, compatibleWith: nil)!
     public static let clapTextPrimary = UIColor(named: "clapTextPrimary", in: Bundle.module, compatibleWith: nil)!
     public static let clapTextSecondary = UIColor(named: "clapTextSecondary", in: Bundle.module, compatibleWith: nil)!
-    
-    // MARK: - Clap Bubble Colors
     public static let clapTextBubbleOutgoing = UIColor(named: "clapTextBubbleOutgoing", in: Bundle.module, compatibleWith: nil)!
     public static let clapTextBubbleIncoming = UIColor(named: "clapTextBubbleIncoming", in: Bundle.module, compatibleWith: nil)!
     public static let clapTextBubbleSecondaryOutgoing = UIColor(named: "clapTextBubbleSecondaryOutgoing", in: Bundle.module, compatibleWith: nil)!
     public static let clapTextBubbleSecondaryIncoming = UIColor(named: "clapTextBubbleSecondaryIncoming", in: Bundle.module, compatibleWith: nil)!
     public static let clapIconBubbleOutgoing = UIColor(named: "clapIconBubbleOutgoing", in: Bundle.module, compatibleWith: nil)!
     public static let clapIconBubbleIncoming = UIColor(named: "clapIconBubbleIncoming", in: Bundle.module, compatibleWith: nil)!
+    public static let clapIconAccentTertiary = UIColor(named: "clapIconAccentTertiary", in: Bundle.module, compatibleWith: nil)!
 }
 
 // MARK: - SwiftUI Color (Derived from UIColor)
@@ -658,13 +657,12 @@ public class CompoundCoreColorTokens {
     public static var clapBgSubtleSecondary: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgSubtleSecondary) }
     public static var clapTextPrimary: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextPrimary) }
     public static var clapTextSecondary: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextSecondary) }
-    
-    // MARK: - Clap Bubble Colors
     public static var clapTextBubbleOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextBubbleOutgoing) }
     public static var clapTextBubbleIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextBubbleIncoming) }
     public static var clapTextBubbleSecondaryOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextBubbleSecondaryOutgoing) }
     public static var clapTextBubbleSecondaryIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextBubbleSecondaryIncoming) }
     public static var clapIconBubbleOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapIconBubbleOutgoing) }
     public static var clapIconBubbleIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapIconBubbleIncoming) }
+    public static var clapIconAccentTertiary: Color { Color(uiColor: CompoundCoreUIColorTokens.clapIconAccentTertiary) }
 }
 
