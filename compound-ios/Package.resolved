@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "compound-design-tokens",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/element-hq/compound-design-tokens",
-      "state" : {
-        "revision" : "be5d26dfd4ad659b0d3b3aec1ad1cccd0dc8d063",
-        "version" : "6.0.0"
-      }
-    },
-    {
       "identity" : "devicekit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/devicekit/DeviceKit",

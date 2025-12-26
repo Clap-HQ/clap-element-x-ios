@@ -28,7 +28,7 @@ struct Application: App {
         
         SceneDelegate.windowManager = appCoordinator.windowManager
         
-        CompoundThemeOverride.apply()
+//        CompoundThemeOverride.apply()
     }
 
     var body: some Scene {
