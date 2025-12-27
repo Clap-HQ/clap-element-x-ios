@@ -40,12 +40,14 @@ enum PollViewState {
 
 struct PollView: View {
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
-    
+
+    @Environment(\.timelineBubbleIsOutgoing) private var isOutgoing
+
     let poll: Poll
     let state: PollViewState
     let sender: TimelineItemSender
     let actionHandler: (PollViewAction) -> Void
-    
+
     var body: some View {
         if state.isPreview {
             accessibleQuestionView
@@ -81,11 +83,13 @@ struct PollView: View {
             CompoundIcon(poll.hasEnded ? \.pollsEnd : \.polls,
                          size: .custom(22),
                          relativeTo: .compound.bodyLGSemibold)
+                .foregroundColor(.compound.iconBubble(isOutgoing: isOutgoing))
                 .accessibilityLabel(poll.hasEnded ? L10n.a11yPollEnd : L10n.a11yPoll)
 
             Text(poll.question)
                 .multilineTextAlignment(.leading)
                 .font(.compound.bodyLGSemibold)
+                .foregroundColor(.compound.textBubble(isOutgoing: isOutgoing))
         }
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)
@@ -123,8 +127,9 @@ struct PollView: View {
             Text(summaryText)
                 .font(.compound.bodySM)
                 .scaledPadding(.leading, showVotes ? 0 : 32)
-                .foregroundColor(.compound.textSecondary)
+                .foregroundColor(.compound.textBubbleSecondary(isOutgoing: isOutgoing))
                 .frame(maxWidth: .infinity, alignment: showVotes ? .trailing : .leading)
+                .padding(.bottom, poll.hasEnded ? 8 : 0)
         }
     }
 
@@ -137,16 +142,17 @@ struct PollView: View {
                 Text(state.isEditable ? L10n.actionEditPoll : L10n.actionEndPoll)
                     .lineLimit(2, reservesSpace: false)
                     .font(.compound.bodyLGSemibold)
-                    .foregroundColor(.compound.textOnSolidPrimary)
+                    .foregroundColor(.compound.textBubble(isOutgoing: isOutgoing))
                     .padding(.horizontal, 24)
                     .padding(.vertical, 10)
                     .frame(maxWidth: .infinity)
                     .background {
                         Capsule()
-                            .foregroundColor(.compound.bgActionPrimaryRest)
+                            .foregroundColor(.compound._bgPollProgressEmpty(isOutgoing: isOutgoing))
                     }
             }
             .padding(.top, 8)
+            .padding(.bottom, 8)
         }
     }
     

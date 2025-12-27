@@ -334,6 +334,10 @@ public class CompoundCoreUIColorTokens {
     public static let clapIconBubbleOutgoing = UIColor(named: "clapIconBubbleOutgoing", in: Bundle.module, compatibleWith: nil)!
     public static let clapIconBubbleIncoming = UIColor(named: "clapIconBubbleIncoming", in: Bundle.module, compatibleWith: nil)!
     public static let clapIconAccentTertiary = UIColor(named: "clapIconAccentTertiary", in: Bundle.module, compatibleWith: nil)!
+    public static let clapBgPollProgressEmptyOutgoing = UIColor(named: "clapBgPollProgressEmptyOutgoing", in: Bundle.module, compatibleWith: nil)!
+    public static let clapBgPollProgressEmptyIncoming = UIColor(named: "clapBgPollProgressEmptyIncoming", in: Bundle.module, compatibleWith: nil)!
+    public static let clapBgPollProgressFilledOutgoing = UIColor(named: "clapBgPollProgressFilledOutgoing", in: Bundle.module, compatibleWith: nil)!
+    public static let clapBgPollProgressFilledIncoming = UIColor(named: "clapBgPollProgressFilledIncoming", in: Bundle.module, compatibleWith: nil)!
 }
 
 // MARK: - SwiftUI Color (Derived from UIColor)
@@ -664,5 +668,9 @@ public class CompoundCoreColorTokens {
     public static var clapIconBubbleOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapIconBubbleOutgoing) }
     public static var clapIconBubbleIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapIconBubbleIncoming) }
     public static var clapIconAccentTertiary: Color { Color(uiColor: CompoundCoreUIColorTokens.clapIconAccentTertiary) }
+    public static var clapBgPollProgressEmptyOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgPollProgressEmptyOutgoing) }
+    public static var clapBgPollProgressEmptyIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgPollProgressEmptyIncoming) }
+    public static var clapBgPollProgressFilledOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgPollProgressFilledOutgoing) }
+    public static var clapBgPollProgressFilledIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgPollProgressFilledIncoming) }
 }
 

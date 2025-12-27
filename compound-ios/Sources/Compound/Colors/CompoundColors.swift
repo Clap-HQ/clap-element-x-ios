@@ -108,6 +108,16 @@ public class CompoundColors {
     public let _iconBubbleOutgoing = coreTokens.clapIconBubbleOutgoing
     /// Icon color for incoming bubble messages.
     public let _iconBubbleIncoming = coreTokens.clapIconBubbleIncoming
+
+    // MARK: - Poll Progress Bar Colors
+    /// Poll progress bar empty background for outgoing messages.
+    public let _bgPollProgressEmptyOutgoing = coreTokens.clapBgPollProgressEmptyOutgoing
+    /// Poll progress bar empty background for incoming messages.
+    public let _bgPollProgressEmptyIncoming = coreTokens.clapBgPollProgressEmptyIncoming
+    /// Poll progress bar filled color for outgoing messages.
+    public let _bgPollProgressFilledOutgoing = coreTokens.clapBgPollProgressFilledOutgoing
+    /// Poll progress bar filled color for incoming messages.
+    public let _bgPollProgressFilledIncoming = coreTokens.clapBgPollProgressFilledIncoming
     // swiftformat:enable numberFormatting
 }
 

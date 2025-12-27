@@ -39,15 +39,25 @@ extension CompoundColors {
     public func textBubble(isOutgoing: Bool) -> Color {
         isOutgoing ? _textBubbleOutgoing : _textBubbleIncoming
     }
-    
+
     /// Returns the appropriate secondary text color for bubble content based on outgoing state.
     public func textBubbleSecondary(isOutgoing: Bool) -> Color {
         isOutgoing ? _textBubbleSecondaryOutgoing : _textBubbleSecondaryIncoming
     }
-    
+
     /// Returns the appropriate icon color for bubble content based on outgoing state.
     public func iconBubble(isOutgoing: Bool) -> Color {
         isOutgoing ? _iconBubbleOutgoing : _iconBubbleIncoming
+    }
+
+    /// Returns the appropriate poll progress bar empty background color based on outgoing state.
+    public func _bgPollProgressEmpty(isOutgoing: Bool) -> Color {
+        isOutgoing ? _bgPollProgressEmptyOutgoing : _bgPollProgressEmptyIncoming
+    }
+
+    /// Returns the appropriate poll progress bar filled color based on outgoing state.
+    public func _bgPollProgressFilled(isOutgoing: Bool) -> Color {
+        isOutgoing ? _bgPollProgressFilledOutgoing : _bgPollProgressFilledIncoming
     }
 }
 
