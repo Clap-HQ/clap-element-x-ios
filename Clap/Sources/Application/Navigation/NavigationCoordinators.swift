@@ -675,7 +675,8 @@ private struct NavigationSplitCoordinatorView: View {
 
 private struct NavigationStackCoordinatorView: View {
     @Bindable var navigationStackCoordinator: NavigationStackCoordinator
-    
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
         NavigationStack(path: $navigationStackCoordinator.stackModules) {
             navigationStackCoordinator.rootModule?.coordinator?.toPresentable()
@@ -685,6 +686,7 @@ private struct NavigationStackCoordinatorView: View {
                         .id(module.id)
                 }
         }
+        .id(colorScheme) // Force NavigationStack rebuild when color scheme changes
         .sheet(item: $navigationStackCoordinator.sheetModule) { module in
             module.coordinator?.toPresentable()
                 .id(module.id)
