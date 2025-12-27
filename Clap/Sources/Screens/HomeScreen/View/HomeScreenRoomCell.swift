@@ -91,13 +91,19 @@ struct HomeScreenRoomCell: View {
                         .foregroundColor(.compound.textSecondary)
                         .lineLimit(1)
                 }
+                
+                if room.isFavourite {
+                    CompoundIcon(\.favouriteSolid, size: .xSmall, relativeTo: .compound.bodyLGSemibold)
+                        .foregroundColor(.compound.iconSecondary)
+                        .accessibilityLabel(L10n.commonFavourited)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
             if let timestamp = room.timestamp {
                 Text(timestamp)
                     .font(room.isHighlighted ? .compound.bodySMSemibold : .compound.bodySM)
-                    .foregroundColor(room.isHighlighted ? .compound.textActionAccent : .compound.textSecondary)
+                    .foregroundColor(.compound.textSecondary)
             }
         }
     }

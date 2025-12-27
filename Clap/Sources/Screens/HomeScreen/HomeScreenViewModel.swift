@@ -313,15 +313,18 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         
         var rooms = [HomeScreenRoom]()
         let seenInvites = appSettings.seenInvites
-        
+
         for summary in roomSummaryProvider.roomListPublisher.value {
             let room = HomeScreenRoom(summary: summary,
                                       hideUnreadMessagesBadge: appSettings.hideUnreadMessagesBadge,
                                       seenInvites: seenInvites)
             rooms.append(room)
         }
-        
-        state.rooms = rooms
+
+        // Sort rooms with favourites first, maintaining original order within each group
+        let favouriteRooms = rooms.filter { $0.isFavourite }
+        let nonFavouriteRooms = rooms.filter { !$0.isFavourite }
+        state.rooms = favouriteRooms + nonFavouriteRooms
     }
     
     private func markRoomAsFavourite(_ roomID: String, isFavourite: Bool) async {
