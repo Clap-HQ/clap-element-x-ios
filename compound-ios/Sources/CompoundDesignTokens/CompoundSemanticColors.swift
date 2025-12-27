@@ -51,7 +51,8 @@ public class CompoundUIColorTokens {
     public let borderFocused = CompoundCoreUIColorTokens.blue900
     public let borderInfoSubtle = CompoundCoreUIColorTokens.blue700
     public let borderInteractiveHovered = CompoundCoreUIColorTokens.gray1100
-    public let borderInteractivePrimary = CompoundCoreUIColorTokens.gray800
+//    public let borderInteractivePrimary = CompoundCoreUIColorTokens.gray800
+    public let borderInteractivePrimary = CompoundCoreUIColorTokens.clapIconAccentTertiary
     public let borderInteractiveSecondary = CompoundCoreUIColorTokens.gray600
     public let borderSuccessSubtle = CompoundCoreUIColorTokens.green500
     public let gradientActionStop1 = UIColor(named: "gradientActionStop1", in: Bundle.module, compatibleWith: nil)!

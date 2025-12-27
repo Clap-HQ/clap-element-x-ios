@@ -132,8 +132,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     
     
     private var messageBubbleWithReactions: some View {
-        // Figma overlaps reactions by 3
-        VStack(alignment: alignment, spacing: -3) {
+        VStack(alignment: alignment, spacing: 2) {
             bubbleWithTimestamp
 
             // Do not display reactions in the pinned events timeline

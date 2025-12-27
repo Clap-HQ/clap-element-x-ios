@@ -86,13 +86,13 @@ struct TimelineReactionsView: View {
     
     private var layout: AnyLayout {
         if isCollapsible {
-            return AnyLayout(CollapsibleReactionLayout(itemSpacing: 4,
-                                                       rowSpacing: 4,
+            return AnyLayout(CollapsibleReactionLayout(itemSpacing: 2,
+                                                       rowSpacing: 2,
                                                        collapsed: collapsed.wrappedValue,
                                                        rowsBeforeCollapsible: 2))
         }
-        
-        return AnyLayout(HStackLayout(spacing: 4.0))
+
+        return AnyLayout(HStackLayout(spacing: 2.0))
     }
 }
 
@@ -100,7 +100,7 @@ struct TimelineReactionsView: View {
 struct TimelineReactionButtonLabel<Content: View>: View {
     var isHighlighted = false
     @ViewBuilder var content: () -> Content
-    
+
     var body: some View {
         content()
             .background(backgroundShape.inset(by: 1).fill(overlayBackgroundColor))
@@ -108,17 +108,17 @@ struct TimelineReactionButtonLabel<Content: View>: View {
             .overlay(backgroundShape.strokeBorder(Color.compound.bgCanvasDefault, lineWidth: 2))
             .accessibilityElement(children: .combine)
     }
-    
+
     var backgroundShape: some InsettableShape {
         RoundedRectangle(cornerRadius: 14, style: .continuous)
     }
-    
+
     var overlayBackgroundColor: Color {
-        isHighlighted ? Color.compound.bgSubtlePrimary : .compound.bgSubtleSecondary
+        isHighlighted ? Color.compound.iconAccentTertiary.opacity(0.1) : .compound.bgSubtleSecondary
     }
-    
+
     var overlayBorderColor: Color {
-        isHighlighted ? Color.compound.borderInteractivePrimary : .clear
+        isHighlighted ? Color.compound.iconAccentTertiary : .clear
     }
 }
 
@@ -183,13 +183,13 @@ struct TimelineReactionButton: View {
                     .font(.compound.bodySM)
                 if reaction.count > 1 {
                     Text(String(reaction.count))
-                        .font(.compound.bodyMD)
+                        .font(.compound.bodySMSemibold)
                         .foregroundColor(textColor)
                 }
             }
             .frame(height: lineHeight, alignment: .center)
-            .padding(.vertical, 6)
-            .padding(.horizontal, 12)
+            .padding(.vertical, 5)
+            .padding(.horizontal, 10)
         }
     }
     
@@ -199,11 +199,14 @@ struct TimelineReactionButton: View {
 }
 
 struct TimelineReactionAddMoreButtonLabel: View {
+    @ScaledMetric(relativeTo: .subheadline) private var lineHeight = 20
+
     var body: some View {
         TimelineReactionButtonLabel {
             CompoundIcon(\.reactionAdd, size: .xSmall, relativeTo: .compound.bodySM)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
+                .frame(height: lineHeight, alignment: .center)
+                .padding(.vertical, 5)
+                .padding(.horizontal, 10)
                 .foregroundColor(.compound.iconSecondary)
                 .accessibilityLabel(L10n.actionReact)
         }
