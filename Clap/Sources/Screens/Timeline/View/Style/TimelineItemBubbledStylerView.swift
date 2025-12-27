@@ -322,7 +322,7 @@ private extension EventBasedTimelineItemProtocol {
     var contentCornerRadius: CGFloat {
         switch self {
         case is ImageRoomTimelineItem, is VideoRoomTimelineItem, is LocationRoomTimelineItem:
-            return properties.replyDetails != nil || properties.isThreaded ? 8 : .zero
+            return properties.replyDetails != nil || properties.isThreaded ? 12 : .zero
         default:
             return .zero
         }
