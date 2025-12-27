@@ -58,22 +58,22 @@ struct TimelineBubbleLayout: Layout {
     
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Cache) {
         guard !subviews.isEmpty else { return }
-        
-        // Calculate the width using the regular text and the non-greedy quote bubbles.
-        let layoutSubviews = subviews.filter { $0.priority != Priority.visibleQuote }
-        let maxWidth = layoutSubviews.map { size(for: $0, subviews: subviews, proposedSize: proposal, cache: &cache).width }.reduce(0, max)
-        
-        // Place the regular text and greedy quote bubbles using the calculated width.
-        let visibleSubviews = subviews.filter { $0.priority != Priority.hiddenQuote }
 
-        let subviewSizes = visibleSubviews.map { size(for: $0, subviews: subviews, proposedSize: ProposedViewSize(width: maxWidth, height: proposal.height), cache: &cache) }
-        
+        // Use actual bounds width for placement to ensure proper text wrapping
+        let placementWidth = bounds.width
+
+        // Place the regular text and greedy quote bubbles using the bounds width.
+        let visibleSubviews = subviews.filter { $0.priority != Priority.hiddenQuote }
+        let placementProposal = ProposedViewSize(width: placementWidth, height: proposal.height)
+
+        let subviewSizes = visibleSubviews.map { size(for: $0, subviews: subviews, proposedSize: placementProposal, cache: &cache) }
+
         var y = bounds.minY
         for index in visibleSubviews.indices {
             let height = subviewSizes[index].height
             visibleSubviews[index].place(at: CGPoint(x: bounds.minX, y: y),
                                          anchor: .topLeading,
-                                         proposal: ProposedViewSize(width: maxWidth, height: height))
+                                         proposal: ProposedViewSize(width: placementWidth, height: height))
             y += height + spacing
         }
     }

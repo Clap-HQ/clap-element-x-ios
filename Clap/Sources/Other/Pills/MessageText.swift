@@ -115,12 +115,39 @@ struct MessageText: UIViewRepresentable {
 
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: MessageTextView, context: Context) -> CGSize? {
         let proposalWidth = proposal.width ?? UIView.layoutFittingExpandedSize.width
-        
+
         if let size = computedSizes[proposalWidth] {
             return size
         }
-        
-        let size = uiView.sizeThatFits(CGSize(width: proposalWidth, height: UIView.layoutFittingCompressedSize.height))
+
+        // Use layoutManager for accurate size calculation
+        let layoutManager = uiView.layoutManager
+        let textContainer = uiView.textContainer
+        let textStorage = uiView.textStorage
+
+        guard textStorage.length > 0 else {
+            return nil
+        }
+
+        // Save original size
+        let originalSize = textContainer.size
+
+        // Calculate with proposed width
+        textContainer.size = CGSize(width: proposalWidth, height: CGFloat.greatestFiniteMagnitude)
+
+        // Force complete layout
+        let glyphRange = layoutManager.glyphRange(for: textContainer)
+        layoutManager.ensureLayout(forGlyphRange: glyphRange)
+
+        // Get bounding rect for all glyphs
+        let usedRect = layoutManager.usedRect(for: textContainer)
+
+        // Restore original size
+        textContainer.size = originalSize
+
+        // Add small padding to prevent clipping due to rounding
+        let size = CGSize(width: ceil(usedRect.width) + 1, height: ceil(usedRect.height))
+
         DispatchQueue.main.async {
             computedSizes[proposalWidth] = size
         }

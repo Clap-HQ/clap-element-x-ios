@@ -12,53 +12,44 @@ import SwiftUI
 struct FormattedBodyText: View {
     @Environment(\.layoutDirection) private var layoutDirection
     @Environment(\.timelineBubbleIsOutgoing) private var isOutgoing
-    
+
     private let attributedString: AttributedString
-    private let additionalWhitespacesCount: Int
     private let boostFontSize: Bool
-    
+
     private var defaultAttributesContainer: AttributeContainer {
         var container = AttributeContainer()
         container.font = UIFont.preferredFont(forTextStyle: .body)
         container.foregroundColor = UIColor.compound.textBubble(isOutgoing: isOutgoing)
         return container
     }
-    
+
     private var attributedComponents: [AttributedStringBuilderComponent] {
-        var adjustedAttributedString = attributedString + AttributedString(additionalWhitespacesSuffix)
+        var adjustedAttributedString = attributedString
 
         if !String(attributedString.characters).starts(with: "\t") {
             adjustedAttributedString = AttributedString(layoutDirection.isolateLayoutUnicodeString) + adjustedAttributedString
         }
 
         adjustedAttributedString.mergeAttributes(defaultAttributesContainer, mergePolicy: .keepCurrent)
-        
+
         let string = String(attributedString.characters)
-        
+
         if boostFontSize, let range = adjustedAttributedString.range(of: string) {
             adjustedAttributedString[range].font = UIFont.systemFont(ofSize: 48.0)
         }
 
         return adjustedAttributedString.formattedComponents
     }
-    
+
     init(attributedString: AttributedString,
-         additionalWhitespacesCount: Int = 0,
          boostFontSize: Bool = false) {
         self.attributedString = attributedString
-        self.additionalWhitespacesCount = additionalWhitespacesCount
         self.boostFontSize = boostFontSize
     }
-    
-    init(text: String, additionalWhitespacesCount: Int = 0, boostFontSize: Bool = false) {
+
+    init(text: String, boostFontSize: Bool = false) {
         self.init(attributedString: AttributedString(text),
-                  additionalWhitespacesCount: additionalWhitespacesCount,
                   boostFontSize: boostFontSize)
-    }
-    
-    // These is needed to create the slightly off inlined timestamp effect
-    private var additionalWhitespacesSuffix: String {
-        .generateBreakableWhitespaceEnd(whitespaceCount: additionalWhitespacesCount, layoutDirection: layoutDirection)
     }
     
     var body: some View {
@@ -106,8 +97,6 @@ struct FormattedBodyText: View {
                         .layoutPriority(TimelineBubbleLayout.Priority.visibleQuote)
                 } else {
                     MessageText(attributedString: component.attributedString)
-                        .padding(.horizontal, 4)
-                        .fixedSize(horizontal: false, vertical: true)
                         .layoutPriority(TimelineBubbleLayout.Priority.regularText)
                 }
             }
