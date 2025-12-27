@@ -32,6 +32,9 @@ struct FormattedBodyText: View {
 
         adjustedAttributedString.mergeAttributes(defaultAttributesContainer, mergePolicy: .keepCurrent)
 
+        // Apply code block colors based on isOutgoing
+        applyCodeBlockColors(&adjustedAttributedString)
+
         let string = String(attributedString.characters)
 
         if boostFontSize, let range = adjustedAttributedString.range(of: string) {
@@ -39,6 +42,16 @@ struct FormattedBodyText: View {
         }
 
         return adjustedAttributedString.formattedComponents
+    }
+
+    private func applyCodeBlockColors(_ attributedString: inout AttributedString) {
+        for run in attributedString.runs {
+            if run.codeBlock == true {
+                let range = run.range
+                attributedString[range].backgroundColor = UIColor.compound._bgCodeBlock(isOutgoing: isOutgoing)
+                attributedString[range].foregroundColor = UIColor.compound._textCodeBlock(isOutgoing: isOutgoing)
+            }
+        }
     }
 
     init(attributedString: AttributedString,

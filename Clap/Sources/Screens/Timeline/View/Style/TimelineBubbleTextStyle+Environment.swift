@@ -59,6 +59,16 @@ extension CompoundColors {
     public func _bgPollProgressFilled(isOutgoing: Bool) -> Color {
         isOutgoing ? _bgPollProgressFilledOutgoing : _bgPollProgressFilledIncoming
     }
+
+    /// Returns the appropriate code block background color based on outgoing state.
+    public func _bgCodeBlock(isOutgoing: Bool) -> Color {
+        isOutgoing ? _bgCodeBlockOutgoing : _bgCodeBlockIncoming
+    }
+
+    /// Returns the appropriate code block text color based on outgoing state.
+    public func _textCodeBlock(isOutgoing: Bool) -> Color {
+        isOutgoing ? _textCodeBlockOutgoing : _textCodeBlockIncoming
+    }
 }
 
 extension CompoundUIColors {
@@ -75,5 +85,15 @@ extension CompoundUIColors {
     /// Returns the appropriate icon color for bubble content based on outgoing state.
     public func iconBubble(isOutgoing: Bool) -> UIColor {
         isOutgoing ? _iconBubbleOutgoing : _iconBubbleIncoming
+    }
+
+    /// Returns the appropriate code block background color based on outgoing state.
+    public func _bgCodeBlock(isOutgoing: Bool) -> UIColor {
+        isOutgoing ? _bgCodeBlockOutgoing : _bgCodeBlockIncoming
+    }
+
+    /// Returns the appropriate code block text color based on outgoing state.
+    public func _textCodeBlock(isOutgoing: Bool) -> UIColor {
+        isOutgoing ? _textCodeBlockOutgoing : _textCodeBlockIncoming
     }
 }

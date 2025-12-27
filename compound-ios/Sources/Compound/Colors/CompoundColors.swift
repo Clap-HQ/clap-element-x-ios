@@ -118,6 +118,16 @@ public class CompoundColors {
     public let _bgPollProgressFilledOutgoing = coreTokens.clapBgPollProgressFilledOutgoing
     /// Poll progress bar filled color for incoming messages.
     public let _bgPollProgressFilledIncoming = coreTokens.clapBgPollProgressFilledIncoming
+
+    // MARK: - Code Block Colors
+    /// Code block background color for outgoing messages.
+    public let _bgCodeBlockOutgoing = coreTokens.clapBgCodeBlockOutgoing
+    /// Code block background color for incoming messages.
+    public let _bgCodeBlockIncoming = coreTokens.clapBgCodeBlockIncoming
+    /// Code block text color for outgoing messages.
+    public let _textCodeBlockOutgoing = coreTokens.clapTextCodeBlockOutgoing
+    /// Code block text color for incoming messages.
+    public let _textCodeBlockIncoming = coreTokens.clapTextCodeBlockIncoming
     // swiftformat:enable numberFormatting
 }
 

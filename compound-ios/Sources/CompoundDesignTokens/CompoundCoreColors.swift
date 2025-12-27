@@ -340,6 +340,10 @@ public class CompoundCoreUIColorTokens {
     public static var clapBgPollProgressFilledIncoming: UIColor { UIColor(named: "clapBgPollProgressFilledIncoming", in: Bundle.module, compatibleWith: nil)! }
     public static var clapTextBadgeAccent: UIColor { UIColor(named: "clapTextBadgeAccent", in: Bundle.module, compatibleWith: nil)! }
     public static var clapBgBadgeAccent: UIColor { UIColor(named: "clapBgBadgeAccent", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgCodeBlockOutgoing: UIColor { UIColor(named: "clapBgCodeBlockOutgoing", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgCodeBlockIncoming: UIColor { UIColor(named: "clapBgCodeBlockIncoming", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapTextCodeBlockOutgoing: UIColor { UIColor(named: "clapTextCodeBlockOutgoing", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapTextCodeBlockIncoming: UIColor { UIColor(named: "clapTextCodeBlockIncoming", in: Bundle.module, compatibleWith: nil)! }
 }
 
 // MARK: - SwiftUI Color (Derived from UIColor)
@@ -676,5 +680,9 @@ public class CompoundCoreColorTokens {
     public static var clapBgPollProgressFilledIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgPollProgressFilledIncoming) }
     public static var clapTextBadgeAccent: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextBadgeAccent) }
     public static var clapBgBadgeAccent: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgBadgeAccent) }
+    public static var clapBgCodeBlockOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgCodeBlockOutgoing) }
+    public static var clapBgCodeBlockIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgCodeBlockIncoming) }
+    public static var clapTextCodeBlockOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextCodeBlockOutgoing) }
+    public static var clapTextCodeBlockIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextCodeBlockIncoming) }
 }
 
