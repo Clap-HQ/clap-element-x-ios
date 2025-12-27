@@ -320,24 +320,24 @@ public class CompoundCoreUIColorTokens {
     public static let alphaPink1400 = UIColor(named: "alphaPink1400", in: Bundle.module, compatibleWith: nil)!
     public static let transparent = UIColor(named: "transparent", in: Bundle.module, compatibleWith: nil)!
     
-    // MARK: - Clap Custom Colors
-    public static let clapThemeBg = UIColor(named: "clapThemeBg", in: Bundle.module, compatibleWith: nil)!
-    public static let clapBgBubbleIncoming = UIColor(named: "clapBgBubbleIncoming", in: Bundle.module, compatibleWith: nil)!
-    public static let clapBgBubbleOutgoing = UIColor(named: "clapBgBubbleOutgoing", in: Bundle.module, compatibleWith: nil)!
-    public static let clapBgSubtleSecondary = UIColor(named: "clapBgSubtleSecondary", in: Bundle.module, compatibleWith: nil)!
-    public static let clapTextPrimary = UIColor(named: "clapTextPrimary", in: Bundle.module, compatibleWith: nil)!
-    public static let clapTextSecondary = UIColor(named: "clapTextSecondary", in: Bundle.module, compatibleWith: nil)!
-    public static let clapTextBubbleOutgoing = UIColor(named: "clapTextBubbleOutgoing", in: Bundle.module, compatibleWith: nil)!
-    public static let clapTextBubbleIncoming = UIColor(named: "clapTextBubbleIncoming", in: Bundle.module, compatibleWith: nil)!
-    public static let clapTextBubbleSecondaryOutgoing = UIColor(named: "clapTextBubbleSecondaryOutgoing", in: Bundle.module, compatibleWith: nil)!
-    public static let clapTextBubbleSecondaryIncoming = UIColor(named: "clapTextBubbleSecondaryIncoming", in: Bundle.module, compatibleWith: nil)!
-    public static let clapIconBubbleOutgoing = UIColor(named: "clapIconBubbleOutgoing", in: Bundle.module, compatibleWith: nil)!
-    public static let clapIconBubbleIncoming = UIColor(named: "clapIconBubbleIncoming", in: Bundle.module, compatibleWith: nil)!
-    public static let clapIconAccentTertiary = UIColor(named: "clapIconAccentTertiary", in: Bundle.module, compatibleWith: nil)!
-    public static let clapBgPollProgressEmptyOutgoing = UIColor(named: "clapBgPollProgressEmptyOutgoing", in: Bundle.module, compatibleWith: nil)!
-    public static let clapBgPollProgressEmptyIncoming = UIColor(named: "clapBgPollProgressEmptyIncoming", in: Bundle.module, compatibleWith: nil)!
-    public static let clapBgPollProgressFilledOutgoing = UIColor(named: "clapBgPollProgressFilledOutgoing", in: Bundle.module, compatibleWith: nil)!
-    public static let clapBgPollProgressFilledIncoming = UIColor(named: "clapBgPollProgressFilledIncoming", in: Bundle.module, compatibleWith: nil)!
+    // MARK: - Clap Custom Colors (Dynamic UIColors that respond to trait changes)
+    public static var clapThemeBg: UIColor { UIColor(named: "clapThemeBg", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgBubbleIncoming: UIColor { UIColor(named: "clapBgBubbleIncoming", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgBubbleOutgoing: UIColor { UIColor(named: "clapBgBubbleOutgoing", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgSubtleSecondary: UIColor { UIColor(named: "clapBgSubtleSecondary", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapTextPrimary: UIColor { UIColor(named: "clapTextPrimary", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapTextSecondary: UIColor { UIColor(named: "clapTextSecondary", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapTextBubbleOutgoing: UIColor { UIColor(named: "clapTextBubbleOutgoing", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapTextBubbleIncoming: UIColor { UIColor(named: "clapTextBubbleIncoming", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapTextBubbleSecondaryOutgoing: UIColor { UIColor(named: "clapTextBubbleSecondaryOutgoing", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapTextBubbleSecondaryIncoming: UIColor { UIColor(named: "clapTextBubbleSecondaryIncoming", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapIconBubbleOutgoing: UIColor { UIColor(named: "clapIconBubbleOutgoing", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapIconBubbleIncoming: UIColor { UIColor(named: "clapIconBubbleIncoming", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapIconAccentTertiary: UIColor { UIColor(named: "clapIconAccentTertiary", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgPollProgressEmptyOutgoing: UIColor { UIColor(named: "clapBgPollProgressEmptyOutgoing", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgPollProgressEmptyIncoming: UIColor { UIColor(named: "clapBgPollProgressEmptyIncoming", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgPollProgressFilledOutgoing: UIColor { UIColor(named: "clapBgPollProgressFilledOutgoing", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgPollProgressFilledIncoming: UIColor { UIColor(named: "clapBgPollProgressFilledIncoming", in: Bundle.module, compatibleWith: nil)! }
 }
 
 // MARK: - SwiftUI Color (Derived from UIColor)

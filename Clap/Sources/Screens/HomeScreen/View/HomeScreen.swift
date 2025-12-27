@@ -13,9 +13,10 @@ import SwiftUI
 
 struct HomeScreen: View {
     @ObservedObject var context: HomeScreenViewModel.Context
-    
+
     @State private var scrollViewAdapter = ScrollViewAdapter()
-    
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
         HomeScreenContent(context: context, scrollViewAdapter: scrollViewAdapter)
             .alert(item: $context.alertInfo)
@@ -25,6 +26,7 @@ struct HomeScreen: View {
             .navigationTitle(L10n.screenRoomlistMainSpaceTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
+            .id(colorScheme) // Force toolbar rebuild when color scheme changes
             .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
             .track(screen: .Home)
         // 상단 그라데이션 제거
