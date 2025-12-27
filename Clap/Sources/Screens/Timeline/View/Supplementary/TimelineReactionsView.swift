@@ -86,13 +86,13 @@ struct TimelineReactionsView: View {
     
     private var layout: AnyLayout {
         if isCollapsible {
-            return AnyLayout(CollapsibleReactionLayout(itemSpacing: 2,
-                                                       rowSpacing: 2,
+            return AnyLayout(CollapsibleReactionLayout(itemSpacing: 4,
+                                                       rowSpacing: 4,
                                                        collapsed: collapsed.wrappedValue,
                                                        rowsBeforeCollapsible: 2))
         }
 
-        return AnyLayout(HStackLayout(spacing: 2.0))
+        return AnyLayout(HStackLayout(spacing: 4.0))
     }
 }
 
@@ -103,9 +103,8 @@ struct TimelineReactionButtonLabel<Content: View>: View {
 
     var body: some View {
         content()
-            .background(backgroundShape.inset(by: 1).fill(overlayBackgroundColor))
-            .overlay(backgroundShape.inset(by: 2.0).strokeBorder(overlayBorderColor))
-            .overlay(backgroundShape.strokeBorder(Color.compound.bgCanvasDefault, lineWidth: 2))
+            .background(backgroundShape.fill(overlayBackgroundColor))
+            .overlay(backgroundShape.inset(by: 1.0).strokeBorder(overlayBorderColor))
             .accessibilityElement(children: .combine)
     }
 
@@ -188,11 +187,11 @@ struct TimelineReactionButton: View {
                 }
             }
             .frame(height: lineHeight, alignment: .center)
-            .padding(.vertical, 5)
-            .padding(.horizontal, 10)
+            .padding(.vertical, 3)
+            .padding(.horizontal, 8)
         }
     }
-    
+
     var textColor: Color {
         reaction.isHighlighted ? Color.compound.textPrimary : .compound.textSecondary
     }
@@ -205,8 +204,8 @@ struct TimelineReactionAddMoreButtonLabel: View {
         TimelineReactionButtonLabel {
             CompoundIcon(\.reactionAdd, size: .xSmall, relativeTo: .compound.bodySM)
                 .frame(height: lineHeight, alignment: .center)
-                .padding(.vertical, 5)
-                .padding(.horizontal, 10)
+                .padding(.vertical, 3)
+                .padding(.horizontal, 8)
                 .foregroundColor(.compound.iconSecondary)
                 .accessibilityLabel(L10n.actionReact)
         }

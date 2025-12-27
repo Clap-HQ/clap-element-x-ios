@@ -132,7 +132,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     
     
     private var messageBubbleWithReactions: some View {
-        VStack(alignment: alignment, spacing: 2) {
+        VStack(alignment: alignment, spacing: 4) {
             bubbleWithTimestamp
 
             // Do not display reactions in the pinned events timeline
