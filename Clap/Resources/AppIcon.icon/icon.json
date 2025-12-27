@@ -1,6 +1,6 @@
 {
   "fill" : {
-    "automatic-gradient" : "extended-srgb:0.00000,0.47843,1.00000,1.00000"
+    "solid" : "extended-gray:1.00000,1.00000"
   },
   "groups" : [
     {
@@ -8,7 +8,7 @@
         {
           "blend-mode" : "normal",
           "fill" : "automatic",
-          "glass" : true,
+          "glass" : false,
           "hidden" : false,
           "image-name" : "Clap.png",
           "name" : "Clap",

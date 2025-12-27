@@ -13,13 +13,13 @@ struct PillView: View {
     @ObservedObject var context: PillContext
     /// callback triggerd by changes in the display text
     let didChangeText: () -> Void
-    
+
     var textColor: Color {
-        context.viewState.isOwnMention ? .compound.textBadgeAccent : .compound.textPrimary
+        .compound.textBadgeAccent
     }
-    
+
     var backgroundColor: Color {
-        context.viewState.isOwnMention ? .compound.bgBadgeAccent : .compound.bgBadgeDefault
+        .compound.bgBadgeAccent
     }
         
     var body: some View {

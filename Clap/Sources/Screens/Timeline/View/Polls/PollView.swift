@@ -129,8 +129,13 @@ struct PollView: View {
                 .scaledPadding(.leading, showVotes ? 0 : 32)
                 .foregroundColor(.compound.textBubbleSecondary(isOutgoing: isOutgoing))
                 .frame(maxWidth: .infinity, alignment: showVotes ? .trailing : .leading)
-                .padding(.bottom, poll.hasEnded ? 8 : 0)
+                .padding(.bottom, needsSummaryBottomPadding ? 8 : 0)
         }
+    }
+
+    private var needsSummaryBottomPadding: Bool {
+        // Add bottom padding when poll has ended or when there's no toolbar (incoming polls)
+        poll.hasEnded || !poll.createdByAccountOwner
     }
 
     @ViewBuilder

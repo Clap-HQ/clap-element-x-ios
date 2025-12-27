@@ -338,6 +338,8 @@ public class CompoundCoreUIColorTokens {
     public static var clapBgPollProgressEmptyIncoming: UIColor { UIColor(named: "clapBgPollProgressEmptyIncoming", in: Bundle.module, compatibleWith: nil)! }
     public static var clapBgPollProgressFilledOutgoing: UIColor { UIColor(named: "clapBgPollProgressFilledOutgoing", in: Bundle.module, compatibleWith: nil)! }
     public static var clapBgPollProgressFilledIncoming: UIColor { UIColor(named: "clapBgPollProgressFilledIncoming", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapTextBadgeAccent: UIColor { UIColor(named: "clapTextBadgeAccent", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgBadgeAccent: UIColor { UIColor(named: "clapBgBadgeAccent", in: Bundle.module, compatibleWith: nil)! }
 }
 
 // MARK: - SwiftUI Color (Derived from UIColor)
@@ -672,5 +674,7 @@ public class CompoundCoreColorTokens {
     public static var clapBgPollProgressEmptyIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgPollProgressEmptyIncoming) }
     public static var clapBgPollProgressFilledOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgPollProgressFilledOutgoing) }
     public static var clapBgPollProgressFilledIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgPollProgressFilledIncoming) }
+    public static var clapTextBadgeAccent: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextBadgeAccent) }
+    public static var clapBgBadgeAccent: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgBadgeAccent) }
 }
 

@@ -20,7 +20,8 @@ public class CompoundUIColorTokens {
     public let bgActionSecondaryHovered = CompoundCoreUIColorTokens.alphaGray200
     public let bgActionSecondaryPressed = CompoundCoreUIColorTokens.alphaGray300
     public let bgActionSecondaryRest = CompoundCoreUIColorTokens.themeBg
-    public let bgBadgeAccent = UIColor(named: "bgBadgeAccent", in: Bundle.module, compatibleWith: nil)!
+//    public let bgBadgeAccent = UIColor(named: "bgBadgeAccent", in: Bundle.module, compatibleWith: nil)!
+    public let bgBadgeAccent = CompoundCoreUIColorTokens.clapBgBadgeAccent
     public let bgBadgeDefault = UIColor(named: "bgBadgeDefault", in: Bundle.module, compatibleWith: nil)!
     public let bgBadgeInfo = UIColor(named: "bgBadgeInfo", in: Bundle.module, compatibleWith: nil)!
 //    public let bgCanvasDefault = CompoundCoreUIColorTokens.themeBg
@@ -89,7 +90,8 @@ public class CompoundUIColorTokens {
     public let iconTertiaryAlpha = CompoundCoreUIColorTokens.alphaGray800
     public let textActionAccent = CompoundCoreUIColorTokens.green900
     public let textActionPrimary = CompoundCoreUIColorTokens.gray1400
-    public let textBadgeAccent = CompoundCoreUIColorTokens.green1100
+//    public let textBadgeAccent = CompoundCoreUIColorTokens.green1100
+    public let textBadgeAccent = CompoundCoreUIColorTokens.clapTextBadgeAccent
     public let textBadgeInfo = CompoundCoreUIColorTokens.blue1100
     public let textCriticalPrimary = CompoundCoreUIColorTokens.red900
     public let textDecorative1 = CompoundCoreUIColorTokens.lime1100
