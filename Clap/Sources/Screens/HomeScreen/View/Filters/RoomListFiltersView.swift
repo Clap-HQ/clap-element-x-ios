@@ -6,81 +6,108 @@
 // Please see LICENSE files in the repository root for full details.
 //
 
+import Compound
 import SwiftUI
 
 struct RoomListFiltersView: View {
-    let leadingID = "leading"
     @Binding var state: RoomListFiltersState
-    @Namespace private var namespace
-    
-    /// When you connect a mouse on macOS the scrollbars aren't hidden. This is some extra padding
-    /// applied to the scroll view content to make sure the bars don't overlap the filters.
-    private var macScrollBarPadding: CGFloat { ProcessInfo.processInfo.isiOSAppOnMac ? 16 : 0 }
-    
+
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.horizontal) {
-                HStack(spacing: 0) {
-                    // Using an empty view makes the scroll a bit clunky, better a 0 frame spacer
-                    Spacer()
-                        .frame(width: 0, height: 0)
-                        .id(leadingID)
-                    
-                    HStack(spacing: 8) {
-                        if state.isFiltering {
-                            clearButton(scrollViewProxy: proxy)
-                        }
-                        
-                        ForEach(state.activeFilters) { filter in
-                            RoomListFilterView(filter: filter,
-                                               isActive: getBinding(for: filter, scrollViewProxy: proxy))
-                                .matchedGeometryEffect(id: filter.id, in: namespace)
-                                // This will make the animation always render the enabled ones on top
-                                .zIndex(1)
-                        }
-                        ForEach(state.availableFilters) { filter in
-                            RoomListFilterView(filter: filter,
-                                               isActive: getBinding(for: filter, scrollViewProxy: proxy))
-                                .matchedGeometryEffect(id: filter.id, in: namespace)
+        HStack(spacing: 8) {
+            filterMenuButton
+
+            if state.isFiltering {
+                activeFiltersView
+            }
+
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+    }
+
+    private var filterMenuButton: some View {
+        Menu {
+            ForEach(RoomListFilter.availableFilters) { filter in
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2).disabledDuringTests()) {
+                        if state.isFilterActive(filter) {
+                            state.deactivateFilter(filter)
+                        } else {
+                            // Deactivate incompatible filters first
+                            for incompatible in filter.incompatibleFilters {
+                                if state.isFilterActive(incompatible) {
+                                    state.deactivateFilter(incompatible)
+                                }
+                            }
+                            state.activateFilter(filter)
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, macScrollBarPadding)
+                } label: {
+                    Label {
+                        Text(filter.localizedName)
+                    } icon: {
+                        if state.isFilterActive(filter) {
+                            Image(systemName: "checkmark")
+                        }
+                    }
                 }
             }
-            .scrollIndicators(.hidden)
-            .padding(.vertical, 12)
-            .padding(.bottom, -macScrollBarPadding)
+
+            if state.isFiltering {
+                Divider()
+
+                Button(role: .destructive) {
+                    withAnimation(.easeInOut(duration: 0.2).disabledDuringTests()) {
+                        state.clearFilters()
+                    }
+                } label: {
+                    Label(L10n.screenRoomlistClearFilters, systemImage: "xmark.circle")
+                }
+            }
+        } label: {
+            CompoundIcon(\.filter, size: .small, relativeTo: .compound.bodyMD)
+                .foregroundColor(state.isFiltering ? .compound.textOnSolidPrimary : .compound.textSecondary)
+                .padding(8)
+                .background {
+                    Circle()
+                        .fill(state.isFiltering ? Color.compound.bgActionPrimaryRest : Color.compound.bgSubtleSecondary)
+                }
         }
     }
-    
-    private func clearButton(scrollViewProxy: ScrollViewProxy) -> some View {
-        Button(action: {
-            withAnimation(.easeInOut(duration: 0.2).disabledDuringTests()) {
-                state.clearFilters()
-                scrollViewProxy.scrollTo(leadingID, anchor: .leading)
-            }
-        }, label: {
-            Image(systemName: "xmark.circle.fill")
-                .font(.system(size: 24))
-                .foregroundColor(.compound.bgActionPrimaryRest)
-        })
-        .accessibilityLabel(L10n.screenRoomlistClearFilters)
-    }
-    
-    private func getBinding(for filter: RoomListFilter, scrollViewProxy: ScrollViewProxy) -> Binding<Bool> {
-        Binding<Bool>(get: {
-            state.isFilterActive(filter)
-        }, set: { isEnabled, _ in
-            withAnimation(.easeInOut(duration: 0.2).disabledDuringTests()) {
-                if isEnabled {
-                    state.activateFilter(filter)
-                    scrollViewProxy.scrollTo(leadingID, anchor: .leading)
-                } else {
-                    state.deactivateFilter(filter)
+
+    @ViewBuilder
+    private var activeFiltersView: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 6) {
+                ForEach(state.activeFilters) { filter in
+                    activeFilterChip(for: filter)
                 }
             }
-        })
+        }
+    }
+
+    private func activeFilterChip(for filter: RoomListFilter) -> some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.2).disabledDuringTests()) {
+                state.deactivateFilter(filter)
+            }
+        } label: {
+            HStack(spacing: 4) {
+                Text(filter.localizedName)
+                    .font(.compound.bodySM)
+
+                Image(systemName: "xmark")
+                    .font(.system(size: 10, weight: .semibold))
+            }
+            .foregroundColor(.compound.textOnSolidPrimary)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background {
+                Capsule()
+                    .fill(Color.compound.bgActionPrimaryRest)
+            }
+        }
     }
 }
 
@@ -88,10 +115,18 @@ struct RoomListFiltersView: View {
 
 struct RoomListFiltersView_Previews: PreviewProvider, TestablePreview {
     static var previews: some View {
-        RoomListFiltersView(state: .constant(.init(appSettings: ServiceLocator.shared.settings)))
-        RoomListFiltersView(state: .constant(.init(activeFilters: [.rooms, .favourites],
-                                                   appSettings: ServiceLocator.shared.settings)))
-        RoomListFiltersView(state: .constant(.init(activeFilters: [.lowPriority],
-                                                   appSettings: ServiceLocator.shared.settings)))
+        VStack(spacing: 20) {
+            RoomListFiltersView(state: .constant(.init(appSettings: ServiceLocator.shared.settings)))
+                .previewDisplayName("No filters")
+
+            RoomListFiltersView(state: .constant(.init(activeFilters: [.rooms],
+                                                       appSettings: ServiceLocator.shared.settings)))
+                .previewDisplayName("One filter")
+
+            RoomListFiltersView(state: .constant(.init(activeFilters: [.rooms, .favourites],
+                                                       appSettings: ServiceLocator.shared.settings)))
+                .previewDisplayName("Two filters")
+        }
+        .padding()
     }
 }
