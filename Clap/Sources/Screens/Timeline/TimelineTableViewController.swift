@@ -242,18 +242,11 @@ class TimelineTableViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         sendLastVisibleItemReadReceipt()
-
+        
         guard !hasAppearedOnce else { return }
-
-        // For thread timelines, scroll to the top (root message) on first appear
-        if coordinator.context.viewState.timelineKind.isThread {
-            scrollToOldestItem(animated: false)
-        } else {
-            tableView.contentOffset.y = -1
-        }
-
+        tableView.contentOffset.y = -1
         hasAppearedOnce = true
         paginatePublisher.send()
     }
@@ -365,20 +358,12 @@ class TimelineTableViewController: UIViewController {
         
         dataSource.apply(snapshot, animatingDifferences: animated)
         
-        // Check if this is the first load (current snapshot is empty, new snapshot has items)
-        let isFirstLoad = currentSnapshot.numberOfMainItems == 0 && snapshot.numberOfMainItems > 0
-
         if let focussedEvent, focussedEvent.appearance != .hasAppeared {
             scrollToItem(eventID: focussedEvent.eventID, animated: focussedEvent.appearance == .animated)
         } else if let layout {
             restoreLayout(layout)
-        } else if isSwitchingTimelines || isFirstLoad {
-            // For thread timelines, scroll to the oldest item (root message) at the top
-            if coordinator.context.viewState.timelineKind.isThread {
-                scrollToOldestItem(animated: false)
-            } else {
-                scrollToNewestItem(animated: false)
-            }
+        } else if isSwitchingTimelines {
+            scrollToNewestItem(animated: false)
         }
         
         if isSwitchingTimelines {
