@@ -144,7 +144,7 @@ struct HomeScreenRoomCell: View {
                         .accessibilityLabel(L10n.a11yNotificationsNewMessages)
                 }
             }
-            .foregroundColor(room.isHighlighted ? .compound.iconAccentTertiary : .compound.iconQuaternary)
+            .foregroundColor(room.isHighlighted ? .compound.iconCriticalPrimary : .compound.iconQuaternary)
         }
     }
             

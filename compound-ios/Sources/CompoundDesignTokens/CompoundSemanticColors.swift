@@ -75,7 +75,8 @@ public class CompoundUIColorTokens {
     public let iconAccentPrimary = CompoundCoreUIColorTokens.green900
     // public let iconAccentTertiary = CompoundCoreUIColorTokens.green800
     public let iconAccentTertiary = CompoundCoreUIColorTokens.clapIconAccentTertiary
-    public let iconCriticalPrimary = CompoundCoreUIColorTokens.red900
+//    public let iconCriticalPrimary = CompoundCoreUIColorTokens.red900
+    public let iconCriticalPrimary = CompoundCoreUIColorTokens.red800
     public let iconDisabled = CompoundCoreUIColorTokens.gray700
     public let iconInfoPrimary = CompoundCoreUIColorTokens.blue900
     public let iconOnSolidPrimary = CompoundCoreUIColorTokens.themeBg
