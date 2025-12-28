@@ -20,14 +20,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
 
     private var isDirectOneToOneRoom: Bool { context.viewState.isDirectOneToOneRoom }
     private var isFocussed: Bool { focussedEventID != nil && timelineItem.id.eventID == focussedEventID }
-    private var isPinned: Bool {
-        guard context.viewState.timelineKind != .pinned,
-              let eventID = timelineItem.id.eventID else {
-            return false
-        }
-        return context.viewState.pinnedEventIDs.contains(eventID)
-    }
-    
+
     /// The base padding applied to bubbles on either side.
     ///
     /// **Note:** This is on top of the insets applied to the cells by the table view.
@@ -192,7 +185,6 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                     context.send(viewAction: .handleTimelineItemMenuAction(itemID: timelineItem.id, action: action))
                 }
             }
-            .pinnedIndicator(isPinned: isPinned, isOutgoing: timelineItem.isOutgoing)
             .padding(.top, messageBubbleTopPadding)
     }
     
@@ -227,6 +219,9 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
         Text(timelineItem.localizedSendInfo)
             .font(.compound.bodyXS)
             .foregroundStyle(.compound.textSecondary)
+            .multilineTextAlignment(timelineItem.isOutgoing ? .trailing : .leading)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
     }
     
     @ViewBuilder
@@ -335,40 +330,6 @@ private extension EdgeInsets {
     }
 
     static var zero: Self = .init(around: 0)
-}
-
-private struct PinnedIndicatorViewModifier: ViewModifier {
-    let isPinned: Bool
-    let isOutgoing: Bool
-    
-    func body(content: Content) -> some View {
-        if isPinned {
-            HStack(alignment: .top, spacing: 8) {
-                if isOutgoing {
-                    pinnedIndicator
-                }
-                content
-                    .layoutPriority(1)
-                if !isOutgoing {
-                    pinnedIndicator
-                }
-            }
-        } else {
-            content
-        }
-    }
-    
-    private var pinnedIndicator: some View {
-        CompoundIcon(\.pinSolid, size: .xSmall, relativeTo: .compound.bodyMD)
-            .foregroundStyle(Color.compound.iconTertiary)
-            .accessibilityLabel(L10n.commonPinned)
-    }
-}
-
-private extension View {
-    func pinnedIndicator(isPinned: Bool, isOutgoing: Bool) -> some View {
-        modifier(PinnedIndicatorViewModifier(isPinned: isPinned, isOutgoing: isOutgoing))
-    }
 }
 
 // MARK: - Previews

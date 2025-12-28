@@ -18,7 +18,8 @@ struct SeparatorRoomTimelineView: View {
             .frame(maxWidth: .infinity)
             .multilineTextAlignment(.center)
             .padding(.horizontal, 36.0)
-            .padding(.vertical, 8.0)
+            .padding(.top, 16.0)
+            .padding(.bottom, 8.0)
     }
 }
 
