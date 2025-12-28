@@ -115,45 +115,47 @@ struct TimelineThreadSummaryView: View {
     
     private struct ThreadView: View {
         @EnvironmentObject private var context: TimelineViewModel.Context
-        
+
         let senderID: String
         let sender: TimelineItemSender?
         let plainBody: String
         let formattedBody: AttributedString?
         let numberOfReplies: Int
-        
+
         var body: some View {
             HStack(spacing: 4) {
                 CompoundIcon(\.threads, size: .xSmall, relativeTo: .compound.bodyXS)
                     .foregroundColor(.compound.iconSecondary)
                     .accessibilityLabel(L10n.commonThread)
-                
+
                 Text(L10n.commonReplies(numberOfReplies))
                     .font(.compound.bodyXSSemibold)
                     .foregroundColor(.compound.textPrimary)
-                
+
                 LoadableAvatarImage(url: sender?.avatarURL,
                                     name: sender?.displayName,
                                     contentID: senderID,
                                     avatarSize: .user(on: .threadSummary),
                                     mediaProvider: context.mediaProvider)
                     .accessibilityHidden(true)
-                
+
                 Text(sender?.disambiguatedDisplayName ?? senderID)
                     .font(.compound.bodyXSSemibold)
                     .foregroundColor(.compound.textPrimary)
                     .accessibilityLabel(L10n.commonInReplyTo(sender?.disambiguatedDisplayName ?? senderID))
-                
+
                 Text(context.viewState.buildMessagePreview(formattedBody: formattedBody, plainBody: plainBody))
                     .font(.compound.bodyXS)
                     .foregroundColor(.compound.textSecondary)
             }
             .accessibilityElement(children: .combine)
             .lineLimit(1)
-            .padding(.vertical, 7.0)
-            .padding(.horizontal, 8.0)
-            .background(Color.compound.bgSubtlePrimary)
-            .cornerRadius(8)
+            .padding(.vertical, 6)
+            .padding(.horizontal, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color.compound.bgSubtleSecondary)
+            )
         }
     }
 }
