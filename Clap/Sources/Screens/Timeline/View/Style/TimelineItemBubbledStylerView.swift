@@ -235,26 +235,19 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
 //            }
 //
             if let replyDetails = timelineItem.properties.replyDetails {
-                // The rendered reply bubble with a greedy width. The custom layout prevents
-                // the infinite width from increasing the overall width of the view.
-                
-                TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(4.0)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.compound.bgCanvasDefault)
-                    .cornerRadius(14)
-                    .layoutPriority(TimelineBubbleLayout.Priority.visibleQuote)
-                    .onTapGesture {
-                        context.send(viewAction: .focusOnEventID(replyDetails.eventID))
-                    }
-                
-                // Add a fixed width reply bubble that is used for layout calculations but won't be rendered.
-                TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(4.0)
-                    .layoutPriority(TimelineBubbleLayout.Priority.hiddenQuote)
-                    .hidden()
+                // The rendered reply view with horizontal separator
+                VStack(alignment: .leading, spacing: 0) {
+                    TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails, isOutgoing: timelineItem.isOutgoing)
+                        .onTapGesture {
+                            context.send(viewAction: .focusOnEventID(replyDetails.eventID))
+                        }
+
+                    Divider()
+                        .background(Color.compound.borderDisabled)
+                        .padding(.top, 8)
+                }
+                .fixedSize(horizontal: true, vertical: false)
+                .layoutPriority(TimelineBubbleLayout.Priority.regularText)
             }
             
             content()
