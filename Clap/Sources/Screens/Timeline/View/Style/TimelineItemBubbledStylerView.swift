@@ -235,19 +235,23 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
 //            }
 //
             if let replyDetails = timelineItem.properties.replyDetails {
-                // The rendered reply view with horizontal separator
-                VStack(alignment: .leading, spacing: 0) {
+                // Visible reply view - uses full bubble width for separator
+                VStack(alignment: .leading, spacing: 8) {
                     TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails, isOutgoing: timelineItem.isOutgoing)
                         .onTapGesture {
                             context.send(viewAction: .focusOnEventID(replyDetails.eventID))
                         }
 
-                    Divider()
-                        .background(Color.compound.borderDisabled)
-                        .padding(.top, 8)
+                    Rectangle()
+                        .fill(Color.compound.borderDisabled)
+                        .frame(height: 1)
                 }
-                .fixedSize(horizontal: true, vertical: false)
-                .layoutPriority(TimelineBubbleLayout.Priority.regularText)
+                .layoutPriority(TimelineBubbleLayout.Priority.visibleQuote)
+
+                // Hidden reply view - used for layout calculation (determines bubble width)
+                TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails, isOutgoing: timelineItem.isOutgoing)
+                    .layoutPriority(TimelineBubbleLayout.Priority.hiddenQuote)
+                    .hidden()
             }
             
             content()

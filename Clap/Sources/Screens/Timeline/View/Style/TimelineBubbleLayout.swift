@@ -43,16 +43,20 @@ struct TimelineBubbleLayout: Layout {
     
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Cache) -> CGSize {
         guard !subviews.isEmpty else { return .zero }
-        
+
         // Calculate the natural size using the regular text and non-greedy quote bubbles.
         let layoutSubviews = subviews.filter { $0.priority != Priority.visibleQuote }
 
         let subviewSizes = layoutSubviews.map { size(for: $0, subviews: subviews, proposedSize: proposal, cache: &cache) }
-        
+
         let maxWidth = subviewSizes.map(\.width).reduce(0, max)
-        let totalHeight = subviewSizes.map(\.height).reduce(0, +)
-        let totalSpacing = CGFloat(layoutSubviews.count - 1) * spacing
-        
+
+        // For height calculation, use visible subviews (same as placeSubviews)
+        let visibleSubviews = subviews.filter { $0.priority != Priority.hiddenQuote }
+        let visibleSizes = visibleSubviews.map { size(for: $0, subviews: subviews, proposedSize: proposal, cache: &cache) }
+        let totalHeight = visibleSizes.map(\.height).reduce(0, +)
+        let totalSpacing = CGFloat(max(0, visibleSubviews.count - 1)) * spacing
+
         return CGSize(width: maxWidth, height: totalHeight + totalSpacing)
     }
     
