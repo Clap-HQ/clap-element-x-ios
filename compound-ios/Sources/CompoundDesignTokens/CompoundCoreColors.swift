@@ -344,6 +344,8 @@ public class CompoundCoreUIColorTokens {
     public static var clapBgCodeBlockIncoming: UIColor { UIColor(named: "clapBgCodeBlockIncoming", in: Bundle.module, compatibleWith: nil)! }
     public static var clapTextCodeBlockOutgoing: UIColor { UIColor(named: "clapTextCodeBlockOutgoing", in: Bundle.module, compatibleWith: nil)! }
     public static var clapTextCodeBlockIncoming: UIColor { UIColor(named: "clapTextCodeBlockIncoming", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapBgBadgeDefault: UIColor { UIColor(named: "clapBgBadgeDefault", in: Bundle.module, compatibleWith: nil)! }
+    public static var clapRoomBg: UIColor { UIColor(named: "clapRoomBg", in: Bundle.module, compatibleWith: nil)! }
 }
 
 // MARK: - SwiftUI Color (Derived from UIColor)
@@ -684,5 +686,7 @@ public class CompoundCoreColorTokens {
     public static var clapBgCodeBlockIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgCodeBlockIncoming) }
     public static var clapTextCodeBlockOutgoing: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextCodeBlockOutgoing) }
     public static var clapTextCodeBlockIncoming: Color { Color(uiColor: CompoundCoreUIColorTokens.clapTextCodeBlockIncoming) }
+    public static var clapBgBadgeDefault: Color { Color(uiColor: CompoundCoreUIColorTokens.clapBgBadgeDefault) }
+    public static var clapRoomBg: Color { Color(uiColor: CompoundCoreUIColorTokens.clapRoomBg) }
 }
 

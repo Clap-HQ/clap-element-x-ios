@@ -60,7 +60,7 @@ struct CompletionSuggestionView: View {
         }
         .listStyle(PlainListStyle())
         .frame(height: contentHeightForRowCount(min(CGFloat(items.count), Constants.maxVisibleRows)))
-        .background(Color.compound.bgCanvasDefault)
+        .background(Color.compound.bgRoomScreen)
     }
     
     private func contentHeightForRowCount(_ count: CGFloat) -> CGFloat {

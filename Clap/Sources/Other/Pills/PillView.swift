@@ -15,11 +15,11 @@ struct PillView: View {
     let didChangeText: () -> Void
 
     var textColor: Color {
-        .compound.textBadgeAccent
+        context.viewState.isOwnMention ? .compound.textBadgeAccent : .compound.textPrimary
     }
 
     var backgroundColor: Color {
-        .compound.bgBadgeAccent
+        context.viewState.isOwnMention ? .compound.bgBadgeAccent : .compound.bgBadgeDefault
     }
         
     var body: some View {

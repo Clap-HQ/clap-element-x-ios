@@ -33,7 +33,7 @@ struct RoomScreen: View {
                 }
                 .accessibilityIdentifier(A11yIdentifiers.roomScreen.scrollToBottom)
             }
-            .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
+            .background(Color.compound.bgRoomScreen.ignoresSafeArea())
             .overlay(alignment: .top) {
                 if !isVoiceOverEnabled {
                     pinnedItemsBanner
@@ -60,7 +60,7 @@ struct RoomScreen: View {
                     
                     composer
                         .padding(.top, 8)
-                        .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
+                        .background(Color.compound.bgRoomScreen.ignoresSafeArea())
                         .environmentObject(timelineContext)
                         .environment(\.timelineContext, timelineContext)
                         // Make sure the reply header honours the hideTimelineMedia setting too.
@@ -165,7 +165,7 @@ struct RoomScreen: View {
         .padding(.bottom, 12)
         .highlight(gradient: .compound.info,
                    borderColor: .compound.borderInfoSubtle,
-                   backgroundColor: .compound.bgCanvasDefault)
+                   backgroundColor: .compound.bgRoomScreen)
     }
     
     @ViewBuilder

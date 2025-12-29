@@ -73,7 +73,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                         }
                         TimelineItemStatusView(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus)
                             .environmentObject(context)
-                            .padding(.top, 8)
+                            .padding(.top, 6)
                             .padding(.bottom, 3)
                     }
                 }
@@ -117,13 +117,13 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                 Spacer()
                 TimelineItemStatusView(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus)
                     .environmentObject(context)
-                    .padding(.top, 8)
+                    .padding(.top, 6)
                     .padding(.bottom, 3)
             }
         }
     }
-    
-    
+
+
     private var messageBubbleWithReactions: some View {
         VStack(alignment: alignment, spacing: 4) {
             bubbleWithTimestamp

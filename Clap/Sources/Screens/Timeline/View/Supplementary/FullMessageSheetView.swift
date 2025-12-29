@@ -20,7 +20,7 @@ struct FullMessageSheetView: View {
                     .padding(.horizontal, 8)
                     .padding(.top, 16)
             }
-            .background(.compound.bgCanvasDefault)
+            .background(.compound.bgRoomScreen)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
