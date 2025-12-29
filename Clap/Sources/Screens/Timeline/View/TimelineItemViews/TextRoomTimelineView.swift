@@ -116,7 +116,7 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
             } label: {
                 Text(L10n.screenRoomTimelineReactionsShowMore)
                     .font(.compound.bodySMSemibold)
-                    .foregroundColor(.compound.textPrimary)
+                    .foregroundColor(.compound.textBubble(isOutgoing: timelineItem.isOutgoing))
             }
             .padding(.horizontal, 4)
         }

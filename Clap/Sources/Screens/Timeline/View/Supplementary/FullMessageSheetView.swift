@@ -10,17 +10,25 @@ import SwiftUI
 
 struct FullMessageSheetView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.timelineContext) private var timelineContext
 
     let timelineItem: TextRoomTimelineItem
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                fullMessageBubble
-                    .padding(.horizontal, 8)
-                    .padding(.top, 16)
+                if let attributedString = timelineItem.content.formattedBody {
+                    MessageText(attributedString: adjustedAttributedString(attributedString))
+                        .padding(16)
+                } else {
+                    Text(timelineItem.body)
+                        .font(.compound.bodyLG)
+                        .foregroundStyle(.compound.textPrimary)
+                        .textSelection(.enabled)
+                        .padding(16)
+                }
             }
-            .background(.compound.bgRoomScreen)
+            .background(.compound.bgCanvasDefault)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -34,18 +42,25 @@ struct FullMessageSheetView: View {
         .presentationDetents([.large])
     }
 
-    @ViewBuilder
-    private var fullMessageBubble: some View {
-        TimelineStyler(timelineItem: timelineItem) {
-            VStack(alignment: .leading, spacing: 8) {
-                if let attributedString = timelineItem.content.formattedBody {
-                    FormattedBodyText(attributedString: attributedString,
-                                      boostFontSize: timelineItem.shouldBoost)
-                } else {
-                    FormattedBodyText(text: timelineItem.body,
-                                      boostFontSize: timelineItem.shouldBoost)
-                }
+    /// Adjusts code block background color for better visibility in modal
+    private func adjustedAttributedString(_ original: AttributedString) -> AttributedString {
+        var adjusted = original
+
+        // Apply default text attributes
+        var container = AttributeContainer()
+        container.font = UIFont.preferredFont(forTextStyle: .body)
+        container.foregroundColor = UIColor.compound.textPrimary
+        adjusted.mergeAttributes(container, mergePolicy: .keepCurrent)
+
+        // Apply code block colors
+        for run in adjusted.runs {
+            if run.codeBlock == true {
+                let range = run.range
+                adjusted[range].backgroundColor = UIColor.compound._bgCodeBlock(isOutgoing: false)
+                adjusted[range].foregroundColor = UIColor.compound._textCodeBlock(isOutgoing: false)
             }
         }
+
+        return adjusted
     }
 }

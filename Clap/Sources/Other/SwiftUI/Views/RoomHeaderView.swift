@@ -26,11 +26,20 @@ struct RoomHeaderView: View {
 
     private var content: some View {
         HStack(spacing: 4) {
-            Text(roomName)
-                .lineLimit(1)
-                .font(.compound.bodyLGSemibold)
-                .foregroundStyle(.compound.textPrimary)
-                .accessibilityIdentifier(A11yIdentifiers.roomScreen.name)
+            VStack(alignment: .leading, spacing: 0) {
+                Text(roomName)
+                    .lineLimit(1)
+                    .font(.compound.bodyLGSemibold)
+                    .foregroundStyle(.compound.textPrimary)
+                    .accessibilityIdentifier(A11yIdentifiers.roomScreen.name)
+
+                if let roomSubtitle {
+                    Text(roomSubtitle)
+                        .lineLimit(1)
+                        .font(.compound.bodyXS)
+                        .foregroundStyle(.compound.textSecondary)
+                }
+            }
 
             if !isDirectOneToOneRoom, memberCount > 0 {
                 Text("\(memberCount)")
