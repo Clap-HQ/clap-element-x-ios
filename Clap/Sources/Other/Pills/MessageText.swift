@@ -98,9 +98,6 @@ struct MessageText: UIViewRepresentable {
         textView.layoutManager.usesFontLeading = false
         textView.backgroundColor = .clear
 
-        // Set text container to allow unlimited height for proper size calculation
-        textView.textContainer.size = CGSize(width: 0, height: CGFloat.greatestFiniteMagnitude)
-
         if let attributedText = try? NSAttributedString(attributedString, including: \.elementX) {
             textView.attributedText = attributedText
         }
@@ -124,12 +121,18 @@ struct MessageText: UIViewRepresentable {
             return size
         }
 
-        // Update text container width only if it changed
-        if uiView.textContainer.size.width != proposalWidth {
-            uiView.textContainer.size.width = proposalWidth
+        // Only update text container if width changed (height should already be infinite)
+        let textContainer = uiView.textContainer
+        if textContainer.size.width != proposalWidth || textContainer.size.height != .greatestFiniteMagnitude {
+            textContainer.size = CGSize(width: proposalWidth, height: .greatestFiniteMagnitude)
         }
 
-        let size = uiView.sizeThatFits(CGSize(width: proposalWidth, height: UIView.layoutFittingCompressedSize.height))
+        var size = uiView.sizeThatFits(CGSize(width: proposalWidth, height: UIView.layoutFittingCompressedSize.height))
+
+        // Apply ceil to prevent clipping from rounding
+        size.height = ceil(size.height)
+        size.width = ceil(size.width)
+
         DispatchQueue.main.async {
             computedSizes[proposalWidth] = size
         }
