@@ -87,7 +87,7 @@ struct MessageText: UIViewRepresentable {
         // We disable selection at delegate level
         textView.isSelectable = true
         textView.isUserInteractionEnabled = true
-        
+
         // Otherwise links can be dragged and dropped when long pressed
         textView.textDragInteraction?.isEnabled = false
 
@@ -97,6 +97,10 @@ struct MessageText: UIViewRepresentable {
         textView.textContainer.lineFragmentPadding = 0
         textView.layoutManager.usesFontLeading = false
         textView.backgroundColor = .clear
+
+        // Set text container to allow unlimited height for proper size calculation
+        textView.textContainer.size = CGSize(width: 0, height: CGFloat.greatestFiniteMagnitude)
+
         if let attributedText = try? NSAttributedString(attributedString, including: \.elementX) {
             textView.attributedText = attributedText
         }
@@ -120,16 +124,12 @@ struct MessageText: UIViewRepresentable {
             return size
         }
 
-        // Configure text container for accurate measurement
-        uiView.textContainer.size = CGSize(width: proposalWidth, height: .greatestFiniteMagnitude)
+        // Update text container width only if it changed
+        if uiView.textContainer.size.width != proposalWidth {
+            uiView.textContainer.size.width = proposalWidth
+        }
 
-        // Get size using sizeThatFits which respects text container settings
-        var size = uiView.sizeThatFits(CGSize(width: proposalWidth, height: UIView.layoutFittingCompressedSize.height))
-
-        // Apply ceil to prevent clipping from rounding
-        size.height = ceil(size.height)
-        size.width = ceil(size.width)
-
+        let size = uiView.sizeThatFits(CGSize(width: proposalWidth, height: UIView.layoutFittingCompressedSize.height))
         DispatchQueue.main.async {
             computedSizes[proposalWidth] = size
         }
