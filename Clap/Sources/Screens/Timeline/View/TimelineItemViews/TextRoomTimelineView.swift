@@ -14,7 +14,7 @@ import OrderedCollections
 
 struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
     static let maxLinkPreviewsToRender = 2
-    static let maxCharacterCount = 300
+    static let maxCharacterCount = 400
 
     @Environment(\.timelineContext) private var context
     let timelineItem: TextRoomTimelineItem
@@ -117,8 +117,10 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
                 Text(L10n.screenRoomTimelineReactionsShowMore)
                     .font(.compound.bodySMSemibold)
                     .foregroundColor(.compound.textBubble(isOutgoing: timelineItem.isOutgoing))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
             }
-            .padding(.horizontal, 4)
+            .buttonStyle(.plain)
         }
     }
     
