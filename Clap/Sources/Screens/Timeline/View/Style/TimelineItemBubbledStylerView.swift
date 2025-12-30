@@ -46,7 +46,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                         incomingMessageContent
                     }
                 }
-                .padding(.top, 8)
+                .padding(.top, 4)
             } else if !timelineItem.isOutgoing, !isDirectOneToOneRoom {
                 // Incoming message without sender details (grouped messages)
                 // Align with avatar position from messages that show sender details
@@ -145,7 +145,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                 TimelineThreadSummaryView(threadSummary: threadSummary) {
                     context.send(viewAction: .displayThread(itemID: timelineItem.id))
                 }
-                .padding(5)
+                .padding(.top, 2)
             }
         }
     }
@@ -220,8 +220,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
             .font(.compound.bodyXS)
             .foregroundStyle(.compound.textSecondary)
             .multilineTextAlignment(timelineItem.isOutgoing ? .trailing : .leading)
-            .lineLimit(nil)
-            .fixedSize(horizontal: false, vertical: true)
+            .fixedSize()
     }
     
     @ViewBuilder

@@ -90,8 +90,13 @@ struct FormattedBodyText: View {
         TimelineBubbleLayout(spacing: 8) {
             ForEach(attributedComponents) { component in
                 // Ignore if the string contains only the layout correction
-                if String(component.attributedString.characters) == layoutDirection.isolateLayoutUnicodeString {
-                    EmptyView()
+                let componentString = String(component.attributedString.characters)
+                if componentString == layoutDirection.isolateLayoutUnicodeString ||
+                    componentString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    // Empty content placeholder to ensure minimum bubble height
+                    Color.clear
+                        .frame(width: 1, height: 20)
+                        .layoutPriority(TimelineBubbleLayout.Priority.regularText)
                 } else if component.isBlockquote {
                     // The rendered blockquote with a greedy width. The custom layout prevents the
                     // infinite width from increasing the overall width of the view.

@@ -126,7 +126,14 @@ struct MessageText: UIViewRepresentable {
         let textStorage = uiView.textStorage
 
         guard textStorage.length > 0 else {
-            return nil
+            // Return minimum size for empty text to ensure proper bubble layout
+            // Use a space character to calculate actual line height, minimal width
+            let font = UIFont.preferredFont(forTextStyle: .body)
+            let spaceSize = NSAttributedString(string: " ", attributes: [.font: font])
+                .boundingRect(with: CGSize(width: proposalWidth, height: .greatestFiniteMagnitude),
+                              options: [.usesLineFragmentOrigin, .usesFontLeading],
+                              context: nil)
+            return CGSize(width: 1, height: ceil(spaceSize.height))
         }
 
         // Save original size
