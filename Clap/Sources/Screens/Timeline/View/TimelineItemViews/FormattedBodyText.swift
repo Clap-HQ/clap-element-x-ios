@@ -14,6 +14,7 @@ struct FormattedBodyText: View {
     @Environment(\.timelineBubbleIsOutgoing) private var isOutgoing
 
     private let attributedString: AttributedString
+    private let additionalWhitespacesCount: Int
     private let boostFontSize: Bool
 
     private var defaultAttributesContainer: AttributeContainer {
@@ -24,7 +25,7 @@ struct FormattedBodyText: View {
     }
 
     private var attributedComponents: [AttributedStringBuilderComponent] {
-        var adjustedAttributedString = attributedString
+        var adjustedAttributedString = attributedString + AttributedString(additionalWhitespacesSuffix)
 
         if !String(attributedString.characters).starts(with: "\t") {
             adjustedAttributedString = AttributedString(layoutDirection.isolateLayoutUnicodeString) + adjustedAttributedString
@@ -55,48 +56,51 @@ struct FormattedBodyText: View {
     }
 
     init(attributedString: AttributedString,
+         additionalWhitespacesCount: Int = 0,
          boostFontSize: Bool = false) {
         self.attributedString = attributedString
+        self.additionalWhitespacesCount = additionalWhitespacesCount
         self.boostFontSize = boostFontSize
     }
 
-    init(text: String, boostFontSize: Bool = false) {
+    init(text: String, additionalWhitespacesCount: Int = 0, boostFontSize: Bool = false) {
         self.init(attributedString: AttributedString(text),
+                  additionalWhitespacesCount: additionalWhitespacesCount,
                   boostFontSize: boostFontSize)
     }
-    
+
+    // These is needed to create the slightly off inlined timestamp effect
+    private var additionalWhitespacesSuffix: String {
+        .generateBreakableWhitespaceEnd(whitespaceCount: additionalWhitespacesCount, layoutDirection: layoutDirection)
+    }
+
     var body: some View {
         mainContent
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text(attributedString))
     }
-    
+
     @ViewBuilder
     var mainContent: some View {
         layout
             .tint(.compound.textLinkExternal)
     }
-    
+
     private var blockquoteUIColor: UIColor {
         UIColor.compound.textBubbleSecondary(isOutgoing: isOutgoing)
     }
-    
+
     private var blockquoteBarColor: Color {
         Color.compound.textBubbleSecondary(isOutgoing: isOutgoing)
     }
-    
+
     /// The attributed components laid out for the bubbles timeline style.
     var layout: some View {
         TimelineBubbleLayout(spacing: 8) {
             ForEach(attributedComponents) { component in
                 // Ignore if the string contains only the layout correction
-                let componentString = String(component.attributedString.characters)
-                if componentString == layoutDirection.isolateLayoutUnicodeString ||
-                    componentString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    // Empty content placeholder to ensure minimum bubble height
-                    Color.clear
-                        .frame(width: 1, height: 20)
-                        .layoutPriority(TimelineBubbleLayout.Priority.regularText)
+                if String(component.attributedString.characters) == layoutDirection.isolateLayoutUnicodeString {
+                    EmptyView()
                 } else if component.isBlockquote {
                     // The rendered blockquote with a greedy width. The custom layout prevents the
                     // infinite width from increasing the overall width of the view.
@@ -115,10 +119,11 @@ struct FormattedBodyText: View {
                         .layoutPriority(TimelineBubbleLayout.Priority.visibleQuote)
                 } else {
                     MessageText(attributedString: component.attributedString)
+                        .fixedSize(horizontal: false, vertical: true)
                         .layoutPriority(TimelineBubbleLayout.Priority.regularText)
                 }
             }
-            
+
             // Make a second iteration through the components adding fixed width blockquotes
             // which are used for layout calculations but won't be rendered.
             ForEach(attributedComponents) { component in
@@ -132,7 +137,7 @@ struct FormattedBodyText: View {
             }
         }
     }
-    
+
     private var blockquoteAttributes: AttributeContainer {
         // The paragraph style removes the block style paragraph that the parser adds by default
         // Set directly in the constructor to avoid `Conformance to 'Sendable'` warnings
@@ -140,7 +145,7 @@ struct FormattedBodyText: View {
         // Sadly setting SwiftUI fonts do not work so we would need UIFont equivalents for compound, this one is bodyMD
         container.font = UIFont.preferredFont(forTextStyle: .subheadline)
         container.foregroundColor = blockquoteUIColor
-        
+
         return container
     }
 }
@@ -152,16 +157,16 @@ struct FormattedBodyText_Previews: PreviewProvider, TestablePreview {
         body(AttributedStringBuilderV1(cacheKey: "v1", mentionBuilder: MentionBuilder()))
             .previewLayout(.sizeThatFits)
             .previewDisplayName("v1")
-        
+
         body(AttributedStringBuilderV2(cacheKey: "v2", mentionBuilder: MentionBuilder()))
             .previewLayout(.sizeThatFits)
             .previewDisplayName("v2")
     }
-    
+
     @ViewBuilder
     static func body(_ attributedStringBuilder: AttributedStringBuilderProtocol) -> some View {
         let htmlStrings = HTMLFixtures.allCases.map(\.rawValue)
-        
+
         ScrollView {
             VStack(alignment: .leading, spacing: 4.0) {
                 ForEach(htmlStrings, id: \.self) { htmlString in
@@ -169,10 +174,10 @@ struct FormattedBodyText_Previews: PreviewProvider, TestablePreview {
                         Text(htmlString)
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                             .padding(4.0)
-                        
+
                         Divider()
                             .background(.black)
-                        
+
                         if let attributedString = attributedStringBuilder.fromHTML(htmlString) {
                             FormattedBodyText(attributedString: attributedString)
                                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
@@ -182,13 +187,13 @@ struct FormattedBodyText_Previews: PreviewProvider, TestablePreview {
                     }
                     .border(.black)
                 }
-                
+
                 FormattedBodyText(attributedString: AttributedString("Some plain text wrapped in an AttributedString."))
                     .bubbleBackground()
-                
+
                 FormattedBodyText(text: "Some plain text that's not an attributed component.")
                     .bubbleBackground()
-                
+
                 FormattedBodyText(text: "❤️", boostFontSize: true)
                     .bubbleBackground()
             }

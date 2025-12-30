@@ -291,7 +291,7 @@ private extension EventBasedTimelineItemProtocol {
     /// The insets for the full bubble content.
     /// Padding affecting just the "send info" should be added inside `TimelineItemSendInfoView`
     var bubbleInsets: EdgeInsets {
-        let defaultInsets: EdgeInsets = .init(top: 9.5, leading: 12, bottom: 9.5, trailing: 12)
+        let defaultInsets: EdgeInsets = .init(top: 9, leading: 12, bottom: 9, trailing: 12)
 
         switch self {
         case is StickerRoomTimelineItem:

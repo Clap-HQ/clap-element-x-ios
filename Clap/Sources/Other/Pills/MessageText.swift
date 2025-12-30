@@ -120,40 +120,15 @@ struct MessageText: UIViewRepresentable {
             return size
         }
 
-        // Use layoutManager for accurate size calculation
-        let layoutManager = uiView.layoutManager
-        let textContainer = uiView.textContainer
-        let textStorage = uiView.textStorage
+        // Configure text container for accurate measurement
+        uiView.textContainer.size = CGSize(width: proposalWidth, height: .greatestFiniteMagnitude)
 
-        guard textStorage.length > 0 else {
-            // Return minimum size for empty text to ensure proper bubble layout
-            // Use a space character to calculate actual line height, minimal width
-            let font = UIFont.preferredFont(forTextStyle: .body)
-            let spaceSize = NSAttributedString(string: " ", attributes: [.font: font])
-                .boundingRect(with: CGSize(width: proposalWidth, height: .greatestFiniteMagnitude),
-                              options: [.usesLineFragmentOrigin, .usesFontLeading],
-                              context: nil)
-            return CGSize(width: 1, height: ceil(spaceSize.height))
-        }
+        // Get size using sizeThatFits which respects text container settings
+        var size = uiView.sizeThatFits(CGSize(width: proposalWidth, height: UIView.layoutFittingCompressedSize.height))
 
-        // Save original size
-        let originalSize = textContainer.size
-
-        // Calculate with proposed width
-        textContainer.size = CGSize(width: proposalWidth, height: CGFloat.greatestFiniteMagnitude)
-
-        // Force complete layout
-        let glyphRange = layoutManager.glyphRange(for: textContainer)
-        layoutManager.ensureLayout(forGlyphRange: glyphRange)
-
-        // Get bounding rect for all glyphs
-        let usedRect = layoutManager.usedRect(for: textContainer)
-
-        // Restore original size
-        textContainer.size = originalSize
-
-        // Add small padding to prevent clipping due to rounding
-        let size = CGSize(width: ceil(usedRect.width) + 1, height: ceil(usedRect.height))
+        // Apply ceil to prevent clipping from rounding
+        size.height = ceil(size.height)
+        size.width = ceil(size.width)
 
         DispatchQueue.main.async {
             computedSizes[proposalWidth] = size
