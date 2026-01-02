@@ -10,6 +10,8 @@ import Compound
 import SwiftUI
 
 struct NoticeRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
+    @Environment(\.timelineBubbleIsOutgoing) private var isOutgoing
+    
     let timelineItem: NoticeRoomTimelineItem
     
     var body: some View {
@@ -27,7 +29,7 @@ struct NoticeRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
                 }
             } icon: {
                 CompoundIcon(\.info, size: .small, relativeTo: .compound.bodyLG)
-                    .foregroundColor(.compound.iconSecondary)
+                    .foregroundColor(Color.compound.iconBubble(isOutgoing: isOutgoing))
             }
             .labelStyle(.custom(spacing: 6.0, alignment: .top))
             .padding(.leading, 4) // Trailing padding is provided by FormattedBodyText

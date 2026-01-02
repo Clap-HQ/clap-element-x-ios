@@ -20,32 +20,40 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
 
     private var isDirectOneToOneRoom: Bool { context.viewState.isDirectOneToOneRoom }
     private var isFocussed: Bool { focussedEventID != nil && timelineItem.id.eventID == focussedEventID }
-    private var isPinned: Bool {
-        guard context.viewState.timelineKind != .pinned,
-              let eventID = timelineItem.id.eventID else {
-            return false
-        }
-        return context.viewState.pinnedEventIDs.contains(eventID)
-    }
-    
+
     /// The base padding applied to bubbles on either side.
     ///
     /// **Note:** This is on top of the insets applied to the cells by the table view.
     private let bubbleHorizontalPadding: CGFloat = 8
-    /// Additional padding applied to outgoing bubbles when the avatar is shown
-    private var bubbleAvatarPadding: CGFloat {
-        guard !timelineItem.isOutgoing, !isDirectOneToOneRoom else { return 0 }
-        return 8
-    }
+
+    /// Padding to align incoming messages without avatar with those that have avatar
+    /// Avatar size (32) + HStack spacing (4) = 36
+    private let avatarAlignmentPadding: CGFloat = 36
     
     var body: some View {
         ZStack(alignment: .trailingFirstTextBaseline) {
-            VStack(alignment: alignment, spacing: -12) {
-                if !timelineItem.isOutgoing, !isDirectOneToOneRoom {
-                    header
-                        .zIndex(1)
-                }
+            if !timelineItem.isOutgoing, !isDirectOneToOneRoom, shouldShowSenderDetails {
+                // Incoming message with sender details: avatar on left, nickname + bubble on right
+                HStack(alignment: .top, spacing: 4) {
+                    TimelineSenderAvatarView(timelineItem: timelineItem)
+                        .onTapGesture {
+                            context.send(viewAction: .tappedOnSenderDetails(sender: timelineItem.sender))
+                        }
 
+                    VStack(alignment: .leading, spacing: 2) {
+                        senderNameHeader
+
+                        incomingMessageContent
+                    }
+                }
+                .padding(.top, 4)
+            } else if !timelineItem.isOutgoing, !isDirectOneToOneRoom {
+                // Incoming message without sender details (grouped messages)
+                // Align with avatar position from messages that show sender details
+                incomingMessageContent
+                    .padding(.leading, avatarAlignmentPadding)
+            } else {
+                // Outgoing message or DM
                 VStack(alignment: alignment, spacing: 0) {
                     HStack(spacing: 0) {
                         if timelineItem.isOutgoing {
@@ -53,8 +61,11 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                         }
 
                         messageBubbleWithReactions
+
+                        if !timelineItem.isOutgoing {
+                            Spacer()
+                        }
                     }
-                    .padding(timelineItem.isOutgoing ? .leading : .trailing, 48) // Additional padding to differentiate alignment.
 
                     HStack(spacing: 0) {
                         if !timelineItem.isOutgoing {
@@ -62,54 +73,61 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                         }
                         TimelineItemStatusView(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus)
                             .environmentObject(context)
-                            .padding(.top, 8)
+                            .padding(.top, 6)
                             .padding(.bottom, 3)
                     }
                 }
-                .padding(.horizontal, bubbleHorizontalPadding)
-                .padding(.leading, bubbleAvatarPadding)
+                .padding(.top, messageBubbleTopPadding)
             }
         }
-        .padding(EdgeInsets(top: 1, leading: 8, bottom: 1, trailing: 8))
+        .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
         .highlightedTimelineItem(isFocussed)
     }
-    
+
     @ViewBuilder
-    private var header: some View {
-        if shouldShowSenderDetails {
-            HStack(alignment: .top, spacing: 4) {
-                TimelineSenderAvatarView(timelineItem: timelineItem)
-                HStack(alignment: .center, spacing: 4) {
-                    Text(timelineItem.sender.displayName ?? timelineItem.sender.id)
-                        .font(.compound.bodySMSemibold)
-                        .foregroundColor(.compound.decorativeColor(for: timelineItem.sender.id).text)
-                    
-                    if timelineItem.sender.displayName != nil, timelineItem.sender.isDisplayNameAmbiguous {
-                        Text(timelineItem.sender.id)
-                            .font(.compound.bodyXS)
-                            .foregroundColor(.compound.textSecondary)
-                    }
-                }
-                .lineLimit(1)
-                .scaledPadding(.vertical, 3)
+    private var senderNameHeader: some View {
+        HStack(alignment: .center, spacing: 4) {
+            Text(timelineItem.sender.displayName ?? timelineItem.sender.id)
+                .font(.compound.bodySMSemibold)
+                .foregroundColor(.compound.decorativeColor(for: timelineItem.sender.id).text)
+
+            if timelineItem.sender.displayName != nil, timelineItem.sender.isDisplayNameAmbiguous {
+                Text(timelineItem.sender.id)
+                    .font(.compound.bodyXS)
+                    .foregroundColor(.compound.textSecondary)
             }
-            // sender info are read inside the `TimelineAccessibilityModifier`
-            .accessibilityHidden(true)
-            .onTapGesture {
-                context.send(viewAction: .tappedOnSenderDetails(sender: timelineItem.sender))
-            }
-            .padding(.top, 8)
+        }
+        .lineLimit(1)
+        .scaledPadding(.vertical, 3)
+        .accessibilityHidden(true)
+        .onTapGesture {
+            context.send(viewAction: .tappedOnSenderDetails(sender: timelineItem.sender))
         }
     }
-    
+
+    @ViewBuilder
+    private var incomingMessageContent: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 0) {
+                messageBubbleWithReactions
+                Spacer()
+            }
+
+            HStack(spacing: 0) {
+                Spacer()
+                TimelineItemStatusView(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus)
+                    .environmentObject(context)
+                    .padding(.top, 6)
+                    .padding(.bottom, 3)
+            }
+        }
+    }
+
+
     private var messageBubbleWithReactions: some View {
-        // Figma overlaps reactions by 3
-        VStack(alignment: alignment, spacing: -3) {
-            messageBubbleWithActions
-                .timelineItemAccessibility(timelineItem) {
-                    context.send(viewAction: .displayTimelineItemMenu(itemID: timelineItem.id))
-                }
-            
+        VStack(alignment: alignment, spacing: 4) {
+            bubbleWithTimestamp
+
             // Do not display reactions in the pinned events timeline
             if context.viewState.timelineKind != .pinned,
                !timelineItem.properties.reactions.isEmpty {
@@ -120,14 +138,14 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                     // Workaround to stop the message long press stealing the touch from the reaction buttons
                     .onTapGesture { }
             }
-            
+
             if context.viewState.areThreadsEnabled,
                !context.viewState.timelineKind.isThread,
                let threadSummary = timelineItem.properties.threadSummary {
                 TimelineThreadSummaryView(threadSummary: threadSummary) {
                     context.send(viewAction: .displayThread(itemID: timelineItem.id))
                 }
-                .padding(5)
+                .padding(.top, 2)
             }
         }
     }
@@ -167,48 +185,70 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                     context.send(viewAction: .handleTimelineItemMenuAction(itemID: timelineItem.id, action: action))
                 }
             }
-            .pinnedIndicator(isPinned: isPinned, isOutgoing: timelineItem.isOutgoing)
             .padding(.top, messageBubbleTopPadding)
     }
     
     var messageBubble: some View {
         contentWithReply
-            .timelineItemSendInfo(timelineItem: timelineItem, adjustedDeliveryStatus: adjustedDeliveryStatus, context: context)
+            .timelineBubbleStyle(isOutgoing: timelineItem.isOutgoing)
             .bubbleBackground(isOutgoing: timelineItem.isOutgoing,
                               insets: timelineItem.bubbleInsets,
                               color: timelineItem.bubbleBackgroundColor)
+    }
+
+    /// Space reserved for timestamp label outside the bubble
+    private let timestampSpacing: CGFloat = 48
+
+    @ViewBuilder
+    private var bubbleWithTimestamp: some View {
+        messageBubbleWithActions
+            .timelineItemAccessibility(timelineItem) {
+                context.send(viewAction: .displayTimelineItemMenu(itemID: timelineItem.id))
+            }
+            .overlay(alignment: timelineItem.isOutgoing ? .bottomLeading : .bottomTrailing) {
+                timestampLabel
+                    .alignmentGuide(timelineItem.isOutgoing ? .leading : .trailing) { d in
+                        timelineItem.isOutgoing ? d[.trailing] + 4 : d[.leading] - 4
+                    }
+            }
+            .padding(timelineItem.isOutgoing ? .leading : .trailing, timestampSpacing)
+    }
+
+    @ViewBuilder
+    private var timestampLabel: some View {
+        Text(timelineItem.localizedSendInfo)
+            .font(.compound.bodyXS)
+            .foregroundStyle(.compound.textSecondary)
+            .multilineTextAlignment(timelineItem.isOutgoing ? .trailing : .leading)
+            .fixedSize()
     }
     
     @ViewBuilder
     var contentWithReply: some View {
         TimelineBubbleLayout(spacing: 8) {
-            if !context.viewState.timelineKind.isThread, timelineItem.properties.isThreaded {
-                ThreadDecorator()
-                    .padding(.leading, 4)
-                    .layoutPriority(TimelineBubbleLayout.Priority.regularText)
-            }
-            
+            // 스레드 데코레이터 제거
+//            if !context.viewState.timelineKind.isThread, timelineItem.properties.isThreaded {
+//                ThreadDecorator()
+//                    .padding(.leading, 4)
+//                    .layoutPriority(TimelineBubbleLayout.Priority.regularText)
+//            }
+//
             if let replyDetails = timelineItem.properties.replyDetails {
-                // The rendered reply bubble with a greedy width. The custom layout prevents
-                // the infinite width from increasing the overall width of the view.
-                
-                TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(4.0)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.compound.bgCanvasDefault)
-                    .cornerRadius(8)
-                    .layoutPriority(TimelineBubbleLayout.Priority.visibleQuote)
-                    .onTapGesture {
-                        if context.viewState.timelineKind != .pinned {
+                // Visible reply view - uses full bubble width for separator
+                VStack(alignment: .leading, spacing: 8) {
+                    TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails, isOutgoing: timelineItem.isOutgoing)
+                        .onTapGesture {
                             context.send(viewAction: .focusOnEventID(replyDetails.eventID))
                         }
-                    }
-                
-                // Add a fixed width reply bubble that is used for layout calculations but won't be rendered.
-                TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(4.0)
+
+                    Rectangle()
+                        .fill(Color.compound.borderDisabled)
+                        .frame(height: 1)
+                }
+                .layoutPriority(TimelineBubbleLayout.Priority.visibleQuote)
+
+                // Hidden reply view - used for layout calculation (determines bubble width)
+                TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails, isOutgoing: timelineItem.isOutgoing)
                     .layoutPriority(TimelineBubbleLayout.Priority.hiddenQuote)
                     .hidden()
             }
@@ -251,7 +291,7 @@ private extension EventBasedTimelineItemProtocol {
     /// The insets for the full bubble content.
     /// Padding affecting just the "send info" should be added inside `TimelineItemSendInfoView`
     var bubbleInsets: EdgeInsets {
-        let defaultInsets: EdgeInsets = .init(around: 8)
+        let defaultInsets: EdgeInsets = .init(top: 9, leading: 12, bottom: 9, trailing: 12)
 
         switch self {
         case is StickerRoomTimelineItem:
@@ -273,7 +313,7 @@ private extension EventBasedTimelineItemProtocol {
     var contentCornerRadius: CGFloat {
         switch self {
         case is ImageRoomTimelineItem, is VideoRoomTimelineItem, is LocationRoomTimelineItem:
-            return properties.replyDetails != nil || properties.isThreaded ? 8 : .zero
+            return properties.replyDetails != nil || properties.isThreaded ? 12 : .zero
         default:
             return .zero
         }
@@ -286,40 +326,6 @@ private extension EdgeInsets {
     }
 
     static var zero: Self = .init(around: 0)
-}
-
-private struct PinnedIndicatorViewModifier: ViewModifier {
-    let isPinned: Bool
-    let isOutgoing: Bool
-    
-    func body(content: Content) -> some View {
-        if isPinned {
-            HStack(alignment: .top, spacing: 8) {
-                if isOutgoing {
-                    pinnedIndicator
-                }
-                content
-                    .layoutPriority(1)
-                if !isOutgoing {
-                    pinnedIndicator
-                }
-            }
-        } else {
-            content
-        }
-    }
-    
-    private var pinnedIndicator: some View {
-        CompoundIcon(\.pinSolid, size: .xSmall, relativeTo: .compound.bodyMD)
-            .foregroundStyle(Color.compound.iconTertiary)
-            .accessibilityLabel(L10n.commonPinned)
-    }
-}
-
-private extension View {
-    func pinnedIndicator(isPinned: Bool, isOutgoing: Bool) -> some View {
-        modifier(PinnedIndicatorViewModifier(isPinned: isPinned, isOutgoing: isOutgoing))
-    }
 }
 
 // MARK: - Previews

@@ -224,8 +224,9 @@ private struct MessageComposerStyleModifier<Header: View>: ViewModifier {
             ZStack {
                 composerShape
                     .fill(Color.compound.bgSubtleSecondary)
-                composerShape
-                    .stroke(Color.compound.borderInteractiveSecondary, lineWidth: 0.5)
+                // stroke 제거
+//                composerShape
+//                    .stroke(Color.compound.borderInteractiveSecondary, lineWidth: 0.5)
             }
         }
     }
