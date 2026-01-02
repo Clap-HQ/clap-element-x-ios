@@ -23,6 +23,7 @@ struct HomeScreen: View {
                    actions: leaveRoomAlertActions,
                    message: leaveRoomAlertMessage)
             .navigationTitle(L10n.screenRoomlistMainSpaceTitle)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
             .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
             .track(screen: .Home)
