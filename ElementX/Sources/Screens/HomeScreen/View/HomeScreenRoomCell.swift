@@ -92,6 +92,12 @@ struct HomeScreenRoomCell: View {
                         .lineLimit(1)
                 }
                 
+                if room.isFavourite {
+                    CompoundIcon(\.favouriteSolid, size: .xSmall, relativeTo: .compound.bodyLGSemibold)
+                        .foregroundColor(.compound.iconSecondary)
+                        .accessibilityLabel(L10n.commonFavourited)
+                }
+                
                 switch room.lastMessageState {
                 case .sending:
                     CompoundIcon(\.time, size: .xSmall, relativeTo: .compound.bodyLGSemibold)
