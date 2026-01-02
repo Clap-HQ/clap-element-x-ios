@@ -1,11 +1,11 @@
 name: ElementX
 
 schemes:
-  ElementX:
+  Clap Dev:
     analyze:
       config: Debug
     archive:
-      config: Release
+      config: Debug
     build:
       targets:
         ElementX:
@@ -15,7 +15,7 @@ schemes:
           - analyzing
           - archiving
     profile:
-      config: Release
+      config: Debug
     run:
       config: Debug
       environmentVariables:
@@ -30,6 +30,32 @@ schemes:
           isEnabled: false
     test:
       config: Debug
+      gatherCoverageData: true
+      coverageTargets:
+        - ElementX
+      testPlans:
+        - path: ../../UnitTests/SupportingFiles/UnitTests.xctestplan
+          defaultPlan: true
+
+  Clap:
+    analyze:
+      config: Release
+    archive:
+      config: Release
+    build:
+      targets:
+        ElementX:
+          - running
+          - testing
+          - profiling
+          - analyzing
+          - archiving
+    profile:
+      config: Release
+    run:
+      config: Release
+    test:
+      config: Release
       gatherCoverageData: true
       coverageTargets:
         - ElementX
@@ -144,6 +170,15 @@ targets:
         DEVELOPMENT_ASSET_PATHS: DevelopmentAssets/Media
         OTHER_SWIFT_FLAGS:
         - "-DIS_MAIN_APP"
+      configs:
+        Debug:
+          APP_DISPLAY_NAME: Clap Dev
+          APP_GROUP_IDENTIFIER: group.ac.clap.app.dev
+          BASE_BUNDLE_IDENTIFIER: ac.clap.app.dev
+        Release:
+          APP_DISPLAY_NAME: Clap
+          APP_GROUP_IDENTIFIER: group.ac.clap.app
+          BASE_BUNDLE_IDENTIFIER: ac.clap.app
 
     preBuildScripts:
     - name: 🛠 SwiftGen
