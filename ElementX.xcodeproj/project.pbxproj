@@ -1161,6 +1161,7 @@
 		CD0088B763CD970CF1CBF8CB /* DateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E97E9615A158C76B2AB77 /* DateTests.swift */; };
 		CD6A72B65D3B6076F4045C30 /* PHGPostHogConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B891A6DA826E2461DBB40F /* PHGPostHogConfiguration.swift */; };
 		CD86D7902F07E265002ACE4E /* TimelineBubbleTextStyle+Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD86D78F2F07E265002ACE4E /* TimelineBubbleTextStyle+Environment.swift */; };
+		CD86D7952F07EDAD002ACE4E /* FullMessageSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD86D7942F07EDAD002ACE4E /* FullMessageSheetView.swift */; };
 		CDAE3A37D4DF136F9D07DB61 /* RoomChangeRolesScreenSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF710CB1C31F8938EAA3A7D /* RoomChangeRolesScreenSection.swift */; };
 		CDCA8A559E098503DDE29477 /* AttributedStringBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5C6FBF97B6EED3D4FA5EFF /* AttributedStringBuilder.swift */; };
 		CE1694C7BB93C3311524EF28 /* Untranslated.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2F7194F440375338F8E2487 /* Untranslated.strings */; };
@@ -2622,6 +2623,7 @@
 		CD469F7513574341181F7EAA /* ServerSelectionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSelectionScreen.swift; sourceTree = "<group>"; };
 		CD6613DE16AD26B3A74DA1F5 /* LocationRoomTimelineItemContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRoomTimelineItemContent.swift; sourceTree = "<group>"; };
 		CD86D78F2F07E265002ACE4E /* TimelineBubbleTextStyle+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimelineBubbleTextStyle+Environment.swift"; sourceTree = "<group>"; };
+		CD86D7942F07EDAD002ACE4E /* FullMessageSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullMessageSheetView.swift; sourceTree = "<group>"; };
 		CDA38C9B58693A49A3032552 /* DeclineAndBlockScreenCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeclineAndBlockScreenCoordinator.swift; sourceTree = "<group>"; };
 		CDB3227C7A74B734924942E9 /* RoomSummaryProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomSummaryProvider.swift; sourceTree = "<group>"; };
 		CDE3F3911FF7CC639BDE5844 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -3235,6 +3237,7 @@
 		13CC0A77B6E5EEDF881C5E8B /* Supplementary */ = {
 			isa = PBXGroup;
 			children = (
+				CD86D7942F07EDAD002ACE4E /* FullMessageSheetView.swift */,
 				02EE0FABA8ED6D6C1D6CE71D /* ReactionsSummaryView.swift */,
 				66F91544AC136BF6477BDAB8 /* TimelineDeliveryStatusView.swift */,
 				72614BFF35B8394C6E13F55A /* TimelineItemStatusView.swift */,
@@ -7918,6 +7921,7 @@
 				62C5876C4254C58C2086F0DE /* HomeScreenContent.swift in Sources */,
 				8CC12086CBF91A7E10CDC205 /* HomeScreenCoordinator.swift in Sources */,
 				77BB228AEA861E50FFD6A228 /* HomeScreenEmptyStateView.swift in Sources */,
+				CD86D7952F07EDAD002ACE4E /* FullMessageSheetView.swift in Sources */,
 				22C5483D01EEB290B8339817 /* HomeScreenInviteCell.swift in Sources */,
 				86DFA58FBBEB0AF671D2A1E1 /* HomeScreenKnockedCell.swift in Sources */,
 				8810A2A30A68252EBB54EE05 /* HomeScreenModels.swift in Sources */,
