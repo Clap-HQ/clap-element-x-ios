@@ -23,7 +23,7 @@ struct ReadMarkerRoomTimelineView: View {
                 .foregroundColor(.compound.borderInteractivePrimary)
         }
         .padding(.horizontal, 20)
-        .padding(.vertical, 16)
+        .padding(.vertical, 8)
     }
 }
 
