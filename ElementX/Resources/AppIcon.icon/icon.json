@@ -1,27 +1,40 @@
 {
-  "fill" : "automatic",
+  "fill" : {
+    "solid" : "extended-gray:1.00000,1.00000"
+  },
   "groups" : [
     {
       "layers" : [
         {
+          "blend-mode" : "normal",
+          "fill" : "automatic",
           "glass" : false,
-          "image-name" : "AppIcon.png",
-          "name" : "AppIcon"
+          "hidden" : false,
+          "image-name" : "Clap.png",
+          "name" : "Clap",
+          "position" : {
+            "scale" : 0.9,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
         }
       ],
-      "name" : "Background",
       "shadow" : {
-        "kind" : "none",
+        "kind" : "neutral",
         "opacity" : 0.5
       },
-      "specular" : false,
       "translucency" : {
-        "enabled" : false,
+        "enabled" : true,
         "value" : 0.5
       }
     }
   ],
   "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
     "squares" : "shared"
   }
 }
