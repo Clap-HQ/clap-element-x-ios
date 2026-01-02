@@ -91,7 +91,7 @@ struct TimelineReactionsView: View {
                                                        collapsed: collapsed.wrappedValue,
                                                        rowsBeforeCollapsible: 2))
         }
-        
+
         return AnyLayout(HStackLayout(spacing: 4.0))
     }
 }
@@ -100,25 +100,24 @@ struct TimelineReactionsView: View {
 struct TimelineReactionButtonLabel<Content: View>: View {
     var isHighlighted = false
     @ViewBuilder var content: () -> Content
-    
+
     var body: some View {
         content()
-            .background(backgroundShape.inset(by: 1).fill(overlayBackgroundColor))
-            .overlay(backgroundShape.inset(by: 2.0).strokeBorder(overlayBorderColor))
-            .overlay(backgroundShape.strokeBorder(Color.compound.bgCanvasDefault, lineWidth: 2))
+            .background(backgroundShape.fill(overlayBackgroundColor))
+            .overlay(backgroundShape.inset(by: 1.0).strokeBorder(overlayBorderColor))
             .accessibilityElement(children: .combine)
     }
-    
+
     var backgroundShape: some InsettableShape {
         RoundedRectangle(cornerRadius: 14, style: .continuous)
     }
-    
+
     var overlayBackgroundColor: Color {
-        isHighlighted ? Color.compound.bgSubtlePrimary : .compound.bgSubtleSecondary
+        isHighlighted ? Color.compound.iconAccentTertiary.opacity(0.1) : .compound.bgSubtleSecondary
     }
-    
+
     var overlayBorderColor: Color {
-        isHighlighted ? Color.compound.borderInteractivePrimary : .clear
+        isHighlighted ? Color.compound.iconAccentTertiary : .clear
     }
 }
 
@@ -183,27 +182,30 @@ struct TimelineReactionButton: View {
                     .font(.compound.bodySM)
                 if reaction.count > 1 {
                     Text(String(reaction.count))
-                        .font(.compound.bodyMD)
+                        .font(.compound.bodySMSemibold)
                         .foregroundColor(textColor)
                 }
             }
             .frame(height: lineHeight, alignment: .center)
-            .padding(.vertical, 6)
-            .padding(.horizontal, 12)
+            .padding(.vertical, 3)
+            .padding(.horizontal, 8)
         }
     }
-    
+
     var textColor: Color {
         reaction.isHighlighted ? Color.compound.textPrimary : .compound.textSecondary
     }
 }
 
 struct TimelineReactionAddMoreButtonLabel: View {
+    @ScaledMetric(relativeTo: .subheadline) private var lineHeight = 20
+
     var body: some View {
         TimelineReactionButtonLabel {
             CompoundIcon(\.reactionAdd, size: .xSmall, relativeTo: .compound.bodySM)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
+                .frame(height: lineHeight, alignment: .center)
+                .padding(.vertical, 3)
+                .padding(.horizontal, 8)
                 .foregroundColor(.compound.iconSecondary)
                 .accessibilityLabel(L10n.actionReact)
         }
