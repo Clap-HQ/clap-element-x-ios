@@ -6,6 +6,7 @@
 // Please see LICENSE files in the repository root for full details.
 //
 
+import Compound
 import Foundation
 import SwiftUI
 
@@ -13,28 +14,64 @@ import OrderedCollections
 
 struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
     static let maxLinkPreviewsToRender = 2
-    
+    static let maxCharacterCount = 400
+
     @Environment(\.timelineContext) private var context
     let timelineItem: TextRoomTimelineItem
-    
+
     @State private var linkMetadata: OrderedDictionary<URL, LinkMetadataProviderItem>
-    
+    @State private var showFullMessageSheet = false
+
+    private var textContent: String {
+        timelineItem.body
+    }
+
+    private var shouldTruncate: Bool {
+        textContent.count > Self.maxCharacterCount && !timelineItem.shouldBoost
+    }
+
+    private var truncatedAttributedString: AttributedString? {
+        guard shouldTruncate, let attributedString = timelineItem.content.formattedBody else {
+            return timelineItem.content.formattedBody
+        }
+
+        let characters = attributedString.characters
+        if characters.count <= Self.maxCharacterCount {
+            return attributedString
+        }
+
+        // Find the index at maxCharacterCount to preserve attributes
+        let startIndex = characters.startIndex
+        let endIndex = characters.index(startIndex, offsetBy: Self.maxCharacterCount)
+
+        // Create a truncated AttributedString preserving formatting
+        var truncated = AttributedString(attributedString[startIndex..<endIndex])
+        truncated.append(AttributedString("…"))
+
+        return truncated
+    }
+
+    private var truncatedPlainText: String {
+        guard shouldTruncate else {
+            return timelineItem.body
+        }
+        return String(timelineItem.body.prefix(Self.maxCharacterCount)) + "…"
+    }
+
     init(timelineItem: TextRoomTimelineItem, linkMetadata: OrderedDictionary<URL, LinkMetadataProviderItem> = [:]) {
         self.timelineItem = timelineItem
         self.linkMetadata = linkMetadata
     }
-    
+
     var body: some View {
         TimelineStyler(timelineItem: timelineItem) {
             VStack(alignment: .leading, spacing: 8) {
-                if let attributedString = timelineItem.content.formattedBody {
-                    FormattedBodyText(attributedString: attributedString,
-                                      boostFontSize: timelineItem.shouldBoost)
+                if shouldTruncate {
+                    truncatedContent
                 } else {
-                    FormattedBodyText(text: timelineItem.body,
-                                      boostFontSize: timelineItem.shouldBoost)
+                    fullContent
                 }
-                
+
                 if context?.viewState.linkPreviewsEnabled ?? false, !linkMetadata.keys.isEmpty {
                     VStack(spacing: 8) {
                         ForEach(linkMetadata.keys, id: \.absoluteString) { url in
@@ -47,6 +84,44 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
             }
         }
         .task { await fetchLinkPreviews() }
+        .sheet(isPresented: $showFullMessageSheet) {
+            FullMessageSheetView(timelineItem: timelineItem)
+        }
+    }
+
+    @ViewBuilder
+    private var fullContent: some View {
+        if let attributedString = timelineItem.content.formattedBody {
+            FormattedBodyText(attributedString: attributedString,
+                              boostFontSize: timelineItem.shouldBoost)
+        } else {
+            FormattedBodyText(text: timelineItem.body,
+                              boostFontSize: timelineItem.shouldBoost)
+        }
+    }
+
+    @ViewBuilder
+    private var truncatedContent: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if let attributedString = truncatedAttributedString {
+                FormattedBodyText(attributedString: attributedString,
+                                  boostFontSize: false)
+            } else {
+                FormattedBodyText(text: truncatedPlainText,
+                                  boostFontSize: false)
+            }
+
+            Button {
+                showFullMessageSheet = true
+            } label: {
+                Text(L10n.screenRoomTimelineReactionsShowMore)
+                    .font(.compound.bodySMSemibold)
+                    .foregroundColor(.compound.textBubble(isOutgoing: timelineItem.isOutgoing))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        }
     }
     
     private func fetchLinkPreviews() async {
