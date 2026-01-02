@@ -107,6 +107,8 @@ class SettingsFlowCoordinator: FlowCoordinatorProtocol {
                     presentLabs()
                 case .developerOptions:
                     presentDeveloperOptions()
+                case .developerMode:
+                    presentDeveloperMode()
                 case .deactivateAccount:
                     presentDeactivateAccount()
                 }
@@ -238,7 +240,12 @@ class SettingsFlowCoordinator: FlowCoordinatorProtocol {
         
         navigationStackCoordinator.push(coordinator)
     }
-    
+
+    private func presentDeveloperMode() {
+        let coordinator = DeveloperModeScreenCoordinator(developerModeSettings: ServiceLocator.shared.developerModeSettings)
+        navigationStackCoordinator.push(coordinator)
+    }
+
     private func presentDeactivateAccount() {
         let parameters = DeactivateAccountScreenCoordinatorParameters(clientProxy: flowParameters.userSession.clientProxy,
                                                                       userIndicatorController: flowParameters.userIndicatorController)

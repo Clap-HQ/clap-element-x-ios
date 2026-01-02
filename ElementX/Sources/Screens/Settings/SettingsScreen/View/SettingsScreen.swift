@@ -32,7 +32,11 @@ struct SettingsScreen: View {
             generalSection
             
             signOutSection
-            
+
+            if context.viewState.showDeveloperMode {
+                developerModeSection
+            }
+
             if context.viewState.showDeveloperOptions {
                 developerOptionsSection
             }
@@ -187,7 +191,7 @@ struct SettingsScreen: View {
                         context.send(viewAction: .logout)
                     })
                     .accessibilityIdentifier(A11yIdentifiers.settingsScreen.logout)
-            
+
             if context.viewState.showAccountDeactivation {
                 ListRow(label: .action(title: L10n.actionDeactivateAccount,
                                        icon: \.warning,
@@ -197,12 +201,26 @@ struct SettingsScreen: View {
                         })
             }
         } footer: {
-            if !context.viewState.showDeveloperOptions {
+            if !context.viewState.showDeveloperMode, !context.viewState.showDeveloperOptions {
                 versionSection
             }
         }
     }
     
+    private var developerModeSection: some View {
+        Section {
+            ListRow(label: .default(title: "Developer Mode",
+                                    icon: \.admin),
+                    kind: .navigationLink {
+                        context.send(viewAction: .developerMode)
+                    })
+        } footer: {
+            if !context.viewState.showDeveloperOptions {
+                versionSection
+            }
+        }
+    }
+
     private var developerOptionsSection: some View {
         Section {
             ListRow(label: .default(title: L10n.commonDeveloperOptions,
