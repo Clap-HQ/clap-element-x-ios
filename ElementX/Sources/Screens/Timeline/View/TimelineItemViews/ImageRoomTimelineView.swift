@@ -23,7 +23,7 @@ struct ImageRoomTimelineView: View {
                     .accessibilityLabel(L10n.commonImage)
                     // This clip shape is distinct from the one in the styler as that one
                     // operates on the entire message so wouldn't round the bottom corners.
-                    .clipShape(RoundedRectangle(cornerRadius: hasMediaCaption ? 6 : 0))
+                    .clipShape(RoundedRectangle(cornerRadius: hasMediaCaption ? 12 : 0))
                     .onTapGesture {
                         context?.send(viewAction: .mediaTapped(itemID: timelineItem.id))
                     }
