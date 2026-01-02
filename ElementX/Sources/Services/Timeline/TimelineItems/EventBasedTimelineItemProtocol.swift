@@ -79,11 +79,11 @@ extension EventBasedTimelineItemProtocol {
     }
 
     /// contains the timestamp and an optional edited localised prefix
-    /// example: (edited) 12:17 PM
+    /// example: (edited)\n12:17 PM
     var localizedSendInfo: String {
         var start = ""
         if properties.isEdited {
-            start = "\(L10n.commonEditedSuffix) "
+            start = "\(L10n.commonEditedSuffix)\n"
         }
         return start + timestamp.formattedTime()
     }

@@ -41,7 +41,7 @@ struct LocationRoomTimelineView: View {
                 .clipped()
             }
         } else {
-            FormattedBodyText(text: timelineItem.body, additionalWhitespacesCount: timelineItem.additionalWhitespaces())
+            FormattedBodyText(text: timelineItem.body)
         }
     }
 
