@@ -15,7 +15,7 @@ extension View {
     ///   - insets: defaults to what we use for file timeline items, text uses custom values
     ///   - color: self explanatory, defaults to subtle secondary
     func bubbleBackground(isOutgoing: Bool = true,
-                          insets: EdgeInsets = .init(top: 8, leading: 12, bottom: 8, trailing: 12),
+                          insets: EdgeInsets = .init(top: 10, leading: 12, bottom: 10, trailing: 12),
                           color: Color? = .compound.bgSubtleSecondary) -> some View {
         modifier(TimelineItemBubbleBackgroundModifier(isOutgoing: isOutgoing,
                                                       insets: insets,
@@ -29,12 +29,12 @@ private struct TimelineItemBubbleBackgroundModifier: ViewModifier {
     let isOutgoing: Bool
     let insets: EdgeInsets
     var color: Color?
-    
+
     func body(content: Content) -> some View {
         content
             .padding(insets)
             .background(color)
-            .cornerRadius(12, corners: roundedCorners)
+            .cornerRadius(20, corners: roundedCorners)
     }
     
     private var roundedCorners: UIRectCorner {
@@ -42,19 +42,11 @@ private struct TimelineItemBubbleBackgroundModifier: ViewModifier {
         case .single:
             return .allCorners
         case .first:
-            if isOutgoing {
-                return [.topLeft, .topRight, .bottomLeft]
-            } else {
-                return [.topLeft, .topRight, .bottomRight]
-            }
+            return .allCorners
         case .middle:
-            return isOutgoing ? [.topLeft, .bottomLeft] : [.topRight, .bottomRight]
+            return .allCorners
         case .last:
-            if isOutgoing {
-                return [.topLeft, .bottomLeft, .bottomRight]
-            } else {
-                return [.topRight, .bottomLeft, .bottomRight]
-            }
+            return .allCorners
         }
     }
 }

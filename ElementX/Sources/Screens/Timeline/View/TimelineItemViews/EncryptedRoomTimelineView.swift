@@ -42,12 +42,14 @@ struct EncryptedRoomTimelineView: View {
 }
 
 struct RoomTimelineViewLabelStyle: LabelStyle {
+    @Environment(\.timelineBubbleIsOutgoing) private var isOutgoing
+    
     func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .center, spacing: 8) {
             configuration.icon
-                .foregroundColor(.compound.iconSecondary)
+                .foregroundColor(Color.compound.iconBubble(isOutgoing: isOutgoing))
             configuration.title
-                .foregroundColor(.compound.textPrimary)
+                .foregroundColor(Color.compound.textBubble(isOutgoing: isOutgoing))
         }
         .padding(.horizontal, 4)
     }
