@@ -43,31 +43,34 @@ struct TimelineBubbleLayout: Layout {
     
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Cache) -> CGSize {
         guard !subviews.isEmpty else { return .zero }
-        
-        // Calculate the natural size using the regular text and non-greedy quote bubbles.
-        let layoutSubviews = subviews.filter { $0.priority != Priority.visibleQuote }
 
-        let subviewSizes = layoutSubviews.map { size(for: $0, subviews: subviews, proposedSize: proposal, cache: &cache) }
-        
-        let maxWidth = subviewSizes.map(\.width).reduce(0, max)
-        let totalHeight = subviewSizes.map(\.height).reduce(0, +)
-        let totalSpacing = CGFloat(layoutSubviews.count - 1) * spacing
-        
+        // Calculate width using regular text and hidden quotes (not visible quotes which are greedy)
+        let widthSubviews = subviews.filter { $0.priority != Priority.visibleQuote }
+        let widthSizes = widthSubviews.map { size(for: $0, subviews: subviews, proposedSize: proposal, cache: &cache) }
+        let maxWidth = widthSizes.map(\.width).reduce(0, max)
+
+        // Calculate height using visible subviews (same as placeSubviews)
+        let visibleSubviews = subviews.filter { $0.priority != Priority.hiddenQuote }
+        let heightProposal = ProposedViewSize(width: maxWidth, height: proposal.height)
+        let heightSizes = visibleSubviews.map { size(for: $0, subviews: subviews, proposedSize: heightProposal, cache: &cache) }
+        let totalHeight = heightSizes.map(\.height).reduce(0, +)
+        let totalSpacing = CGFloat(max(0, visibleSubviews.count - 1)) * spacing
+
         return CGSize(width: maxWidth, height: totalHeight + totalSpacing)
     }
-    
+
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Cache) {
         guard !subviews.isEmpty else { return }
-        
+
         // Calculate the width using the regular text and the non-greedy quote bubbles.
         let layoutSubviews = subviews.filter { $0.priority != Priority.visibleQuote }
         let maxWidth = layoutSubviews.map { size(for: $0, subviews: subviews, proposedSize: proposal, cache: &cache).width }.reduce(0, max)
-        
+
         // Place the regular text and greedy quote bubbles using the calculated width.
         let visibleSubviews = subviews.filter { $0.priority != Priority.hiddenQuote }
 
         let subviewSizes = visibleSubviews.map { size(for: $0, subviews: subviews, proposedSize: ProposedViewSize(width: maxWidth, height: proposal.height), cache: &cache) }
-        
+
         var y = bounds.minY
         for index in visibleSubviews.indices {
             let height = subviewSizes[index].height
