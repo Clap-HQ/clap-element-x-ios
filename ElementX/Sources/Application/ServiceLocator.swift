@@ -20,11 +20,17 @@ class ServiceLocator {
     }
     
     private(set) var settings: AppSettings!
-    
+
     func register(appSettings: AppSettings) {
         settings = appSettings
     }
-    
+
+    private(set) var developerModeSettings: DeveloperModeSettings!
+
+    func register(developerModeSettings: DeveloperModeSettings) {
+        self.developerModeSettings = developerModeSettings
+    }
+
     private(set) var analytics: AnalyticsService!
     
     func register(analytics: AnalyticsService) {

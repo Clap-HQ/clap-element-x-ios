@@ -27,6 +27,7 @@ class SettingsScreenViewModel: SettingsScreenViewModelType, SettingsScreenViewMo
                                            userID: userSession.clientProxy.userID,
                                            showAccountDeactivation: userSession.clientProxy.canDeactivateAccount,
                                            showDeveloperOptions: appSettings.developerOptionsEnabled,
+                                           showDeveloperMode: appSettings.developerModeEnabled,
                                            showAnalyticsSettings: appSettings.canPromptForAnalytics,
                                            isBugReportServiceEnabled: isBugReportServiceEnabled),
                    mediaProvider: userSession.mediaProvider)
@@ -34,7 +35,11 @@ class SettingsScreenViewModel: SettingsScreenViewModelType, SettingsScreenViewMo
         appSettings.$developerOptionsEnabled
             .weakAssign(to: \.state.showDeveloperOptions, on: self)
             .store(in: &cancellables)
-        
+
+        appSettings.$developerModeEnabled
+            .weakAssign(to: \.state.showDeveloperMode, on: self)
+            .store(in: &cancellables)
+
         userSession.clientProxy.userAvatarURLPublisher
             .receive(on: DispatchQueue.main)
             .weakAssign(to: \.state.userAvatarURL, on: self)
@@ -119,6 +124,8 @@ class SettingsScreenViewModel: SettingsScreenViewModelType, SettingsScreenViewMo
             appSettings.developerOptionsEnabled.toggle()
         case .developerOptions:
             actionsSubject.send(.developerOptions)
+        case .developerMode:
+            actionsSubject.send(.developerMode)
         case .deactivateAccount:
             actionsSubject.send(.deactivateAccount)
         }

@@ -91,7 +91,7 @@ struct ServerConfirmationScreen: View {
             .buttonStyle(.compound(.primary))
             .accessibilityIdentifier(A11yIdentifiers.serverConfirmationScreen.continue)
             
-            if case .confirmation = context.viewState.mode {
+            if case .confirmation = context.viewState.mode, context.viewState.showCustomHomeserver {
                 Button { context.send(viewAction: .changeServer) } label: {
                     Text(L10n.screenServerConfirmationChangeServer)
                         .font(.compound.bodyLGSemibold)

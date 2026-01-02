@@ -63,6 +63,7 @@ final class AppSettings {
         case knockingEnabled
         case threadsEnabled
         case developerOptionsEnabled
+        case developerModeEnabled
         case linkPreviewsEnabled
         case spaceSettingsEnabled
         case focusEventOnNotificationTap
@@ -401,6 +402,10 @@ final class AppSettings {
     
     @UserPreference(key: UserDefaultsKeys.developerOptionsEnabled, defaultValue: isDevelopmentBuild, storageType: .userDefaults(store))
     var developerOptionsEnabled
+
+    /// Whether developer mode is enabled. When enabled, experimental feature flags can be toggled.
+    @UserPreference(key: UserDefaultsKeys.developerModeEnabled, defaultValue: isDevelopmentBuild, storageType: .userDefaults(store))
+    var developerModeEnabled
 }
 
 extension AppSettings: CommonSettingsProtocol { }
