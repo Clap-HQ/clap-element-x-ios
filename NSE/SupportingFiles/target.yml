@@ -76,6 +76,15 @@ targets:
         SWIFT_OBJC_INTERFACE_HEADER_NAME: GeneratedInterface-Swift.h
         OTHER_SWIFT_FLAGS:
         - "-DIS_NSE"
+      configs:
+        Debug:
+          APP_DISPLAY_NAME: Clap Dev
+          APP_GROUP_IDENTIFIER: group.ac.clap.app.dev
+          BASE_BUNDLE_IDENTIFIER: ac.clap.app.dev
+        Release:
+          APP_DISPLAY_NAME: Clap
+          APP_GROUP_IDENTIFIER: group.ac.clap.app
+          BASE_BUNDLE_IDENTIFIER: ac.clap.app
         
     sources:
     - path: ../Sources

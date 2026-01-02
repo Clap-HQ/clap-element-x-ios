@@ -8928,6 +8928,9 @@
 		4CB921EC997F763064B8E436 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APP_DISPLAY_NAME = Clap;
+				APP_GROUP_IDENTIFIER = group.ac.clap.app;
+				BASE_BUNDLE_IDENTIFIER = ac.clap.app;
 				CODE_SIGN_ENTITLEMENTS = NSE/SupportingFiles/NSE.entitlements;
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -8977,7 +8980,10 @@
 		62E1B7866DF0ED442C39A83B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APP_DISPLAY_NAME = Clap;
+				APP_GROUP_IDENTIFIER = group.ac.clap.app;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BASE_BUNDLE_IDENTIFIER = ac.clap.app;
 				CODE_SIGN_ENTITLEMENTS = ElementX/SupportingFiles/ElementX.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
@@ -9005,7 +9011,10 @@
 		6897D5BC19A2EA6ABD57DE7E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APP_DISPLAY_NAME = "Clap Dev";
+				APP_GROUP_IDENTIFIER = group.ac.clap.app.dev;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BASE_BUNDLE_IDENTIFIER = ac.clap.app.dev;
 				CODE_SIGN_ENTITLEMENTS = ElementX/SupportingFiles/ElementX.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
@@ -9051,6 +9060,9 @@
 		7620CDAB1B38B30431DA8878 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APP_DISPLAY_NAME = "Clap Dev";
+				APP_GROUP_IDENTIFIER = group.ac.clap.app.dev;
+				BASE_BUNDLE_IDENTIFIER = ac.clap.app.dev;
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/SupportingFiles/ShareExtension.entitlements;
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -9073,11 +9085,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_DISPLAY_NAME = Clap;
-				APP_GROUP_IDENTIFIER = group.ac.clap.app;
 				APP_NAME = ElementX;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "colors/accent-color";
-				BASE_BUNDLE_IDENTIFIER = ac.clap.app;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -9143,11 +9152,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_DISPLAY_NAME = Clap;
-				APP_GROUP_IDENTIFIER = group.ac.clap.app;
 				APP_NAME = ElementX;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = "colors/accent-color";
-				BASE_BUNDLE_IDENTIFIER = ac.clap.app;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -9279,6 +9285,9 @@
 		A46EFA0820A3F5A3A0C74CFE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APP_DISPLAY_NAME = "Clap Dev";
+				APP_GROUP_IDENTIFIER = group.ac.clap.app.dev;
+				BASE_BUNDLE_IDENTIFIER = ac.clap.app.dev;
 				CODE_SIGN_ENTITLEMENTS = NSE/SupportingFiles/NSE.entitlements;
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -9328,6 +9337,9 @@
 		E57C898C511BBC8215673DEF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APP_DISPLAY_NAME = Clap;
+				APP_GROUP_IDENTIFIER = group.ac.clap.app;
+				BASE_BUNDLE_IDENTIFIER = ac.clap.app;
 				CODE_SIGN_ENTITLEMENTS = ShareExtension/SupportingFiles/ShareExtension.entitlements;
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
