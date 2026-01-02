@@ -21,11 +21,11 @@ struct RoomAttachmentPicker: View {
         Menu {
             menuContent
         } label: {
-            CompoundIcon(asset: Asset.Images.composerAttachment, size: .custom(30), relativeTo: .compound.headingLG)
-                .scaledPadding(7, relativeTo: .compound.headingLG)
+            CompoundIcon(asset: Asset.Images.composerAttachment, size: .custom(34), relativeTo: .compound.headingLG)
                 .foregroundColor(
                     isEnabled ? .compound.iconPrimary : .compound.iconDisabled
                 )
+                .frame(width: 34, height: 34)
         }
         .buttonStyle(RoomAttachmentPickerButtonStyle())
         .accessibilityLabel(L10n.actionAddToTimeline)
