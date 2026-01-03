@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "Activité des fils";
 "screen_thread_activity_empty_title" = "Aucun fil non lu";
 "screen_thread_activity_empty_description" = "Vous êtes à jour !";
-"space_channel_list_joined_section_title" = "Salons auxquels vous participez";
-"space_channel_list_unjoined_section_title" = "Salons que vous pouvez rejoindre";
+"space_room_list_joined_section_title" = "Salons auxquels vous participez";
+"space_room_list_unjoined_section_title" = "Salons que vous pouvez rejoindre";

@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "Jutulõngade tegevus";
 "screen_thread_activity_empty_title" = "Lugemata jutulõngasid pole";
 "screen_thread_activity_empty_description" = "Oled kõigega kursis!";
-"space_channel_list_joined_section_title" = "Toad, milles olete";
-"space_channel_list_unjoined_section_title" = "Toad, millega saate liituda";
+"space_room_list_joined_section_title" = "Toad, milles olete";
+"space_room_list_unjoined_section_title" = "Toad, millega saate liituda";

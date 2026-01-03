@@ -10,9 +10,9 @@ import Combine
 import MatrixRustSDK
 import SwiftUI
 
-typealias SpaceChannelListScreenViewModelType = StateStoreViewModelV2<SpaceChannelListScreenViewState, SpaceChannelListScreenViewAction>
+typealias SpaceRoomListScreenViewModelType = StateStoreViewModelV2<SpaceRoomListScreenViewState, SpaceRoomListScreenViewAction>
 
-class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, SpaceChannelListScreenViewModelProtocol {
+class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomListScreenViewModelProtocol {
     private let spaceRoomListProxy: SpaceRoomListProxyProtocol
     private let spaceServiceProxy: SpaceServiceProxyProtocol
     private let clientProxy: ClientProxyProtocol
@@ -20,8 +20,8 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
     private let userIndicatorController: UserIndicatorControllerProtocol
     private let appSettings: AppSettings
 
-    private let actionsSubject: PassthroughSubject<SpaceChannelListScreenViewModelAction, Never> = .init()
-    var actionsPublisher: AnyPublisher<SpaceChannelListScreenViewModelAction, Never> {
+    private let actionsSubject: PassthroughSubject<SpaceRoomListScreenViewModelAction, Never> = .init()
+    var actionsPublisher: AnyPublisher<SpaceRoomListScreenViewModelAction, Never> {
         actionsSubject.eraseToAnyPublisher()
     }
 
@@ -39,7 +39,7 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
 
         let spaceProxy = spaceRoomListProxy.spaceRoomProxyPublisher.value
 
-        super.init(initialViewState: SpaceChannelListScreenViewState(
+        super.init(initialViewState: SpaceRoomListScreenViewState(
             spaceID: spaceRoomListProxy.id,
             spaceName: spaceProxy.name,
             spaceAvatarURL: spaceProxy.avatarURL,
@@ -50,7 +50,7 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
         // Populate the list immediately with current data
         let initialSpaceRooms = spaceRoomListProxy.spaceRoomsPublisher.value
         let roomSummaries = clientProxy.roomSummaryProvider.roomListPublisher.value
-        updateChannelList(with: initialSpaceRooms, roomSummaries: roomSummaries)
+        updateRoomList(with: initialSpaceRooms, roomSummaries: roomSummaries)
 
         setupSubscriptions()
         setupSpaceRoomProxy()
@@ -58,17 +58,17 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
 
     // MARK: - Public
 
-    override func process(viewAction: SpaceChannelListScreenViewAction) {
+    override func process(viewAction: SpaceRoomListScreenViewAction) {
         switch viewAction {
-        case .selectChannel(let item):
+        case .selectRoom(let item):
             switch item {
             case .joined(let info):
                 actionsSubject.send(.selectRoom(roomID: info.id))
             case .unjoined(let proxy):
-                Task { await joinChannel(proxy) }
+                Task { await joinRoom(proxy) }
             }
-        case .joinChannel(let proxy):
-            Task { await joinChannel(proxy) }
+        case .joinRoom(let proxy):
+            Task { await joinRoom(proxy) }
         case .showRoomDetails(let roomID):
             actionsSubject.send(.showRoomDetails(roomID: roomID))
         case .markAsRead(let roomID):
@@ -104,14 +104,14 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
             }
             .store(in: &cancellables)
 
-        // Combine space rooms and room summaries to update channel list atomically
+        // Combine space rooms and room summaries to update room list atomically
         // This prevents flickering caused by multiple separate updates
         spaceRoomListProxy.spaceRoomsPublisher
             .combineLatest(clientProxy.roomSummaryProvider.roomListPublisher)
             .debounce(for: .milliseconds(50), scheduler: DispatchQueue.main)
             .sink { [weak self] spaceRooms, roomSummaries in
                 guard let self else { return }
-                updateChannelList(with: spaceRooms, roomSummaries: roomSummaries)
+                updateRoomList(with: spaceRooms, roomSummaries: roomSummaries)
             }
             .store(in: &cancellables)
 
@@ -126,25 +126,25 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
             .store(in: &cancellables)
     }
 
-    private func updateChannelList(with spaceRooms: [SpaceRoomProxyProtocol], roomSummaries: [RoomSummary]) {
+    private func updateRoomList(with spaceRooms: [SpaceRoomProxyProtocol], roomSummaries: [RoomSummary]) {
         // Build a lookup dictionary for quick access
         let summaryByID = Dictionary(uniqueKeysWithValues: roomSummaries.map { ($0.id, $0) })
 
-        var joinedItems: [SpaceChannelListItem] = []
-        var unjoinedItems: [SpaceChannelListItem] = []
+        var joinedItems: [SpaceRoomListItem] = []
+        var unjoinedItems: [SpaceRoomListItem] = []
 
         for spaceRoom in spaceRooms {
-            // Skip spaces - only show rooms/channels
+            // Skip spaces - only show rooms
             guard !spaceRoom.isSpace else { continue }
 
             if spaceRoom.state == .joined {
                 // Get room summary for joined rooms to show last message
                 if let summary = summaryByID[spaceRoom.id] {
-                    let joinedInfo = JoinedChannelInfo(summary: summary)
+                    let joinedInfo = JoinedRoomInfo(summary: summary)
                     joinedItems.append(.joined(joinedInfo))
                 } else {
                     // Fallback if summary not available
-                    let joinedInfo = JoinedChannelInfo(
+                    let joinedInfo = JoinedRoomInfo(
                         id: spaceRoom.id,
                         name: spaceRoom.name,
                         avatar: spaceRoom.avatar,
@@ -164,7 +164,7 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
             }
         }
 
-        // Sort joined channels by last message date (most recent first)
+        // Sort joined rooms by last message date (most recent first)
         let sortedJoinedItems = joinedItems.sorted { lhs, rhs in
             guard case .joined(let lhsInfo) = lhs, case .joined(let rhsInfo) = rhs else { return false }
             let lhsDate = lhsInfo.lastMessageDate ?? .distantPast
@@ -172,13 +172,13 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
             return lhsDate > rhsDate
         }
 
-        state.joinedChannels = sortedJoinedItems
-        state.unjoinedChannels = unjoinedItems
+        state.joinedRooms = sortedJoinedItems
+        state.unjoinedRooms = unjoinedItems
     }
 
-    private func joinChannel(_ spaceRoom: SpaceRoomProxyProtocol) async {
-        state.joiningChannelIDs.insert(spaceRoom.id)
-        defer { state.joiningChannelIDs.remove(spaceRoom.id) }
+    private func joinRoom(_ spaceRoom: SpaceRoomProxyProtocol) async {
+        state.joiningRoomIDs.insert(spaceRoom.id)
+        defer { state.joiningRoomIDs.remove(spaceRoom.id) }
 
         guard case .success = await clientProxy.joinRoom(spaceRoom.id, via: spaceRoom.via) else {
             showFailureIndicator()
@@ -286,7 +286,7 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
             case .didCancel:
                 state.bindings.leaveSpaceViewModel = nil
             case .presentRolesAndPermissions:
-                // Not supported in space channel list context
+                // Not supported in space room list context
                 state.bindings.leaveSpaceViewModel = nil
             case .didLeaveSpace:
                 state.bindings.leaveSpaceViewModel = nil

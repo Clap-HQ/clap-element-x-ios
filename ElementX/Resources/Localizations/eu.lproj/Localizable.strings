@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "Harien jarduera";
 "screen_thread_activity_empty_title" = "Ez dago irakurri gabeko haririk";
 "screen_thread_activity_empty_description" = "Egunean zaude!";
-"space_channel_list_joined_section_title" = "Zure gelak";
-"space_channel_list_unjoined_section_title" = "Elkartu zaitezkeen gelak";
+"space_room_list_joined_section_title" = "Zure gelak";
+"space_room_list_unjoined_section_title" = "Elkartu zaitezkeen gelak";

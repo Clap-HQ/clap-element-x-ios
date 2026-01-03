@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "Trådaktivitet";
 "screen_thread_activity_empty_title" = "Ingen uleste tråder";
 "screen_thread_activity_empty_description" = "Du er oppdatert!";
-"space_channel_list_joined_section_title" = "Rom du er med i";
-"space_channel_list_unjoined_section_title" = "Rom du kan bli med i";
+"space_room_list_joined_section_title" = "Rom du er med i";
+"space_room_list_unjoined_section_title" = "Rom du kan bli med i";

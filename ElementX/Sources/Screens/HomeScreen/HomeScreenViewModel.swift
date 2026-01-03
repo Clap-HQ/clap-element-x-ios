@@ -152,7 +152,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         setupSpaceSubscriptions()
 
         // updateRooms() will be called by subscriptions
-        // When groupSpaceChannels is enabled, rooms will be updated after space tracking completes
+        // When groupSpaceRooms is enabled, rooms will be updated after space tracking completes
     }
     
     // MARK: - Public
@@ -287,7 +287,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
     }
 
     private func setupSpaceSubscriptions() {
-        // React to groupSpaceChannels setting changes
+        // React to groupSpaceRooms setting changes
         developerModeSettings.$groupSpaceRooms
             .combineLatest(spaceService.joinedSpacesPublisher)
             .receive(on: DispatchQueue.main)
@@ -299,7 +299,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
     }
 
     private func updateSpaces(from spaceProxies: [SpaceRoomProxyProtocol]) {
-        // Only show space cells if groupSpaceChannels is enabled
+        // Only show space cells if groupSpaceRooms is enabled
         if developerModeSettings.groupSpaceRooms {
             // Track child rooms for each space to hide them from main chat list
             // state.spaces will be set in rebuildSpacesWithAggregatedInfo() after tracking completes
@@ -445,7 +445,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
     private func selectSpace(spaceID: String) async {
         switch await spaceService.spaceRoomList(spaceID: spaceID) {
         case .success(let spaceRoomListProxy):
-            actionsSubject.send(.presentSpaceChannelList(spaceRoomListProxy))
+            actionsSubject.send(.presentSpaceRoomList(spaceRoomListProxy))
         case .failure(let error):
             MXLog.error("Failed to get space room list: \(error)")
             displayError()
@@ -512,7 +512,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         state.rooms = rooms
 
         // Also update space cells when room summaries change (for last message, badges, etc.)
-        if developerModeSettings.groupSpaceChannels, !spaceRoomListProxies.isEmpty {
+        if developerModeSettings.groupSpaceRooms, !spaceRoomListProxies.isEmpty {
             rebuildSpacesWithAggregatedInfo()
         }
     }

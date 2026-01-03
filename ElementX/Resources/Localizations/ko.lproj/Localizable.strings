@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "스레드 활동";
 "screen_thread_activity_empty_title" = "읽지 않은 스레드가 없습니다";
 "screen_thread_activity_empty_description" = "모두 확인했습니다!";
-"space_channel_list_joined_section_title" = "참여 중인 룸";
-"space_channel_list_unjoined_section_title" = "참여 가능한 룸";
+"space_room_list_joined_section_title" = "참여 중인 룸";
+"space_room_list_unjoined_section_title" = "참여 가능한 룸";

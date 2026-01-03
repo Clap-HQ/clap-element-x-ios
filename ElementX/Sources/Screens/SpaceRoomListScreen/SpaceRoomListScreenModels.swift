@@ -9,7 +9,7 @@
 import Combine
 import Foundation
 
-enum SpaceChannelListScreenViewModelAction {
+enum SpaceRoomListScreenViewModelAction {
     case selectRoom(roomID: String)
     case showRoomDetails(roomID: String)
     case dismiss
@@ -18,9 +18,9 @@ enum SpaceChannelListScreenViewModelAction {
     case leftSpace
 }
 
-enum SpaceChannelListScreenViewAction {
-    case selectChannel(SpaceChannelListItem)
-    case joinChannel(SpaceRoomProxyProtocol)
+enum SpaceRoomListScreenViewAction {
+    case selectRoom(SpaceRoomListItem)
+    case joinRoom(SpaceRoomProxyProtocol)
     case showRoomDetails(roomID: String)
     case markAsRead(roomID: String)
     case markAsUnread(roomID: String)
@@ -32,16 +32,16 @@ enum SpaceChannelListScreenViewAction {
     case leaveSpace
 }
 
-struct SpaceChannelListScreenViewState: BindableState {
+struct SpaceRoomListScreenViewState: BindableState {
     let spaceID: String
     var spaceName: String
     var spaceAvatarURL: URL?
     var spaceMemberCount: Int
     var spaceTopic: String?
 
-    var joinedChannels: [SpaceChannelListItem] = []
-    var unjoinedChannels: [SpaceChannelListItem] = []
-    var joiningChannelIDs: Set<String> = []
+    var joinedRooms: [SpaceRoomListItem] = []
+    var unjoinedRooms: [SpaceRoomListItem] = []
+    var joiningRoomIDs: Set<String> = []
 
     // Space menu properties
     var permalink: URL?
@@ -53,30 +53,30 @@ struct SpaceChannelListScreenViewState: BindableState {
         canEditBaseInfo || canEditRolesAndPermissions
     }
 
-    var bindings = SpaceChannelListScreenViewStateBindings()
+    var bindings = SpaceRoomListScreenViewStateBindings()
 
     var spaceAvatar: RoomAvatar {
         .space(id: spaceID, name: spaceName, avatarURL: spaceAvatarURL)
     }
 
-    var hasJoinedChannels: Bool {
-        !joinedChannels.isEmpty
+    var hasJoinedRooms: Bool {
+        !joinedRooms.isEmpty
     }
 
-    var hasUnjoinedChannels: Bool {
-        !unjoinedChannels.isEmpty
+    var hasUnjoinedRooms: Bool {
+        !unjoinedRooms.isEmpty
     }
 }
 
-struct SpaceChannelListScreenViewStateBindings {
+struct SpaceRoomListScreenViewStateBindings {
     var leaveSpaceViewModel: LeaveSpaceViewModel?
 }
 
-/// An item in the space channel list
-enum SpaceChannelListItem: Identifiable, Equatable {
-    /// A joined channel with chat-list style display (shows last message, timestamp, etc.)
-    case joined(JoinedChannelInfo)
-    /// An unjoined channel with join button
+/// An item in the space room list
+enum SpaceRoomListItem: Identifiable, Equatable {
+    /// A joined room with chat-list style display (shows last message, timestamp, etc.)
+    case joined(JoinedRoomInfo)
+    /// An unjoined room with join button
     case unjoined(SpaceRoomProxyProtocol)
 
     var id: String {
@@ -100,13 +100,13 @@ enum SpaceChannelListItem: Identifiable, Equatable {
         }
     }
 
-    static func == (lhs: SpaceChannelListItem, rhs: SpaceChannelListItem) -> Bool {
+    static func == (lhs: SpaceRoomListItem, rhs: SpaceRoomListItem) -> Bool {
         lhs.id == rhs.id
     }
 }
 
-/// Info for a joined channel, similar to HomeScreenRoom but simplified
-struct JoinedChannelInfo: Identifiable, Equatable {
+/// Info for a joined room, similar to HomeScreenRoom but simplified
+struct JoinedRoomInfo: Identifiable, Equatable {
     let id: String
     let name: String
     let avatar: RoomAvatar

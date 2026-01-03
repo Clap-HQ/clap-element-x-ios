@@ -9,12 +9,12 @@
 import Compound
 import SwiftUI
 
-/// A cell for displaying a joined channel in the space channel list.
+/// A cell for displaying a joined room in the space room list.
 /// This mimics the HomeScreenRoomCell style, showing last message, timestamp, badges, etc.
-struct SpaceChannelJoinedCell: View {
+struct SpaceRoomJoinedCell: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
 
-    let info: JoinedChannelInfo
+    let info: JoinedRoomInfo
     let isSelected: Bool
     let mediaProvider: MediaProviderProtocol?
     let action: () -> Void
@@ -143,13 +143,13 @@ struct SpaceChannelJoinedCell: View {
 
 // MARK: - Previews
 
-struct SpaceChannelJoinedCell_Previews: PreviewProvider, TestablePreview {
+struct SpaceRoomJoinedCell_Previews: PreviewProvider, TestablePreview {
     static let mediaProvider = MediaProviderMock(configuration: .init())
 
     static var previews: some View {
         VStack(spacing: 0) {
-            SpaceChannelJoinedCell(
-                info: JoinedChannelInfo(
+            SpaceRoomJoinedCell(
+                info: JoinedRoomInfo(
                     id: "!room1:matrix.org",
                     name: "General",
                     avatar: .room(id: "!room1:matrix.org", name: "General", avatarURL: nil),
@@ -166,8 +166,8 @@ struct SpaceChannelJoinedCell_Previews: PreviewProvider, TestablePreview {
                 mediaProvider: mediaProvider
             ) { }
 
-            SpaceChannelJoinedCell(
-                info: JoinedChannelInfo(
+            SpaceRoomJoinedCell(
+                info: JoinedRoomInfo(
                     id: "!room2:matrix.org",
                     name: "Random",
                     avatar: .room(id: "!room2:matrix.org", name: "Random", avatarURL: nil),

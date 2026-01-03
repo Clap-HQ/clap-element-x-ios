@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "Aktivita vlákien";
 "screen_thread_activity_empty_title" = "Žiadne neprečítané vlákna";
 "screen_thread_activity_empty_description" = "Všetko je prečítané!";
-"space_channel_list_joined_section_title" = "Miestnosti, v ktorých ste";
-"space_channel_list_unjoined_section_title" = "Miestnosti, ku ktorým sa môžete pripojiť";
+"space_room_list_joined_section_title" = "Miestnosti, v ktorých ste";
+"space_room_list_unjoined_section_title" = "Miestnosti, ku ktorým sa môžete pripojiť";

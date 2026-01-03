@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "Aktywność wątków";
 "screen_thread_activity_empty_title" = "Brak nieprzeczytanych wątków";
 "screen_thread_activity_empty_description" = "Wszystko przeczytane!";
-"space_channel_list_joined_section_title" = "Pokoje, w których jesteś";
-"space_channel_list_unjoined_section_title" = "Pokoje, do których możesz dołączyć";
+"space_room_list_joined_section_title" = "Pokoje, w których jesteś";
+"space_room_list_unjoined_section_title" = "Pokoje, do których możesz dołączyć";

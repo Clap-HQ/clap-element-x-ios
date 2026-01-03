@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "Активност в нишките";
 "screen_thread_activity_empty_title" = "Няма непрочетени нишки";
 "screen_thread_activity_empty_description" = "Всичко е прочетено!";
-"space_channel_list_joined_section_title" = "Стаи, в които сте";
-"space_channel_list_unjoined_section_title" = "Стаи, към които можете да се присъедините";
+"space_room_list_joined_section_title" = "Стаи, в които сте";
+"space_room_list_unjoined_section_title" = "Стаи, към които можете да се присъедините";

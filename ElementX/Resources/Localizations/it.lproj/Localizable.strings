@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "Attività delle discussioni";
 "screen_thread_activity_empty_title" = "Nessuna discussione non letta";
 "screen_thread_activity_empty_description" = "Sei in pari!";
-"space_channel_list_joined_section_title" = "Stanze a cui partecipi";
-"space_channel_list_unjoined_section_title" = "Stanze a cui puoi unirti";
+"space_room_list_joined_section_title" = "Stanze a cui partecipi";
+"space_room_list_unjoined_section_title" = "Stanze a cui puoi unirti";

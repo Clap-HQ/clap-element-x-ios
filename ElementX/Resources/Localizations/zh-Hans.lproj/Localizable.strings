@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "消息列活动";
 "screen_thread_activity_empty_title" = "没有未读消息列";
 "screen_thread_activity_empty_description" = "您已全部看完！";
-"space_channel_list_joined_section_title" = "您加入的房间";
-"space_channel_list_unjoined_section_title" = "可加入的房间";
+"space_room_list_joined_section_title" = "您加入的房间";
+"space_room_list_unjoined_section_title" = "可加入的房间";

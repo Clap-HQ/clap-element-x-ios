@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "Δραστηριότητα Νημάτων";
 "screen_thread_activity_empty_title" = "Δεν υπάρχουν μη αναγνωσμένα νήματα";
 "screen_thread_activity_empty_description" = "Είσαι ενημερωμένος!";
-"space_channel_list_joined_section_title" = "Δωμάτια στα οποία συμμετέχετε";
-"space_channel_list_unjoined_section_title" = "Δωμάτια στα οποία μπορείτε να συμμετάσχετε";
+"space_room_list_joined_section_title" = "Δωμάτια στα οποία συμμετέχετε";
+"space_room_list_unjoined_section_title" = "Δωμάτια στα οποία μπορείτε να συμμετάσχετε";

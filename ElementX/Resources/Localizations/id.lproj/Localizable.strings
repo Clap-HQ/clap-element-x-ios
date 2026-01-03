@@ -1481,5 +1481,5 @@
 "screen_thread_activity_title" = "Aktivitas Utas";
 "screen_thread_activity_empty_title" = "Tidak ada utas yang belum dibaca";
 "screen_thread_activity_empty_description" = "Anda sudah membaca semuanya!";
-"space_channel_list_joined_section_title" = "Ruangan yang Anda ikuti";
-"space_channel_list_unjoined_section_title" = "Ruangan yang dapat Anda ikuti";
+"space_room_list_joined_section_title" = "Ruangan yang Anda ikuti";
+"space_room_list_unjoined_section_title" = "Ruangan yang dapat Anda ikuti";
