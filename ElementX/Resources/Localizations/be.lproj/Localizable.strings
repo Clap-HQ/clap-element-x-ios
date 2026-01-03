@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Актыўнасць галін";
 "screen_thread_activity_empty_title" = "Няма непрачытаных галін";
 "screen_thread_activity_empty_description" = "Вы ўсё прачыталі!";
+"space_channel_list_joined_section_title" = "Пакоі, у якіх вы знаходзіцеся";
+"space_channel_list_unjoined_section_title" = "Пакоі, да якіх вы можаце далучыцца";

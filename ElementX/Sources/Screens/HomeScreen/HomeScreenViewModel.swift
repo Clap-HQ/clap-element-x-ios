@@ -19,9 +19,19 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
     private let appSettings: AppSettings
     private let notificationManager: NotificationManagerProtocol
     private let userIndicatorController: UserIndicatorControllerProtocol
-    
+
     private let roomSummaryProvider: RoomSummaryProviderProtocol?
-    
+    private var spaceService: SpaceServiceProxyProtocol { userSession.clientProxy.spaceService }
+    private var developerModeSettings: ClapDeveloperModeSettings { ServiceLocator.shared.clapDeveloperModeSettings }
+
+    /// Set of room IDs that belong to any joined space (used to hide them from chat tab)
+    private var spaceChildrenRoomIDs: Set<String> = []
+    /// Holds space room list subscriptions for tracking child rooms
+    private var spaceRoomListProxies: [String: SpaceRoomListProxyProtocol] = [:]
+    private var spaceChildrenCancellables: [String: AnyCancellable] = [:]
+    /// Whether space children tracking has completed initial load
+    private var isSpaceChildrenLoaded = false
+
     private var actionsSubject: PassthroughSubject<HomeScreenViewModelAction, Never> = .init()
     var actions: AnyPublisher<HomeScreenViewModelAction, Never> {
         actionsSubject.eraseToAnyPublisher()
@@ -139,8 +149,10 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             .store(in: &cancellables)
         
         setupRoomListSubscriptions()
-        
-        updateRooms()
+        setupSpaceSubscriptions()
+
+        // updateRooms() will be called by subscriptions
+        // When groupSpaceChannels is enabled, rooms will be updated after space tracking completes
     }
     
     // MARK: - Public
@@ -149,6 +161,8 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         switch viewAction {
         case .selectRoom(let roomIdentifier):
             actionsSubject.send(.presentRoom(roomIdentifier: roomIdentifier))
+        case .selectSpace(let spaceID):
+            Task { await selectSpace(spaceID: spaceID) }
         case .showRoomDetails(let roomIdentifier):
             actionsSubject.send(.presentRoomDetails(roomIdentifier: roomIdentifier))
         case .leaveRoom(let roomIdentifier):
@@ -271,28 +285,187 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             }
             .store(in: &cancellables)
     }
+
+    private func setupSpaceSubscriptions() {
+        // React to groupSpaceChannels setting changes
+        developerModeSettings.$groupSpaceRooms
+            .combineLatest(spaceService.joinedSpacesPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _, spaces in
+                guard let self else { return }
+                updateSpaces(from: spaces)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func updateSpaces(from spaceProxies: [SpaceRoomProxyProtocol]) {
+        // Only show space cells if groupSpaceChannels is enabled
+        if developerModeSettings.groupSpaceRooms {
+            // Track child rooms for each space to hide them from main chat list
+            // state.spaces will be set in rebuildSpacesWithAggregatedInfo() after tracking completes
+            Task { [weak self] in
+                await self?.updateSpaceChildrenTracking(for: spaceProxies)
+            }
+        } else {
+            state.spaces = []
+            // Clear tracking when feature is disabled
+            spaceRoomListProxies.removeAll()
+            spaceChildrenCancellables.removeAll()
+            spaceChildrenRoomIDs.removeAll()
+            isSpaceChildrenLoaded = true // No need to wait when grouping is disabled
+            updateRooms()
+        }
+    }
+
+    private func updateSpaceChildrenTracking(for spaceProxies: [SpaceRoomProxyProtocol]) async {
+        let currentSpaceIDs = Set(spaceProxies.map(\.id))
+        let existingSpaceIDs = Set(spaceRoomListProxies.keys)
+
+        // Remove tracking for spaces that are no longer joined
+        let removedSpaceIDs = existingSpaceIDs.subtracting(currentSpaceIDs)
+        await MainActor.run {
+            for spaceID in removedSpaceIDs {
+                spaceRoomListProxies.removeValue(forKey: spaceID)
+                spaceChildrenCancellables.removeValue(forKey: spaceID)
+            }
+        }
+
+        // Add tracking for new spaces
+        let newSpaceIDs = currentSpaceIDs.subtracting(existingSpaceIDs)
+        for spaceID in newSpaceIDs {
+            switch await spaceService.spaceRoomList(spaceID: spaceID) {
+            case .success(let spaceRoomListProxy):
+                // Paginate to load all children
+                await spaceRoomListProxy.paginate()
+
+                await MainActor.run {
+                    spaceRoomListProxies[spaceID] = spaceRoomListProxy
+
+                    // Subscribe to space's child rooms
+                    let cancellable = spaceRoomListProxy.spaceRoomsPublisher
+                        .receive(on: DispatchQueue.main)
+                        .sink { [weak self] _ in
+                            self?.rebuildSpaceChildrenRoomIDs()
+                        }
+                    spaceChildrenCancellables[spaceID] = cancellable
+                }
+
+            case .failure(let error):
+                MXLog.error("Failed to get space room list for tracking children: \(error)")
+            }
+        }
+
+        // Rebuild after any changes or on initial load
+        await MainActor.run {
+            // Mark as loaded after first successful tracking setup
+            let wasLoaded = isSpaceChildrenLoaded
+            isSpaceChildrenLoaded = true
+
+            rebuildSpaceChildrenRoomIDs()
+
+            // If this was the first load, update room list mode
+            if !wasLoaded, let roomSummaryProvider {
+                updateRoomListMode(with: roomSummaryProvider.statePublisher.value)
+            }
+        }
+    }
+
+    private func rebuildSpaceChildrenRoomIDs() {
+        var newSet = Set<String>()
+        for (_, proxy) in spaceRoomListProxies {
+            // Only include joined rooms (these are the ones that appear in the main chat list)
+            let joinedChildIDs = proxy.spaceRoomsPublisher.value
+                .filter { $0.state == .joined && !$0.isSpace }
+                .map(\.id)
+            newSet.formUnion(joinedChildIDs)
+        }
+        spaceChildrenRoomIDs = newSet
+        rebuildSpacesWithAggregatedInfo()
+        updateRooms()
+    }
+
+    /// Rebuilds spaces with aggregated badge and last message date info from child rooms
+    private func rebuildSpacesWithAggregatedInfo() {
+        guard let roomSummaryProvider else { return }
+
+        let summaries = roomSummaryProvider.roomListPublisher.value
+        let summaryByID = Dictionary(uniqueKeysWithValues: summaries.map { ($0.id, $0) })
+
+        state.spaces = spaceRoomListProxies.compactMap { spaceID, proxy -> HomeScreenSpace? in
+            guard let spaceProxy = spaceService.joinedSpacesPublisher.value.first(where: { $0.id == spaceID }) else {
+                return nil
+            }
+
+            let joinedChildRooms = proxy.spaceRoomsPublisher.value.filter { $0.state == .joined && !$0.isSpace }
+            let childSummaries = joinedChildRooms.compactMap { summaryByID[$0.id] }
+
+            // Aggregate last message date (most recent among all children)
+            let lastMessageDate = childSummaries.compactMap(\.lastMessageDate).max()
+
+            // Aggregate badges from child rooms
+            var hasUnreadMessages = false
+            var hasUnreadMentions = false
+            var hasUnreadNotifications = false
+            var isMarkedUnread = false
+            var allMuted = !childSummaries.isEmpty
+
+            for summary in childSummaries {
+                hasUnreadMessages = hasUnreadMessages || summary.hasUnreadMessages
+                hasUnreadMentions = hasUnreadMentions || summary.hasUnreadMentions
+                hasUnreadNotifications = hasUnreadNotifications || summary.hasUnreadNotifications
+                isMarkedUnread = isMarkedUnread || summary.isMarkedUnread
+                if !summary.isMuted {
+                    allMuted = false
+                }
+            }
+
+            let isDotShown = hasUnreadMessages || hasUnreadMentions || hasUnreadNotifications || isMarkedUnread
+            let isMentionShown = hasUnreadMentions && !allMuted
+            let isHighlighted = isMarkedUnread || (!allMuted && (hasUnreadNotifications || hasUnreadMentions))
+
+            return HomeScreenSpace(
+                spaceProxy: spaceProxy,
+                lastMessageDate: lastMessageDate,
+                badges: .init(isDotShown: isDotShown, isMentionShown: isMentionShown, isMuteShown: allMuted),
+                isHighlighted: isHighlighted
+            )
+        }
+    }
+
+    private func selectSpace(spaceID: String) async {
+        switch await spaceService.spaceRoomList(spaceID: spaceID) {
+        case .success(let spaceRoomListProxy):
+            actionsSubject.send(.presentSpaceChannelList(spaceRoomListProxy))
+        case .failure(let error):
+            MXLog.error("Failed to get space room list: \(error)")
+            displayError()
+        }
+    }
     
     private func updateRoomListMode(with roomSummaryProviderState: RoomSummaryProviderState) {
         let isLoadingData = !roomSummaryProviderState.isLoaded
         let hasNoRooms = roomSummaryProviderState.isLoaded && roomSummaryProviderState.totalNumberOfRooms == 0
-        
+
+        // When groupSpaceRooms is enabled, wait for space children to load before showing rooms
+        let isWaitingForSpaceChildren = developerModeSettings.groupSpaceRooms && !isSpaceChildrenLoaded
+
         var roomListMode = state.roomListMode
-        if isLoadingData {
+        if isLoadingData || isWaitingForSpaceChildren {
             roomListMode = .skeletons
         } else if hasNoRooms {
             roomListMode = .empty
         } else {
             roomListMode = .rooms
         }
-        
+
         guard roomListMode != state.roomListMode else {
             return
         }
-        
+
         if roomListMode == .rooms, state.roomListMode == .skeletons {
             analyticsService.signpost.endFirstRooms()
         }
-        
+
         state.roomListMode = roomListMode
         
         MXLog.info("Received room summary provider update, setting view room list mode to \"\(state.roomListMode)\"")
@@ -310,11 +483,16 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             MXLog.error("Room summary provider unavailable")
             return
         }
-        
+
         var rooms = [HomeScreenRoom]()
         let seenInvites = appSettings.seenInvites
         
         for summary in roomSummaryProvider.roomListPublisher.value {
+            // Hide rooms that belong to any joined space
+            if spaceChildrenRoomIDs.contains(summary.id) {
+                continue
+            }
+
             let room = HomeScreenRoom(summary: summary,
                                       hideUnreadMessagesBadge: appSettings.hideUnreadMessagesBadge,
                                       seenInvites: seenInvites)

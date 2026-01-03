@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Gijų veikla";
 "screen_thread_activity_empty_title" = "Nėra neskaitytų gijų";
 "screen_thread_activity_empty_description" = "Viską perskaitėte!";
+"space_channel_list_joined_section_title" = "Kambariai, kuriuose esate";
+"space_channel_list_unjoined_section_title" = "Kambariai, prie kurių galite prisijungti";

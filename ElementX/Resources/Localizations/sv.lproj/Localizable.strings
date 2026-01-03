@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Trådaktivitet";
 "screen_thread_activity_empty_title" = "Inga olästa trådar";
 "screen_thread_activity_empty_description" = "Du är helt i kapp!";
+"space_channel_list_joined_section_title" = "Rum du är med i";
+"space_channel_list_unjoined_section_title" = "Rum du kan gå med i";

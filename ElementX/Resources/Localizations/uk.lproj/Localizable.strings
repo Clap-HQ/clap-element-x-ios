@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Активність гілок";
 "screen_thread_activity_empty_title" = "Немає непрочитаних гілок";
 "screen_thread_activity_empty_description" = "Ви все прочитали!";
+"space_channel_list_joined_section_title" = "Кімнати, в яких ви перебуваєте";
+"space_channel_list_unjoined_section_title" = "Кімнати, до яких ви можете приєднатися";

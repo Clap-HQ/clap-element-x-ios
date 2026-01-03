@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Ketjujen toiminta";
 "screen_thread_activity_empty_title" = "Ei lukemattomia ketjuja";
 "screen_thread_activity_empty_description" = "Olet ajan tasalla!";
+"space_channel_list_joined_section_title" = "Huoneet, joissa olet";
+"space_channel_list_unjoined_section_title" = "Huoneet, joihin voit liittyä";

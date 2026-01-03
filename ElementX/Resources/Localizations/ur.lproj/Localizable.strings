@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "تھریڈ سرگرمی";
 "screen_thread_activity_empty_title" = "کوئی غیر پڑھے تھریڈز نہیں";
 "screen_thread_activity_empty_description" = "آپ نے سب پڑھ لیا!";
+"space_channel_list_joined_section_title" = "آپ جن کمروں میں ہیں";
+"space_channel_list_unjoined_section_title" = "کمرے جن میں آپ شامل ہو سکتے ہیں";

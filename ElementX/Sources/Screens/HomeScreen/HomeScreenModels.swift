@@ -16,6 +16,7 @@ enum HomeScreenViewModelAction {
     case presentReportRoom(roomIdentifier: String)
     case presentDeclineAndBlock(userID: String, roomID: String)
     case presentSpace(SpaceRoomListProxyProtocol)
+    case presentSpaceChannelList(SpaceRoomListProxyProtocol)
     case roomLeft(roomIdentifier: String)
     case transferOwnership(roomIdentifier: String)
     case presentSecureBackupSettings
@@ -30,6 +31,7 @@ enum HomeScreenViewModelAction {
 
 enum HomeScreenViewAction {
     case selectRoom(roomIdentifier: String)
+    case selectSpace(spaceID: String)
     case showRoomDetails(roomIdentifier: String)
     case leaveRoom(roomIdentifier: String)
     case confirmLeaveRoom(roomIdentifier: String)
@@ -46,7 +48,7 @@ enum HomeScreenViewAction {
     case markRoomAsUnread(roomIdentifier: String)
     case markRoomAsRead(roomIdentifier: String)
     case markRoomAsFavourite(roomIdentifier: String, isFavourite: Bool)
-    
+
     case acceptInvite(roomIdentifier: String)
     case declineInvite(roomIdentifier: String)
 }
@@ -92,52 +94,76 @@ struct HomeScreenViewState: BindableState {
     let userID: String
     var userDisplayName: String?
     var userAvatarURL: URL?
-    
+
     var securityBannerMode = HomeScreenSecurityBannerMode.none
     var shouldShowNewSoundBanner = false
-    
+
     var requiresExtraAccountSetup = false
-        
+
     var rooms: [HomeScreenRoom] = []
+    var spaces: [HomeScreenSpace] = []
     var roomListMode: HomeScreenRoomListMode = .skeletons
-    
+
     var hasPendingInvitations = false
-        
+
     var selectedRoomID: String?
-    
+
     var hideInviteAvatars = false
-    
+
     var reportRoomEnabled = false
-    
+
+    /// Combined list of rooms and spaces for display, sorted by last message date
+    var visibleItems: [HomeScreenListItem] {
+        if roomListMode == .skeletons {
+            return placeholderRooms.map { .room($0) }
+        }
+
+        // 검색 중이거나 필터링 중일 때는 스페이스를 표시하지 않음
+        if bindings.isSearchFieldFocused || bindings.filtersState.isFiltering {
+            return rooms.map { .room($0) }
+        }
+
+        // Combine spaces and rooms, then sort by last message date (most recent first)
+        let spaceItems = spaces.map { HomeScreenListItem.space($0) }
+        let roomItems = rooms.map { HomeScreenListItem.room($0) }
+        let allItems = spaceItems + roomItems
+
+        return allItems.sorted { lhs, rhs in
+            let lhsDate = lhs.lastMessageDate ?? .distantPast
+            let rhsDate = rhs.lastMessageDate ?? .distantPast
+            return lhsDate > rhsDate
+        }
+    }
+
     var visibleRooms: [HomeScreenRoom] {
         if roomListMode == .skeletons {
             return placeholderRooms
         }
-        
+
         return rooms
     }
-        
+
     var bindings: HomeScreenViewStateBindings
-    
+
     var placeholderRooms: [HomeScreenRoom] {
         (1...10).map { _ in
             HomeScreenRoom.placeholder()
         }
     }
-    
+
     // Used to hide all the rooms when the search field is focused and the query is empty
     var shouldHideRoomList: Bool {
         bindings.isSearchFieldFocused && bindings.searchQuery.isEmpty
     }
-    
+
     var shouldShowEmptyFilterState: Bool {
         !bindings.isSearchFieldFocused && bindings.filtersState.isFiltering && visibleRooms.isEmpty
     }
-    
+
     var shouldShowFilters: Bool {
         !bindings.isSearchFieldFocused && roomListMode == .rooms
     }
-    
+
     var shouldShowBanner: Bool {
         securityBannerMode.isShown || shouldShowNewSoundBanner
     }
@@ -200,9 +226,11 @@ struct HomeScreenRoom: Identifiable, Equatable {
     let isFavourite: Bool
     
     let timestamp: String?
-    
+
+    let lastMessageDate: Date?
+
     let lastMessage: AttributedString?
-    
+
     enum LastMessageState { case sending, failed }
     let lastMessageState: LastMessageState?
     
@@ -233,6 +261,7 @@ struct HomeScreenRoom: Identifiable, Equatable {
                        isHighlighted: false,
                        isFavourite: false,
                        timestamp: "Now",
+                       lastMessageDate: nil,
                        lastMessage: placeholderLastMessage,
                        lastMessageState: nil,
                        avatar: .room(id: "", name: "", avatarURL: nil),
@@ -273,6 +302,7 @@ extension HomeScreenRoom {
                   isHighlighted: isHighlighted,
                   isFavourite: summary.isFavourite,
                   timestamp: summary.lastMessageDate?.formattedMinimal(),
+                  lastMessageDate: summary.lastMessageDate,
                   lastMessage: summary.lastMessage,
                   lastMessageState: summary.homeScreenLastMessageState,
                   avatar: summary.avatar,
@@ -291,6 +321,84 @@ private extension RoomSummary {
             case .failed: .failed
             case .none: .none
             }
+        }
+    }
+}
+
+// MARK: - HomeScreenSpace
+
+struct HomeScreenSpace: Identifiable, Equatable {
+    let id: String
+    let name: String
+    let avatarURL: URL?
+    let memberCount: Int
+    let childrenCount: Int
+
+    /// The most recent message date among all joined child rooms (for sorting)
+    let lastMessageDate: Date?
+
+    /// Badge information aggregated from child rooms
+    let badges: Badges
+    struct Badges: Equatable {
+        let isDotShown: Bool
+        let isMentionShown: Bool
+        let isMuteShown: Bool
+    }
+
+    /// Whether this space has unread notifications (for highlighting)
+    let isHighlighted: Bool
+
+    var avatar: RoomAvatar {
+        .space(id: id, name: name, avatarURL: avatarURL)
+    }
+
+    init(spaceProxy: SpaceRoomProxyProtocol,
+         lastMessageDate: Date? = nil,
+         badges: Badges = .init(isDotShown: false, isMentionShown: false, isMuteShown: false),
+         isHighlighted: Bool = false) {
+        self.id = spaceProxy.id
+        self.name = spaceProxy.name
+        self.avatarURL = spaceProxy.avatarURL
+        self.memberCount = spaceProxy.joinedMembersCount
+        self.childrenCount = spaceProxy.childrenCount
+        self.lastMessageDate = lastMessageDate
+        self.badges = badges
+        self.isHighlighted = isHighlighted
+    }
+
+    init(id: String, name: String, avatarURL: URL?, memberCount: Int, childrenCount: Int,
+         lastMessageDate: Date? = nil,
+         badges: Badges = .init(isDotShown: false, isMentionShown: false, isMuteShown: false),
+         isHighlighted: Bool = false) {
+        self.id = id
+        self.name = name
+        self.avatarURL = avatarURL
+        self.memberCount = memberCount
+        self.childrenCount = childrenCount
+        self.lastMessageDate = lastMessageDate
+        self.badges = badges
+        self.isHighlighted = isHighlighted
+    }
+}
+
+// MARK: - HomeScreenListItem
+
+enum HomeScreenListItem: Identifiable, Equatable {
+    case room(HomeScreenRoom)
+    case space(HomeScreenSpace)
+
+    var id: String {
+        switch self {
+        case .room(let room): "room-\(room.id)"
+        case .space(let space): "space-\(space.id)"
+        }
+    }
+
+    /// The last message date for sorting (rooms and spaces together)
+    var lastMessageDate: Date? {
+        switch self {
+        case .room(let room): room.lastMessageDate
+        case .space(let space): space.lastMessageDate
         }
     }
 }

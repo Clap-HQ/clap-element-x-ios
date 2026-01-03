@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Atividade de tópicos";
 "screen_thread_activity_empty_title" = "Nenhum tópico não lido";
 "screen_thread_activity_empty_description" = "Você está em dia!";
+"space_channel_list_joined_section_title" = "Salas em que você está";
+"space_channel_list_unjoined_section_title" = "Salas que você pode entrar";

@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Iplar faoliyati";
 "screen_thread_activity_empty_title" = "O'qilmagan iplar yo'q";
 "screen_thread_activity_empty_description" = "Hammasini o'qib chiqdingiz!";
+"space_channel_list_joined_section_title" = "Siz aʼzo boʻlgan xonalar";
+"space_channel_list_unjoined_section_title" = "Qoʻshilishingiz mumkin boʻlgan xonalar";

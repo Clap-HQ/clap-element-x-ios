@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Thread-activiteit";
 "screen_thread_activity_empty_title" = "Geen ongelezen threads";
 "screen_thread_activity_empty_description" = "Je bent helemaal bij!";
+"space_channel_list_joined_section_title" = "Kamers waar je in zit";
+"space_channel_list_unjoined_section_title" = "Kamers waar je aan kunt deelnemen";

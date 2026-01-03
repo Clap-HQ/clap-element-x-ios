@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Thread Activity";
 "screen_thread_activity_empty_title" = "No unread threads";
 "screen_thread_activity_empty_description" = "You're all caught up!";
+"space_channel_list_joined_section_title" = "Rooms you're in";
+"space_channel_list_unjoined_section_title" = "Rooms you can join";

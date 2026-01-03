@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "討論串活動";
 "screen_thread_activity_empty_title" = "沒有未讀討論串";
 "screen_thread_activity_empty_description" = "您已全部看完！";
+"space_channel_list_joined_section_title" = "您加入的房間";
+"space_channel_list_unjoined_section_title" = "可加入的房間";

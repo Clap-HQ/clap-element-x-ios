@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Actividad de hilos";
 "screen_thread_activity_empty_title" = "No hay hilos sin leer";
 "screen_thread_activity_empty_description" = "¡Estás al día!";
+"space_channel_list_joined_section_title" = "Salas en las que estás";
+"space_channel_list_unjoined_section_title" = "Salas a las que puedes unirte";

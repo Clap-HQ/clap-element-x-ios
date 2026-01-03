@@ -3103,6 +3103,10 @@ internal enum L10n {
   internal static func settingsVersionNumber(_ p1: Any, _ p2: Any) -> String {
     return L10n.tr("Localizable", "settings_version_number", String(describing: p1), String(describing: p2))
   }
+  /// Rooms you're in
+  internal static var spaceChannelListJoinedSectionTitle: String { return L10n.tr("Localizable", "space_channel_list_joined_section_title") }
+  /// Rooms you can join
+  internal static var spaceChannelListUnjoinedSectionTitle: String { return L10n.tr("Localizable", "space_channel_list_unjoined_section_title") }
   /// (avatar was changed too)
   internal static var stateEventAvatarChangedToo: String { return L10n.tr("Localizable", "state_event_avatar_changed_too") }
   /// %1$@ changed their avatar

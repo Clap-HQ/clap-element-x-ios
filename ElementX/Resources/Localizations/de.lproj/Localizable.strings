@@ -1481,3 +1481,5 @@
 "screen_thread_activity_title" = "Thread-Aktivität";
 "screen_thread_activity_empty_title" = "Keine ungelesenen Threads";
 "screen_thread_activity_empty_description" = "Du bist auf dem neuesten Stand!";
+"space_channel_list_joined_section_title" = "Räume, denen Sie beigetreten sind";
+"space_channel_list_unjoined_section_title" = "Räume, denen Sie beitreten können";

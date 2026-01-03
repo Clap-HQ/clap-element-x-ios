@@ -1481,3 +1481,6 @@
 "screen_thread_activity_title" = "فعالیت رشته‌ها";
 "screen_thread_activity_empty_title" = "رشته خوانده نشده‌ای وجود ندارد";
 "screen_thread_activity_empty_description" = "همه چیز را خوانده‌اید!";
+"space_channel_list_joined_section_title" = "اتاق‌هایی که عضو هستید";
+"space_channel_list_unjoined_section_title" = "اتاق‌هایی که می‌توانید بپیوندید";
+
