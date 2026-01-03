@@ -399,8 +399,15 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             let joinedChildRooms = proxy.spaceRoomsPublisher.value.filter { $0.state == .joined && !$0.isSpace }
             let childSummaries = joinedChildRooms.compactMap { summaryByID[$0.id] }
 
-            // Aggregate last message date (most recent among all children)
-            let lastMessageDate = childSummaries.compactMap(\.lastMessageDate).max()
+            // Find the most recent message among all children
+            let mostRecentSummary = childSummaries
+                .filter { $0.lastMessageDate != nil }
+                .max { ($0.lastMessageDate ?? .distantPast) < ($1.lastMessageDate ?? .distantPast) }
+
+            let lastMessageDate = mostRecentSummary?.lastMessageDate
+            let timestamp = lastMessageDate?.formattedMinimal()
+            let lastMessage = mostRecentSummary?.lastMessage
+            let lastMessageRoomName = mostRecentSummary?.name
 
             // Aggregate badges from child rooms
             var hasUnreadMessages = false
@@ -426,6 +433,9 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             return HomeScreenSpace(
                 spaceProxy: spaceProxy,
                 lastMessageDate: lastMessageDate,
+                timestamp: timestamp,
+                lastMessage: lastMessage,
+                lastMessageRoomName: lastMessageRoomName,
                 badges: .init(isDotShown: isDotShown, isMentionShown: isMentionShown, isMuteShown: allMuted),
                 isHighlighted: isHighlighted
             )
@@ -500,6 +510,11 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         }
 
         state.rooms = rooms
+
+        // Also update space cells when room summaries change (for last message, badges, etc.)
+        if developerModeSettings.groupSpaceChannels, !spaceRoomListProxies.isEmpty {
+            rebuildSpacesWithAggregatedInfo()
+        }
     }
     
     private func markRoomAsFavourite(_ roomID: String, isFavourite: Bool) async {

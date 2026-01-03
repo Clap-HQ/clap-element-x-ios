@@ -260,15 +260,20 @@ When `groupSpaceChannels` is enabled:
    - Space cells appear in the chat list, sorted by most recent child room activity
    - Channels belonging to spaces are hidden from the main chat list
    - Aggregated unread badges are shown on space cells
+   - Real-time updates: new messages in child rooms update space cell immediately
 
-2. **Space channel list**:
+2. **Space cell UI layout**:
+   - Line 1: `SpaceName • 25` (member count) + timestamp (or chevron if no messages)
+   - Line 2: `[ChannelName] Last message...` (up to 2 lines)
+
+3. **Space channel list**:
    - Tapping a space cell navigates to `SpaceChannelListScreen`
    - Shows joined channels (with context menu for leave/settings)
    - Shows unjoined channels with join button
 
-3. **Related files**:
-   - `HomeScreenViewModel.swift` - Space children tracking and filtering logic
-   - `HomeScreenSpaceCell.swift` - Space cell UI with badges
+4. **Related files**:
+   - `HomeScreenViewModel.swift` - Space children tracking, filtering, and aggregation logic
+   - `HomeScreenSpaceCell.swift` - Space cell UI with badges and last message
    - `SpaceChannelListScreen/` - Space channel list screen (Coordinator, ViewModel, View)
 
 ### Related Files
