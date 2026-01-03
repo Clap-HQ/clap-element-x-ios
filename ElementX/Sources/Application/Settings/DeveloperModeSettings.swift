@@ -14,7 +14,7 @@ final class DeveloperModeSettings {
     private enum Keys: String {
         case showCustomHomeserver
         case showQRCodeLogin
-        case groupSpaceChannels
+        case groupSpaceRooms
     }
 
     private static var suiteName: String = InfoPlistReader.main.appGroupIdentifier
@@ -33,8 +33,8 @@ final class DeveloperModeSettings {
     @UserPreference(key: Keys.showQRCodeLogin, defaultValue: isClapDev, storageType: .userDefaults(store))
     var showQRCodeLogin
 
-    /// Whether to group space-affiliated channels under space cells in chat tab.
-    /// When enabled, channels belonging to spaces are hidden from the main chat list and shown in space channel list instead.
-    @UserPreference(key: Keys.groupSpaceChannels, defaultValue: true, storageType: .userDefaults(store))
-    var groupSpaceChannels
+    /// Whether to group space-affiliated rooms under space cells in chat tab.
+    /// When enabled, rooms belonging to spaces are hidden from the main chat list and shown in space room list instead.
+    @UserPreference(key: Keys.groupSpaceRooms, defaultValue: true, storageType: .userDefaults(store))
+    var groupSpaceRooms
 }

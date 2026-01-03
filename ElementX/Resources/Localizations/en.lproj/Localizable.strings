@@ -1474,5 +1474,5 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Troubleshoot notifications";
 
-"space_channel_list_joined_section_title" = "Rooms you're in";
-"space_channel_list_unjoined_section_title" = "Rooms you can join";
+"space_room_list_joined_section_title" = "Rooms you're in";
+"space_room_list_unjoined_section_title" = "Rooms you can join";

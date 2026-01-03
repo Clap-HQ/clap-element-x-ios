@@ -9,13 +9,13 @@
 import Compound
 import SwiftUI
 
-struct SpaceChannelListScreen: View {
-    @Bindable var context: SpaceChannelListScreenViewModel.Context
+struct SpaceRoomListScreen: View {
+    @Bindable var context: SpaceRoomListScreenViewModel.Context
 
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
-                channelList
+                roomList
             }
         }
         .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
@@ -29,35 +29,35 @@ struct SpaceChannelListScreen: View {
     }
 
     @ViewBuilder
-    private var channelList: some View {
-        // Joined channels section
-        if context.viewState.hasJoinedChannels {
-            sectionHeader(title: L10n.spaceChannelListJoinedSectionTitle)
+    private var roomList: some View {
+        // Joined rooms section
+        if context.viewState.hasJoinedRooms {
+            sectionHeader(title: L10n.spaceRoomListJoinedSectionTitle)
 
-            ForEach(context.viewState.joinedChannels) { item in
+            ForEach(context.viewState.joinedRooms) { item in
                 if case .joined(let info) = item {
-                    SpaceChannelJoinedCell(info: info,
-                                           isSelected: false,
-                                           mediaProvider: context.mediaProvider) {
-                        context.send(viewAction: .selectChannel(item))
+                    SpaceRoomJoinedCell(info: info,
+                                        isSelected: false,
+                                        mediaProvider: context.mediaProvider) {
+                        context.send(viewAction: .selectRoom(item))
                     }
                     .contextMenu {
-                        joinedChannelContextMenu(for: info)
+                        joinedRoomContextMenu(for: info)
                     }
                 }
             }
         }
 
-        // Unjoined channels section
-        if context.viewState.hasUnjoinedChannels {
-            sectionHeader(title: L10n.spaceChannelListUnjoinedSectionTitle)
+        // Unjoined rooms section
+        if context.viewState.hasUnjoinedRooms {
+            sectionHeader(title: L10n.spaceRoomListUnjoinedSectionTitle)
 
-            ForEach(context.viewState.unjoinedChannels) { item in
+            ForEach(context.viewState.unjoinedRooms) { item in
                 if case .unjoined(let proxy) = item {
-                    SpaceChannelUnjoinedCell(spaceRoomProxy: proxy,
-                                             isJoining: context.viewState.joiningChannelIDs.contains(proxy.id),
-                                             mediaProvider: context.mediaProvider) {
-                        context.send(viewAction: .joinChannel(proxy))
+                    SpaceRoomUnjoinedCell(spaceRoomProxy: proxy,
+                                          isJoining: context.viewState.joiningRoomIDs.contains(proxy.id),
+                                          mediaProvider: context.mediaProvider) {
+                        context.send(viewAction: .joinRoom(proxy))
                     }
                 }
             }
@@ -76,7 +76,7 @@ struct SpaceChannelListScreen: View {
     }
 
     @ViewBuilder
-    private func joinedChannelContextMenu(for info: JoinedChannelInfo) -> some View {
+    private func joinedRoomContextMenu(for info: JoinedRoomInfo) -> some View {
         if info.badges.isDotShown {
             Button {
                 context.send(viewAction: .markAsRead(roomID: info.id))
@@ -162,16 +162,16 @@ struct SpaceChannelListScreen: View {
 
 // MARK: - Previews
 
-struct SpaceChannelListScreen_Previews: PreviewProvider, TestablePreview {
+struct SpaceRoomListScreen_Previews: PreviewProvider, TestablePreview {
     static let viewModel = makeViewModel()
 
     static var previews: some View {
         NavigationStack {
-            SpaceChannelListScreen(context: viewModel.context)
+            SpaceRoomListScreen(context: viewModel.context)
         }
     }
 
-    static func makeViewModel() -> SpaceChannelListScreenViewModel {
+    static func makeViewModel() -> SpaceRoomListScreenViewModel {
         let spaceRoomProxy = SpaceRoomProxyMock(.init(id: "!space:matrix.org",
                                                       name: "Engineering Team",
                                                       isSpace: true,
@@ -184,10 +184,10 @@ struct SpaceChannelListScreen_Previews: PreviewProvider, TestablePreview {
         let clientProxy = ClientProxyMock(.init())
         let userSession = UserSessionMock(.init(clientProxy: clientProxy))
 
-        return SpaceChannelListScreenViewModel(spaceRoomListProxy: spaceRoomListProxy,
-                                               spaceServiceProxy: SpaceServiceProxyMock(.init()),
-                                               userSession: userSession,
-                                               appSettings: AppSettings(),
-                                               userIndicatorController: UserIndicatorControllerMock())
+        return SpaceRoomListScreenViewModel(spaceRoomListProxy: spaceRoomListProxy,
+                                            spaceServiceProxy: SpaceServiceProxyMock(.init()),
+                                            userSession: userSession,
+                                            appSettings: AppSettings(),
+                                            userIndicatorController: UserIndicatorControllerMock())
     }
 }

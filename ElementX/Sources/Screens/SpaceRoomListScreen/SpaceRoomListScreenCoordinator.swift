@@ -9,7 +9,7 @@
 import Combine
 import SwiftUI
 
-struct SpaceChannelListScreenCoordinatorParameters {
+struct SpaceRoomListScreenCoordinatorParameters {
     let spaceRoomListProxy: SpaceRoomListProxyProtocol
     let spaceServiceProxy: SpaceServiceProxyProtocol
     let userSession: UserSessionProtocol
@@ -17,7 +17,7 @@ struct SpaceChannelListScreenCoordinatorParameters {
     let userIndicatorController: UserIndicatorControllerProtocol
 }
 
-enum SpaceChannelListScreenCoordinatorAction {
+enum SpaceRoomListScreenCoordinatorAction {
     case selectRoom(roomID: String)
     case showRoomDetails(roomID: String)
     case dismiss
@@ -26,23 +26,23 @@ enum SpaceChannelListScreenCoordinatorAction {
     case leftSpace
 }
 
-final class SpaceChannelListScreenCoordinator: CoordinatorProtocol {
-    private let parameters: SpaceChannelListScreenCoordinatorParameters
-    private var viewModel: SpaceChannelListScreenViewModelProtocol
+final class SpaceRoomListScreenCoordinator: CoordinatorProtocol {
+    private let parameters: SpaceRoomListScreenCoordinatorParameters
+    private var viewModel: SpaceRoomListScreenViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
 
-    private let actionsSubject: PassthroughSubject<SpaceChannelListScreenCoordinatorAction, Never> = .init()
-    var actionsPublisher: AnyPublisher<SpaceChannelListScreenCoordinatorAction, Never> {
+    private let actionsSubject: PassthroughSubject<SpaceRoomListScreenCoordinatorAction, Never> = .init()
+    var actionsPublisher: AnyPublisher<SpaceRoomListScreenCoordinatorAction, Never> {
         actionsSubject.eraseToAnyPublisher()
     }
 
-    init(parameters: SpaceChannelListScreenCoordinatorParameters) {
+    init(parameters: SpaceRoomListScreenCoordinatorParameters) {
         self.parameters = parameters
-        viewModel = SpaceChannelListScreenViewModel(spaceRoomListProxy: parameters.spaceRoomListProxy,
-                                                    spaceServiceProxy: parameters.spaceServiceProxy,
-                                                    userSession: parameters.userSession,
-                                                    appSettings: parameters.appSettings,
-                                                    userIndicatorController: parameters.userIndicatorController)
+        viewModel = SpaceRoomListScreenViewModel(spaceRoomListProxy: parameters.spaceRoomListProxy,
+                                                 spaceServiceProxy: parameters.spaceServiceProxy,
+                                                 userSession: parameters.userSession,
+                                                 appSettings: parameters.appSettings,
+                                                 userIndicatorController: parameters.userIndicatorController)
     }
 
     func start() {
@@ -68,6 +68,6 @@ final class SpaceChannelListScreenCoordinator: CoordinatorProtocol {
     }
 
     func toPresentable() -> AnyView {
-        AnyView(SpaceChannelListScreen(context: viewModel.context))
+        AnyView(SpaceRoomListScreen(context: viewModel.context))
     }
 }

@@ -9,9 +9,9 @@
 import Compound
 import SwiftUI
 
-/// A cell for displaying an unjoined channel in the space channel list.
-/// This shows the channel info with a Join button, similar to SpaceRoomCell.
-struct SpaceChannelUnjoinedCell: View {
+/// A cell for displaying an unjoined room in the space room list.
+/// This shows the room info with a Join button, similar to SpaceRoomCell.
+struct SpaceRoomUnjoinedCell: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
 
     let spaceRoomProxy: SpaceRoomProxyProtocol
@@ -100,26 +100,26 @@ struct SpaceChannelUnjoinedCell: View {
 
 // MARK: - Previews
 
-struct SpaceChannelUnjoinedCell_Previews: PreviewProvider, TestablePreview {
+struct SpaceRoomUnjoinedCell_Previews: PreviewProvider, TestablePreview {
     static let mediaProvider = MediaProviderMock(configuration: .init())
 
     static var previews: some View {
         VStack(spacing: 0) {
-            SpaceChannelUnjoinedCell(
+            SpaceRoomUnjoinedCell(
                 spaceRoomProxy: SpaceRoomProxyMock(.init(id: "!room1:matrix.org",
-                                                         name: "Design Channel",
+                                                         name: "Design Room",
                                                          isSpace: false,
                                                          joinedMembersCount: 30,
                                                          topic: "Design discussions")),
                 mediaProvider: mediaProvider
             ) { }
 
-            SpaceChannelUnjoinedCell(
+            SpaceRoomUnjoinedCell(
                 spaceRoomProxy: SpaceRoomProxyMock(.init(id: "!room2:matrix.org",
                                                          name: "Marketing",
                                                          isSpace: false,
                                                          joinedMembersCount: 15,
-                                                         topic: "Marketing team channel")),
+                                                         topic: "Marketing team room")),
                 isJoining: true,
                 mediaProvider: mediaProvider
             ) { }

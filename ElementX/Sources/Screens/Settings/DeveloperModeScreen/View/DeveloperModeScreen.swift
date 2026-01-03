@@ -31,9 +31,9 @@ struct DeveloperModeScreen: View {
             }
 
             Section {
-                Toggle(isOn: $context.groupSpaceChannels) {
-                    Text("Group Space Channels")
-                    Text("Hide space-affiliated channels from chat tab and show them under space cells instead")
+                Toggle(isOn: $context.groupSpaceRooms) {
+                    Text("Group Space Rooms")
+                    Text("Hide space-affiliated rooms from chat tab and show them under space cells instead")
                         .font(.compound.bodySM)
                         .foregroundColor(.compound.textSecondary)
                 }

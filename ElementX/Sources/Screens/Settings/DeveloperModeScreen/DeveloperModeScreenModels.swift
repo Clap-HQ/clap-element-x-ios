@@ -31,9 +31,9 @@ struct DeveloperModeScreenViewStateBindings {
         set { developerModeSettings.showQRCodeLogin = newValue }
     }
 
-    var groupSpaceChannels: Bool {
-        get { developerModeSettings.groupSpaceChannels }
-        set { developerModeSettings.groupSpaceChannels = newValue }
+    var groupSpaceRooms: Bool {
+        get { developerModeSettings.groupSpaceRooms }
+        set { developerModeSettings.groupSpaceRooms = newValue }
     }
 }
 

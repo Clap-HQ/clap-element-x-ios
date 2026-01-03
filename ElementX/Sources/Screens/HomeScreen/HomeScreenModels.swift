@@ -16,7 +16,7 @@ enum HomeScreenViewModelAction {
     case presentReportRoom(roomIdentifier: String)
     case presentDeclineAndBlock(userID: String, roomID: String)
     case presentSpace(SpaceRoomListProxyProtocol)
-    case presentSpaceChannelList(SpaceRoomListProxyProtocol)
+    case presentSpaceRoomList(SpaceRoomListProxyProtocol)
     case roomLeft(roomIdentifier: String)
     case transferOwnership(roomIdentifier: String)
     case presentSecureBackupSettings
