@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "建立新的對話或聊天室";
 "screen_roomlist_empty_message" = "從向某人傳送訊息開始。";
 "screen_roomlist_empty_title" = "尚無聊天室。";
+"screen_roomlist_filter_all" = "全部";
 "screen_roomlist_filter_favourites" = "我的最愛";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "您可以在聊天設定中將聊天新增至收藏。\n目前，您可以取消選取篩選條件以檢視其他聊天";
 "screen_roomlist_filter_favourites_empty_state_title" = "您尚無收藏聊天";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "您尚無任何私人訊息";
 "screen_roomlist_filter_rooms" = "聊天室";
 "screen_roomlist_filter_rooms_empty_state_title" = "您尚未進入任何聊天室";
+"screen_roomlist_filter_spaces" = "空間";
+"screen_roomlist_filter_spaces_empty_state_title" = "您尚未加入任何空間";
 "screen_roomlist_filter_unreads" = "未讀";
 "screen_roomlist_filter_unreads_empty_state_title" = "恭喜！\n您沒有任何未讀的訊息！";
 "screen_roomlist_main_space_title" = "所有聊天室";

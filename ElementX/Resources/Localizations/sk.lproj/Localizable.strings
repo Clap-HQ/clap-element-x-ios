@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "Vytvorte novú konverzáciu alebo miestnosť";
 "screen_roomlist_empty_message" = "Začnite tým, že niekomu pošlete správu.";
 "screen_roomlist_empty_title" = "Zatiaľ žiadne konverzácie.";
+"screen_roomlist_filter_all" = "Všetko";
 "screen_roomlist_filter_favourites" = "Obľúbené";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Môžete pridať konverzáciu medzi obľúbené v nastaveniach konverzácie.\nZatiaľ môžete zrušiť výber filtrov, aby ste videli ostatné konverzácie";
 "screen_roomlist_filter_favourites_empty_state_title" = "Zatiaľ nemáte obľúbené konverzácie";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Zatiaľ nemáte žiadne priame správy";
 "screen_roomlist_filter_rooms" = "Miestnosti";
 "screen_roomlist_filter_rooms_empty_state_title" = "Zatiaľ ešte nie ste v žiadnej miestnosti";
+"screen_roomlist_filter_spaces" = "Priestory";
+"screen_roomlist_filter_spaces_empty_state_title" = "Zatiaľ ešte nie ste v žiadnom priestore";
 "screen_roomlist_filter_unreads" = "Neprečítané";
 "screen_roomlist_filter_unreads_empty_state_title" = "Gratulujeme!\nNemáte žiadne neprečítané správy!";
 "screen_roomlist_main_space_title" = "Všetky konverzácie";

@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "Luo uusi keskustelu tai huone";
 "screen_roomlist_empty_message" = "Aloita lähettämällä viesti jollekin.";
 "screen_roomlist_empty_title" = "Sinulla ei ole vielä keskusteluja.";
+"screen_roomlist_filter_all" = "Kaikki";
 "screen_roomlist_filter_favourites" = "Suosikit";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Voit lisätä keskustelun suosikkeihisi keskustelun asetuksissa.\nToistaiseksi voit poistaa suodattimien valinnan, jotta näet muut keskustelut.";
 "screen_roomlist_filter_favourites_empty_state_title" = "Sinulla ei ole vielä suosikkikeskusteluja";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Sinulla ei ole vielä yhtään yksityisviestiä";
 "screen_roomlist_filter_rooms" = "Huoneet";
 "screen_roomlist_filter_rooms_empty_state_title" = "Et ole vielä missään huoneessa";
+"screen_roomlist_filter_spaces" = "Tilat";
+"screen_roomlist_filter_spaces_empty_state_title" = "Et ole vielä missään tilassa";
 "screen_roomlist_filter_unreads" = "Lukemattomat";
 "screen_roomlist_filter_unreads_empty_state_title" = "Onnittelut!\nSinulla ei ole lukemattomia viestejä!";
 "screen_roomlist_main_space_title" = "Keskustelut";

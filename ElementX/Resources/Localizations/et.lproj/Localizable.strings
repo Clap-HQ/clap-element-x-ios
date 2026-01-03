@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "Loo uus vestlus või jututuba";
 "screen_roomlist_empty_message" = "Alustamiseks saada kellelegi sõnum.";
 "screen_roomlist_empty_title" = "Veel pole vestlusi.";
+"screen_roomlist_filter_all" = "Kõik";
 "screen_roomlist_filter_favourites" = "Lemmikud";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Vestluse seadistusest saad ta määrata lemmikuks.\nAga seni... oma teiste vestluste nägemiseks pead eemaldama filtrid";
 "screen_roomlist_filter_favourites_empty_state_title" = "Sul veel pole lemmikvestlusi";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Sul pole veel otsevestlusi";
 "screen_roomlist_filter_rooms" = "Jututoad";
 "screen_roomlist_filter_rooms_empty_state_title" = "Sa veel ei osale mitte üheski jututoas";
+"screen_roomlist_filter_spaces" = "Kogukonnakeskused";
+"screen_roomlist_filter_spaces_empty_state_title" = "Sa veel ei osale mitte üheski kogukonnakeskuses";
 "screen_roomlist_filter_unreads" = "Lugemata";
 "screen_roomlist_filter_unreads_empty_state_title" = "Õnnitleme!\nSul pole ühtegi lugemata sõnumit!";
 "screen_roomlist_main_space_title" = "Vestlused";

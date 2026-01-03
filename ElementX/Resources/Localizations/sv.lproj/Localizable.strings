@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "Skapa en ny konversation eller ett nytt rum";
 "screen_roomlist_empty_message" = "Kom igång genom att skicka meddelanden till någon.";
 "screen_roomlist_empty_title" = "Inga chattar än.";
+"screen_roomlist_filter_all" = "Alla";
 "screen_roomlist_filter_favourites" = "Favoriter";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Du kan lägga till en chatt till dina favoriter i chattinställningarna.\nFör tillfället kan du avmarkera filter för att se dina andra chattar";
 "screen_roomlist_filter_favourites_empty_state_title" = "Du har inga favoritchattar än";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Du har inga DM:er än";
 "screen_roomlist_filter_rooms" = "Rum";
 "screen_roomlist_filter_rooms_empty_state_title" = "Du är inte i något rum än";
+"screen_roomlist_filter_spaces" = "Utrymmen";
+"screen_roomlist_filter_spaces_empty_state_title" = "Du är inte i något utrymme än";
 "screen_roomlist_filter_unreads" = "Olästa";
 "screen_roomlist_filter_unreads_empty_state_title" = "Grattis!\nDu har inga olästa meddelanden!";
 "screen_roomlist_main_space_title" = "Alla chattar";

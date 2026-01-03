@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "Yeni bir sohbet veya oda oluşturun";
 "screen_roomlist_empty_message" = "Birine mesaj göndererek başla.";
 "screen_roomlist_empty_title" = "Henüz sohbet yok.";
+"screen_roomlist_filter_all" = "Tümü";
 "screen_roomlist_filter_favourites" = "Favoriler";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Sohbet ayarlarından bir sohbeti favorilerinize ekleyebilirsiniz.\nŞimdilik, diğer sohbetlerinizi görmek için filtrelerin seçimini kaldırabilirsiniz";
 "screen_roomlist_filter_favourites_empty_state_title" = "Henüz favori sohbetleriniz yok";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Henüz hiç DM'niz yok";
 "screen_roomlist_filter_rooms" = "Odalar";
 "screen_roomlist_filter_rooms_empty_state_title" = "Henüz herhangi bir odada değilsiniz";
+"screen_roomlist_filter_spaces" = "Uzaylar";
+"screen_roomlist_filter_spaces_empty_state_title" = "Henüz herhangi bir uzayda değilsiniz";
 "screen_roomlist_filter_unreads" = "Okunmamış";
 "screen_roomlist_filter_unreads_empty_state_title" = "Tebrikler!\nOkunmamış mesajınız yok!";
 "screen_roomlist_main_space_title" = "Sohbetler";

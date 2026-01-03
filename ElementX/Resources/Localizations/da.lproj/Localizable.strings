@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "Opret en ny samtale eller et nyt rum";
 "screen_roomlist_empty_message" = "Kom i gang ved at sende en besked til nogen.";
 "screen_roomlist_empty_title" = "Ingen samtaler endnu.";
+"screen_roomlist_filter_all" = "Alle";
 "screen_roomlist_filter_favourites" = "Favoritter";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Du kan tilføje en samtale til dine favoritter i samtaleindstillingerne.\nFor nu kan du fravælge filtre for at se dine andre samtaler";
 "screen_roomlist_filter_favourites_empty_state_title" = "Du har endnu ingen foretrukne samtaler";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Du har ingen DM'er endnu";
 "screen_roomlist_filter_rooms" = "Rum";
 "screen_roomlist_filter_rooms_empty_state_title" = "Du er ikke i noget rum endnu";
+"screen_roomlist_filter_spaces" = "Rum";
+"screen_roomlist_filter_spaces_empty_state_title" = "Du er ikke i noget rum endnu";
 "screen_roomlist_filter_unreads" = "Ulæste";
 "screen_roomlist_filter_unreads_empty_state_title" = "Tillykke!\nDu har ingen ulæste beskeder!";
 "screen_roomlist_main_space_title" = "Samtaler";

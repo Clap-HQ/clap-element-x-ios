@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "Utwórz nową rozmowę lub pokój";
 "screen_roomlist_empty_message" = "Wyślij komuś wiadomość, aby rozpocząć.";
 "screen_roomlist_empty_title" = "Brak czatów.";
+"screen_roomlist_filter_all" = "Wszystko";
 "screen_roomlist_filter_favourites" = "Ulubione";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Możesz dodać czat do ulubionych w ustawieniach czatu.\nNa razie możesz wyczyścić filtry, aby zobaczyć pozostałe czaty";
 "screen_roomlist_filter_favourites_empty_state_title" = "Nie masz jeszcze ulubionych czatów";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Nie masz jeszcze żadnych PW";
 "screen_roomlist_filter_rooms" = "Pokoje";
 "screen_roomlist_filter_rooms_empty_state_title" = "Nie jesteś jeszcze w żadnym pokoju";
+"screen_roomlist_filter_spaces" = "Przestrzenie";
+"screen_roomlist_filter_spaces_empty_state_title" = "Nie jesteś jeszcze w żadnej przestrzeni";
 "screen_roomlist_filter_unreads" = "Nieprzeczytane";
 "screen_roomlist_filter_unreads_empty_state_title" = "Gratulacje!\nNie masz żadnych nieprzeczytanych wiadomości!";
 "screen_roomlist_main_space_title" = "Wszystkie czaty";

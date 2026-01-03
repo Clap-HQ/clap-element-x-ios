@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "Opprett en ny samtale eller et nytt rom";
 "screen_roomlist_empty_message" = "Kom i gang med å sende meldinger til noen.";
 "screen_roomlist_empty_title" = "Ingen chatter ennå.";
+"screen_roomlist_filter_all" = "Alle";
 "screen_roomlist_filter_favourites" = "Favoritter";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Du kan legge til en chat blant favorittene dine i chat-innstillingene.\nInntil videre kan du velge bort filtre for å se de andre chattene dine";
 "screen_roomlist_filter_favourites_empty_state_title" = "Du har ikke favorittchatter ennå";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Du har ingen DM-er ennå";
 "screen_roomlist_filter_rooms" = "Rom";
 "screen_roomlist_filter_rooms_empty_state_title" = "Du er ikke i noe rom ennå";
+"screen_roomlist_filter_spaces" = "Rom";
+"screen_roomlist_filter_spaces_empty_state_title" = "Du er ikke i noe rom ennå";
 "screen_roomlist_filter_unreads" = "Uleste";
 "screen_roomlist_filter_unreads_empty_state_title" = "Gratulerer!\nDu har ingen uleste meldinger!";
 "screen_roomlist_main_space_title" = "Chatter";

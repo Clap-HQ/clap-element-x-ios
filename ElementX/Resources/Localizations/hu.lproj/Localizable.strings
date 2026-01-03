@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "Új beszélgetés vagy szoba létrehozása";
 "screen_roomlist_empty_message" = "Kezdje azzal, hogy üzenetet küld valakinek.";
 "screen_roomlist_empty_title" = "Még nincsenek csevegések.";
+"screen_roomlist_filter_all" = "Mind";
 "screen_roomlist_filter_favourites" = "Kedvencek";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "A csevegési beállításokban csevegéseket adhat hozzá a kedvencekhez.\nEgyelőre törölheti a szűrőket a többi csevegés megtekintéséhez.";
 "screen_roomlist_filter_favourites_empty_state_title" = "Még nincsenek kedvenc csevegései";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Még nincsenek privát üzenetei";
 "screen_roomlist_filter_rooms" = "Szobák";
 "screen_roomlist_filter_rooms_empty_state_title" = "Még nincs egy szobában sem";
+"screen_roomlist_filter_spaces" = "Terek";
+"screen_roomlist_filter_spaces_empty_state_title" = "Még nincs egy térben sem";
 "screen_roomlist_filter_unreads" = "Olvasatlan";
 "screen_roomlist_filter_unreads_empty_state_title" = "Gratulálunk!\nNincs olvasatlan üzenete!";
 "screen_roomlist_main_space_title" = "Összes csevegés";

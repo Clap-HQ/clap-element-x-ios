@@ -1143,6 +1143,7 @@
 "screen_roomlist_a11y_create_message" = "Стварыце новую размову або пакой";
 "screen_roomlist_empty_message" = "Пачніце з паведамлення каму-небудзь.";
 "screen_roomlist_empty_title" = "Пакуль няма чатаў.";
+"screen_roomlist_filter_all" = "Усе";
 "screen_roomlist_filter_favourites" = "Абранае";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Дадаць чат у абранае можна ў наладах чата.\nНа дадзены момант вы можаце прыбраць фільтры, каб убачыць іншыя вашыя чаты.";
 "screen_roomlist_filter_favourites_empty_state_title" = "У вас пакуль няма абраных чатаў";
@@ -1154,6 +1155,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "У вас пакуль няма асабістых паведамленняў";
 "screen_roomlist_filter_rooms" = "Пакоі";
 "screen_roomlist_filter_rooms_empty_state_title" = "Вас пакуль няма ў ніводным пакоі";
+"screen_roomlist_filter_spaces" = "Прасторы";
+"screen_roomlist_filter_spaces_empty_state_title" = "Вы яшчэ не ў ніякай прасторы";
 "screen_roomlist_filter_unreads" = "Непрачытаныя";
 "screen_roomlist_filter_unreads_empty_state_title" = "Віншуем!\nУ вас няма непрачытаных паведамленняў!";
 "screen_roomlist_main_space_title" = "Усе чаты";

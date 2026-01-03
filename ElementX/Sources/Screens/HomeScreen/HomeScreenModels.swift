@@ -118,12 +118,28 @@ struct HomeScreenViewState: BindableState {
             return placeholderRooms.map { .room($0) }
         }
 
-        // 검색 중이거나 필터링 중일 때는 스페이스를 표시하지 않음
-        if bindings.isSearchFieldFocused || bindings.filtersState.isFiltering {
+        // When searching, show only rooms (no spaces)
+        if bindings.isSearchFieldFocused {
             return rooms.map { .room($0) }
         }
 
-        // Combine spaces and rooms, then sort by last message date (most recent first)
+        // When Spaces filter is active, show only spaces sorted by last message date
+        if bindings.filtersState.isSpacesFilterActive {
+            return spaces
+                .map { HomeScreenListItem.space($0) }
+                .sorted { lhs, rhs in
+                    let lhsDate = lhs.lastMessageDate ?? .distantPast
+                    let rhsDate = rhs.lastMessageDate ?? .distantPast
+                    return lhsDate > rhsDate
+                }
+        }
+
+        // When secondary filters are active (unreads, people, rooms, etc.), show only filtered rooms
+        if bindings.filtersState.isFiltering {
+            return rooms.map { .room($0) }
+        }
+
+        // When All filter is active (default), combine spaces and rooms sorted by last message date
         let spaceItems = spaces.map { HomeScreenListItem.space($0) }
         let roomItems = rooms.map { HomeScreenListItem.room($0) }
         let allItems = spaceItems + roomItems
@@ -157,7 +173,15 @@ struct HomeScreenViewState: BindableState {
     }
 
     var shouldShowEmptyFilterState: Bool {
-        !bindings.isSearchFieldFocused && bindings.filtersState.isFiltering && visibleRooms.isEmpty
+        guard !bindings.isSearchFieldFocused else { return false }
+
+        // Show empty state when Spaces filter is active and no spaces
+        if bindings.filtersState.isSpacesFilterActive {
+            return spaces.isEmpty
+        }
+
+        // Show empty state when secondary filters are active and no rooms match
+        return bindings.filtersState.isFiltering && visibleRooms.isEmpty
     }
 
     var shouldShowFilters: Bool {

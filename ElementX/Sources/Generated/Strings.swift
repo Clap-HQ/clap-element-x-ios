@@ -2738,6 +2738,8 @@ internal enum L10n {
   internal static var screenRoomlistEmptyMessage: String { return L10n.tr("Localizable", "screen_roomlist_empty_message") }
   /// No chats yet.
   internal static var screenRoomlistEmptyTitle: String { return L10n.tr("Localizable", "screen_roomlist_empty_title") }
+  /// All
+  internal static var screenRoomlistFilterAll: String { return L10n.tr("Localizable", "screen_roomlist_filter_all") }
   /// Favourites
   internal static var screenRoomlistFilterFavourites: String { return L10n.tr("Localizable", "screen_roomlist_filter_favourites") }
   /// You can add a chat to your favourites in the chat settings.
@@ -2763,8 +2765,12 @@ internal enum L10n {
   internal static var screenRoomlistFilterPeopleEmptyStateTitle: String { return L10n.tr("Localizable", "screen_roomlist_filter_people_empty_state_title") }
   /// Rooms
   internal static var screenRoomlistFilterRooms: String { return L10n.tr("Localizable", "screen_roomlist_filter_rooms") }
-  /// You’re not in any room yet
+  /// You're not in any room yet
   internal static var screenRoomlistFilterRoomsEmptyStateTitle: String { return L10n.tr("Localizable", "screen_roomlist_filter_rooms_empty_state_title") }
+  /// Spaces
+  internal static var screenRoomlistFilterSpaces: String { return L10n.tr("Localizable", "screen_roomlist_filter_spaces") }
+  /// You're not in any space yet
+  internal static var screenRoomlistFilterSpacesEmptyStateTitle: String { return L10n.tr("Localizable", "screen_roomlist_filter_spaces_empty_state_title") }
   /// Unreads
   internal static var screenRoomlistFilterUnreads: String { return L10n.tr("Localizable", "screen_roomlist_filter_unreads") }
   /// Congrats!
