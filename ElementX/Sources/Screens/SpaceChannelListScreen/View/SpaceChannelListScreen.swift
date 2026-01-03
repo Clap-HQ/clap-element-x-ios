@@ -62,11 +62,6 @@ struct SpaceChannelListScreen: View {
                 }
             }
         }
-
-        if context.viewState.isPaginating {
-            ProgressView()
-                .padding()
-        }
     }
 
     @ViewBuilder

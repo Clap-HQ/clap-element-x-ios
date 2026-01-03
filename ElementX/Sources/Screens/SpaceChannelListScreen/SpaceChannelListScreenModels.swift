@@ -42,8 +42,6 @@ struct SpaceChannelListScreenViewState: BindableState {
     var joinedChannels: [SpaceChannelListItem] = []
     var unjoinedChannels: [SpaceChannelListItem] = []
     var joiningChannelIDs: Set<String> = []
-    var isLoading = true
-    var isPaginating = false
 
     // Space menu properties
     var permalink: URL?
