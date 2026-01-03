@@ -337,6 +337,15 @@ struct HomeScreenSpace: Identifiable, Equatable {
     /// The most recent message date among all joined child rooms (for sorting)
     let lastMessageDate: Date?
 
+    /// The formatted timestamp of the most recent message (e.g., "Now", "2m", "Yesterday")
+    let timestamp: String?
+
+    /// The last message content from the most recent child room
+    let lastMessage: AttributedString?
+
+    /// The name of the room that has the most recent message
+    let lastMessageRoomName: String?
+
     /// Badge information aggregated from child rooms
     let badges: Badges
     struct Badges: Equatable {
@@ -354,6 +363,9 @@ struct HomeScreenSpace: Identifiable, Equatable {
 
     init(spaceProxy: SpaceRoomProxyProtocol,
          lastMessageDate: Date? = nil,
+         timestamp: String? = nil,
+         lastMessage: AttributedString? = nil,
+         lastMessageRoomName: String? = nil,
          badges: Badges = .init(isDotShown: false, isMentionShown: false, isMuteShown: false),
          isHighlighted: Bool = false) {
         self.id = spaceProxy.id
@@ -362,12 +374,18 @@ struct HomeScreenSpace: Identifiable, Equatable {
         self.memberCount = spaceProxy.joinedMembersCount
         self.childrenCount = spaceProxy.childrenCount
         self.lastMessageDate = lastMessageDate
+        self.timestamp = timestamp
+        self.lastMessage = lastMessage
+        self.lastMessageRoomName = lastMessageRoomName
         self.badges = badges
         self.isHighlighted = isHighlighted
     }
 
     init(id: String, name: String, avatarURL: URL?, memberCount: Int, childrenCount: Int,
          lastMessageDate: Date? = nil,
+         timestamp: String? = nil,
+         lastMessage: AttributedString? = nil,
+         lastMessageRoomName: String? = nil,
          badges: Badges = .init(isDotShown: false, isMentionShown: false, isMuteShown: false),
          isHighlighted: Bool = false) {
         self.id = id
@@ -376,6 +394,9 @@ struct HomeScreenSpace: Identifiable, Equatable {
         self.memberCount = memberCount
         self.childrenCount = childrenCount
         self.lastMessageDate = lastMessageDate
+        self.timestamp = timestamp
+        self.lastMessage = lastMessage
+        self.lastMessageRoomName = lastMessageRoomName
         self.badges = badges
         self.isHighlighted = isHighlighted
     }

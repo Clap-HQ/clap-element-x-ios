@@ -70,9 +70,15 @@ struct HomeScreenSpaceCell: View {
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            // Chevron to indicate this is a drilldown
-            CompoundIcon(\.chevronRight, size: .small, relativeTo: .compound.bodyLGSemibold)
-                .foregroundColor(.compound.iconTertiary)
+            if let timestamp = space.timestamp {
+                Text(timestamp)
+                    .font(.compound.bodySM)
+                    .foregroundColor(space.isHighlighted ? .compound.textActionAccent : .compound.textSecondary)
+            } else {
+                // Chevron to indicate this is a drilldown (only when no timestamp)
+                CompoundIcon(\.chevronRight, size: .small, relativeTo: .compound.bodyLGSemibold)
+                    .foregroundColor(.compound.iconTertiary)
+            }
         }
     }
 
@@ -112,24 +118,43 @@ struct HomeScreenSpaceCell: View {
     }
 
     private var subtitle: some View {
-        HStack(spacing: 4) {
-            CompoundIcon(\.public, size: .xSmall, relativeTo: .compound.bodyMD)
-                .foregroundStyle(.compound.iconTertiary)
+        VStack(alignment: .leading, spacing: 4) {
+            // First line: last message with room name prefix
+            if let lastMessage = space.lastMessage {
+                HStack(spacing: 0) {
+                    if let roomName = space.lastMessageRoomName {
+                        Text("[\(roomName)] ")
+                            .font(.compound.bodyMD)
+                            .foregroundColor(.compound.textSecondary)
+                            .lineLimit(1)
+                    }
+                    Text(lastMessage)
+                        .font(.compound.bodyMD)
+                        .foregroundColor(.compound.textSecondary)
+                        .lineLimit(1)
+                }
+            }
 
-            Text(L10n.commonSpace)
-                .font(.compound.bodyMD)
-                .foregroundColor(.compound.textSecondary)
-                .lineLimit(1)
+            // Second line: Space • X members
+            HStack(spacing: 4) {
+                CompoundIcon(\.public, size: .xSmall, relativeTo: .compound.bodyMD)
+                    .foregroundStyle(.compound.iconTertiary)
 
-            if space.memberCount > 0 {
-                Text("•")
-                    .font(.compound.bodyMD)
-                    .foregroundColor(.compound.textSecondary)
-
-                Text(L10n.commonMemberCount(space.memberCount))
+                Text(L10n.commonSpace)
                     .font(.compound.bodyMD)
                     .foregroundColor(.compound.textSecondary)
                     .lineLimit(1)
+
+                if space.memberCount > 0 {
+                    Text("•")
+                        .font(.compound.bodyMD)
+                        .foregroundColor(.compound.textSecondary)
+
+                    Text(L10n.commonMemberCount(space.memberCount))
+                        .font(.compound.bodyMD)
+                        .foregroundColor(.compound.textSecondary)
+                        .lineLimit(1)
+                }
             }
         }
     }
@@ -145,7 +170,11 @@ struct HomeScreenSpaceCell_Previews: PreviewProvider, TestablePreview {
                                        name: "Engineering Team",
                                        avatarURL: nil,
                                        memberCount: 25,
-                                       childrenCount: 5),
+                                       childrenCount: 5,
+                                       lastMessageDate: Date(),
+                                       timestamp: "Now",
+                                       lastMessage: "Let's discuss the new feature",
+                                       lastMessageRoomName: "General"),
                 isSelected: false,
                 mediaProvider: mediaProvider
             ) { _ in }
@@ -155,8 +184,25 @@ struct HomeScreenSpaceCell_Previews: PreviewProvider, TestablePreview {
                                        name: "Design Community",
                                        avatarURL: nil,
                                        memberCount: 100,
-                                       childrenCount: 12),
+                                       childrenCount: 12,
+                                       lastMessageDate: Date().addingTimeInterval(-3600),
+                                       timestamp: "1h",
+                                       lastMessage: "Check out the new mockups!",
+                                       lastMessageRoomName: "Design Reviews",
+                                       badges: .init(isDotShown: true, isMentionShown: false, isMuteShown: false),
+                                       isHighlighted: true),
                 isSelected: true,
+                mediaProvider: mediaProvider
+            ) { _ in }
+
+            // Space without messages
+            HomeScreenSpaceCell(
+                space: HomeScreenSpace(id: "!space3:matrix.org",
+                                       name: "Empty Space",
+                                       avatarURL: nil,
+                                       memberCount: 5,
+                                       childrenCount: 0),
+                isSelected: false,
                 mediaProvider: mediaProvider
             ) { _ in }
         }
