@@ -47,6 +47,11 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
             spaceTopic: spaceProxy.topic
         ), mediaProvider: userSession.mediaProvider)
 
+        // Populate the list immediately with current data
+        let initialSpaceRooms = spaceRoomListProxy.spaceRoomsPublisher.value
+        let roomSummaries = clientProxy.roomSummaryProvider.roomListPublisher.value
+        updateChannelList(with: initialSpaceRooms, roomSummaries: roomSummaries)
+
         setupSubscriptions()
         setupSpaceRoomProxy()
     }
@@ -99,13 +104,14 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
             }
             .store(in: &cancellables)
 
+        // Combine space rooms and room summaries to update channel list atomically
+        // This prevents flickering caused by multiple separate updates
         spaceRoomListProxy.spaceRoomsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] spaceRooms in
+            .combineLatest(clientProxy.roomSummaryProvider.roomListPublisher)
+            .debounce(for: .milliseconds(50), scheduler: DispatchQueue.main)
+            .sink { [weak self] spaceRooms, roomSummaries in
                 guard let self else { return }
-                Task {
-                    await self.updateChannelList(with: spaceRooms)
-                }
+                updateChannelList(with: spaceRooms, roomSummaries: roomSummaries)
             }
             .store(in: &cancellables)
 
@@ -113,32 +119,17 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
             .receive(on: DispatchQueue.main)
             .sink { [weak self] paginationState in
                 guard let self else { return }
-                switch paginationState {
-                case .idle(let endReached):
-                    state.isPaginating = false
-                    state.isLoading = false
-                    guard !endReached else { return }
+                if case .idle(let endReached) = paginationState, !endReached {
                     Task { await self.spaceRoomListProxy.paginate() }
-                case .loading:
-                    state.isPaginating = true
-                }
-            }
-            .store(in: &cancellables)
-
-        // Subscribe to room summary changes to update badges, read state, favourite state, etc.
-        clientProxy.roomSummaryProvider.roomListPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let self else { return }
-                let spaceRooms = spaceRoomListProxy.spaceRoomsPublisher.value
-                Task {
-                    await self.updateChannelList(with: spaceRooms)
                 }
             }
             .store(in: &cancellables)
     }
 
-    private func updateChannelList(with spaceRooms: [SpaceRoomProxyProtocol]) async {
+    private func updateChannelList(with spaceRooms: [SpaceRoomProxyProtocol], roomSummaries: [RoomSummary]) {
+        // Build a lookup dictionary for quick access
+        let summaryByID = Dictionary(uniqueKeysWithValues: roomSummaries.map { ($0.id, $0) })
+
         var joinedItems: [SpaceChannelListItem] = []
         var unjoinedItems: [SpaceChannelListItem] = []
 
@@ -148,7 +139,7 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
 
             if spaceRoom.state == .joined {
                 // Get room summary for joined rooms to show last message
-                if let summary = await getRoomSummary(for: spaceRoom.id) {
+                if let summary = summaryByID[spaceRoom.id] {
                     let joinedInfo = JoinedChannelInfo(summary: summary)
                     joinedItems.append(.joined(joinedInfo))
                 } else {
@@ -183,12 +174,6 @@ class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, Spac
 
         state.joinedChannels = sortedJoinedItems
         state.unjoinedChannels = unjoinedItems
-    }
-
-    private func getRoomSummary(for roomID: String) async -> RoomSummary? {
-        // Try to find the room in the room summary provider
-        let summaries = clientProxy.roomSummaryProvider.roomListPublisher.value
-        return summaries.first { $0.id == roomID }
     }
 
     private func joinChannel(_ spaceRoom: SpaceRoomProxyProtocol) async {
