@@ -20,6 +20,12 @@ struct DeveloperModeScreen: View {
                         .font(.compound.bodySM)
                         .foregroundColor(.compound.textSecondary)
                 }
+                Toggle(isOn: $context.showQRCodeLogin) {
+                    Text("Show QR Code Login")
+                    Text("Show the sign in with QR code button")
+                        .font(.compound.bodySM)
+                        .foregroundColor(.compound.textSecondary)
+                }
             } header: {
                 Text("Authentication")
             }

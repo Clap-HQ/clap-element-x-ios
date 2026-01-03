@@ -16,11 +16,11 @@ class AuthenticationStartScreenViewModel: AuthenticationStartScreenViewModelType
     private let provisioningParameters: AccountProvisioningParameters?
     private let appSettings: AppSettings
     private let userIndicatorController: UserIndicatorControllerProtocol
-    
+
     private let canReportProblem: Bool
-    
+
     private var actionsSubject: PassthroughSubject<AuthenticationStartScreenViewModelAction, Never> = .init()
-    
+
     var actions: AnyPublisher<AuthenticationStartScreenViewModelAction, Never> {
         actionsSubject.eraseToAnyPublisher()
     }
@@ -35,9 +35,9 @@ class AuthenticationStartScreenViewModel: AuthenticationStartScreenViewModelType
         self.appSettings = appSettings
         self.userIndicatorController = userIndicatorController
         canReportProblem = isBugReportServiceEnabled
-        
-        let isQRCodeScanningSupported = !ProcessInfo.processInfo.isiOSAppOnMac
-        
+
+        let isQRCodeScanningSupported = !ProcessInfo.processInfo.isiOSAppOnMac && ServiceLocator.shared.developerModeSettings.showQRCodeLogin
+
         let initialViewState = if !appSettings.allowOtherAccountProviders {
             // We don't show the create account button when custom providers are disallowed.
             // The assumption here being that if you're running a custom app, your users will already be created.
@@ -58,7 +58,7 @@ class AuthenticationStartScreenViewModel: AuthenticationStartScreenViewModelType
                                                showQRCodeLoginButton: isQRCodeScanningSupported,
                                                hideBrandChrome: appSettings.hideBrandChrome)
         }
-        
+
         super.init(initialViewState: initialViewState)
     }
 

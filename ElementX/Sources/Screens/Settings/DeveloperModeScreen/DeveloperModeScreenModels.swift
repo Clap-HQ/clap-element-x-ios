@@ -25,6 +25,11 @@ struct DeveloperModeScreenViewStateBindings {
         get { developerModeSettings.showCustomHomeserver }
         set { developerModeSettings.showCustomHomeserver = newValue }
     }
+
+    var showQRCodeLogin: Bool {
+        get { developerModeSettings.showQRCodeLogin }
+        set { developerModeSettings.showQRCodeLogin = newValue }
+    }
 }
 
 enum DeveloperModeScreenViewAction { }

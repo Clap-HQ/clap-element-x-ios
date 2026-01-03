@@ -13,12 +13,22 @@ import Foundation
 final class DeveloperModeSettings {
     private enum Keys: String {
         case showCustomHomeserver
+        case showQRCodeLogin
     }
 
     private static var suiteName: String = InfoPlistReader.main.appGroupIdentifier
     private static var store: UserDefaults! = UserDefaults(suiteName: suiteName)
 
+    /// Whether this is the Clap Dev scheme (Debug build)
+    private static var isClapDev: Bool {
+        InfoPlistReader.main.baseBundleIdentifier == "ac.clap.app.dev"
+    }
+
     /// Whether to show the custom homeserver option in the authentication flow.
-    @UserPreference(key: Keys.showCustomHomeserver, defaultValue: false, storageType: .userDefaults(store))
+    @UserPreference(key: Keys.showCustomHomeserver, defaultValue: isClapDev, storageType: .userDefaults(store))
     var showCustomHomeserver
+
+    /// Whether to show the QR code login button in the authentication flow.
+    @UserPreference(key: Keys.showQRCodeLogin, defaultValue: isClapDev, storageType: .userDefaults(store))
+    var showQRCodeLogin
 }
