@@ -8984,6 +8984,7 @@
 				APP_GROUP_IDENTIFIER = group.ac.clap.app;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BASE_BUNDLE_IDENTIFIER = ac.clap.app;
+				CLAP_HOMESERVER = clap.ac;
 				CODE_SIGN_ENTITLEMENTS = ElementX/SupportingFiles/ElementX.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
@@ -9015,6 +9016,7 @@
 				APP_GROUP_IDENTIFIER = group.ac.clap.app.dev;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BASE_BUNDLE_IDENTIFIER = ac.clap.app.dev;
+				CLAP_HOMESERVER = dev.clap.ac;
 				CODE_SIGN_ENTITLEMENTS = ElementX/SupportingFiles/ElementX.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";

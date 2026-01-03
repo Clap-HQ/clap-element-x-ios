@@ -16,10 +16,11 @@ struct InfoPlistReader {
         static let bundleShortVersion = "CFBundleShortVersionString"
         static let bundleDisplayName = "CFBundleDisplayName"
         static let productionAppName = "productionAppName"
+        static let clapHomeserver = "clapHomeserver"
         static let utExportedTypeDeclarationsKey = "UTExportedTypeDeclarations"
         static let utTypeIdentifierKey = "UTTypeIdentifier"
         static let utDescriptionKey = "UTTypeDescription"
-        
+
         static let bundleURLTypes = "CFBundleURLTypes"
         static let bundleURLName = "CFBundleURLName"
         static let bundleURLSchemes = "CFBundleURLSchemes"
@@ -87,7 +88,12 @@ struct InfoPlistReader {
     var productionAppName: String {
         infoPlistValue(forKey: Keys.productionAppName)
     }
-    
+
+    /// The default homeserver for Clap (varies by build configuration)
+    var clapHomeserver: String {
+        infoPlistValue(forKey: Keys.clapHomeserver)
+    }
+
     // MARK: - Custom App Scheme
     
     var appScheme: String {
