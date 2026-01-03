@@ -19,6 +19,7 @@ struct FullMessageSheetView: View {
             ScrollView {
                 if let attributedString = timelineItem.content.formattedBody {
                     MessageText(attributedString: adjustedAttributedString(attributedString))
+                        .tint(.compound.textLinkExternal)
                         .padding(16)
                 } else {
                     Text(timelineItem.body)
