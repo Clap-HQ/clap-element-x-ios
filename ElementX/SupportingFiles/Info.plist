@@ -116,6 +116,8 @@
 	<string>$(APP_GROUP_IDENTIFIER)</string>
 	<key>baseBundleIdentifier</key>
 	<string>$(BASE_BUNDLE_IDENTIFIER)</string>
+	<key>clapHomeserver</key>
+	<string>$(CLAP_HOMESERVER)</string>
 	<key>keychainAccessGroupIdentifier</key>
 	<string>$(KEYCHAIN_ACCESS_GROUP_IDENTIFIER)</string>
 	<key>productionAppName</key>
