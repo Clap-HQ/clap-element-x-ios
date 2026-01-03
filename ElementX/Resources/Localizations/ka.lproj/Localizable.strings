@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "You don't have access to this message";
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "პრობლემების გადაჭრის შეტყობინებები";
+
+"space_channel_list_joined_section_title" = "ოთახები, რომლებშიც ხართ";
+"space_channel_list_unjoined_section_title" = "ოთახები, რომლებსაც შეგიძლიათ შეუერთდეთ";

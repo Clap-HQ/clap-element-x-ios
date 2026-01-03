@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "您無法存取此則訊息";
 "troubleshoot_notifications_entry_point_push_history_title" = "推播通知歷史紀錄";
 "troubleshoot_notifications_entry_point_title" = "疑難排解通知";
+
+"space_channel_list_joined_section_title" = "您加入的房間";
+"space_channel_list_unjoined_section_title" = "可加入的房間";

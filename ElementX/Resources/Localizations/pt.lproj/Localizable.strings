@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Não tens acesso a esta mensagem";
 "troubleshoot_notifications_entry_point_push_history_title" = "Histórico de push";
 "troubleshoot_notifications_entry_point_title" = "Corrigir notificações";
+
+"space_channel_list_joined_section_title" = "Salas em que você está";
+"space_channel_list_unjoined_section_title" = "Salas que você pode entrar";

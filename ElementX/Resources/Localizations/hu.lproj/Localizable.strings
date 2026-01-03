@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Nincs hozzáférése ehhez az üzenethez";
 "troubleshoot_notifications_entry_point_push_history_title" = "Leküldéses értesítések előzmények";
 "troubleshoot_notifications_entry_point_title" = "Értesítések hibaelhárítása";
+
+"space_channel_list_joined_section_title" = "Szobák, amelyekben benne vagy";
+"space_channel_list_unjoined_section_title" = "Szobák, amelyekhez csatlakozhatsz";

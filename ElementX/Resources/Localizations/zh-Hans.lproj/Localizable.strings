@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "无权访问此消息";
 "troubleshoot_notifications_entry_point_push_history_title" = "推送历史记录";
 "troubleshoot_notifications_entry_point_title" = "排查通知问题";
+
+"space_channel_list_joined_section_title" = "您加入的房间";
+"space_channel_list_unjoined_section_title" = "可加入的房间";

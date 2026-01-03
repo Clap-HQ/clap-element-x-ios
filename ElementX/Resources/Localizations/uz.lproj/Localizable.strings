@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Sizni ushbu xabarga ruxsatingiz yoʻq";
 "troubleshoot_notifications_entry_point_push_history_title" = "Bildirishnoma tarixi";
 "troubleshoot_notifications_entry_point_title" = "Bildirishnomalar bilan bog‘liq muammolarni bartaraf etish";
+
+"space_channel_list_joined_section_title" = "Siz aʼzo boʻlgan xonalar";
+"space_channel_list_unjoined_section_title" = "Qoʻshilishingiz mumkin boʻlgan xonalar";

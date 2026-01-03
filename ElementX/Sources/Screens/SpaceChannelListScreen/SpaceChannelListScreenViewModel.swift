@@ -1,0 +1,322 @@
+//
+// Copyright 2025 Element Creations Ltd.
+// Copyright 2025 New Vector Ltd.
+//
+// SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
+// Please see LICENSE files in the repository root for full details.
+//
+
+import Combine
+import MatrixRustSDK
+import SwiftUI
+
+typealias SpaceChannelListScreenViewModelType = StateStoreViewModelV2<SpaceChannelListScreenViewState, SpaceChannelListScreenViewAction>
+
+class SpaceChannelListScreenViewModel: SpaceChannelListScreenViewModelType, SpaceChannelListScreenViewModelProtocol {
+    private let spaceRoomListProxy: SpaceRoomListProxyProtocol
+    private let spaceServiceProxy: SpaceServiceProxyProtocol
+    private let clientProxy: ClientProxyProtocol
+    private let mediaProvider: MediaProviderProtocol
+    private let userIndicatorController: UserIndicatorControllerProtocol
+    private let appSettings: AppSettings
+
+    private let actionsSubject: PassthroughSubject<SpaceChannelListScreenViewModelAction, Never> = .init()
+    var actionsPublisher: AnyPublisher<SpaceChannelListScreenViewModelAction, Never> {
+        actionsSubject.eraseToAnyPublisher()
+    }
+
+    init(spaceRoomListProxy: SpaceRoomListProxyProtocol,
+         spaceServiceProxy: SpaceServiceProxyProtocol,
+         userSession: UserSessionProtocol,
+         appSettings: AppSettings,
+         userIndicatorController: UserIndicatorControllerProtocol) {
+        self.spaceRoomListProxy = spaceRoomListProxy
+        self.spaceServiceProxy = spaceServiceProxy
+        self.clientProxy = userSession.clientProxy
+        self.mediaProvider = userSession.mediaProvider
+        self.appSettings = appSettings
+        self.userIndicatorController = userIndicatorController
+
+        let spaceProxy = spaceRoomListProxy.spaceRoomProxyPublisher.value
+
+        super.init(initialViewState: SpaceChannelListScreenViewState(
+            spaceID: spaceRoomListProxy.id,
+            spaceName: spaceProxy.name,
+            spaceAvatarURL: spaceProxy.avatarURL,
+            spaceMemberCount: spaceProxy.joinedMembersCount,
+            spaceTopic: spaceProxy.topic
+        ), mediaProvider: userSession.mediaProvider)
+
+        setupSubscriptions()
+        setupSpaceRoomProxy()
+    }
+
+    // MARK: - Public
+
+    override func process(viewAction: SpaceChannelListScreenViewAction) {
+        switch viewAction {
+        case .selectChannel(let item):
+            switch item {
+            case .joined(let info):
+                actionsSubject.send(.selectRoom(roomID: info.id))
+            case .unjoined(let proxy):
+                Task { await joinChannel(proxy) }
+            }
+        case .joinChannel(let proxy):
+            Task { await joinChannel(proxy) }
+        case .showRoomDetails(let roomID):
+            actionsSubject.send(.showRoomDetails(roomID: roomID))
+        case .markAsRead(let roomID):
+            Task { await markAsRead(roomID: roomID) }
+        case .markAsUnread(let roomID):
+            Task { await markAsUnread(roomID: roomID) }
+        case .markAsFavourite(let roomID, let isFavourite):
+            Task { await markAsFavourite(roomID: roomID, isFavourite: isFavourite) }
+        case .leaveRoom(let roomID):
+            Task { await leaveRoom(roomID: roomID) }
+        case .displayMembers:
+            guard let roomProxy = state.roomProxy else { return }
+            actionsSubject.send(.displayMembers(roomProxy: roomProxy))
+        case .spaceSettings:
+            guard let roomProxy = state.roomProxy else { return }
+            actionsSubject.send(.displaySpaceSettings(roomProxy: roomProxy))
+        case .leaveSpace:
+            Task { await showLeaveSpaceConfirmation() }
+        }
+    }
+
+    // MARK: - Private
+
+    private func setupSubscriptions() {
+        spaceRoomListProxy.spaceRoomProxyPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] spaceProxy in
+                guard let self else { return }
+                state.spaceName = spaceProxy.name
+                state.spaceAvatarURL = spaceProxy.avatarURL
+                state.spaceMemberCount = spaceProxy.joinedMembersCount
+                state.spaceTopic = spaceProxy.topic
+            }
+            .store(in: &cancellables)
+
+        spaceRoomListProxy.spaceRoomsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] spaceRooms in
+                guard let self else { return }
+                Task {
+                    await self.updateChannelList(with: spaceRooms)
+                }
+            }
+            .store(in: &cancellables)
+
+        spaceRoomListProxy.paginationStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] paginationState in
+                guard let self else { return }
+                switch paginationState {
+                case .idle(let endReached):
+                    state.isPaginating = false
+                    state.isLoading = false
+                    guard !endReached else { return }
+                    Task { await self.spaceRoomListProxy.paginate() }
+                case .loading:
+                    state.isPaginating = true
+                }
+            }
+            .store(in: &cancellables)
+
+        // Subscribe to room summary changes to update badges, read state, favourite state, etc.
+        clientProxy.roomSummaryProvider.roomListPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                let spaceRooms = spaceRoomListProxy.spaceRoomsPublisher.value
+                Task {
+                    await self.updateChannelList(with: spaceRooms)
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func updateChannelList(with spaceRooms: [SpaceRoomProxyProtocol]) async {
+        var joinedItems: [SpaceChannelListItem] = []
+        var unjoinedItems: [SpaceChannelListItem] = []
+
+        for spaceRoom in spaceRooms {
+            // Skip spaces - only show rooms/channels
+            guard !spaceRoom.isSpace else { continue }
+
+            if spaceRoom.state == .joined {
+                // Get room summary for joined rooms to show last message
+                if let summary = await getRoomSummary(for: spaceRoom.id) {
+                    let joinedInfo = JoinedChannelInfo(summary: summary)
+                    joinedItems.append(.joined(joinedInfo))
+                } else {
+                    // Fallback if summary not available
+                    let joinedInfo = JoinedChannelInfo(
+                        id: spaceRoom.id,
+                        name: spaceRoom.name,
+                        avatar: spaceRoom.avatar,
+                        memberCount: spaceRoom.joinedMembersCount,
+                        lastMessage: nil,
+                        timestamp: nil,
+                        lastMessageDate: nil,
+                        isDirect: spaceRoom.isDirect ?? false,
+                        badges: .init(isDotShown: false, isMentionShown: false, isMuteShown: false, isCallShown: false),
+                        isHighlighted: false,
+                        isFavourite: false
+                    )
+                    joinedItems.append(.joined(joinedInfo))
+                }
+            } else {
+                unjoinedItems.append(.unjoined(spaceRoom))
+            }
+        }
+
+        // Sort joined channels by last message date (most recent first)
+        let sortedJoinedItems = joinedItems.sorted { lhs, rhs in
+            guard case .joined(let lhsInfo) = lhs, case .joined(let rhsInfo) = rhs else { return false }
+            let lhsDate = lhsInfo.lastMessageDate ?? .distantPast
+            let rhsDate = rhsInfo.lastMessageDate ?? .distantPast
+            return lhsDate > rhsDate
+        }
+
+        state.joinedChannels = sortedJoinedItems
+        state.unjoinedChannels = unjoinedItems
+    }
+
+    private func getRoomSummary(for roomID: String) async -> RoomSummary? {
+        // Try to find the room in the room summary provider
+        let summaries = clientProxy.roomSummaryProvider.roomListPublisher.value
+        return summaries.first { $0.id == roomID }
+    }
+
+    private func joinChannel(_ spaceRoom: SpaceRoomProxyProtocol) async {
+        state.joiningChannelIDs.insert(spaceRoom.id)
+        defer { state.joiningChannelIDs.remove(spaceRoom.id) }
+
+        guard case .success = await clientProxy.joinRoom(spaceRoom.id, via: spaceRoom.via) else {
+            showFailureIndicator()
+            return
+        }
+
+        // After joining, the room will appear in the list as joined
+    }
+
+    private func markAsRead(roomID: String) async {
+        guard case .joined(let roomProxy) = await clientProxy.roomForIdentifier(roomID) else {
+            showFailureIndicator()
+            return
+        }
+
+        // First clear the unread flag, then send read receipt
+        guard case .success = await roomProxy.flagAsUnread(false) else {
+            showFailureIndicator()
+            return
+        }
+
+        let receiptType: ReceiptType = appSettings.sharePresence ? .read : .readPrivate
+        if case .failure = await roomProxy.markAsRead(receiptType: receiptType) {
+            showFailureIndicator()
+        }
+    }
+
+    private func markAsUnread(roomID: String) async {
+        guard case .joined(let roomProxy) = await clientProxy.roomForIdentifier(roomID) else {
+            showFailureIndicator()
+            return
+        }
+
+        guard case .success = await roomProxy.flagAsUnread(true) else {
+            showFailureIndicator()
+            return
+        }
+    }
+
+    private func markAsFavourite(roomID: String, isFavourite: Bool) async {
+        guard case .joined(let roomProxy) = await clientProxy.roomForIdentifier(roomID) else {
+            showFailureIndicator()
+            return
+        }
+
+        guard case .success = await roomProxy.flagAsFavourite(isFavourite) else {
+            showFailureIndicator()
+            return
+        }
+    }
+
+    private func leaveRoom(roomID: String) async {
+        guard case .joined(let roomProxy) = await clientProxy.roomForIdentifier(roomID) else {
+            showFailureIndicator()
+            return
+        }
+
+        guard case .success = await roomProxy.leaveRoom() else {
+            showFailureIndicator()
+            return
+        }
+    }
+
+    private func setupSpaceRoomProxy() {
+        Task {
+            if case let .joined(roomProxy) = await clientProxy.roomForIdentifier(spaceRoomListProxy.id) {
+                await roomProxy.subscribeForUpdates()
+                state.roomProxy = roomProxy
+                if case let .success(permalinkURL) = await roomProxy.matrixToPermalink() {
+                    state.permalink = permalinkURL
+                }
+
+                appSettings.$spaceSettingsEnabled
+                    .combineLatest(roomProxy.infoPublisher)
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] isEnabled, roomInfo in
+                        guard let self else { return }
+                        guard isEnabled, let powerLevels = roomInfo.powerLevels else {
+                            state.canEditBaseInfo = false
+                            state.canEditRolesAndPermissions = false
+                            return
+                        }
+                        state.canEditBaseInfo = powerLevels.canOwnUserEditBaseInfo()
+                        state.canEditRolesAndPermissions = powerLevels.canOwnUserEditRolesAndPermissions()
+                    }
+                    .store(in: &cancellables)
+            }
+        }
+    }
+
+    private func showLeaveSpaceConfirmation() async {
+        guard case let .success(leaveHandle) = await spaceServiceProxy.leaveSpace(spaceID: spaceRoomListProxy.id) else {
+            showFailureIndicator()
+            return
+        }
+
+        let leaveSpaceViewModel = LeaveSpaceViewModel(spaceName: state.spaceName,
+                                                      canEditRolesAndPermissions: appSettings.spaceSettingsEnabled && state.canEditRolesAndPermissions,
+                                                      leaveHandle: leaveHandle,
+                                                      userIndicatorController: userIndicatorController,
+                                                      mediaProvider: mediaProvider)
+        leaveSpaceViewModel.actions.sink { [weak self] action in
+            guard let self else { return }
+            switch action {
+            case .didCancel:
+                state.bindings.leaveSpaceViewModel = nil
+            case .presentRolesAndPermissions:
+                // Not supported in space channel list context
+                state.bindings.leaveSpaceViewModel = nil
+            case .didLeaveSpace:
+                state.bindings.leaveSpaceViewModel = nil
+                actionsSubject.send(.leftSpace)
+            }
+        }
+        .store(in: &cancellables)
+
+        state.bindings.leaveSpaceViewModel = leaveSpaceViewModel
+    }
+
+    private func showFailureIndicator() {
+        userIndicatorController.submitIndicator(UserIndicator(id: "\(Self.self)-Failure",
+                                                              type: .toast,
+                                                              title: L10n.errorUnknown,
+                                                              iconName: "xmark"))
+    }
+}

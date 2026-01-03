@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Sul pole ligipääsu antud sõnumile";
 "troubleshoot_notifications_entry_point_push_history_title" = "Tõuketeadete ajalugu";
 "troubleshoot_notifications_entry_point_title" = "Teavituste veaotsing";
+
+"space_channel_list_joined_section_title" = "Toad, milles olete";
+"space_channel_list_unjoined_section_title" = "Toad, millega saate liituda";

@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Nie masz uprawnień do tej wiadomości";
 "troubleshoot_notifications_entry_point_push_history_title" = "Historia powiadomień Push";
 "troubleshoot_notifications_entry_point_title" = "Rozwiązywanie problemów powiadomień";
+
+"space_channel_list_joined_section_title" = "Pokoje, w których jesteś";
+"space_channel_list_unjoined_section_title" = "Pokoje, do których możesz dołączyć";

@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Ви не маєте доступу до цього повідомлення";
 "troubleshoot_notifications_entry_point_push_history_title" = "Історія push-сповіщень";
 "troubleshoot_notifications_entry_point_title" = "Усунення неполадок сповіщень";
+
+"space_channel_list_joined_section_title" = "Кімнати, в яких ви перебуваєте";
+"space_channel_list_unjoined_section_title" = "Кімнати, до яких ви можете приєднатися";

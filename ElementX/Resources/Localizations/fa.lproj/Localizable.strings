@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "به این پیام دسترسی ندارید";
 "troubleshoot_notifications_entry_point_push_history_title" = "تاریخچهٔ آگاهی‌های ارسالی";
 "troubleshoot_notifications_entry_point_title" = "رفع‌اشکال آگاهی‌ها";
+
+"space_channel_list_joined_section_title" = "اتاق‌هایی که عضو هستید";
+"space_channel_list_unjoined_section_title" = "اتاق‌هایی که می‌توانید بپیوندید";

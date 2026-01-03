@@ -1473,3 +1473,6 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "이 메시지에 액세스할 수 없습니다";
 "troubleshoot_notifications_entry_point_push_history_title" = "푸시 기록";
 "troubleshoot_notifications_entry_point_title" = "문제 해결 알림";
+
+"space_channel_list_joined_section_title" = "참여 중인 룸";
+"space_channel_list_unjoined_section_title" = "참여 가능한 룸";

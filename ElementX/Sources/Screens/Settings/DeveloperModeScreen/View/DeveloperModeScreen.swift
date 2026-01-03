@@ -29,6 +29,17 @@ struct DeveloperModeScreen: View {
             } header: {
                 Text("Authentication")
             }
+
+            Section {
+                Toggle(isOn: $context.groupSpaceChannels) {
+                    Text("Group Space Channels")
+                    Text("Hide space-affiliated channels from chat tab and show them under space cells instead")
+                        .font(.compound.bodySM)
+                        .foregroundColor(.compound.textSecondary)
+                }
+            } header: {
+                Text("Spaces")
+            }
         }
         .compoundList()
         .navigationTitle("Developer Mode")

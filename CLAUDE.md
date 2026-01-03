@@ -242,6 +242,7 @@ Developer-only flags managed in `DeveloperModeSettings.swift`:
 |------|-------------|---------|
 | `showCustomHomeserver` | Show custom homeserver selection UI at login | true only in Clap Dev |
 | `showQRCodeLogin` | Show QR code login button | true only in Clap Dev |
+| `groupSpaceChannels` | Hide space-affiliated channels from chat tab and show them under space cells | true |
 
 ```swift
 // Usage example
@@ -250,6 +251,25 @@ if settings.showCustomHomeserver {
     // Show custom homeserver UI
 }
 ```
+
+### Space Channel Grouping
+
+When `groupSpaceChannels` is enabled:
+
+1. **Chat tab behavior**:
+   - Space cells appear in the chat list, sorted by most recent child room activity
+   - Channels belonging to spaces are hidden from the main chat list
+   - Aggregated unread badges are shown on space cells
+
+2. **Space channel list**:
+   - Tapping a space cell navigates to `SpaceChannelListScreen`
+   - Shows joined channels (with context menu for leave/settings)
+   - Shows unjoined channels with join button
+
+3. **Related files**:
+   - `HomeScreenViewModel.swift` - Space children tracking and filtering logic
+   - `HomeScreenSpaceCell.swift` - Space cell UI with badges
+   - `SpaceChannelListScreen/` - Space channel list screen (Coordinator, ViewModel, View)
 
 ### Related Files
 

@@ -14,6 +14,7 @@ final class DeveloperModeSettings {
     private enum Keys: String {
         case showCustomHomeserver
         case showQRCodeLogin
+        case groupSpaceChannels
     }
 
     private static var suiteName: String = InfoPlistReader.main.appGroupIdentifier
@@ -31,4 +32,9 @@ final class DeveloperModeSettings {
     /// Whether to show the QR code login button in the authentication flow.
     @UserPreference(key: Keys.showQRCodeLogin, defaultValue: isClapDev, storageType: .userDefaults(store))
     var showQRCodeLogin
+
+    /// Whether to group space-affiliated channels under space cells in chat tab.
+    /// When enabled, channels belonging to spaces are hidden from the main chat list and shown in space channel list instead.
+    @UserPreference(key: Keys.groupSpaceChannels, defaultValue: true, storageType: .userDefaults(store))
+    var groupSpaceChannels
 }
