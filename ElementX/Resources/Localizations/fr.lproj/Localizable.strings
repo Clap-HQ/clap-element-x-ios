@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Créer une nouvelle discussion ou un nouveau salon";
 "screen_roomlist_empty_message" = "Commencez par envoyer un message à quelqu’un.";
 "screen_roomlist_empty_title" = "Aucune discussion pour le moment.";
+"screen_roomlist_filter_all" = "Tout";
 "screen_roomlist_filter_favourites" = "Favoris";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Vous pouvez ajouter une discussion aux favoris depuis les paramètres de la discussion.\nEn attendant, vous pouvez désélectionner des filtres pour voir vos autres salons.";
 "screen_roomlist_filter_favourites_empty_state_title" = "Vous n’avez pas encore de discussions favorites";
@@ -1154,7 +1155,9 @@
 "screen_roomlist_filter_mixed_empty_state_title" = "Vous n’avez pas de discussions pour cette sélection";
 "screen_roomlist_filter_people_empty_state_title" = "Vous n’avez pas encore de discussions";
 "screen_roomlist_filter_rooms" = "Salons";
-"screen_roomlist_filter_rooms_empty_state_title" = "Vous n’êtes membre d’aucun salon";
+"screen_roomlist_filter_rooms_empty_state_title" = "Vous n'êtes membre d'aucun salon";
+"screen_roomlist_filter_spaces" = "Espaces";
+"screen_roomlist_filter_spaces_empty_state_title" = "Vous n'êtes dans aucun espace";
 "screen_roomlist_filter_unreads" = "Non-lus";
 "screen_roomlist_filter_unreads_empty_state_title" = "Félicitations !\nVous n’avez plus de messages non-lus !";
 "screen_roomlist_main_space_title" = "Conversations";

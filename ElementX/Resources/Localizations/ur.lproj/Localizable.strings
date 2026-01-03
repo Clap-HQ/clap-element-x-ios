@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "ایک نئی گفتگو یا کمرہ تخلیق کریں";
 "screen_roomlist_empty_message" = "کسی کو پیغام بھیج کر شروع کریں۔";
 "screen_roomlist_empty_title" = "ابھی تک کوئی گفتگوئیں نہیں ہیں۔";
+"screen_roomlist_filter_all" = "سب";
 "screen_roomlist_filter_favourites" = "پسندیدگان";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "آپ گفتگو کی ترتیبات میں اپنے پسندیدہ میں گفتگو شامل کر سکتے ہیں۔\n ابھی کے لیے، آپ اپنی دوسری گفتگوئیں دیکھنے کے لیے مرشحات کو غیر منتخب کر سکتے ہیں۔";
 "screen_roomlist_filter_favourites_empty_state_title" = "آپ کے پاس ابھی تک پسندیدہ گفتگوئیں نہیں ہیں";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "آپ کے پاس ابھی تک کوئی براہ راست پیغامات نہیں ہے۔";
 "screen_roomlist_filter_rooms" = "کمرے";
 "screen_roomlist_filter_rooms_empty_state_title" = "آپ ابھی تک کسی کمرے میں نہیں ہیں";
+"screen_roomlist_filter_spaces" = "جگہیں";
+"screen_roomlist_filter_spaces_empty_state_title" = "آپ ابھی تک کسی جگہ میں نہیں ہیں";
 "screen_roomlist_filter_unreads" = "غیر مقروءہ";
 "screen_roomlist_filter_unreads_empty_state_title" = "مبارک ہو!\nآپ کے پاس کوئی غیر مقروءہ پیغامات نہیں!";
 "screen_roomlist_main_space_title" = "گفتگوئیں";

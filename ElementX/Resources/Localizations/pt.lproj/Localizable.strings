@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Criar uma nova conversa ou sala";
 "screen_roomlist_empty_message" = "Começa por enviar uma mensagem a alguém.";
 "screen_roomlist_empty_title" = "Ainda não tens conversas.";
+"screen_roomlist_filter_all" = "Tudo";
 "screen_roomlist_filter_favourites" = "Favoritas";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Podes adicionar uma conversa às tuas favoritas nas suas configurações.\nPor enquanto, podes anular a seleção dos filtros para veres as tuas outras conversas";
 "screen_roomlist_filter_favourites_empty_state_title" = "Ainda não tens nenhuma conversa favorita";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Ainda não tens nenhuma MD (mensagem direta)";
 "screen_roomlist_filter_rooms" = "Salas";
 "screen_roomlist_filter_rooms_empty_state_title" = "Ainda não estás em nenhuma sala";
+"screen_roomlist_filter_spaces" = "Espaços";
+"screen_roomlist_filter_spaces_empty_state_title" = "Ainda não estás em nenhum espaço";
 "screen_roomlist_filter_unreads" = "Por ler";
 "screen_roomlist_filter_unreads_empty_state_title" = "Parabéns!\nNão tens nenhuma mensagem por ler!";
 "screen_roomlist_main_space_title" = "Conversas";

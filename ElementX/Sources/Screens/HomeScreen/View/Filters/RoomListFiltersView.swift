@@ -25,19 +25,22 @@ struct RoomListFiltersView: View {
                     Spacer()
                         .frame(width: 0, height: 0)
                         .id(leadingID)
-                    
+
                     HStack(spacing: 8) {
+                        // Show clear button when any filter is active
                         if state.isFiltering {
                             clearButton(scrollViewProxy: proxy)
                         }
-                        
-                        ForEach(state.activeFilters) { filter in
+
+                        // Active filters (currently selected)
+                        ForEach(Array(state.activeFilters)) { filter in
                             RoomListFilterView(filter: filter,
                                                isActive: getBinding(for: filter, scrollViewProxy: proxy))
                                 .matchedGeometryEffect(id: filter.id, in: namespace)
-                                // This will make the animation always render the enabled ones on top
                                 .zIndex(1)
                         }
+
+                        // Available filters (filters that can be selected)
                         ForEach(state.availableFilters) { filter in
                             RoomListFilterView(filter: filter,
                                                isActive: getBinding(for: filter, scrollViewProxy: proxy))

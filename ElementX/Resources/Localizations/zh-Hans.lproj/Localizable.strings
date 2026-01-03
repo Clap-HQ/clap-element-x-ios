@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "创建新的对话或聊天室";
 "screen_roomlist_empty_message" = "通过向某人发送消息来开始。";
 "screen_roomlist_empty_title" = "还没有聊天。";
+"screen_roomlist_filter_all" = "全部";
 "screen_roomlist_filter_favourites" = "收藏夹";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "可以在聊天设置里将聊天添加到收藏夹中。\n现在，可以取消选择过滤器以查看其他对话。";
 "screen_roomlist_filter_favourites_empty_state_title" = "您未收藏任何聊天";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "目前您还没有私信";
 "screen_roomlist_filter_rooms" = "聊天室";
 "screen_roomlist_filter_rooms_empty_state_title" = "您尚未进入任何聊天室";
+"screen_roomlist_filter_spaces" = "空间";
+"screen_roomlist_filter_spaces_empty_state_title" = "您还没有加入任何空间";
 "screen_roomlist_filter_unreads" = "未读";
 "screen_roomlist_filter_unreads_empty_state_title" = "恭喜！\n没有任何未读消息！";
 "screen_roomlist_main_space_title" = "全部聊天";

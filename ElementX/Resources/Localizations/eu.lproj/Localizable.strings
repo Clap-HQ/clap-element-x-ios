@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Sortu elkarrizketa edo gela berria";
 "screen_roomlist_empty_message" = "Hasi norbaiti mezuak bidaltzen.";
 "screen_roomlist_empty_title" = "Oraindik ez dago txatik.";
+"screen_roomlist_filter_all" = "Dena";
 "screen_roomlist_filter_favourites" = "Gogokoak";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Txatak gogokoetara gehi dezakezu txaten ezarpenetan.\nOraingoz, iragazkiak desautatu ditzakezu zure gainerako txatak ikusteko";
 "screen_roomlist_filter_favourites_empty_state_title" = "Oraindik ez duzu gogoko txatik";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Oraindik ez duzu Mezu Pribaturik";
 "screen_roomlist_filter_rooms" = "Gelak";
 "screen_roomlist_filter_rooms_empty_state_title" = "Oraindik ez zaude inolako gelatan";
+"screen_roomlist_filter_spaces" = "Espazioak";
+"screen_roomlist_filter_spaces_empty_state_title" = "Oraindik ez zaude inongo espazioan";
 "screen_roomlist_filter_unreads" = "Irakurri gabeak";
 "screen_roomlist_filter_unreads_empty_state_title" = "Bejondeizula!\nEz duzu irakurri gabeko mezurik!";
 "screen_roomlist_main_space_title" = "Txatak";

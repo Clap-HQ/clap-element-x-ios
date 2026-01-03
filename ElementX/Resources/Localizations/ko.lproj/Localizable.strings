@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "새로운 대화 또는 방 만들기";
 "screen_roomlist_empty_message" = "누군가에게 메시지를 보내어 시작해 보세요.";
 "screen_roomlist_empty_title" = "아직 채팅이 없습니다.";
+"screen_roomlist_filter_all" = "전체";
 "screen_roomlist_filter_favourites" = "즐겨찾기";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "채팅 설정에서 채팅을 즐겨찾기에 추가할 수 있습니다.\n현재는 다른 채팅을 보려면 필터를 선택 해제해야 합니다.";
 "screen_roomlist_filter_favourites_empty_state_title" = "아직 즐겨찾는 채팅이 없습니다.";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "아직 DM이 없습니다.";
 "screen_roomlist_filter_rooms" = "방";
 "screen_roomlist_filter_rooms_empty_state_title" = "아직 어떤 방에도 있지 않습니다.";
+"screen_roomlist_filter_spaces" = "스페이스";
+"screen_roomlist_filter_spaces_empty_state_title" = "아직 스페이스에 참여하지 않았습니다";
 "screen_roomlist_filter_unreads" = "읽지 않은 항목";
 "screen_roomlist_filter_unreads_empty_state_title" = "축하합니다!\n읽지 않은 메시지가 없습니다!";
 "screen_roomlist_main_space_title" = "채팅";

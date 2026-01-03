@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Crëwch sgwrs neu ystafell newydd";
 "screen_roomlist_empty_message" = "Cychwynnwch arni trwy anfon neges at rywun.";
 "screen_roomlist_empty_title" = "Dim sgyrsiau eto.";
+"screen_roomlist_filter_all" = "Popeth";
 "screen_roomlist_filter_favourites" = "Ffefrynnau";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Gallwch ychwanegu sgwrs at eich ffefrynnau yn y gosodiadau sgwrsio.\nAm y tro, gallwch ddad-ddewis hidlwyr er mwyn gweld eich sgyrsiau eraill";
 "screen_roomlist_filter_favourites_empty_state_title" = "Does gennych chi ddim hoff sgyrsiau eto";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Does gennych chi ddim unrhyw DMs eto";
 "screen_roomlist_filter_rooms" = "Ystafelloedd";
 "screen_roomlist_filter_rooms_empty_state_title" = "Dydych chi ddim mewn unrhyw ystafell eto";
+"screen_roomlist_filter_spaces" = "Gofodau";
+"screen_roomlist_filter_spaces_empty_state_title" = "Dydych chi ddim mewn unrhyw ofod eto";
 "screen_roomlist_filter_unreads" = "Heb ei ddarllen";
 "screen_roomlist_filter_unreads_empty_state_title" = "Llongyfarchiadau!\nDoes gennych chi ddim negeseuon heb eu darllen!";
 "screen_roomlist_main_space_title" = "Sgyrsiau";
