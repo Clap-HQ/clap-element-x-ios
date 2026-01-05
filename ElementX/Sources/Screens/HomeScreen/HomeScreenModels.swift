@@ -123,7 +123,19 @@ struct HomeScreenViewState: BindableState {
             return rooms.map { .room($0) }
         }
 
-        // When Spaces filter is active, show only spaces sorted by last message date
+        // When both Spaces and Unreads filters are active, show only unread spaces
+        if bindings.filtersState.isSpacesFilterActive && bindings.filtersState.isUnreadsFilterActive {
+            return spaces
+                .filter { $0.badges.isDotShown || $0.badges.isMentionShown }
+                .map { HomeScreenListItem.space($0) }
+                .sorted { lhs, rhs in
+                    let lhsDate = lhs.lastMessageDate ?? .distantPast
+                    let rhsDate = rhs.lastMessageDate ?? .distantPast
+                    return lhsDate > rhsDate
+                }
+        }
+
+        // When only Spaces filter is active, show all spaces sorted by last message date
         if bindings.filtersState.isSpacesFilterActive {
             return spaces
                 .map { HomeScreenListItem.space($0) }
@@ -134,7 +146,22 @@ struct HomeScreenViewState: BindableState {
                 }
         }
 
-        // When secondary filters are active (unreads, people, rooms, etc.), show only filtered rooms
+        // When Unreads filter is active (without Spaces), show unread rooms AND unread spaces
+        if bindings.filtersState.isUnreadsFilterActive {
+            let unreadSpaceItems = spaces
+                .filter { $0.badges.isDotShown || $0.badges.isMentionShown }
+                .map { HomeScreenListItem.space($0) }
+            let roomItems = rooms.map { HomeScreenListItem.room($0) }
+            let allItems = unreadSpaceItems + roomItems
+
+            return allItems.sorted { lhs, rhs in
+                let lhsDate = lhs.lastMessageDate ?? .distantPast
+                let rhsDate = rhs.lastMessageDate ?? .distantPast
+                return lhsDate > rhsDate
+            }
+        }
+
+        // When other filters are active (people, rooms, etc.), show only filtered rooms
         if bindings.filtersState.isFiltering {
             return rooms.map { .room($0) }
         }
@@ -174,14 +201,10 @@ struct HomeScreenViewState: BindableState {
 
     var shouldShowEmptyFilterState: Bool {
         guard !bindings.isSearchFieldFocused else { return false }
+        guard bindings.filtersState.isFiltering else { return false }
 
-        // Show empty state when Spaces filter is active and no spaces
-        if bindings.filtersState.isSpacesFilterActive {
-            return spaces.isEmpty
-        }
-
-        // Show empty state when secondary filters are active and no rooms match
-        return bindings.filtersState.isFiltering && visibleRooms.isEmpty
+        // Show empty state when visibleItems is empty
+        return visibleItems.isEmpty
     }
 
     var shouldShowFilters: Bool {

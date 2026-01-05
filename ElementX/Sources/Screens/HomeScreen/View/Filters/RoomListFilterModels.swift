@@ -18,8 +18,8 @@ enum RoomListFilter: Int, CaseIterable, Identifiable {
     }
 
     case unreads
-    case spaces
     case people
+    case spaces
     case rooms
     case favourites
     case invites
@@ -52,14 +52,14 @@ enum RoomListFilter: Int, CaseIterable, Identifiable {
     var incompatibleFilters: [RoomListFilter] {
         switch self {
         case .spaces:
-            // Spaces hides all other filters when active
-            return RoomListFilter.allCases.filter { $0 != .spaces }
+            // Spaces can be combined with unreads, but not with other filters
+            return [.people, .rooms, .favourites, .invites, .lowPriority]
         case .people:
             return [.spaces, .rooms, .invites]
         case .rooms:
             return [.spaces, .people, .invites]
         case .unreads:
-            return [.spaces, .invites]
+            return [.invites]
         case .favourites:
             return [.spaces, .invites, .lowPriority]
         case .invites:
@@ -135,14 +135,12 @@ struct RoomListFiltersState {
         activeFilters.contains(.spaces)
     }
 
-    mutating func activateFilter(_ filter: RoomListFilter) {
-        // If activating spaces filter, clear all other filters first
-        if filter.isSpacesFilter {
-            activeFilters.removeAll()
-            activeFilters.append(filter)
-            return
-        }
+    /// Whether the unreads filter is active
+    var isUnreadsFilterActive: Bool {
+        activeFilters.contains(.unreads)
+    }
 
+    mutating func activateFilter(_ filter: RoomListFilter) {
         filter.incompatibleFilters.forEach { incompatibleFilter in
             if activeFilters.contains(incompatibleFilter) {
                 fatalError("[RoomListFiltersState] adding mutually exclusive filters is not allowed")
