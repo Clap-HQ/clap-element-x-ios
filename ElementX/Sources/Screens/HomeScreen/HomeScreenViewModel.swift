@@ -163,6 +163,8 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             actionsSubject.send(.presentRoom(roomIdentifier: roomIdentifier))
         case .selectSpace(let spaceID):
             Task { await selectSpace(spaceID: spaceID) }
+        case .leaveSpace(let spaceID):
+            Task { await showLeaveSpaceConfirmation(spaceID: spaceID) }
         case .showRoomDetails(let roomIdentifier):
             actionsSubject.send(.presentRoomDetails(roomIdentifier: roomIdentifier))
         case .leaveRoom(let roomIdentifier):
@@ -450,6 +452,45 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             MXLog.error("Failed to get space room list: \(error)")
             displayError()
         }
+    }
+
+    private func showLeaveSpaceConfirmation(spaceID: String) async {
+        guard let space = state.spaces.first(where: { $0.id == spaceID }) else {
+            displayError()
+            return
+        }
+
+        guard case let .success(leaveHandle) = await spaceService.leaveSpace(spaceID: spaceID) else {
+            displayError()
+            return
+        }
+
+        guard let mediaProvider = context.mediaProvider else {
+            displayError()
+            return
+        }
+
+        let leaveSpaceViewModel = LeaveSpaceViewModel(spaceName: space.name,
+                                                      canEditRolesAndPermissions: false,
+                                                      leaveHandle: leaveHandle,
+                                                      userIndicatorController: userIndicatorController,
+                                                      mediaProvider: mediaProvider)
+        leaveSpaceViewModel.actions.sink { [weak self] (action: LeaveSpaceViewModelAction) in
+            guard let self else { return }
+            switch action {
+            case .didCancel:
+                state.bindings.leaveSpaceViewModel = nil
+            case .presentRolesAndPermissions:
+                // Not supported from home screen context menu
+                state.bindings.leaveSpaceViewModel = nil
+            case .didLeaveSpace:
+                state.bindings.leaveSpaceViewModel = nil
+                actionsSubject.send(.spaceLeft(spaceID: spaceID))
+            }
+        }
+        .store(in: &cancellables)
+
+        state.bindings.leaveSpaceViewModel = leaveSpaceViewModel
     }
     
     private func updateRoomListMode(with roomSummaryProviderState: RoomSummaryProviderState) {

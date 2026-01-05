@@ -408,6 +408,11 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
                        detailStateRoomID == roomID {
                         clearRoute(animated: true)
                     }
+                case .spaceLeft(let spaceID):
+                    // Dismiss space room list if the left space was being displayed
+                    if spaceRoomListCoordinator != nil {
+                        dismissSpaceRoomListFlow(animated: true)
+                    }
                 case .presentSettingsScreen:
                     actionsSubject.send(.showSettings)
                 case .presentFeedbackScreen:

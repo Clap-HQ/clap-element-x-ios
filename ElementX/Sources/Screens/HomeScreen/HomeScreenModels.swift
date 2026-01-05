@@ -18,6 +18,7 @@ enum HomeScreenViewModelAction {
     case presentSpace(SpaceRoomListProxyProtocol)
     case presentSpaceRoomList(SpaceRoomListProxyProtocol)
     case roomLeft(roomIdentifier: String)
+    case spaceLeft(spaceID: String)
     case transferOwnership(roomIdentifier: String)
     case presentSecureBackupSettings
     case presentRecoveryKeyScreen
@@ -35,6 +36,7 @@ enum HomeScreenViewAction {
     case showRoomDetails(roomIdentifier: String)
     case leaveRoom(roomIdentifier: String)
     case confirmLeaveRoom(roomIdentifier: String)
+    case leaveSpace(spaceID: String)
     case reportRoom(roomIdentifier: String)
     case showSettings
     case startChat
@@ -220,9 +222,10 @@ struct HomeScreenViewStateBindings {
     var filtersState: RoomListFiltersState
     var searchQuery = ""
     var isSearchFieldFocused = false
-    
+
     var alertInfo: AlertInfo<UUID>?
     var leaveRoomAlertItem: LeaveRoomAlertItem?
+    var leaveSpaceViewModel: LeaveSpaceViewModel?
 }
 
 struct HomeScreenRoom: Identifiable, Equatable {

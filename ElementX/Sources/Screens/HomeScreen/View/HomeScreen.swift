@@ -22,6 +22,9 @@ struct HomeScreen: View {
             .alert(item: $context.leaveRoomAlertItem,
                    actions: leaveRoomAlertActions,
                    message: leaveRoomAlertMessage)
+            .sheet(item: $context.leaveSpaceViewModel) { leaveSpaceViewModel in
+                LeaveSpaceView(context: leaveSpaceViewModel.context)
+            }
             .navigationTitle(L10n.screenRoomlistMainSpaceTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
