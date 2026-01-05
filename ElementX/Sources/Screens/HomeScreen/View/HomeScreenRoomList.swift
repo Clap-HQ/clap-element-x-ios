@@ -29,6 +29,13 @@ struct HomeScreenRoomList: View {
                                     isSelected: false,
                                     mediaProvider: context.mediaProvider,
                                     action: context.send)
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            context.send(viewAction: .leaveSpace(spaceID: space.id))
+                        } label: {
+                            Label(L10n.actionLeaveSpace, icon: \.leave)
+                        }
+                    }
             case .room(let room):
                 roomCell(for: room)
             }

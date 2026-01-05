@@ -27,6 +27,7 @@ enum HomeScreenCoordinatorAction {
     case presentSpace(SpaceRoomListProxyProtocol)
     case presentSpaceRoomList(SpaceRoomListProxyProtocol)
     case roomLeft(roomIdentifier: String)
+    case spaceLeft(spaceID: String)
     case transferOwnership(roomIdentifier: String)
     case presentSettingsScreen
     case presentFeedbackScreen
@@ -78,6 +79,8 @@ final class HomeScreenCoordinator: CoordinatorProtocol {
                     actionsSubject.send(.presentSpaceRoomList(spaceRoomListProxy))
                 case .roomLeft(roomIdentifier: let roomIdentifier):
                     actionsSubject.send(.roomLeft(roomIdentifier: roomIdentifier))
+                case .spaceLeft(let spaceID):
+                    actionsSubject.send(.spaceLeft(spaceID: spaceID))
                 case .presentFeedbackScreen:
                     actionsSubject.send(.presentFeedbackScreen)
                 case .presentSettingsScreen:
