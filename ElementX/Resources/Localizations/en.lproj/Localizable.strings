@@ -1486,3 +1486,18 @@
 "screen_thread_activity_empty_description" = "You're all caught up!";
 "space_room_list_joined_section_title" = "Rooms you're in";
 "space_room_list_unjoined_section_title" = "Rooms you can join";
+
+"screen_space_create_room" = "Create room";
+"screen_space_remove_room" = "Remove from space";
+"screen_space_remove_room_alert_title" = "Remove room";
+"screen_space_remove_room_alert_message" = "Are you sure you want to remove \"%@\" from this space?";
+"screen_space_remove_room_success" = "%@ removed from space";
+"screen_space_create_room_visibility_header" = "Room visibility";
+"screen_space_create_room_visibility_space_members_title" = "Visible to space members";
+"screen_space_create_room_visibility_space_members_description" = "Anyone in %@ can find and join this room. Only admins of this room can add it to a space.";
+"screen_space_create_room_visibility_private_title" = "Private room (invite only)";
+"screen_space_create_room_visibility_private_description" = "Only people invited can find and join this room. You can change this at any time from room settings.";
+"screen_space_create_room_visibility_public_title" = "Public room";
+"screen_space_create_room_visibility_public_description" = "Anyone can find and join this room. You can change this at any time from room settings.";
+"screen_space_create_room_encryption_title" = "Enable end-to-end encryption";
+"screen_space_create_room_encryption_description" = "You can't disable this later. Bridges & most bots won't work yet.";

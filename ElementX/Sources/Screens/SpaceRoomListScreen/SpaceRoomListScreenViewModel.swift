@@ -13,12 +13,14 @@ import SwiftUI
 typealias SpaceRoomListScreenViewModelType = StateStoreViewModelV2<SpaceRoomListScreenViewState, SpaceRoomListScreenViewAction>
 
 class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomListScreenViewModelProtocol {
-    private let spaceRoomListProxy: SpaceRoomListProxyProtocol
+    private var spaceRoomListProxy: SpaceRoomListProxyProtocol
     private let spaceServiceProxy: SpaceServiceProxyProtocol
     private let clientProxy: ClientProxyProtocol
     private let mediaProvider: MediaProviderProtocol
     private let userIndicatorController: UserIndicatorControllerProtocol
     private let appSettings: AppSettings
+
+    private var spaceRoomListCancellables = Set<AnyCancellable>()
 
     private let actionsSubject: PassthroughSubject<SpaceRoomListScreenViewModelAction, Never> = .init()
     var actionsPublisher: AnyPublisher<SpaceRoomListScreenViewModelAction, Never> {
@@ -82,6 +84,11 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
             Task { await markAsFavourite(roomID: roomID, isFavourite: isFavourite) }
         case .leaveRoom(let roomID):
             Task { await leaveRoom(roomID: roomID) }
+        case .confirmRemoveRoomFromSpace(let roomID, let roomName):
+            state.bindings.removeRoomConfirmation = RemoveRoomConfirmation(id: roomID, roomName: roomName)
+        case .removeRoomFromSpace(let roomID, let roomName):
+            state.bindings.removeRoomConfirmation = nil
+            Task { await removeRoomFromSpace(roomID: roomID, roomName: roomName) }
         case .displayMembers:
             guard let roomProxy = state.roomProxy else { return }
             actionsSubject.send(.displayMembers(roomProxy: roomProxy))
@@ -91,6 +98,8 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
         case .spaceSettings:
             guard let roomProxy = state.roomProxy else { return }
             actionsSubject.send(.displaySpaceSettings(roomProxy: roomProxy))
+        case .createRoom:
+            actionsSubject.send(.presentCreateRoomInSpace(spaceID: state.spaceID, spaceName: state.spaceName))
         case .leaveSpace:
             Task { await showLeaveSpaceConfirmation() }
         }
@@ -99,6 +108,13 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
     // MARK: - Private
 
     private func setupSubscriptions() {
+        setupSpaceRoomListSubscriptions()
+    }
+
+    private func setupSpaceRoomListSubscriptions() {
+        // Clear previous subscriptions when replacing proxy
+        spaceRoomListCancellables.removeAll()
+
         spaceRoomListProxy.spaceRoomProxyPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] spaceProxy in
@@ -108,7 +124,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                 state.spaceMemberCount = spaceProxy.joinedMembersCount
                 state.spaceTopic = spaceProxy.topic
             }
-            .store(in: &cancellables)
+            .store(in: &spaceRoomListCancellables)
 
         // Combine space rooms and room summaries to update room list atomically
         // This prevents flickering caused by multiple separate updates
@@ -119,7 +135,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                 guard let self else { return }
                 updateRoomList(with: spaceRooms, roomSummaries: roomSummaries)
             }
-            .store(in: &cancellables)
+            .store(in: &spaceRoomListCancellables)
 
         spaceRoomListProxy.paginationStatePublisher
             .receive(on: DispatchQueue.main)
@@ -129,7 +145,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                     Task { await self.spaceRoomListProxy.paginate() }
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &spaceRoomListCancellables)
     }
 
     private func updateRoomList(with spaceRooms: [SpaceRoomProxyProtocol], roomSummaries: [RoomSummary]) {
@@ -261,6 +277,59 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
         }
     }
 
+    private func removeRoomFromSpace(roomID: String, roomName: String) async {
+        showLoadingIndicator()
+        defer { hideLoadingIndicator() }
+
+        let spaceID = state.spaceID
+        let result = await clientProxy.matrixAPI.spaces.removeChildFromSpace(spaceID: spaceID,
+                                                                               childRoomID: roomID)
+        switch result {
+        case .success:
+            // Refresh the space room list to reflect the removal
+            await refreshSpaceRoomList()
+            // Notify coordinator to refresh home screen as well
+            actionsSubject.send(.removedRoomFromSpace(spaceID: spaceID))
+            userIndicatorController.submitIndicator(UserIndicator(id: "\(Self.self)-RemovedFromSpace",
+                                                                  type: .toast,
+                                                                  title: L10n.screenSpaceRemoveRoomSuccess(roomName),
+                                                                  iconName: "checkmark"))
+        case .failure(let error):
+            MXLog.error("Failed to remove room \(roomID) from space \(spaceID): \(error)")
+            showFailureIndicator()
+        }
+    }
+
+    func refreshSpaceRoomList() async {
+        // Give SDK time to process the state event change
+        try? await Task.sleep(for: .milliseconds(500))
+
+        // Fetch a fresh space room list from the service and replace the current proxy
+        let result = await spaceServiceProxy.spaceRoomList(spaceID: state.spaceID)
+        switch result {
+        case .success(let newSpaceRoomList):
+            // Paginate to ensure we have all the data
+            await newSpaceRoomList.paginate()
+
+            // Wait a bit for pagination results to be available
+            try? await Task.sleep(for: .milliseconds(200))
+
+            // Replace the proxy and re-subscribe
+            await MainActor.run {
+                spaceRoomListProxy = newSpaceRoomList
+                setupSpaceRoomListSubscriptions()
+
+                // Immediately update the room list with fresh data
+                let spaceRooms = newSpaceRoomList.spaceRoomsPublisher.value
+                let roomSummaries = clientProxy.roomSummaryProvider.roomListPublisher.value
+                updateRoomList(with: spaceRooms, roomSummaries: roomSummaries)
+                MXLog.info("Refreshed space room list for \(state.spaceID) with \(spaceRooms.count) rooms")
+            }
+        case .failure(let error):
+            MXLog.error("Failed to refresh space room list: \(error)")
+        }
+    }
+
     private func setupSpaceRoomProxy() {
         Task {
             if case let .joined(roomProxy) = await clientProxy.roomForIdentifier(spaceRoomListProxy.id) {
@@ -334,5 +403,20 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                                                               type: .toast,
                                                               title: L10n.errorUnknown,
                                                               iconName: "xmark"))
+    }
+
+    // MARK: Loading indicator
+
+    private static let loadingIndicatorIdentifier = "\(SpaceRoomListScreenViewModel.self)-Loading"
+
+    private func showLoadingIndicator() {
+        userIndicatorController.submitIndicator(UserIndicator(id: Self.loadingIndicatorIdentifier,
+                                                              type: .modal(progress: .indeterminate, interactiveDismissDisabled: true, allowsInteraction: false),
+                                                              title: L10n.commonLoading,
+                                                              persistent: true))
+    }
+
+    private func hideLoadingIndicator() {
+        userIndicatorController.retractIndicatorWithId(Self.loadingIndicatorIdentifier)
     }
 }

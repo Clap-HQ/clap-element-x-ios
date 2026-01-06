@@ -1487,3 +1487,18 @@
 "space_room_list_joined_section_title" = "اتاق‌هایی که عضو هستید";
 "space_room_list_unjoined_section_title" = "اتاق‌هایی که می‌توانید بپیوندید";
 
+
+"screen_space_create_room" = "ایجاد اتاق";
+"screen_space_remove_room" = "حذف از فضا";
+"screen_space_remove_room_alert_title" = "حذف اتاق";
+"screen_space_remove_room_alert_message" = "آیا مطمئن هستید که می‌خواهید \"%@\" را از این فضا حذف کنید؟";
+"screen_space_remove_room_success" = "%@ از فضا حذف شد";
+"screen_space_create_room_visibility_header" = "قابلیت مشاهده اتاق";
+"screen_space_create_room_visibility_space_members_title" = "قابل مشاهده برای اعضای فضا";
+"screen_space_create_room_visibility_space_members_description" = "هر کسی در %@ می‌تواند این اتاق را پیدا کند و بپیوندد. فقط مدیران این اتاق می‌توانند آن را به یک فضا اضافه کنند.";
+"screen_space_create_room_visibility_private_title" = "اتاق خصوصی (فقط با دعوت)";
+"screen_space_create_room_visibility_private_description" = "فقط افراد دعوت شده می‌توانند این اتاق را پیدا کنند و بپیوندند. شما می‌توانید این را در هر زمان در تنظیمات اتاق تغییر دهید.";
+"screen_space_create_room_visibility_public_title" = "اتاق عمومی";
+"screen_space_create_room_visibility_public_description" = "هر کسی می‌تواند این اتاق را پیدا کند و بپیوندد. شما می‌توانید این را در هر زمان در تنظیمات اتاق تغییر دهید.";
+"screen_space_create_room_encryption_title" = "فعال کردن رمزگذاری سرتاسری";
+"screen_space_create_room_encryption_description" = "شما نمی‌توانید این را بعداً غیرفعال کنید. پل‌ها و اکثر ربات‌ها هنوز کار نخواهند کرد.";

@@ -1486,3 +1486,18 @@
 "screen_thread_activity_empty_description" = "Du är helt i kapp!";
 "space_room_list_joined_section_title" = "Rum du är med i";
 "space_room_list_unjoined_section_title" = "Rum du kan gå med i";
+
+"screen_space_create_room" = "Skapa rum";
+"screen_space_remove_room" = "Ta bort från utrymme";
+"screen_space_remove_room_alert_title" = "Ta bort rum";
+"screen_space_remove_room_alert_message" = "Är du säker på att du vill ta bort \"%@\" från detta utrymme?";
+"screen_space_remove_room_success" = "%@ borttaget från utrymme";
+"screen_space_create_room_visibility_header" = "Rumssynlighet";
+"screen_space_create_room_visibility_space_members_title" = "Synligt för utrymmesmedlemmar";
+"screen_space_create_room_visibility_space_members_description" = "Vem som helst i %@ kan hitta och gå med i detta rum. Endast administratörer för detta rum kan lägga till det i ett utrymme.";
+"screen_space_create_room_visibility_private_title" = "Privat rum (endast inbjudan)";
+"screen_space_create_room_visibility_private_description" = "Endast inbjudna personer kan hitta och gå med i detta rum. Du kan ändra detta när som helst i rumsinställningarna.";
+"screen_space_create_room_visibility_public_title" = "Offentligt rum";
+"screen_space_create_room_visibility_public_description" = "Vem som helst kan hitta och gå med i detta rum. Du kan ändra detta när som helst i rumsinställningarna.";
+"screen_space_create_room_encryption_title" = "Aktivera totalsträckskryptering";
+"screen_space_create_room_encryption_description" = "Du kan inte inaktivera detta senare. Bryggor och de flesta bottar kommer inte fungera än.";

@@ -1486,3 +1486,18 @@
 "screen_thread_activity_empty_description" = "Sunteți la curent!";
 "space_room_list_joined_section_title" = "Camere în care sunteți";
 "space_room_list_unjoined_section_title" = "Camere la care vă puteți alătura";
+
+"screen_space_create_room" = "Creează cameră";
+"screen_space_remove_room" = "Elimină din spațiu";
+"screen_space_remove_room_alert_title" = "Elimină camera";
+"screen_space_remove_room_alert_message" = "Ești sigur că vrei să elimini \"%@\" din acest spațiu?";
+"screen_space_remove_room_success" = "%@ eliminată din spațiu";
+"screen_space_create_room_visibility_header" = "Vizibilitatea camerei";
+"screen_space_create_room_visibility_space_members_title" = "Vizibilă pentru membrii spațiului";
+"screen_space_create_room_visibility_space_members_description" = "Oricine din %@ poate găsi și se poate alătura acestei camere. Doar administratorii acestei camere o pot adăuga la un spațiu.";
+"screen_space_create_room_visibility_private_title" = "Cameră privată (doar prin invitație)";
+"screen_space_create_room_visibility_private_description" = "Doar persoanele invitate pot găsi și se pot alătura acestei camere. Poți schimba asta oricând din setările camerei.";
+"screen_space_create_room_visibility_public_title" = "Cameră publică";
+"screen_space_create_room_visibility_public_description" = "Oricine poate găsi și se poate alătura acestei camere. Poți schimba asta oricând din setările camerei.";
+"screen_space_create_room_encryption_title" = "Activează criptarea de la un capăt la altul";
+"screen_space_create_room_encryption_description" = "Nu poți dezactiva asta mai târziu. Podurile și majoritatea boților nu vor funcționa încă.";

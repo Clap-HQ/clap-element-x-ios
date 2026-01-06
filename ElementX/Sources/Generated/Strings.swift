@@ -3039,6 +3039,28 @@ internal enum L10n {
   internal static var screenSpaceAnnouncementSubtitle: String { return L10n.tr("Localizable", "screen_space_announcement_subtitle") }
   /// Introducing Spaces
   internal static var screenSpaceAnnouncementTitle: String { return L10n.tr("Localizable", "screen_space_announcement_title") }
+  /// Create room
+  internal static var screenSpaceCreateRoom: String { return L10n.tr("Localizable", "screen_space_create_room") }
+  /// You can't disable this later. Bridges & most bots won't work yet.
+  internal static var screenSpaceCreateRoomEncryptionDescription: String { return L10n.tr("Localizable", "screen_space_create_room_encryption_description") }
+  /// Enable end-to-end encryption
+  internal static var screenSpaceCreateRoomEncryptionTitle: String { return L10n.tr("Localizable", "screen_space_create_room_encryption_title") }
+  /// Room visibility
+  internal static var screenSpaceCreateRoomVisibilityHeader: String { return L10n.tr("Localizable", "screen_space_create_room_visibility_header") }
+  /// Only people invited can find and join this room. You can change this at any time from room settings.
+  internal static var screenSpaceCreateRoomVisibilityPrivateDescription: String { return L10n.tr("Localizable", "screen_space_create_room_visibility_private_description") }
+  /// Private room (invite only)
+  internal static var screenSpaceCreateRoomVisibilityPrivateTitle: String { return L10n.tr("Localizable", "screen_space_create_room_visibility_private_title") }
+  /// Anyone can find and join this room. You can change this at any time from room settings.
+  internal static var screenSpaceCreateRoomVisibilityPublicDescription: String { return L10n.tr("Localizable", "screen_space_create_room_visibility_public_description") }
+  /// Public room
+  internal static var screenSpaceCreateRoomVisibilityPublicTitle: String { return L10n.tr("Localizable", "screen_space_create_room_visibility_public_title") }
+  /// Anyone in %@ can find and join this room. Only admins of this room can add it to a space.
+  internal static func screenSpaceCreateRoomVisibilitySpaceMembersDescription(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "screen_space_create_room_visibility_space_members_description", String(describing: p1))
+  }
+  /// Visible to space members
+  internal static var screenSpaceCreateRoomVisibilitySpaceMembersTitle: String { return L10n.tr("Localizable", "screen_space_create_room_visibility_space_members_title") }
   /// Spaces you have created or joined.
   internal static var screenSpaceListDescription: String { return L10n.tr("Localizable", "screen_space_list_description") }
   /// %1$@ • %2$@
@@ -3053,6 +3075,18 @@ internal enum L10n {
   internal static var screenSpaceListTitle: String { return L10n.tr("Localizable", "screen_space_list_title") }
   /// View members
   internal static var screenSpaceMenuActionMembers: String { return L10n.tr("Localizable", "screen_space_menu_action_members") }
+  /// Remove from space
+  internal static var screenSpaceRemoveRoom: String { return L10n.tr("Localizable", "screen_space_remove_room") }
+  /// Are you sure you want to remove "%@" from this space?
+  internal static func screenSpaceRemoveRoomAlertMessage(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "screen_space_remove_room_alert_message", String(describing: p1))
+  }
+  /// Remove room
+  internal static var screenSpaceRemoveRoomAlertTitle: String { return L10n.tr("Localizable", "screen_space_remove_room_alert_title") }
+  /// %@ removed from space
+  internal static func screenSpaceRemoveRoomSuccess(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "screen_space_remove_room_success", String(describing: p1))
+  }
   /// Leave space
   internal static var screenSpaceSettingsLeaveSpace: String { return L10n.tr("Localizable", "screen_space_settings_leave_space") }
   /// Roles & permissions

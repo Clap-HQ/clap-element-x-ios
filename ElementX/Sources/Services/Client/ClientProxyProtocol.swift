@@ -9,6 +9,8 @@
 import Combine
 import Foundation
 import MatrixRustSDK
+import CompoundDesignTokens
+import SwiftUI
 
 enum ClientProxyAction {
     case receivedSyncUpdate
@@ -76,8 +78,29 @@ enum SpaceRoomVisibility: String, CaseIterable, Identifiable {
     case publicRoom
 
     var id: String { rawValue }
-}
 
+    var title: String {
+        switch self {
+        case .spaceMembers:
+            return L10n.screenSpaceCreateRoomVisibilitySpaceMembersTitle
+        case .privateRoom:
+            return L10n.screenSpaceCreateRoomVisibilityPrivateTitle
+        case .publicRoom:
+            return L10n.screenSpaceCreateRoomVisibilityPublicTitle
+        }
+    }
+
+    var icon: KeyPath<CompoundIcons, Image> {
+        switch self {
+        case .spaceMembers:
+            return \.userProfile
+        case .privateRoom:
+            return \.lock
+        case .publicRoom:
+            return \.public
+        }
+    }
+}
 // The `Decodable` conformance is just for the purpose of migration
 enum TimelineMediaVisibility: Decodable {
     case always

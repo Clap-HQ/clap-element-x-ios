@@ -1486,3 +1486,18 @@
 "screen_thread_activity_empty_description" = "Vše je přečteno!";
 "space_room_list_joined_section_title" = "Místnosti, ve kterých jste";
 "space_room_list_unjoined_section_title" = "Místnosti, ke kterým se můžete připojit";
+
+"screen_space_create_room" = "Vytvořit místnost";
+"screen_space_remove_room" = "Odebrat z prostoru";
+"screen_space_remove_room_alert_title" = "Odebrat místnost";
+"screen_space_remove_room_alert_message" = "Opravdu chcete odebrat \"%@\" z tohoto prostoru?";
+"screen_space_remove_room_success" = "%@ odebrána z prostoru";
+"screen_space_create_room_visibility_header" = "Viditelnost místnosti";
+"screen_space_create_room_visibility_space_members_title" = "Viditelné pro členy prostoru";
+"screen_space_create_room_visibility_space_members_description" = "Kdokoli v %@ může tuto místnost najít a připojit se. Pouze správci této místnosti ji mohou přidat do prostoru.";
+"screen_space_create_room_visibility_private_title" = "Soukromá místnost (pouze pro pozvané)";
+"screen_space_create_room_visibility_private_description" = "Pouze pozvaní lidé mohou tuto místnost najít a připojit se. Toto můžete kdykoli změnit v nastavení místnosti.";
+"screen_space_create_room_visibility_public_title" = "Veřejná místnost";
+"screen_space_create_room_visibility_public_description" = "Kdokoli může tuto místnost najít a připojit se. Toto můžete kdykoli změnit v nastavení místnosti.";
+"screen_space_create_room_encryption_title" = "Povolit koncové šifrování";
+"screen_space_create_room_encryption_description" = "Později to nelze zakázat. Propojení a většina botů zatím nebude fungovat.";
