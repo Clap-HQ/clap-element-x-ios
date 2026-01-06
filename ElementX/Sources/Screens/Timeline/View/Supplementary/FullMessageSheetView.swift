@@ -20,12 +20,14 @@ struct FullMessageSheetView: View {
                 if let attributedString = timelineItem.content.formattedBody {
                     MessageText(attributedString: adjustedAttributedString(attributedString))
                         .tint(.compound.textLinkExternal)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(16)
                 } else {
                     Text(timelineItem.body)
                         .font(.compound.bodyLG)
                         .foregroundStyle(.compound.textPrimary)
                         .textSelection(.enabled)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(16)
                 }
             }

@@ -14,7 +14,8 @@ import OrderedCollections
 
 struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
     static let maxLinkPreviewsToRender = 2
-    static let maxCharacterCount = 400
+    static let maxLineCount = 25
+    static let maxCharacterCount = 450
 
     @Environment(\.timelineContext) private var context
     let timelineItem: TextRoomTimelineItem
@@ -26,8 +27,21 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
         timelineItem.body
     }
 
+    private var lineCount: Int {
+        textContent.components(separatedBy: "\n").count
+    }
+
+    private var exceedsLineLimit: Bool {
+        lineCount > Self.maxLineCount
+    }
+
+    private var exceedsCharacterLimit: Bool {
+        textContent.count > Self.maxCharacterCount
+    }
+
     private var shouldTruncate: Bool {
-        textContent.count > Self.maxCharacterCount && !timelineItem.shouldBoost
+        guard !timelineItem.shouldBoost else { return false }
+        return exceedsLineLimit || exceedsCharacterLimit
     }
 
     private var truncatedAttributedString: AttributedString? {
@@ -35,17 +49,29 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
             return timelineItem.content.formattedBody
         }
 
-        let characters = attributedString.characters
-        if characters.count <= Self.maxCharacterCount {
+        let string = String(attributedString.characters)
+        var truncateIndex: Int
+
+        if exceedsLineLimit {
+            // Truncate by line count
+            let lines = string.components(separatedBy: "\n")
+            let truncatedLines = lines.prefix(Self.maxLineCount).joined(separator: "\n")
+            truncateIndex = truncatedLines.count
+        } else {
+            // Truncate by character count
+            truncateIndex = Self.maxCharacterCount
+        }
+
+        guard let endIndex = attributedString.characters.index(
+            attributedString.startIndex,
+            offsetBy: truncateIndex,
+            limitedBy: attributedString.endIndex
+        ) else {
             return attributedString
         }
 
-        // Find the index at maxCharacterCount to preserve attributes
-        let startIndex = characters.startIndex
-        let endIndex = characters.index(startIndex, offsetBy: Self.maxCharacterCount)
-
         // Create a truncated AttributedString preserving formatting
-        var truncated = AttributedString(attributedString[startIndex..<endIndex])
+        var truncated = AttributedString(attributedString[attributedString.startIndex..<endIndex])
         truncated.append(AttributedString("…"))
 
         return truncated
@@ -55,7 +81,13 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
         guard shouldTruncate else {
             return timelineItem.body
         }
-        return String(timelineItem.body.prefix(Self.maxCharacterCount)) + "…"
+
+        if exceedsLineLimit {
+            let lines = timelineItem.body.components(separatedBy: "\n")
+            return lines.prefix(Self.maxLineCount).joined(separator: "\n") + "…"
+        } else {
+            return String(timelineItem.body.prefix(Self.maxCharacterCount)) + "…"
+        }
     }
 
     init(timelineItem: TextRoomTimelineItem, linkMetadata: OrderedDictionary<URL, LinkMetadataProviderItem> = [:]) {
@@ -117,7 +149,8 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
                 Text(L10n.screenRoomTimelineReactionsShowMore)
                     .font(.compound.bodySMSemibold)
                     .foregroundColor(.compound.textBubble(isOutgoing: timelineItem.isOutgoing))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top, 4)
+                    .padding(.trailing, 40)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
