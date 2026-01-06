@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Katıldığınız odalar";
 "space_channel_list_unjoined_section_title" = "Katılabileceğiniz odalar";
+
+"screen_space_create_room" = "Oda oluştur";
+"screen_space_remove_room" = "Alandan kaldır";
+"screen_space_remove_room_alert_title" = "Odayı kaldır";
+"screen_space_remove_room_alert_message" = "\"%@\" öğesini bu alandan kaldırmak istediğinize emin misiniz?";
+"screen_space_remove_room_success" = "%@ alandan kaldırıldı";
+"screen_space_create_room_visibility_header" = "Oda görünürlüğü";
+"screen_space_create_room_visibility_space_members_title" = "Alan üyeleri tarafından görülebilir";
+"screen_space_create_room_visibility_space_members_description" = "%@ alanındaki herkes bu odayı bulabilir ve katılabilir. Sadece bu odanın yöneticileri onu bir alana ekleyebilir.";
+"screen_space_create_room_visibility_private_title" = "Özel oda (yalnızca davetliler)";
+"screen_space_create_room_visibility_private_description" = "Sadece davet edilen kişiler bu odayı bulabilir ve katılabilir. Bunu istediğiniz zaman oda ayarlarından değiştirebilirsiniz.";
+"screen_space_create_room_visibility_public_title" = "Herkese açık oda";
+"screen_space_create_room_visibility_public_description" = "Herkes bu odayı bulabilir ve katılabilir. Bunu istediğiniz zaman oda ayarlarından değiştirebilirsiniz.";
+"screen_space_create_room_encryption_title" = "Uçtan uca şifrelemeyi etkinleştir";
+"screen_space_create_room_encryption_description" = "Bunu daha sonra devre dışı bırakamazsınız. Köprüler ve çoğu bot henüz çalışmayacaktır.";

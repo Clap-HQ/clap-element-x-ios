@@ -58,6 +58,12 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
     private var spaceRoomListMemberDetailsCoordinator: RoomMemberDetailsScreenCoordinator?
     // periphery:ignore - retaining purpose
     private var spaceRoomListSpaceSettingsFlowCoordinator: RoomFlowCoordinator?
+    // periphery:ignore - retaining purpose
+    private var createRoomInSpaceCoordinator: CreateRoomInSpaceScreenCoordinator?
+    // periphery:ignore - retaining purpose
+    private var createRoomInSpaceNavigationStackCoordinator: NavigationStackCoordinator?
+    // periphery:ignore - retaining purpose
+    private var homeScreenCoordinator: HomeScreenCoordinator?
 
     private var spaceRoomListCancellables = Set<AnyCancellable>()
     
@@ -391,7 +397,7 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
         coordinator.actions
             .sink { [weak self] action in
                 guard let self else { return }
-                
+
                 switch action {
                 case .presentRoom(let roomID):
                     handleAppRoute(.room(roomID: roomID, via: []), animated: true)
@@ -436,7 +442,8 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
                 }
             }
             .store(in: &cancellables)
-        
+
+        homeScreenCoordinator = coordinator
         sidebarNavigationStackCoordinator.setRootCoordinator(coordinator)
     }
     
@@ -617,6 +624,12 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
                     presentSpaceMembers(roomProxy: roomProxy, animated: true)
                 case .displaySpaceSettings(let roomProxy):
                     presentSpaceSettings(roomProxy: roomProxy, animated: true)
+                case .presentCreateRoomInSpace(let spaceID, let spaceName):
+                    presentCreateRoomInSpace(spaceID: spaceID, spaceName: spaceName, animated: true)
+                case .removedRoomFromSpace(let spaceID):
+                    Task { [weak self] in
+                        await self?.homeScreenCoordinator?.refreshSpaceChildren(for: spaceID)
+                    }
                 case .leftSpace:
                     dismissSpaceRoomListFlow(animated: true)
                 }
@@ -640,6 +653,7 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
         spaceRoomListMembersFlowCoordinator = nil
         spaceRoomListMemberDetailsCoordinator = nil
         spaceRoomListSpaceSettingsFlowCoordinator = nil
+        createRoomInSpaceCoordinator = nil
     }
 
     private func presentSpaceMembers(roomProxy: JoinedRoomProxyProtocol, animated: Bool) {
@@ -781,6 +795,73 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
 
         // Navigate directly to room details screen
         coordinator.handleAppRoute(.roomDetails(roomID: roomID), animated: animated)
+    }
+
+    private func presentCreateRoomInSpace(spaceID: String, spaceName: String, animated: Bool) {
+        guard createRoomInSpaceCoordinator == nil else {
+            MXLog.warning("Create room in space coordinator already exists, ignoring duplicate presentation request")
+            return
+        }
+
+        let navigationStackCoordinator = NavigationStackCoordinator()
+        createRoomInSpaceNavigationStackCoordinator = navigationStackCoordinator
+        let coordinator = CreateRoomInSpaceScreenCoordinator(parameters: .init(spaceID: spaceID,
+                                                                                spaceName: spaceName,
+                                                                                userSession: userSession,
+                                                                                userIndicatorController: flowParameters.userIndicatorController,
+                                                                                appSettings: flowParameters.appSettings))
+        createRoomInSpaceCoordinator = coordinator
+
+        coordinator.actions
+            .sink { [weak self] action in
+                guard let self else { return }
+                switch action {
+                case .createdRoom(let roomID):
+                    navigationSplitCoordinator.setSheetCoordinator(nil)
+                    createRoomInSpaceCoordinator = nil
+                    createRoomInSpaceNavigationStackCoordinator = nil
+                    // Refresh both space room list and home screen space children
+                    Task { [weak self] in
+                        await self?.spaceRoomListCoordinator?.refreshSpaceRoomList()
+                        await self?.homeScreenCoordinator?.refreshSpaceChildren(for: spaceID)
+                    }
+                    // Navigate to the newly created room
+                    presentRoomInSpaceRoomList(roomID: roomID, animated: true)
+                case .dismiss:
+                    navigationSplitCoordinator.setSheetCoordinator(nil)
+                    createRoomInSpaceCoordinator = nil
+                    createRoomInSpaceNavigationStackCoordinator = nil
+                case .displayMediaPickerWithMode(let mode):
+                    presentMediaPicker(mode: mode, coordinator: coordinator)
+                }
+            }
+            .store(in: &spaceRoomListCancellables)
+
+        coordinator.start()
+        navigationStackCoordinator.setRootCoordinator(coordinator)
+        navigationSplitCoordinator.setSheetCoordinator(navigationStackCoordinator, animated: animated) { [weak self] in
+            self?.createRoomInSpaceCoordinator = nil
+            self?.createRoomInSpaceNavigationStackCoordinator = nil
+        }
+    }
+
+    private func presentMediaPicker(mode: MediaPickerScreenMode, coordinator: CreateRoomInSpaceScreenCoordinator) {
+        guard let navStackCoordinator = createRoomInSpaceNavigationStackCoordinator else { return }
+
+        let mediaPickerCoordinator = MediaPickerScreenCoordinator(mode: mode,
+                                                                   userIndicatorController: flowParameters.userIndicatorController,
+                                                                   orientationManager: flowParameters.windowManager) { [weak navStackCoordinator, weak coordinator] action in
+            switch action {
+            case .selectedMediaAtURLs(let urls):
+                if let url = urls.first {
+                    coordinator?.updateAvatar(fileURL: url)
+                }
+                navStackCoordinator?.setSheetCoordinator(nil)
+            case .cancel:
+                navStackCoordinator?.setSheetCoordinator(nil)
+            }
+        }
+        navStackCoordinator.setSheetCoordinator(mediaPickerCoordinator)
     }
 
     // MARK: Start Chat

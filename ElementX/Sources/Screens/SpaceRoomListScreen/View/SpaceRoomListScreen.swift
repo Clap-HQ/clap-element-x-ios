@@ -26,6 +26,16 @@ struct SpaceRoomListScreen: View {
         .sheet(item: $context.leaveSpaceViewModel) { leaveSpaceViewModel in
             LeaveSpaceView(context: leaveSpaceViewModel.context)
         }
+        .alert(item: $context.removeRoomConfirmation) { confirmation in
+            Alert(
+                title: Text(L10n.screenSpaceRemoveRoomAlertTitle),
+                message: Text(L10n.screenSpaceRemoveRoomAlertMessage(confirmation.roomName)),
+                primaryButton: .destructive(Text(L10n.actionRemove)) {
+                    context.send(viewAction: .removeRoomFromSpace(roomID: confirmation.id, roomName: confirmation.roomName))
+                },
+                secondaryButton: .cancel()
+            )
+        }
     }
 
     @ViewBuilder
@@ -116,6 +126,14 @@ struct SpaceRoomListScreen: View {
         } label: {
             Label(L10n.actionLeaveRoom, icon: \.leave)
         }
+
+        if context.viewState.canManageSpaceChildren {
+            Button(role: .destructive) {
+                context.send(viewAction: .confirmRemoveRoomFromSpace(roomID: info.id, roomName: info.name))
+            } label: {
+                Label(L10n.screenSpaceRemoveRoom, icon: \.close)
+            }
+        }
     }
 
     @ToolbarContentBuilder
@@ -144,6 +162,14 @@ struct SpaceRoomListScreen: View {
                        context.viewState.roomProxy != nil {
                         Button { context.send(viewAction: .spaceSettings) } label: {
                             Label(L10n.commonSettings, icon: \.settings)
+                        }
+                    }
+                }
+
+                if context.viewState.canManageSpaceChildren {
+                    Section {
+                        Button { context.send(viewAction: .createRoom) } label: {
+                            Label(L10n.screenSpaceCreateRoom, icon: \.plus)
                         }
                     }
                 }

@@ -59,7 +59,9 @@ class ClientProxy: ClientProxyProtocol {
     private(set) var sessionVerificationController: SessionVerificationControllerProxyProtocol?
     
     let spaceService: SpaceServiceProxyProtocol
-    
+
+    let spaceChildService: SpaceChildServiceProtocol
+
     private static var roomCreationPowerLevelOverrides: PowerLevels {
         .init(usersDefault: nil,
               eventsDefault: nil,
@@ -173,7 +175,14 @@ class ClientProxy: ClientProxyProtocol {
         secureBackupController = SecureBackupController(encryption: client.encryption())
         
         spaceService = SpaceServiceProxy(spaceService: client.spaceService())
-        
+
+        // Initialize SpaceChildService with a closure that fetches the current access token
+        // This ensures we always use the latest token, even after token refresh
+        spaceChildService = SpaceChildService(homeserverURL: client.homeserver()) { [weak client] in
+            guard let client else { return nil }
+            return try? client.session().accessToken
+        }
+
         let configuredAppService = try await ClientProxyServices(client: client,
                                                                  actionsSubject: actionsSubject,
                                                                  notificationSettings: notificationSettings,
@@ -492,7 +501,84 @@ class ClientProxy: ClientProxyProtocol {
             return .failure(.sdkError(error))
         }
     }
-    
+
+    func createRoomInSpace(spaceID: String,
+                           name: String,
+                           topic: String?,
+                           visibility: SpaceRoomVisibility,
+                           isEncrypted: Bool,
+                           avatarURL: URL?) async -> Result<String, ClientProxyError> {
+        // Determine isRoomPrivate based on visibility
+        // Public rooms are not private, all others are private
+        let isRoomPrivate = visibility != .publicRoom
+
+        // 1. Create the room using existing method
+        // Note: Encryption is handled by createRoom when isRoomPrivate is true
+        let createResult = await createRoom(name: name,
+                                            topic: topic,
+                                            isRoomPrivate: isRoomPrivate && isEncrypted,
+                                            isKnockingOnly: false,
+                                            userIDs: [],
+                                            avatarURL: avatarURL,
+                                            aliasLocalPart: nil)
+
+        guard case .success(let roomID) = createResult else {
+            return createResult
+        }
+
+        MXLog.info("Room created: \(roomID), now adding to space: \(spaceID)")
+
+        // 2. Set m.space.child on the space (makes the room visible in the space)
+        let addChildResult = await spaceChildService.addChildToSpace(spaceID: spaceID,
+                                                                      childRoomID: roomID,
+                                                                      suggested: false)
+        switch addChildResult {
+        case .success:
+            MXLog.info("Successfully added room \(roomID) as child of space \(spaceID)")
+        case .failure(let error):
+            MXLog.error("Failed to add room \(roomID) as child of space \(spaceID): \(error.localizedDescription)")
+        }
+
+        // 3. Set m.space.parent on the room (declares the room's parent)
+        let setParentResult = await spaceChildService.setSpaceParent(roomID: roomID,
+                                                                      spaceID: spaceID,
+                                                                      canonical: true)
+        switch setParentResult {
+        case .success:
+            MXLog.info("Successfully set space \(spaceID) as parent of room \(roomID)")
+        case .failure(let error):
+            MXLog.error("Failed to set space parent for room \(roomID): \(error.localizedDescription)")
+        }
+
+        // 4. Set join rules based on visibility
+        switch visibility {
+        case .spaceMembers:
+            // Restricted: only space members can join
+            let joinRuleResult = await spaceChildService.setRestrictedJoinRule(roomID: roomID, spaceID: spaceID)
+            switch joinRuleResult {
+            case .success:
+                MXLog.info("Successfully set restricted join rule for room \(roomID)")
+            case .failure(let error):
+                MXLog.error("Failed to set restricted join rule for room \(roomID): \(error.localizedDescription)")
+            }
+        case .publicRoom:
+            // Public: anyone can join
+            let joinRuleResult = await spaceChildService.setPublicJoinRule(roomID: roomID)
+            switch joinRuleResult {
+            case .success:
+                MXLog.info("Successfully set public join rule for room \(roomID)")
+            case .failure(let error):
+                MXLog.error("Failed to set public join rule for room \(roomID): \(error.localizedDescription)")
+            }
+        case .privateRoom:
+            // Invite only: default behavior from createRoom, no additional action needed
+            MXLog.info("Room \(roomID) is private (invite only), no join rule change needed")
+        }
+
+        MXLog.info("Completed createRoomInSpace: room=\(roomID), space=\(spaceID), visibility=\(visibility)")
+        return .success(roomID)
+    }
+
     func joinRoom(_ roomID: String, via: [String]) async -> Result<Void, ClientProxyError> {
         do {
             let _ = try await client.joinRoomByIdOrAlias(roomIdOrAlias: roomID, serverNames: via)

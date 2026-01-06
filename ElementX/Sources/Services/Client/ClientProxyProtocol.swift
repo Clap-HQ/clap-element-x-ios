@@ -127,7 +127,9 @@ protocol ClientProxyProtocol: AnyObject {
     var sessionVerificationController: SessionVerificationControllerProxyProtocol? { get }
     
     var spaceService: SpaceServiceProxyProtocol { get }
-    
+
+    var spaceChildService: SpaceChildServiceProtocol { get }
+
     var isReportRoomSupported: Bool { get async }
     
     var isLiveKitRTCSupported: Bool { get async }
@@ -159,7 +161,14 @@ protocol ClientProxyProtocol: AnyObject {
                     userIDs: [String],
                     avatarURL: URL?,
                     aliasLocalPart: String?) async -> Result<String, ClientProxyError>
-    
+
+    func createRoomInSpace(spaceID: String,
+                           name: String,
+                           topic: String?,
+                           visibility: SpaceRoomVisibility,
+                           isEncrypted: Bool,
+                           avatarURL: URL?) async -> Result<String, ClientProxyError>
+
     func joinRoom(_ roomID: String, via: [String]) async -> Result<Void, ClientProxyError>
     
     func joinRoomAlias(_ roomAlias: String) async -> Result<Void, ClientProxyError>

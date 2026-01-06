@@ -12,4 +12,6 @@ import Combine
 protocol SpaceRoomListScreenViewModelProtocol {
     var actionsPublisher: AnyPublisher<SpaceRoomListScreenViewModelAction, Never> { get }
     var context: SpaceRoomListScreenViewModel.Context { get }
+
+    func refreshSpaceRoomList() async
 }

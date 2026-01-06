@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Ystafelloedd rydych chi ynddynt";
 "space_channel_list_unjoined_section_title" = "Ystafelloedd y gallwch ymuno â nhw";
+
+"screen_space_create_room" = "Creu ystafell";
+"screen_space_remove_room" = "Dileu o'r gofod";
+"screen_space_remove_room_alert_title" = "Dileu ystafell";
+"screen_space_remove_room_alert_message" = "Ydych chi'n siŵr eich bod am ddileu \"%@\" o'r gofod hwn?";
+"screen_space_remove_room_success" = "%@ wedi'i ddileu o'r gofod";
+"screen_space_create_room_visibility_header" = "Gwelededd ystafell";
+"screen_space_create_room_visibility_space_members_title" = "Yn weladwy i aelodau'r gofod";
+"screen_space_create_room_visibility_space_members_description" = "Gall unrhyw un yn %@ ddod o hyd i'r ystafell hon ac ymuno. Dim ond gweinyddwyr yr ystafell hon all ei hychwanegu at ofod.";
+"screen_space_create_room_visibility_private_title" = "Ystafell breifat (gwahoddiad yn unig)";
+"screen_space_create_room_visibility_private_description" = "Dim ond pobl sydd wedi'u gwahodd all ddod o hyd i'r ystafell hon ac ymuno. Gallwch newid hyn unrhyw bryd yn y gosodiadau ystafell.";
+"screen_space_create_room_visibility_public_title" = "Ystafell gyhoeddus";
+"screen_space_create_room_visibility_public_description" = "Gall unrhyw un ddod o hyd i'r ystafell hon ac ymuno. Gallwch newid hyn unrhyw bryd yn y gosodiadau ystafell.";
+"screen_space_create_room_encryption_title" = "Galluogi amgryptio pen-i-ben";
+"screen_space_create_room_encryption_description" = "Allwch chi ddim analluogi hyn yn nes ymlaen. Ni fydd pontydd a'r mwyafrif o fotiau'n gweithio eto.";

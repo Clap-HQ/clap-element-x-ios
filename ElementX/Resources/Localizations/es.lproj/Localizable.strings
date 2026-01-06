@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Salas en las que estás";
 "space_channel_list_unjoined_section_title" = "Salas a las que puedes unirte";
+
+"screen_space_create_room" = "Crear sala";
+"screen_space_remove_room" = "Quitar del espacio";
+"screen_space_remove_room_alert_title" = "Quitar sala";
+"screen_space_remove_room_alert_message" = "¿Estás seguro de que quieres quitar \"%@\" de este espacio?";
+"screen_space_remove_room_success" = "%@ quitado del espacio";
+"screen_space_create_room_visibility_header" = "Visibilidad de la sala";
+"screen_space_create_room_visibility_space_members_title" = "Visible para los miembros del espacio";
+"screen_space_create_room_visibility_space_members_description" = "Cualquier persona en %@ puede encontrar y unirse a esta sala. Solo los administradores de esta sala pueden añadirla a un espacio.";
+"screen_space_create_room_visibility_private_title" = "Sala privada (solo por invitación)";
+"screen_space_create_room_visibility_private_description" = "Solo las personas invitadas pueden encontrar y unirse a esta sala. Puedes cambiar esto en cualquier momento desde la configuración de la sala.";
+"screen_space_create_room_visibility_public_title" = "Sala pública";
+"screen_space_create_room_visibility_public_description" = "Cualquiera puede encontrar y unirse a esta sala. Puedes cambiar esto en cualquier momento desde la configuración de la sala.";
+"screen_space_create_room_encryption_title" = "Activar el cifrado de extremo a extremo";
+"screen_space_create_room_encryption_description" = "No podrás desactivarlo más adelante. Los puentes y la mayoría de bots todavía no funcionarán.";

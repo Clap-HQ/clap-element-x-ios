@@ -23,6 +23,8 @@ enum SpaceRoomListScreenCoordinatorAction {
     case dismiss
     case displayMembers(roomProxy: JoinedRoomProxyProtocol)
     case displaySpaceSettings(roomProxy: JoinedRoomProxyProtocol)
+    case presentCreateRoomInSpace(spaceID: String, spaceName: String)
+    case removedRoomFromSpace(spaceID: String)
     case leftSpace
 }
 
@@ -60,6 +62,10 @@ final class SpaceRoomListScreenCoordinator: CoordinatorProtocol {
                     actionsSubject.send(.displayMembers(roomProxy: roomProxy))
                 case .displaySpaceSettings(let roomProxy):
                     actionsSubject.send(.displaySpaceSettings(roomProxy: roomProxy))
+                case .presentCreateRoomInSpace(let spaceID, let spaceName):
+                    actionsSubject.send(.presentCreateRoomInSpace(spaceID: spaceID, spaceName: spaceName))
+                case .removedRoomFromSpace(let spaceID):
+                    actionsSubject.send(.removedRoomFromSpace(spaceID: spaceID))
                 case .leftSpace:
                     actionsSubject.send(.leftSpace)
                 }
@@ -69,5 +75,9 @@ final class SpaceRoomListScreenCoordinator: CoordinatorProtocol {
 
     func toPresentable() -> AnyView {
         AnyView(SpaceRoomListScreen(context: viewModel.context))
+    }
+
+    func refreshSpaceRoomList() async {
+        await viewModel.refreshSpaceRoomList()
     }
 }

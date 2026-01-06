@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Räume, denen Sie beigetreten sind";
 "space_channel_list_unjoined_section_title" = "Räume, denen Sie beitreten können";
+
+"screen_space_create_room" = "Chat erstellen";
+"screen_space_remove_room" = "Aus Space entfernen";
+"screen_space_remove_room_alert_title" = "Chat entfernen";
+"screen_space_remove_room_alert_message" = "Möchtest du \"%@\" aus diesem Space entfernen?";
+"screen_space_remove_room_success" = "%@ aus Space entfernt";
+"screen_space_create_room_visibility_header" = "Chat Sichtbarkeit";
+"screen_space_create_room_visibility_space_members_title" = "Für Space-Mitglieder sichtbar";
+"screen_space_create_room_visibility_space_members_description" = "Jeder in %@ kann diesen Chat finden und beitreten. Nur Admins dieses Chats können ihn zu einem Space hinzufügen.";
+"screen_space_create_room_visibility_private_title" = "Privater Chat (Einladung erforderlich)";
+"screen_space_create_room_visibility_private_description" = "Nur eingeladene Personen können diesen Chat finden und beitreten. Du kannst dies jederzeit in den Chat-Einstellungen ändern.";
+"screen_space_create_room_visibility_public_title" = "Öffentlicher Chat";
+"screen_space_create_room_visibility_public_description" = "Jeder kann diesen Chat finden und beitreten. Du kannst dies jederzeit in den Chat-Einstellungen ändern.";
+"screen_space_create_room_encryption_title" = "Ende-zu-Ende-Verschlüsselung aktivieren";
+"screen_space_create_room_encryption_description" = "Du kannst dies später nicht deaktivieren. Brücken und die meisten Bots werden noch nicht funktionieren.";

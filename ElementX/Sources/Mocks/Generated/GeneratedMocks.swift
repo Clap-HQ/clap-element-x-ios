@@ -2298,6 +2298,11 @@ class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
         set(value) { underlyingSpaceService = value }
     }
     var underlyingSpaceService: SpaceServiceProxyProtocol!
+    var spaceChildService: SpaceChildServiceProtocol {
+        get { return underlyingSpaceChildService }
+        set(value) { underlyingSpaceChildService = value }
+    }
+    var underlyingSpaceChildService: SpaceChildServiceProtocol!
     var isReportRoomSupportedCallsCount = 0
     var isReportRoomSupportedCalled: Bool {
         return isReportRoomSupportedCallsCount > 0
@@ -2896,6 +2901,74 @@ class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
             return await createRoomNameTopicIsRoomPrivateIsKnockingOnlyUserIDsAvatarURLAliasLocalPartClosure(name, topic, isRoomPrivate, isKnockingOnly, userIDs, avatarURL, aliasLocalPart)
         } else {
             return createRoomNameTopicIsRoomPrivateIsKnockingOnlyUserIDsAvatarURLAliasLocalPartReturnValue
+        }
+    }
+    //MARK: - createRoomInSpace
+
+    var createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingCallsCount = 0
+    var createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingCallsCount
+                }
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLCalled: Bool {
+        return createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLCallsCount > 0
+    }
+    var createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLReceivedArguments: (spaceID: String, name: String, topic: String?, visibility: SpaceRoomVisibility, isEncrypted: Bool, avatarURL: URL?)?
+    var createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLReceivedInvocations: [(spaceID: String, name: String, topic: String?, visibility: SpaceRoomVisibility, isEncrypted: Bool, avatarURL: URL?)] = []
+
+    var createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingReturnValue: Result<String, ClientProxyError>!
+    var createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLReturnValue: Result<String, ClientProxyError>! {
+        get {
+            if Thread.isMainThread {
+                return createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingReturnValue
+            } else {
+                var returnValue: Result<String, ClientProxyError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingReturnValue
+                }
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLClosure: ((String, String, String?, SpaceRoomVisibility, Bool, URL?) async -> Result<String, ClientProxyError>)?
+
+    func createRoomInSpace(spaceID: String, name: String, topic: String?, visibility: SpaceRoomVisibility, isEncrypted: Bool, avatarURL: URL?) async -> Result<String, ClientProxyError> {
+        createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLCallsCount += 1
+        createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLReceivedArguments = (spaceID: spaceID, name: name, topic: topic, visibility: visibility, isEncrypted: isEncrypted, avatarURL: avatarURL)
+        DispatchQueue.main.async {
+            self.createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLReceivedInvocations.append((spaceID: spaceID, name: name, topic: topic, visibility: visibility, isEncrypted: isEncrypted, avatarURL: avatarURL))
+        }
+        if let createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLClosure = createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLClosure {
+            return await createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLClosure(spaceID, name, topic, visibility, isEncrypted, avatarURL)
+        } else {
+            return createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLReturnValue
         }
     }
     //MARK: - joinRoom

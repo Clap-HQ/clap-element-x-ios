@@ -386,6 +386,38 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         updateRooms()
     }
 
+    /// Refreshes the space children tracking for a specific space
+    /// Call this after creating or removing a room in a space to update grouping
+    func refreshSpaceChildren(for spaceID: String) async {
+        guard developerModeSettings.groupSpaceRooms else { return }
+
+        // Fetch a fresh space room list
+        switch await spaceService.spaceRoomList(spaceID: spaceID) {
+        case .success(let newSpaceRoomListProxy):
+            await newSpaceRoomListProxy.paginate()
+
+            await MainActor.run {
+                // Replace the old proxy with the new one
+                spaceRoomListProxies[spaceID] = newSpaceRoomListProxy
+
+                // Update subscription
+                let cancellable = newSpaceRoomListProxy.spaceRoomsPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] _ in
+                        self?.rebuildSpaceChildrenRoomIDs()
+                    }
+                spaceChildrenCancellables[spaceID] = cancellable
+
+                // Rebuild room IDs to update filtering
+                rebuildSpaceChildrenRoomIDs()
+            }
+            MXLog.info("Refreshed space children tracking for \(spaceID)")
+
+        case .failure(let error):
+            MXLog.error("Failed to refresh space children for \(spaceID): \(error)")
+        }
+    }
+
     /// Rebuilds spaces with aggregated badge and last message date info from child rooms
     private func rebuildSpacesWithAggregatedInfo() {
         guard let roomSummaryProvider else { return }

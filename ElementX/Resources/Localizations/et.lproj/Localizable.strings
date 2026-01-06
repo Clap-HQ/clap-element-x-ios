@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Toad, milles olete";
 "space_channel_list_unjoined_section_title" = "Toad, millega saate liituda";
+
+"screen_space_create_room" = "Loo jututuba";
+"screen_space_remove_room" = "Eemalda sellest kogukonnast";
+"screen_space_remove_room_alert_title" = "Eemalda jututuba";
+"screen_space_remove_room_alert_message" = "Kas oled kindel, et soovid \"%@\" sellest kogukonnast eemaldada?";
+"screen_space_remove_room_success" = "%@ eemaldatud kogukonnast";
+"screen_space_create_room_visibility_header" = "Jututoa nähtavus";
+"screen_space_create_room_visibility_space_members_title" = "Nähtav kogukonnakeskuse liikmetele";
+"screen_space_create_room_visibility_space_members_description" = "Kõik %@ liikmed saavad seda jututuba leida ja sellega liituda. Ainult selle jututoa haldajad saavad seda kogukonnale lisada.";
+"screen_space_create_room_visibility_private_title" = "Privaatne jututuba (kutse alusel)";
+"screen_space_create_room_visibility_private_description" = "Ainult kutsutud inimesed saavad seda jututuba leida ja sellega liituda. Seda saab igal ajal jututoa seadetes muuta.";
+"screen_space_create_room_visibility_public_title" = "Avalik jututuba";
+"screen_space_create_room_visibility_public_description" = "Kõik saavad seda jututuba leida ja sellega liituda. Seda saab igal ajal jututoa seadetes muuta.";
+"screen_space_create_room_encryption_title" = "Võta läbiv krüptimine kasutusele";
+"screen_space_create_room_encryption_description" = "Seda funktsionaalsust sa ei saa hiljem kinni keerata. Sõnumisillad ja enamus roboteid veel ei oska seda kasutada.";

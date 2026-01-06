@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Kambariai, kuriuose esate";
 "space_channel_list_unjoined_section_title" = "Kambariai, prie kurių galite prisijungti";
+
+"screen_space_create_room" = "Sukurti kambarį";
+"screen_space_remove_room" = "Pašalinti iš erdvės";
+"screen_space_remove_room_alert_title" = "Pašalinti kambarį";
+"screen_space_remove_room_alert_message" = "Ar tikrai norite pašalinti \"%@\" iš šios erdvės?";
+"screen_space_remove_room_success" = "%@ pašalintas iš erdvės";
+"screen_space_create_room_visibility_header" = "Kambario matomumas";
+"screen_space_create_room_visibility_space_members_title" = "Matomas erdvės nariams";
+"screen_space_create_room_visibility_space_members_description" = "Bet kas %@ gali rasti ir prisijungti prie šio kambario. Tik šio kambario administratoriai gali jį pridėti prie erdvės.";
+"screen_space_create_room_visibility_private_title" = "Privatus kambarys (tik su kvietimu)";
+"screen_space_create_room_visibility_private_description" = "Tik pakviesti žmonės gali rasti ir prisijungti prie šio kambario. Galite tai pakeisti bet kada kambario nustatymuose.";
+"screen_space_create_room_visibility_public_title" = "Viešas kambarys";
+"screen_space_create_room_visibility_public_description" = "Bet kas gali rasti ir prisijungti prie šio kambario. Galite tai pakeisti bet kada kambario nustatymuose.";
+"screen_space_create_room_encryption_title" = "Įjungti ištisąjį šifravimą";
+"screen_space_create_room_encryption_description" = "Vėliau negalėsite to išjungti. Tiltai ir dauguma robotų dar neveiks.";

@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Siz aʼzo boʻlgan xonalar";
 "space_channel_list_unjoined_section_title" = "Qoʻshilishingiz mumkin boʻlgan xonalar";
+
+"screen_space_create_room" = "Xona yaratish";
+"screen_space_remove_room" = "Fazoviydan olib tashlash";
+"screen_space_remove_room_alert_title" = "Xonani olib tashlash";
+"screen_space_remove_room_alert_message" = "Haqiqatan ham \"%@\"ni bu fazoviydan olib tashlamoqchimisiz?";
+"screen_space_remove_room_success" = "%@ fazoviydan olib tashlandi";
+"screen_space_create_room_visibility_header" = "Xona ko'rinishi";
+"screen_space_create_room_visibility_space_members_title" = "Fazoviy a'zolariga ko'rinadi";
+"screen_space_create_room_visibility_space_members_description" = "%@dagi har kim bu xonani topishi va qo'shilishi mumkin. Faqat bu xonaning administratorlari uni fazoviyga qo'shishi mumkin.";
+"screen_space_create_room_visibility_private_title" = "Shaxsiy xona (faqat taklif bilan)";
+"screen_space_create_room_visibility_private_description" = "Faqat taklif qilingan odamlar bu xonani topishi va qo'shilishi mumkin. Buni istalgan vaqtda xona sozlamalarida o'zgartirishingiz mumkin.";
+"screen_space_create_room_visibility_public_title" = "Ommaviy xona";
+"screen_space_create_room_visibility_public_description" = "Har kim bu xonani topishi va qo'shilishi mumkin. Buni istalgan vaqtda xona sozlamalarida o'zgartirishingiz mumkin.";
+"screen_space_create_room_encryption_title" = "Uchi-uchiga shifrlashni yoqish";
+"screen_space_create_room_encryption_description" = "Buni keyinroq o'chirib bo'lmaydi. Ko'priklar va aksariyat botlar hali ishlamaydi.";

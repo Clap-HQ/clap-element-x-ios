@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "您加入的房間";
 "space_channel_list_unjoined_section_title" = "可加入的房間";
+
+"screen_space_create_room" = "建立聊天室";
+"screen_space_remove_room" = "從聊天空間移除";
+"screen_space_remove_room_alert_title" = "移除聊天室";
+"screen_space_remove_room_alert_message" = "確定要從此聊天空間移除「%@」嗎？";
+"screen_space_remove_room_success" = "%@ 已從聊天空間移除";
+"screen_space_create_room_visibility_header" = "聊天室能見度";
+"screen_space_create_room_visibility_space_members_title" = "對聊天空間成員顯示為可見";
+"screen_space_create_room_visibility_space_members_description" = "%@ 中的任何人都可以找到並加入此聊天室。只有此聊天室的管理員可以將其新增至聊天空間。";
+"screen_space_create_room_visibility_private_title" = "私密聊天室（邀請制）";
+"screen_space_create_room_visibility_private_description" = "只有受邀者才能找到並加入此聊天室。您可以隨時在聊天室設定中變更。";
+"screen_space_create_room_visibility_public_title" = "公開聊天室";
+"screen_space_create_room_visibility_public_description" = "任何人都可以找到並加入此聊天室。您可以隨時在聊天室設定中變更。";
+"screen_space_create_room_encryption_title" = "啟用端對端加密";
+"screen_space_create_room_encryption_description" = "您無法在稍後停用此功能。橋接與大多數的聊天機器人也會無法運作。";

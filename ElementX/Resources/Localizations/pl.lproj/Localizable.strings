@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Pokoje, w których jesteś";
 "space_channel_list_unjoined_section_title" = "Pokoje, do których możesz dołączyć";
+
+"screen_space_create_room" = "Utwórz pokój";
+"screen_space_remove_room" = "Usuń z przestrzeni";
+"screen_space_remove_room_alert_title" = "Usuń pokój";
+"screen_space_remove_room_alert_message" = "Czy na pewno chcesz usunąć \"%@\" z tej przestrzeni?";
+"screen_space_remove_room_success" = "%@ usunięto z przestrzeni";
+"screen_space_create_room_visibility_header" = "Widoczność pokoju";
+"screen_space_create_room_visibility_space_members_title" = "Widoczne dla członków przestrzeni";
+"screen_space_create_room_visibility_space_members_description" = "Każdy w %@ może znaleźć i dołączyć do tego pokoju. Tylko administratorzy tego pokoju mogą dodać go do przestrzeni.";
+"screen_space_create_room_visibility_private_title" = "Pokój prywatny (tylko na zaproszenie)";
+"screen_space_create_room_visibility_private_description" = "Tylko zaproszeni mogą znaleźć i dołączyć do tego pokoju. Możesz to zmienić w dowolnym momencie w ustawieniach pokoju.";
+"screen_space_create_room_visibility_public_title" = "Pokój publiczny";
+"screen_space_create_room_visibility_public_description" = "Każdy może znaleźć i dołączyć do tego pokoju. Możesz to zmienić w dowolnym momencie w ustawieniach pokoju.";
+"screen_space_create_room_encryption_title" = "Włącz szyfrowanie end-to-end";
+"screen_space_create_room_encryption_description" = "Nie będzie można tego później wyłączyć. Mostki i większość botów jeszcze nie działa.";

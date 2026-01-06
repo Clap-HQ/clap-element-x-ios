@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Stanze a cui partecipi";
 "space_channel_list_unjoined_section_title" = "Stanze a cui puoi unirti";
+
+"screen_space_create_room" = "Crea stanza";
+"screen_space_remove_room" = "Rimuovi dallo spazio";
+"screen_space_remove_room_alert_title" = "Rimuovi stanza";
+"screen_space_remove_room_alert_message" = "Sei sicuro di voler rimuovere \"%@\" da questo spazio?";
+"screen_space_remove_room_success" = "%@ rimosso dallo spazio";
+"screen_space_create_room_visibility_header" = "Visibilità stanza";
+"screen_space_create_room_visibility_space_members_title" = "Visibile ai membri dello spazio";
+"screen_space_create_room_visibility_space_members_description" = "Chiunque in %@ può trovare e unirsi a questa stanza. Solo gli amministratori di questa stanza possono aggiungerla a uno spazio.";
+"screen_space_create_room_visibility_private_title" = "Stanza privata (solo a invito)";
+"screen_space_create_room_visibility_private_description" = "Solo le persone invitate possono trovare e unirsi a questa stanza. Puoi modificarlo in qualsiasi momento dalle impostazioni della stanza.";
+"screen_space_create_room_visibility_public_title" = "Stanza pubblica";
+"screen_space_create_room_visibility_public_description" = "Chiunque può trovare e unirsi a questa stanza. Puoi modificarlo in qualsiasi momento dalle impostazioni della stanza.";
+"screen_space_create_room_encryption_title" = "Attiva crittografia end-to-end";
+"screen_space_create_room_encryption_description" = "Non potrai più disattivarla. I bridge e molti bot non funzioneranno.";

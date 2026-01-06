@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Rum du er med i";
 "space_channel_list_unjoined_section_title" = "Rum du kan deltage i";
+
+"screen_space_create_room" = "Opret rum";
+"screen_space_remove_room" = "Spær fra gruppe";
+"screen_space_remove_room_alert_title" = "Fjern rum";
+"screen_space_remove_room_alert_message" = "Er du sikker på, at du vil fjerne \"%@\" fra denne gruppe?";
+"screen_space_remove_room_success" = "%@ fjernet fra gruppe";
+"screen_space_create_room_visibility_header" = "Rummets synlighed";
+"screen_space_create_room_visibility_space_members_title" = "Synlig for medlemmer af gruppen";
+"screen_space_create_room_visibility_space_members_description" = "Alle i %@ kan finde og deltage i dette rum. Kun administratorer af dette rum kan tilføje det til en gruppe.";
+"screen_space_create_room_visibility_private_title" = "Privat rum (kun tilgængeligt med invitation)";
+"screen_space_create_room_visibility_private_description" = "Kun inviterede personer kan finde og deltage i dette rum. Du kan ændre dette når som helst i rumindstillingerne.";
+"screen_space_create_room_visibility_public_title" = "Offentlige rum";
+"screen_space_create_room_visibility_public_description" = "Alle kan finde og deltage i dette rum. Du kan ændre dette når som helst i rumindstillingerne.";
+"screen_space_create_room_encryption_title" = "Aktivér end-to-end kryptering";
+"screen_space_create_room_encryption_description" = "Du kan ikke deaktivere dette senere. Broer og de fleste bots vil ikke virke endnu.";

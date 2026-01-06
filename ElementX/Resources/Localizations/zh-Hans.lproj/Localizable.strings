@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "您加入的房间";
 "space_channel_list_unjoined_section_title" = "可加入的房间";
+
+"screen_space_create_room" = "创建房间";
+"screen_space_remove_room" = "从空间移除";
+"screen_space_remove_room_alert_title" = "移除房间";
+"screen_space_remove_room_alert_message" = "确定要从此空间移除\"%@\"吗？";
+"screen_space_remove_room_success" = "%@ 已从空间移除";
+"screen_space_create_room_visibility_header" = "房间可见度";
+"screen_space_create_room_visibility_space_members_title" = "对空间成员可见";
+"screen_space_create_room_visibility_space_members_description" = "%@ 中的任何人都可以找到并加入此房间。只有此房间的管理员可以将其添加到空间。";
+"screen_space_create_room_visibility_private_title" = "私有房间（仅邀请）";
+"screen_space_create_room_visibility_private_description" = "只有受邀者才能找到并加入此房间。您可以随时在房间设置中更改此设置。";
+"screen_space_create_room_visibility_public_title" = "公共房间";
+"screen_space_create_room_visibility_public_description" = "任何人都可以找到并加入此房间。您可以随时在房间设置中更改此设置。";
+"screen_space_create_room_encryption_title" = "启用端到端加密";
+"screen_space_create_room_encryption_description" = "之后你无法停用。桥接和大多数机器人也不能工作。";

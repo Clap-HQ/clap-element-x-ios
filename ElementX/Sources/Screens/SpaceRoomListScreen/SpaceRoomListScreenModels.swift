@@ -15,6 +15,8 @@ enum SpaceRoomListScreenViewModelAction {
     case dismiss
     case displayMembers(roomProxy: JoinedRoomProxyProtocol)
     case displaySpaceSettings(roomProxy: JoinedRoomProxyProtocol)
+    case presentCreateRoomInSpace(spaceID: String, spaceName: String)
+    case removedRoomFromSpace(spaceID: String)
     case leftSpace
 }
 
@@ -26,9 +28,12 @@ enum SpaceRoomListScreenViewAction {
     case markAsUnread(roomID: String)
     case markAsFavourite(roomID: String, isFavourite: Bool)
     case leaveRoom(roomID: String)
+    case confirmRemoveRoomFromSpace(roomID: String, roomName: String)
+    case removeRoomFromSpace(roomID: String, roomName: String)
     // Space menu actions
     case displayMembers
     case spaceSettings
+    case createRoom
     case leaveSpace
 }
 
@@ -48,6 +53,7 @@ struct SpaceRoomListScreenViewState: BindableState {
     var roomProxy: JoinedRoomProxyProtocol?
     var canEditBaseInfo = false
     var canEditRolesAndPermissions = false
+    var canManageSpaceChildren = false
 
     var isSpaceManagementEnabled: Bool {
         canEditBaseInfo || canEditRolesAndPermissions
@@ -70,6 +76,13 @@ struct SpaceRoomListScreenViewState: BindableState {
 
 struct SpaceRoomListScreenViewStateBindings {
     var leaveSpaceViewModel: LeaveSpaceViewModel?
+    var removeRoomConfirmation: RemoveRoomConfirmation?
+}
+
+/// Confirmation data for removing a room from space
+struct RemoveRoomConfirmation: Identifiable {
+    let id: String
+    let roomName: String
 }
 
 /// An item in the space room list

@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Пакоі, у якіх вы знаходзіцеся";
 "space_channel_list_unjoined_section_title" = "Пакоі, да якіх вы можаце далучыцца";
+
+"screen_space_create_room" = "Стварыць пакой";
+"screen_space_remove_room" = "Выдаліць з прасторы";
+"screen_space_remove_room_alert_title" = "Выдаліць пакой";
+"screen_space_remove_room_alert_message" = "Вы ўпэўнены, што хочаце выдаліць \"%@\" з гэтай прасторы?";
+"screen_space_remove_room_success" = "%@ выдалены з прасторы";
+"screen_space_create_room_visibility_header" = "Бачнасць пакоя";
+"screen_space_create_room_visibility_space_members_title" = "Бачны для ўдзельнікаў прасторы";
+"screen_space_create_room_visibility_space_members_description" = "Любы ў %@ можа знайсці і далучыцца да гэтага пакоя. Толькі адміністратары гэтага пакоя могуць дадаць яго ў прастору.";
+"screen_space_create_room_visibility_private_title" = "Прыватны пакой (толькі па запрашэнні)";
+"screen_space_create_room_visibility_private_description" = "Толькі запрошаныя асобы могуць знайсці і далучыцца да гэтага пакоя. Вы можаце змяніць гэта ў любы час у наладах пакоя.";
+"screen_space_create_room_visibility_public_title" = "Публічны пакой";
+"screen_space_create_room_visibility_public_description" = "Любы можа знайсці і далучыцца да гэтага пакоя. Вы можаце змяніць гэта ў любы час у наладах пакоя.";
+"screen_space_create_room_encryption_title" = "Уключыць скразное шыфраванне";
+"screen_space_create_room_encryption_description" = "Вы не зможаце адключыць гэта пазней. Масты і большасць ботаў пакуль не будуць працаваць.";

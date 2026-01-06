@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Zure gelak";
 "space_channel_list_unjoined_section_title" = "Elkartu zaitezkeen gelak";
+
+"screen_space_create_room" = "Sortu gela";
+"screen_space_remove_room" = "Kendu espaziotik";
+"screen_space_remove_room_alert_title" = "Kendu gela";
+"screen_space_remove_room_alert_message" = "Ziur zaude \"%@\" espazio honetatik kendu nahi duzula?";
+"screen_space_remove_room_success" = "%@ espaziotik kenduta";
+"screen_space_create_room_visibility_header" = "Gelaren ikusgaitasuna";
+"screen_space_create_room_visibility_space_members_title" = "Espazioaren kideentzat ikusgai";
+"screen_space_create_room_visibility_space_members_description" = "%@ espazioko edonork aurkitu eta batu dezake gela honetara. Gela honen administratzaileek bakarrik gehitu dezakete espazio batera.";
+"screen_space_create_room_visibility_private_title" = "Gela pribatua (gonbidapenez bakarrik)";
+"screen_space_create_room_visibility_private_description" = "Gonbidatutako pertsonek bakarrik aurkitu eta batu daitezke gela honetara. Hau edozein unetan alda dezakezu gelaren ezarpenetan.";
+"screen_space_create_room_visibility_public_title" = "Gela publikoa";
+"screen_space_create_room_visibility_public_description" = "Edonork aurkitu eta batu dezake gela honetara. Hau edozein unetan alda dezakezu gelaren ezarpenetan.";
+"screen_space_create_room_encryption_title" = "Gaitu muturretik muturrerako enkriptatzea";
+"screen_space_create_room_encryption_description" = "Ezin duzu hau geroago desgaitu. Zubiak eta bot gehienak oraindik ez dira funtzionatuko.";

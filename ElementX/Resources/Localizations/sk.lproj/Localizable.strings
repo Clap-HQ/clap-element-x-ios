@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Miestnosti, v ktorých ste";
 "space_channel_list_unjoined_section_title" = "Miestnosti, ku ktorým sa môžete pripojiť";
+
+"screen_space_create_room" = "Vytvoriť miestnosť";
+"screen_space_remove_room" = "Odstrániť z priestoru";
+"screen_space_remove_room_alert_title" = "Odstrániť miestnosť";
+"screen_space_remove_room_alert_message" = "Naozaj chcete odstrániť \"%@\" z tohto priestoru?";
+"screen_space_remove_room_success" = "%@ odstránená z priestoru";
+"screen_space_create_room_visibility_header" = "Viditeľnosť miestnosti";
+"screen_space_create_room_visibility_space_members_title" = "Viditeľné pre členov priestoru";
+"screen_space_create_room_visibility_space_members_description" = "Ktokoľvek v %@ môže túto miestnosť nájsť a pripojiť sa. Iba správcovia tejto miestnosti ju môžu pridať do priestoru.";
+"screen_space_create_room_visibility_private_title" = "Súkromná miestnosť (len pre pozvaných)";
+"screen_space_create_room_visibility_private_description" = "Iba pozvaní ľudia môžu túto miestnosť nájsť a pripojiť sa. Môžete to kedykoľvek zmeniť v nastaveniach miestnosti.";
+"screen_space_create_room_visibility_public_title" = "Verejná miestnosť";
+"screen_space_create_room_visibility_public_description" = "Ktokoľvek môže túto miestnosť nájsť a pripojiť sa. Môžete to kedykoľvek zmeniť v nastaveniach miestnosti.";
+"screen_space_create_room_encryption_title" = "Zapnúť end-to-end šifrovanie";
+"screen_space_create_room_encryption_description" = "Toto neskôr nemôžete vypnúť. Premostenia a väčšina botov zatiaľ nebudú fungovať.";

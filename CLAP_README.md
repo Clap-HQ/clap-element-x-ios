@@ -20,6 +20,7 @@
 14. [딥링크 설정](#14-딥링크-설정)
 15. [CI/CD 설정](#15-cicd-설정)
 16. [푸시 알림 설정](#16-푸시-알림-설정)
+17. [Space 내 룸 생성/삭제 기능](#17-space-내-룸-생성삭제-기능)
 
 ---
 
@@ -558,6 +559,177 @@ var pusherAppID: String {
 ### 관련 커밋
 
 - `a41fafac8` feat: Configure push notification settings for Clap
+
+---
+
+## 17. Space 내 룸 생성/삭제 기능
+
+Space 내에서 새 채널(룸)을 생성하고, Space에서 채널을 삭제(제거)하는 기능
+
+> **Note**: Element Web/Desktop에는 구현되어 있지만 Element X iOS에는 미구현된 기능을 Clap에서 직접 추가 구현
+
+### 기능 개요
+
+1. **룸 생성**: Space 내에서 새 채널 생성 시 자동으로 해당 Space의 자식으로 설정
+2. **룸 제거**: Space에서 채널을 제거 (연결 해제)
+
+### SDK 제약 및 구현 방식
+
+MatrixRustSDK의 `CreateRoomParameters`에 `initial_state` 파라미터가 없어서 룸 생성 후 REST API로 Space 관계를 설정합니다.
+
+```
+# Space에 자식 추가 (m.space.child)
+PUT /_matrix/client/v3/rooms/{spaceId}/state/m.space.child/{childRoomId}
+Body: {"via": ["clap.ac"], "suggested": false}
+
+# Space에서 자식 제거 (빈 객체로 설정)
+PUT /_matrix/client/v3/rooms/{spaceId}/state/m.space.child/{childRoomId}
+Body: {}
+
+# 룸에 부모 설정 (m.space.parent)
+PUT /_matrix/client/v3/rooms/{roomId}/state/m.space.parent/{spaceId}
+Body: {"via": ["clap.ac"], "canonical": true}
+
+# Join Rule 설정 (Space 멤버 전용)
+PUT /_matrix/client/v3/rooms/{roomId}/state/m.room.join_rules/
+Body: {"join_rule": "restricted", "allow": [{"type": "m.room_membership", "room_id": "{spaceId}"}]}
+```
+
+### SpaceChildService
+
+Matrix REST API를 통해 Space-Room 관계를 관리하는 서비스
+
+```swift
+// SpaceChildServiceProtocol.swift
+protocol SpaceChildServiceProtocol {
+    /// Space에 자식 룸 추가
+    func addChildToSpace(spaceID: String, childRoomID: String, suggested: Bool) async -> Result<Void, SpaceChildServiceError>
+
+    /// Space에서 룸 제거
+    func removeChildFromSpace(spaceID: String, childRoomID: String) async -> Result<Void, SpaceChildServiceError>
+
+    /// 룸에 부모 Space 설정
+    func setSpaceParent(roomID: String, spaceID: String, canonical: Bool) async -> Result<Void, SpaceChildServiceError>
+
+    /// Restricted Join Rule 설정 (Space 멤버만 참가 가능)
+    func setRestrictedJoinRule(roomID: String, spaceID: String) async -> Result<Void, SpaceChildServiceError>
+
+    /// Public Join Rule 설정
+    func setPublicJoinRule(roomID: String) async -> Result<Void, SpaceChildServiceError>
+}
+```
+
+### SpaceRoomVisibility (룸 공개 설정)
+
+Element Web과 동일한 3가지 옵션
+
+| 옵션 | 설명 | Join Rule |
+|------|------|-----------|
+| `spaceMembers` | Space 멤버만 참가 가능 | `restricted` |
+| `privateRoom` | 초대받은 사용자만 참가 | `invite` |
+| `publicRoom` | 누구나 참가 가능 | `public` |
+
+```swift
+enum SpaceRoomVisibility: String, CaseIterable {
+    case spaceMembers   // Space 멤버 전용
+    case privateRoom    // 비공개 (초대만)
+    case publicRoom     // 공개
+}
+```
+
+### CreateRoomInSpaceScreen
+
+Space 내에서 룸을 생성하는 화면
+
+```
+┌─────────────────────────────────────────────────┐
+│ Create channel in "Engineering Team"            │
+├─────────────────────────────────────────────────┤
+│ [Avatar]  Room name                             │
+│           Topic (optional)                      │
+├─────────────────────────────────────────────────┤
+│ Room visibility                                 │
+│ ○ Space members - Anyone in Engineering Team   │
+│   can find and join                             │
+│ ○ Private - Only invited users can join        │
+│ ○ Public - Anyone can join                     │
+├─────────────────────────────────────────────────┤
+│ Encryption                              [ON]    │
+│ Once enabled, encryption cannot be disabled     │
+└─────────────────────────────────────────────────┘
+```
+
+- Space 이름 컨텍스트 표시
+- 채널 이름, 설명, 아바타 설정
+- 공개 설정 선택 (Space Members/Private/Public)
+- 암호화 토글 (Public 제외)
+
+### SpaceRoomListScreen 메뉴
+
+Space 채널 목록 화면의 툴바 메뉴에 룸 생성/제거 기능 추가
+
+**메뉴 구조:**
+```
+┌─────────────────────────────────────────────────┐
+│ Members                                         │
+│ Share                                           │
+│ Settings                                        │
+├─────────────────────────────────────────────────┤
+│ + Create channel            (권한 필요)          │
+├─────────────────────────────────────────────────┤
+│ Leave space                                     │
+└─────────────────────────────────────────────────┘
+```
+
+**컨텍스트 메뉴 (룸 롱프레스):**
+```
+┌─────────────────────────────────────────────────┐
+│ Mark as read / Mark as unread                   │
+│ Favourite                                       │
+│ Settings                                        │
+│ Leave room                                      │
+│ Remove from space          (권한 필요)           │
+└─────────────────────────────────────────────────┘
+```
+
+### 권한 체크
+
+`m.space.child` state event 전송 권한 필요
+
+```swift
+// SpaceRoomListScreenViewModel.swift
+let canManageSpaceChildren = powerLevels.canOwnUser(sendStateEvent: .spaceChild)
+```
+
+### 관련 파일
+
+**신규:**
+- [SpaceChildServiceProtocol.swift](ElementX/Sources/Services/Spaces/SpaceChildServiceProtocol.swift) - 프로토콜 정의
+- [SpaceChildService.swift](ElementX/Sources/Services/Spaces/SpaceChildService.swift) - REST API 구현
+- [CreateRoomInSpaceScreen/](ElementX/Sources/Screens/CreateRoomInSpaceScreen/) - 룸 생성 화면
+
+**수정:**
+- [ClientProxyProtocol.swift](ElementX/Sources/Services/Client/ClientProxyProtocol.swift) - `createRoomInSpace()` 추가
+- [ClientProxy.swift](ElementX/Sources/Services/Client/ClientProxy.swift) - 구현
+- [SpaceRoomListScreenModels.swift](ElementX/Sources/Screens/SpaceRoomListScreen/SpaceRoomListScreenModels.swift) - 액션/상태 추가
+- [SpaceRoomListScreenViewModel.swift](ElementX/Sources/Screens/SpaceRoomListScreen/SpaceRoomListScreenViewModel.swift) - 로직
+- [SpaceRoomListScreen.swift](ElementX/Sources/Screens/SpaceRoomListScreen/View/SpaceRoomListScreen.swift) - UI
+
+### 로컬라이제이션 키
+
+```
+"screen_space_create_room" = "Create channel"
+"screen_space_create_room_title" = "Create channel in \"%@\""
+"screen_space_create_room_visibility_space_members_title" = "Space members"
+"screen_space_create_room_visibility_space_members_description" = "Anyone in %@ can find and join"
+"screen_space_create_room_visibility_private_title" = "Private"
+"screen_space_create_room_visibility_private_description" = "Only invited users can join"
+"screen_space_create_room_visibility_public_title" = "Public"
+"screen_space_create_room_visibility_public_description" = "Anyone can join"
+"screen_space_remove_room" = "Remove from space"
+"screen_space_remove_room_alert_title" = "Remove channel"
+"screen_space_remove_room_alert_message" = "Remove \"%@\" from this space?"
+```
 
 ---
 

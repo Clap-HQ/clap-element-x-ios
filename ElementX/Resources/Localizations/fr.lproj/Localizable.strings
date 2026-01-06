@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "Salons auxquels vous participez";
 "space_channel_list_unjoined_section_title" = "Salons que vous pouvez rejoindre";
+
+"screen_space_create_room" = "Créer un salon";
+"screen_space_remove_room" = "Supprimer de l'espace";
+"screen_space_remove_room_alert_title" = "Supprimer le salon";
+"screen_space_remove_room_alert_message" = "Êtes-vous sûr de vouloir supprimer \"%@\" de cet espace ?";
+"screen_space_remove_room_success" = "%@ supprimé de l'espace";
+"screen_space_create_room_visibility_header" = "Visibilité du salon";
+"screen_space_create_room_visibility_space_members_title" = "Visible pour les membres de l'espace";
+"screen_space_create_room_visibility_space_members_description" = "Tout le monde dans %@ peut trouver et rejoindre ce salon. Seuls les administrateurs de ce salon peuvent l'ajouter à un espace.";
+"screen_space_create_room_visibility_private_title" = "Salon privé (uniquement sur invitation)";
+"screen_space_create_room_visibility_private_description" = "Seules les personnes invitées peuvent trouver et rejoindre ce salon. Vous pouvez modifier cela à tout moment dans les paramètres du salon.";
+"screen_space_create_room_visibility_public_title" = "Salon public";
+"screen_space_create_room_visibility_public_description" = "Tout le monde peut trouver et rejoindre ce salon. Vous pouvez modifier cela à tout moment dans les paramètres du salon.";
+"screen_space_create_room_encryption_title" = "Activer le chiffrement de bout en bout";
+"screen_space_create_room_encryption_description" = "Vous ne pourrez pas le désactiver plus tard. Les passerelles et la plupart des bots ne fonctionneront pas pour le moment.";

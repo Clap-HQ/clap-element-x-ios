@@ -1479,3 +1479,18 @@
 
 "space_channel_list_joined_section_title" = "ოთახები, რომლებშიც ხართ";
 "space_channel_list_unjoined_section_title" = "ოთახები, რომლებსაც შეგიძლიათ შეუერთდეთ";
+
+"screen_space_create_room" = "ოთახის შექმნა";
+"screen_space_remove_room" = "წაშლა სივრციდან";
+"screen_space_remove_room_alert_title" = "ოთახის წაშლა";
+"screen_space_remove_room_alert_message" = "დარწმუნებული ხართ, რომ გსურთ \"%@\" წაშლა ამ სივრციდან?";
+"screen_space_remove_room_success" = "%@ წაიშალა სივრციდან";
+"screen_space_create_room_visibility_header" = "ოთახის ხილვადობა";
+"screen_space_create_room_visibility_space_members_title" = "ხილული სივრცის წევრებისთვის";
+"screen_space_create_room_visibility_space_members_description" = "%@-ში ნებისმიერს შეუძლია იპოვოს და შეუერთდეს ამ ოთახს. მხოლოდ ამ ოთახის ადმინისტრატორებს შეუძლიათ დაამატონ ის სივრცეში.";
+"screen_space_create_room_visibility_private_title" = "პირადი ოთახი (მხოლოდ მოწვევით)";
+"screen_space_create_room_visibility_private_description" = "მხოლოდ მოწვეულ ადამიანებს შეუძლიათ იპოვონ და შეუერთდნენ ამ ოთახს. თქვენ შეგიძლიათ შეცვალოთ ეს ნებისმიერ დროს ოთახის პარამეტრებში.";
+"screen_space_create_room_visibility_public_title" = "საჯარო ოთახი";
+"screen_space_create_room_visibility_public_description" = "ნებისმიერს შეუძლია იპოვოს და შეუერთდეს ამ ოთახს. თქვენ შეგიძლიათ შეცვალოთ ეს ნებისმიერ დროს ოთახის პარამეტრებში.";
+"screen_space_create_room_encryption_title" = "ბოლოდან ბოლომდე დაშიფვრის ჩართვა";
+"screen_space_create_room_encryption_description" = "თქვენ არ შეგიძლიათ გამორთოთ ეს მოგვიანებით. ხიდები და ბოტების უმეტესობა ჯერ არ იმუშავებს.";
