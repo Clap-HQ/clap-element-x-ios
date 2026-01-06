@@ -252,13 +252,13 @@ final class AppSettings {
     
     var pusherAppID: String {
         #if DEBUG
-        InfoPlistReader.main.baseBundleIdentifier + ".ios.dev"
+        InfoPlistReader.main.baseBundleIdentifier + ".ios.sandbox"  // Xcode 빌드
         #else
-        InfoPlistReader.main.baseBundleIdentifier + ".ios.prod"
+        InfoPlistReader.main.baseBundleIdentifier + ".ios"          // TestFlight/AppStore
         #endif
     }
     
-    private(set) var pushGatewayBaseURL: URL = "https://matrix.org"
+    private(set) var pushGatewayBaseURL = URL(string: "https://sygnal.\(InfoPlistReader.main.clapHomeserver)")!
     var pushGatewayNotifyEndpoint: URL { pushGatewayBaseURL.appending(path: "_matrix/push/v1/notify") }
     
     @UserPreference(key: UserDefaultsKeys.enableNotifications, defaultValue: true, storageType: .userDefaults(store))

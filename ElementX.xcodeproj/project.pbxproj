@@ -9027,6 +9027,7 @@
 				APP_DISPLAY_NAME = Clap;
 				APP_GROUP_IDENTIFIER = group.ac.clap.app;
 				BASE_BUNDLE_IDENTIFIER = ac.clap.app;
+				CLAP_HOMESERVER = clap.ac;
 				CODE_SIGN_ENTITLEMENTS = NSE/SupportingFiles/NSE.entitlements;
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
@@ -9243,6 +9244,7 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -9317,6 +9319,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -9386,6 +9389,7 @@
 				APP_DISPLAY_NAME = "Clap Dev";
 				APP_GROUP_IDENTIFIER = group.ac.clap.app.dev;
 				BASE_BUNDLE_IDENTIFIER = ac.clap.app.dev;
+				CLAP_HOMESERVER = dev.clap.ac;
 				CODE_SIGN_ENTITLEMENTS = NSE/SupportingFiles/NSE.entitlements;
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				DEVELOPMENT_TEAM = "$(DEVELOPMENT_TEAM)";
