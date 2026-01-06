@@ -31,6 +31,8 @@ struct FileRoomTimelineView: View {
 // MARK: Content
 
 struct MediaFileRoomTimelineContent: View {
+    @Environment(\.timelineBubbleIsOutgoing) private var isOutgoing
+
     let filename: String
     let fileSize: UInt?
     let caption: String?
@@ -78,14 +80,14 @@ struct MediaFileRoomTimelineContent: View {
         Label {
             VStack(alignment: .leading, spacing: 0) {
                 Text(filename)
-                    .foregroundStyle(.compound.textPrimary)
+                    .foregroundStyle(.compound.textBubble(isOutgoing: isOutgoing))
                     .font(.compound.bodyLG)
                 Text(fileDescription)
                     .font(.compound.bodySM)
-                    .foregroundStyle(.compound.textSecondary)
+                    .foregroundStyle(.compound.textBubbleSecondary(isOutgoing: isOutgoing))
             }
             .font(.compound.bodyLG)
-            .foregroundStyle(.compound.textPrimary)
+            .foregroundStyle(.compound.textBubble(isOutgoing: isOutgoing))
             .lineLimit(2)
         } icon: {
             CompoundIcon(icon, size: .xSmall, relativeTo: .body)

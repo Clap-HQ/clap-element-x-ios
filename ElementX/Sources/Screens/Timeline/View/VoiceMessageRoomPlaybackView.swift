@@ -11,6 +11,8 @@ import DSWaveformImageViews
 import SwiftUI
 
 struct VoiceMessageRoomPlaybackView: View {
+    @Environment(\.timelineBubbleIsOutgoing) private var isOutgoing
+
     @ObservedObject var playerState: AudioPlayerState
     @ScaledMetric private var waveformLineWidth = 2.0
     @ScaledMetric private var waveformLinePadding = 2.0
@@ -19,7 +21,7 @@ struct VoiceMessageRoomPlaybackView: View {
     let onPlayPause: () -> Void
     let onSeek: (Double) -> Void
     let onScrubbing: (Bool) -> Void
-    
+
     var body: some View {
         HStack(spacing: 8) {
             VoiceMessageButton(state: .init(playerState.playerButtonPlaybackState),
@@ -28,7 +30,7 @@ struct VoiceMessageRoomPlaybackView: View {
             Text(timeLabelContent)
                 .lineLimit(1)
                 .font(.compound.bodySMSemibold)
-                .foregroundColor(.compound.textSecondary)
+                .foregroundColor(.compound.textBubbleSecondary(isOutgoing: isOutgoing))
                 .monospacedDigit()
                 .fixedSize(horizontal: true, vertical: true)
 
