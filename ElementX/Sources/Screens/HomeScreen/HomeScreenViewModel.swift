@@ -187,6 +187,8 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             appSettings.hasSeenNewSoundBanner = true
         case .updateVisibleItemRange(let range):
             roomSummaryProvider?.updateVisibleRange(range)
+        case .subscribeToVisibleRooms(let roomIDs):
+            roomSummaryProvider?.subscribeToRooms(roomIDs)
         case .startChat:
             actionsSubject.send(.presentStartChatScreen)
         case .globalSearch:

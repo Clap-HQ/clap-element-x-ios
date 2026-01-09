@@ -15491,6 +15491,47 @@ class RoomSummaryProviderMock: RoomSummaryProviderProtocol, @unchecked Sendable 
         }
         updateVisibleRangeClosure?(range)
     }
+    //MARK: - subscribeToRooms
+
+    var subscribeToRoomsUnderlyingCallsCount = 0
+    var subscribeToRoomsCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return subscribeToRoomsUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = subscribeToRoomsUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                subscribeToRoomsUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    subscribeToRoomsUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var subscribeToRoomsCalled: Bool {
+        return subscribeToRoomsCallsCount > 0
+    }
+    var subscribeToRoomsReceivedRoomIDs: [String]?
+    var subscribeToRoomsReceivedInvocations: [[String]] = []
+    var subscribeToRoomsClosure: (([String]) -> Void)?
+
+    func subscribeToRooms(_ roomIDs: [String]) {
+        subscribeToRoomsCallsCount += 1
+        subscribeToRoomsReceivedRoomIDs = roomIDs
+        DispatchQueue.main.async {
+            self.subscribeToRoomsReceivedInvocations.append(roomIDs)
+        }
+        subscribeToRoomsClosure?(roomIDs)
+    }
     //MARK: - setFilter
 
     var setFilterUnderlyingCallsCount = 0

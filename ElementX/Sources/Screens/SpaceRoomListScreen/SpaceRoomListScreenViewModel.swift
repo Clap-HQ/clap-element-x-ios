@@ -174,6 +174,13 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
 
         state.joinedRooms = sortedJoinedItems
         state.unjoinedRooms = unjoinedItems
+
+        // Subscribe to joined room IDs to ensure their last messages are loaded
+        let joinedRoomIDs = joinedItems.compactMap { item -> String? in
+            if case .joined(let info) = item { return info.id }
+            return nil
+        }
+        clientProxy.roomSummaryProvider.subscribeToRooms(joinedRoomIDs)
     }
 
     private func joinRoom(_ spaceRoom: SpaceRoomProxyProtocol) async {

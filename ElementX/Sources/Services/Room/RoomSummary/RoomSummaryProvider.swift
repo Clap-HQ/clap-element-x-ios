@@ -117,7 +117,19 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
     func updateVisibleRange(_ range: Range<Int>) {
         visibleItemRangePublisher.send(range)
     }
-    
+
+    func subscribeToRooms(_ roomIDs: [String]) {
+        guard shouldUpdateVisibleRange, !roomIDs.isEmpty else { return }
+
+        Task { [weak self, roomListService] in
+            do {
+                try await roomListService.subscribeToRooms(roomIds: roomIDs)
+            } catch {
+                MXLog.error("Failed subscribing to rooms with error: \(error)")
+            }
+        }
+    }
+
     func setFilter(_ filter: RoomSummaryProviderFilter) {
         let baseFilter: [RoomListEntriesDynamicFilterKind] = [.any(filters: [.all(filters: [.nonSpace, .nonLeft]),
                                                                              .all(filters: [.space, .invite])]),
