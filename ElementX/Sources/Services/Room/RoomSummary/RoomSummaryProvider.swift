@@ -23,6 +23,7 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
     private let serialDispatchQueue: DispatchQueue
     
     private let visibleItemRangePublisher = CurrentValueSubject<Range<Int>, Never>(0..<0)
+    private let roomIDsToSubscribePublisher = CurrentValueSubject<Set<String>, Never>([])
     
     // periphery:ignore - retaining purpose
     private var roomList: RoomListProtocol?
@@ -76,10 +77,32 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
             .receive(on: serialDispatchQueue)
             .sink { [weak self] in self?.updateRoomsWithDiffs($0) }
             .store(in: &cancellables)
-        
+
         setupVisibleRangeObservers()
-        
+        setupRoomSubscriptionObserver()
+
         setupNotificationSettingsSubscription()
+    }
+
+    private func setupRoomSubscriptionObserver() {
+        roomIDsToSubscribePublisher
+            .removeDuplicates()
+            .throttle(for: 0.5, scheduler: DispatchQueue.main, latest: true)
+            .filter { [weak self] roomIDs in
+                guard let self else { return false }
+                return !roomIDs.isEmpty && shouldUpdateVisibleRange
+            }
+            .sink { [weak self] roomIDs in
+                guard let self else { return }
+                Task { [weak self, roomListService] in
+                    do {
+                        try await roomListService.subscribeToRooms(roomIds: Array(roomIDs))
+                    } catch {
+                        MXLog.error("Failed subscribing to rooms with error: \(error)")
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func setRoomList(_ roomList: RoomList) {
@@ -119,15 +142,11 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
     }
 
     func subscribeToRooms(_ roomIDs: [String]) {
-        guard shouldUpdateVisibleRange, !roomIDs.isEmpty else { return }
-
-        Task { [weak self, roomListService] in
-            do {
-                try await roomListService.subscribeToRooms(roomIds: roomIDs)
-            } catch {
-                MXLog.error("Failed subscribing to rooms with error: \(error)")
-            }
-        }
+        guard !roomIDs.isEmpty else { return }
+        // Merge new room IDs with existing ones to batch subscriptions
+        var current = roomIDsToSubscribePublisher.value
+        current.formUnion(roomIDs)
+        roomIDsToSubscribePublisher.send(current)
     }
 
     func setFilter(_ filter: RoomSummaryProviderFilter) {
