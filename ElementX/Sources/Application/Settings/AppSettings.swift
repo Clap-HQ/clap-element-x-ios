@@ -249,11 +249,27 @@ final class AppSettings {
     
     // MARK: - Notifications
     
+    /// Pusher App ID for Sygnal push gateway
+    /// - Xcode 빌드 (실기기/시뮬레이터): `ac.clap.app.dev.ios.sandbox` → APNS sandbox
+    /// - Dev TestFlight: `ac.clap.app.dev.ios` → APNS production
+    /// - Clap (App Store): `ac.clap.app.ios` → APNS production
     var pusherAppID: String {
-        #if DEBUG
-        InfoPlistReader.main.baseBundleIdentifier + ".ios.sandbox"  // Xcode 빌드
+        if isRunningOnTestFlightOrAppStore {
+            return InfoPlistReader.main.baseBundleIdentifier + ".ios"
+        } else {
+            return InfoPlistReader.main.baseBundleIdentifier + ".ios.sandbox"
+        }
+    }
+
+    /// TestFlight/App Store에서 실행 중인지 확인
+    /// - Xcode 빌드: embedded.mobileprovision 파일 존재 → false
+    /// - TestFlight/App Store: embedded.mobileprovision 파일 없음 → true
+    private var isRunningOnTestFlightOrAppStore: Bool {
+        #if targetEnvironment(simulator)
+        return false
         #else
-        InfoPlistReader.main.baseBundleIdentifier + ".ios"          // TestFlight/AppStore
+        // App Store/TestFlight 빌드에는 embedded.mobileprovision이 없음
+        return Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") == nil
         #endif
     }
     
