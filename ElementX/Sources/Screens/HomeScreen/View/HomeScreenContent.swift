@@ -153,18 +153,28 @@ struct HomeScreenContent: View {
               context.viewState.visibleRooms.count > 0 else {
             return
         }
-        
+
         guard scrollView.contentSize.height > scrollView.bounds.height else {
             return
         }
-        
+
         let adjustedContentSize = max(scrollView.contentSize.height - scrollView.contentInset.top - scrollView.contentInset.bottom, scrollView.bounds.height)
         let cellHeight = adjustedContentSize / Double(context.viewState.visibleRooms.count)
-        
+
         let firstIndex = Int(max(0.0, scrollView.contentOffset.y + scrollView.contentInset.top) / cellHeight)
         let lastIndex = Int(max(0.0, scrollView.contentOffset.y + scrollView.bounds.height) / cellHeight)
-        
+
         // This will be deduped and throttled on the view model layer
         context.send(viewAction: .updateVisibleItemRange(firstIndex..<lastIndex))
+
+        // Also subscribe to the actual visible room IDs directly.
+        // This fixes the issue where filtered rooms (space children hidden) have mismatched indices.
+        let visibleRooms = context.viewState.visibleRooms
+        let safeFirstIndex = max(0, firstIndex)
+        let safeLastIndex = min(lastIndex, visibleRooms.count - 1)
+        if safeFirstIndex <= safeLastIndex {
+            let visibleRoomIDs = (safeFirstIndex...safeLastIndex).compactMap { visibleRooms[$0].roomID }
+            context.send(viewAction: .subscribeToVisibleRooms(visibleRoomIDs))
+        }
     }
 }

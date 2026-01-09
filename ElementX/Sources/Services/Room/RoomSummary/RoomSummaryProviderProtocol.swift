@@ -56,6 +56,11 @@ protocol StaticRoomSummaryProviderProtocol {
 // sourcery: AutoMockable
 protocol RoomSummaryProviderProtocol: StaticRoomSummaryProviderProtocol {
     func updateVisibleRange(_ range: Range<Int>)
-    
+
+    /// Subscribe to specific rooms by their IDs.
+    /// Use this when the visible room IDs don't match the internal room list indices
+    /// (e.g., when rooms are filtered out for space grouping).
+    func subscribeToRooms(_ roomIDs: [String])
+
     func setFilter(_ filter: RoomSummaryProviderFilter)
 }
