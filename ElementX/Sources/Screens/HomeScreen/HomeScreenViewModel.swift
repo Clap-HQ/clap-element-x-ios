@@ -384,6 +384,13 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             newSet.formUnion(joinedChildIDs)
         }
         spaceChildrenRoomIDs = newSet
+
+        // Pre-subscribe to space children rooms so their data is ready when user opens them
+        // This reduces timeline loading delay for rooms hidden from the chat tab
+        if !newSet.isEmpty {
+            roomSummaryProvider?.subscribeToRooms(Array(newSet))
+        }
+
         rebuildSpacesWithAggregatedInfo()
         updateRooms()
     }
