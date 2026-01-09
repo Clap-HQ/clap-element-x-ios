@@ -11,6 +11,9 @@ import SwiftUI
 struct DeveloperModeScreen: View {
     @Bindable var context: DeveloperModeScreenViewModel.Context
 
+    @AppStorage("spaceSettingsEnabled", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
+    private var spaceSettingsEnabled = true
+
     var body: some View {
         Form {
             Section {
@@ -28,6 +31,34 @@ struct DeveloperModeScreen: View {
                 }
             } header: {
                 Text("Authentication")
+            }
+
+            Section {
+                Toggle(isOn: $context.groupSpaceRooms) {
+                    Text("Group Space Rooms")
+                    Text("Hide space-affiliated rooms from chat tab and show them under space cells instead")
+                        .font(.compound.bodySM)
+                        .foregroundColor(.compound.textSecondary)
+                }
+                Toggle(isOn: $spaceSettingsEnabled) {
+                    Text("Space Settings")
+                    Text("Enable space settings and permissions management features")
+                        .font(.compound.bodySM)
+                        .foregroundColor(.compound.textSecondary)
+                }
+            } header: {
+                Text("Spaces")
+            }
+
+            Section {
+                Toggle(isOn: $context.showDeveloperSettings) {
+                    Text("Show Developer Settings")
+                    Text("Show View Source, Hide Invite Avatars, Timeline Media, Labs, and Report a Problem options")
+                        .font(.compound.bodySM)
+                        .foregroundColor(.compound.textSecondary)
+                }
+            } header: {
+                Text("Settings")
             }
         }
         .compoundList()

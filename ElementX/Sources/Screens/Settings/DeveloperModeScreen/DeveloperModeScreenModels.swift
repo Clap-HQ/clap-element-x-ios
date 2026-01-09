@@ -30,6 +30,16 @@ struct DeveloperModeScreenViewStateBindings {
         get { developerModeSettings.showQRCodeLogin }
         set { developerModeSettings.showQRCodeLogin = newValue }
     }
+
+    var groupSpaceRooms: Bool {
+        get { developerModeSettings.groupSpaceRooms }
+        set { developerModeSettings.groupSpaceRooms = newValue }
+    }
+
+    var showDeveloperSettings: Bool {
+        get { developerModeSettings.showDeveloperSettings }
+        set { developerModeSettings.showDeveloperSettings = newValue }
+    }
 }
 
 enum DeveloperModeScreenViewAction { }
