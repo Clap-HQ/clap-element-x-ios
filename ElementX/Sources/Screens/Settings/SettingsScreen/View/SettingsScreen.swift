@@ -12,7 +12,10 @@ import SwiftUI
 
 struct SettingsScreen: View {
     let context: SettingsScreenViewModel.Context
-    
+
+    @AppStorage("showDeveloperSettings", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
+    private var showDeveloperSettings = false
+
     private var shouldHideManageAccountSection: Bool {
         context.viewState.accountProfileURL == nil &&
             context.viewState.accountSessionsListURL == nil &&
@@ -148,21 +151,23 @@ struct SettingsScreen: View {
                         context.send(viewAction: .advancedSettings)
                     })
                     .accessibilityIdentifier(A11yIdentifiers.settingsScreen.advancedSettings)
-            
-            ListRow(label: .default(title: L10n.screenAdvancedSettingsLabs,
-                                    icon: \.labs),
-                    kind: .navigationLink {
-                        context.send(viewAction: .labs)
-                    })
-            
+
+            if showDeveloperSettings {
+                ListRow(label: .default(title: L10n.screenAdvancedSettingsLabs,
+                                        icon: \.labs),
+                        kind: .navigationLink {
+                            context.send(viewAction: .labs)
+                        })
+            }
+
             ListRow(label: .default(title: L10n.commonAbout,
                                     icon: \.info),
                     kind: .navigationLink {
                         context.send(viewAction: .about)
                     })
                     .accessibilityIdentifier(A11yIdentifiers.settingsScreen.about)
-            
-            if context.viewState.isBugReportServiceEnabled {
+
+            if context.viewState.isBugReportServiceEnabled, showDeveloperSettings {
                 ListRow(label: .default(title: L10n.commonReportAProblem,
                                         icon: \.chatProblem),
                         kind: .navigationLink {
@@ -170,7 +175,7 @@ struct SettingsScreen: View {
                         })
                         .accessibilityIdentifier(A11yIdentifiers.settingsScreen.reportBug)
             }
-            
+
             if context.viewState.showAnalyticsSettings {
                 ListRow(label: .default(title: L10n.commonAnalytics,
                                         icon: \.chart),

@@ -23,7 +23,6 @@ public struct CompoundToggleStyle: ToggleStyle {
             configuration.label
                 .foregroundColor(.compound.textPrimary)
         }
-        .tint(.compound.iconAccentTertiary)
     }
 }
 

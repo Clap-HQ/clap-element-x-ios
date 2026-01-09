@@ -246,44 +246,60 @@ Settings에서 토글 가능한 개발자 전용 기능
 ```swift
 // DeveloperModeSettings.swift
 final class DeveloperModeSettings {
-    /// Clap Dev 스킴인지 확인
-    private static var isClapDev: Bool {
-        InfoPlistReader.main.baseBundleIdentifier == "ac.clap.app.dev"
-    }
-
     /// 로그인 화면에서 커스텀 홈서버 선택 버튼 표시 여부
-    @UserPreference(key: "showCustomHomeserver", defaultValue: isClapDev)
+    @UserPreference(key: "showCustomHomeserver", defaultValue: false)
     var showCustomHomeserver: Bool
 
     /// 로그인 화면에서 QR 코드 로그인 버튼 표시 여부
-    @UserPreference(key: "showQRCodeLogin", defaultValue: isClapDev)
+    @UserPreference(key: "showQRCodeLogin", defaultValue: false)
     var showQRCodeLogin: Bool
 
     /// Space 소속 채널을 채팅 탭에서 숨기고 Space 셀 아래에 표시할지 여부
     @UserPreference(key: "groupSpaceRooms", defaultValue: true)
     var groupSpaceRooms: Bool
+
+    /// Space 설정 및 권한 관리 기능 활성화 여부 (AppSettings에 저장)
+    /// @AppStorage("spaceSettingsEnabled")로 바인딩
+    // spaceSettingsEnabled: Bool (default: true)
+
+    /// 개발자 전용 설정 옵션 표시 여부
+    /// View Source, Hide Invite Avatars, Timeline Media, Labs, Report a Problem 포함
+    @UserPreference(key: "showDeveloperSettings", defaultValue: false)
+    var showDeveloperSettings: Bool
 }
 ```
 
 | 설정 | 설명 | 기본값 |
 |------|------|--------|
-| `showCustomHomeserver` | 로그인 시 커스텀 홈서버 선택 UI 표시 | Clap Dev에서만 true |
-| `showQRCodeLogin` | QR 코드 로그인 버튼 표시 | Clap Dev에서만 true |
-| `groupSpaceRooms` | Space 채널 그룹화 기능 활성화 | 항상 true |
+| `showCustomHomeserver` | 로그인 시 커스텀 홈서버 선택 UI 표시 | false |
+| `showQRCodeLogin` | QR 코드 로그인 버튼 표시 | false |
+| `groupSpaceRooms` | Space 채널 그룹화 기능 활성화 | true |
+| `spaceSettingsEnabled` | Space 설정 및 권한 관리 기능 활성화 | true |
+| `showDeveloperSettings` | 개발자 전용 설정 옵션 표시 | false |
+
+### showDeveloperSettings로 제어되는 항목
+
+- **Advanced Settings**
+  - View Source (메시지 소스 보기)
+  - Hide avatars in room invite requests (초대 요청 아바타 숨기기)
+  - Show media in timeline (타임라인 미디어 표시)
+- **Settings**
+  - Labs (실험실 기능)
+  - Report a Problem (문제 신고)
 
 ### 설정 화면 UI
 
-Settings > Advanced > Developer Mode 섹션:
+Settings > Developer Mode 섹션:
 
 ```
 ┌─────────────────────────────────────────────────┐
 │ Authentication                                   │
 ├─────────────────────────────────────────────────┤
-│ Show Custom Homeserver                    [ON]  │
+│ Show Custom Homeserver                   [OFF]  │
 │ Show the change account provider button         │
 │ in sign-in flow                                 │
 ├─────────────────────────────────────────────────┤
-│ Show QR Code Login                        [ON]  │
+│ Show QR Code Login                       [OFF]  │
 │ Show the sign in with QR code button            │
 ├─────────────────────────────────────────────────┤
 │ Spaces                                          │
@@ -291,6 +307,17 @@ Settings > Advanced > Developer Mode 섹션:
 │ Group Space Rooms                         [ON]  │
 │ Hide space-affiliated rooms from chat tab       │
 │ and show them under space cells instead         │
+├─────────────────────────────────────────────────┤
+│ Space Settings                            [ON]  │
+│ Enable space settings and permissions           │
+│ management features                             │
+├─────────────────────────────────────────────────┤
+│ Settings                                        │
+├─────────────────────────────────────────────────┤
+│ Show Developer Settings                  [OFF]  │
+│ Show View Source, Hide Invite Avatars,          │
+│ Timeline Media, Labs, and Report a Problem      │
+│ options                                         │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -298,6 +325,8 @@ Settings > Advanced > Developer Mode 섹션:
 
 - [DeveloperModeSettings.swift](ElementX/Sources/Application/Settings/DeveloperModeSettings.swift)
 - [DeveloperModeScreen.swift](ElementX/Sources/Screens/Settings/DeveloperModeScreen/View/DeveloperModeScreen.swift)
+- [SettingsScreen.swift](ElementX/Sources/Screens/Settings/SettingsScreen/View/SettingsScreen.swift)
+- [AdvancedSettingsScreen.swift](ElementX/Sources/Screens/Settings/AdvancedSettingsScreen/View/AdvancedSettingsScreen.swift)
 
 ### 관련 커밋
 
@@ -538,19 +567,19 @@ private(set) var pushGatewayBaseURL = URL(string: "https://sygnal.\(InfoPlistRea
 ```swift
 // AppSettings.swift
 var pusherAppID: String {
-    #if DEBUG
-    InfoPlistReader.main.baseBundleIdentifier + ".ios.sandbox"  // Xcode 빌드
-    #else
-    InfoPlistReader.main.baseBundleIdentifier + ".ios"          // TestFlight/AppStore
-    #endif
+    if isRunningOnTestFlightOrAppStore {
+        return InfoPlistReader.main.baseBundleIdentifier + ".ios"          // TestFlight/AppStore
+    } else {
+        return InfoPlistReader.main.baseBundleIdentifier + ".ios.sandbox"  // Xcode 빌드
+    }
 }
 ```
 
-| 빌드 환경 | Pusher App ID |
+| 배포 환경 | Pusher App ID |
 |----------|---------------|
-| Debug (Clap Dev) | `ac.clap.app.dev.ios.sandbox` |
-| Release (Clap Dev) | `ac.clap.app.dev.ios` |
-| Release (Clap) | `ac.clap.app.ios` |
+| Xcode 빌드 (Clap Dev) | `ac.clap.app.dev.ios.sandbox` |
+| TestFlight/AppStore (Clap Dev) | `ac.clap.app.dev.ios` |
+| TestFlight/AppStore (Clap) | `ac.clap.app.ios` |
 
 ### 관련 파일
 
