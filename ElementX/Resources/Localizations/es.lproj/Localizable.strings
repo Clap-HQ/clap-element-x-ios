@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "No tienes acceso a este mensaje";
 "troubleshoot_notifications_entry_point_push_history_title" = "Historial de notificaciones push";
 "troubleshoot_notifications_entry_point_title" = "Solucionar problemas con las notificaciones";
+
+"screen_thread_list_title" = "Hilos";
+"screen_thread_list_empty_title" = "Aún no hay hilos";
+"screen_thread_list_empty_description" = "Inicia un hilo respondiendo a cualquier mensaje";
+"screen_thread_activity_title" = "Actividad de hilos";
+"screen_thread_activity_empty_title" = "No hay hilos sin leer";
+"screen_thread_activity_empty_description" = "¡Estás al día!";

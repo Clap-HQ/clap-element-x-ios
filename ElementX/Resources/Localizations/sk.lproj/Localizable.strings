@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Nemáte prístup k tejto správe";
 "troubleshoot_notifications_entry_point_push_history_title" = "História push oznámení";
 "troubleshoot_notifications_entry_point_title" = "Oznámenia riešení problémov";
+
+"screen_thread_list_title" = "Vlákna";
+"screen_thread_list_empty_title" = "Zatiaľ žiadne vlákna";
+"screen_thread_list_empty_description" = "Začnite vlákno odpoveďou na ľubovoľnú správu";
+"screen_thread_activity_title" = "Aktivita vlákien";
+"screen_thread_activity_empty_title" = "Žiadne neprečítané vlákna";
+"screen_thread_activity_empty_description" = "Všetko je prečítané!";

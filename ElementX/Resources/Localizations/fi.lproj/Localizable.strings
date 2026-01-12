@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Sinulla ei ole oikeutta lukea tätä viestiä";
 "troubleshoot_notifications_entry_point_push_history_title" = "Push-historia";
 "troubleshoot_notifications_entry_point_title" = "Ilmoitusten vianmääritys";
+
+"screen_thread_list_title" = "Ketjut";
+"screen_thread_list_empty_title" = "Ei ketjuja vielä";
+"screen_thread_list_empty_description" = "Aloita ketju vastaamalla mihin tahansa viestiin";
+"screen_thread_activity_title" = "Ketjujen toiminta";
+"screen_thread_activity_empty_title" = "Ei lukemattomia ketjuja";
+"screen_thread_activity_empty_description" = "Olet ajan tasalla!";

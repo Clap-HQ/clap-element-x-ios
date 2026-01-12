@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Nu aveți acces la acest mesaj";
 "troubleshoot_notifications_entry_point_push_history_title" = "Istoricul notificărilor";
 "troubleshoot_notifications_entry_point_title" = "Depanați notificările";
+
+"screen_thread_list_title" = "Fire de discuție";
+"screen_thread_list_empty_title" = "Nu există fire de discuție încă";
+"screen_thread_list_empty_description" = "Începeți un fir răspunzând la orice mesaj";
+"screen_thread_activity_title" = "Activitate fire";
+"screen_thread_activity_empty_title" = "Nu există fire necitite";
+"screen_thread_activity_empty_description" = "Sunteți la curent!";

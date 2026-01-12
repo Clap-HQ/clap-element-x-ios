@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "您無法存取此則訊息";
 "troubleshoot_notifications_entry_point_push_history_title" = "推播通知歷史紀錄";
 "troubleshoot_notifications_entry_point_title" = "疑難排解通知";
+
+"screen_thread_list_title" = "討論串";
+"screen_thread_list_empty_title" = "尚無討論串";
+"screen_thread_list_empty_description" = "回覆任何訊息以開始討論串";
+"screen_thread_activity_title" = "討論串活動";
+"screen_thread_activity_empty_title" = "沒有未讀討論串";
+"screen_thread_activity_empty_description" = "您已全部看完！";

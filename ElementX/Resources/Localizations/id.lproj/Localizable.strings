@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Anda tidak memiliki akses ke pesan ini";
 "troubleshoot_notifications_entry_point_push_history_title" = "Riwayat dorongan";
 "troubleshoot_notifications_entry_point_title" = "Pecahkan masalah notifikasi";
+
+"screen_thread_list_title" = "Utas";
+"screen_thread_list_empty_title" = "Belum ada utas";
+"screen_thread_list_empty_description" = "Mulai utas dengan membalas pesan apa pun";
+"screen_thread_activity_title" = "Aktivitas Utas";
+"screen_thread_activity_empty_title" = "Tidak ada utas yang belum dibaca";
+"screen_thread_activity_empty_description" = "Anda sudah membaca semuanya!";

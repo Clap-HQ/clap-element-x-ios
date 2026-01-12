@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "به این پیام دسترسی ندارید";
 "troubleshoot_notifications_entry_point_push_history_title" = "تاریخچهٔ آگاهی‌های ارسالی";
 "troubleshoot_notifications_entry_point_title" = "رفع‌اشکال آگاهی‌ها";
+
+"screen_thread_list_title" = "رشته‌ها";
+"screen_thread_list_empty_title" = "هنوز رشته‌ای وجود ندارد";
+"screen_thread_list_empty_description" = "با پاسخ دادن به هر پیامی یک رشته شروع کنید";
+"screen_thread_activity_title" = "فعالیت رشته‌ها";
+"screen_thread_activity_empty_title" = "رشته خوانده نشده‌ای وجود ندارد";
+"screen_thread_activity_empty_description" = "همه چیز را خوانده‌اید!";

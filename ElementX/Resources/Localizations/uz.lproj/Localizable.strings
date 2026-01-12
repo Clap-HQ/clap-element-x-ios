@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Sizni ushbu xabarga ruxsatingiz yoʻq";
 "troubleshoot_notifications_entry_point_push_history_title" = "Bildirishnoma tarixi";
 "troubleshoot_notifications_entry_point_title" = "Bildirishnomalar bilan bog‘liq muammolarni bartaraf etish";
+
+"screen_thread_list_title" = "Mavzular";
+"screen_thread_list_empty_title" = "Hozircha mavzular yo'q";
+"screen_thread_list_empty_description" = "Istalgan xabarga javob berib mavzu boshlang";
+"screen_thread_activity_title" = "Mavzular faoliyati";
+"screen_thread_activity_empty_title" = "O'qilmagan mavzular yo'q";
+"screen_thread_activity_empty_description" = "Hammasini o'qib chiqdingiz!";

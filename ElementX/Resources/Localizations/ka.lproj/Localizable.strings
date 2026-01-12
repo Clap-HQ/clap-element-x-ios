@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "You don't have access to this message";
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "პრობლემების გადაჭრის შეტყობინებები";
+
+"screen_thread_list_title" = "თემები";
+"screen_thread_list_empty_title" = "ჯერ თემები არ არის";
+"screen_thread_list_empty_description" = "დაიწყეთ თემა ნებისმიერ შეტყობინებაზე პასუხით";
+"screen_thread_activity_title" = "თემების აქტივობა";
+"screen_thread_activity_empty_title" = "წაუკითხავი თემები არ არის";
+"screen_thread_activity_empty_description" = "ყველაფერი წაკითხული გაქვთ!";

@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Je hebt geen toegang tot dit bericht";
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Problemen met meldingen oplossen";
+
+"screen_thread_list_title" = "Threads";
+"screen_thread_list_empty_title" = "Nog geen threads";
+"screen_thread_list_empty_description" = "Start een thread door op een bericht te reageren";
+"screen_thread_activity_title" = "Thread-activiteit";
+"screen_thread_activity_empty_title" = "Geen ongelezen threads";
+"screen_thread_activity_empty_description" = "Je bent helemaal bij!";

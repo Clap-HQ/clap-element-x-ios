@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Non hai accesso a questo messaggio";
 "troubleshoot_notifications_entry_point_push_history_title" = "Cronologia push";
 "troubleshoot_notifications_entry_point_title" = "Risoluzione di problemi delle notifiche";
+
+"screen_thread_list_title" = "Thread";
+"screen_thread_list_empty_title" = "Nessun thread ancora";
+"screen_thread_list_empty_description" = "Inizia un thread rispondendo a qualsiasi messaggio";
+"screen_thread_activity_title" = "Attività dei thread";
+"screen_thread_activity_empty_title" = "Nessun thread non letto";
+"screen_thread_activity_empty_description" = "Sei in pari!";
