@@ -22,6 +22,7 @@ enum SpaceRoomListScreenCoordinatorAction {
     case showRoomDetails(roomID: String)
     case dismiss
     case displayMembers(roomProxy: JoinedRoomProxyProtocol)
+    case inviteUsers(roomProxy: JoinedRoomProxyProtocol)
     case displaySpaceSettings(roomProxy: JoinedRoomProxyProtocol)
     case leftSpace
 }
@@ -58,6 +59,8 @@ final class SpaceRoomListScreenCoordinator: CoordinatorProtocol {
                     actionsSubject.send(.dismiss)
                 case .displayMembers(let roomProxy):
                     actionsSubject.send(.displayMembers(roomProxy: roomProxy))
+                case .inviteUsers(let roomProxy):
+                    actionsSubject.send(.inviteUsers(roomProxy: roomProxy))
                 case .displaySpaceSettings(let roomProxy):
                     actionsSubject.send(.displaySpaceSettings(roomProxy: roomProxy))
                 case .leftSpace:

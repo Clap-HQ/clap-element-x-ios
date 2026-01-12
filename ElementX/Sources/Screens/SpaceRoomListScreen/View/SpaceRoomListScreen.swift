@@ -139,11 +139,25 @@ struct SpaceRoomListScreen: View {
                             Label(L10n.actionShare, icon: \.shareIos)
                         }
                     }
+                }
 
-                    if context.viewState.isSpaceManagementEnabled,
-                       context.viewState.roomProxy != nil {
-                        Button { context.send(viewAction: .spaceSettings) } label: {
-                            Label(L10n.commonSettings, icon: \.settings)
+                if context.viewState.isSpaceManagementEnabled || context.viewState.canManageSpaceChildren || context.viewState.canInviteUsers {
+                    Section {
+                        if context.viewState.canInviteUsers {
+                            Button { context.send(viewAction: .inviteUsers) } label: {
+                                Label(L10n.actionInvite, icon: \.userAdd)
+                            }
+                        }
+                        if context.viewState.canManageSpaceChildren {
+                            Button { context.send(viewAction: .createRoom) } label: {
+                                Label(L10n.screenSpaceCreateRoom, icon: \.plus)
+                            }
+                        }
+                        if context.viewState.isSpaceManagementEnabled,
+                           context.viewState.roomProxy != nil {
+                            Button { context.send(viewAction: .spaceSettings) } label: {
+                                Label(L10n.commonSettings, icon: \.settings)
+                            }
                         }
                     }
                 }

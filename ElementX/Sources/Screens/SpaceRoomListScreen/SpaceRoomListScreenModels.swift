@@ -14,6 +14,7 @@ enum SpaceRoomListScreenViewModelAction {
     case showRoomDetails(roomID: String)
     case dismiss
     case displayMembers(roomProxy: JoinedRoomProxyProtocol)
+    case inviteUsers(roomProxy: JoinedRoomProxyProtocol)
     case displaySpaceSettings(roomProxy: JoinedRoomProxyProtocol)
     case leftSpace
 }
@@ -28,6 +29,7 @@ enum SpaceRoomListScreenViewAction {
     case leaveRoom(roomID: String)
     // Space menu actions
     case displayMembers
+    case inviteUsers
     case spaceSettings
     case leaveSpace
 }
@@ -48,6 +50,8 @@ struct SpaceRoomListScreenViewState: BindableState {
     var roomProxy: JoinedRoomProxyProtocol?
     var canEditBaseInfo = false
     var canEditRolesAndPermissions = false
+    var canManageSpaceChildren = false
+    var canInviteUsers = false
 
     var isSpaceManagementEnabled: Bool {
         canEditBaseInfo || canEditRolesAndPermissions

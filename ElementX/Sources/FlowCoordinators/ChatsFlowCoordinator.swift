@@ -615,6 +615,8 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
                     dismissSpaceRoomListFlow(animated: true)
                 case .displayMembers(let roomProxy):
                     presentSpaceMembers(roomProxy: roomProxy, animated: true)
+                case .inviteUsers(let roomProxy):
+                    presentSpaceInviteUsers(roomProxy: roomProxy, animated: true)
                 case .displaySpaceSettings(let roomProxy):
                     presentSpaceSettings(roomProxy: roomProxy, animated: true)
                 case .leftSpace:
@@ -653,6 +655,39 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
 
         // Use RoomMembersFlowCoordinator which handles all member list actions including invite
         let coordinator = RoomMembersFlowCoordinator(entryPoint: .roomMembersList,
+                                                      roomProxy: roomProxy,
+                                                      navigationStackCoordinator: navigationStackCoordinator,
+                                                      flowParameters: flowParameters)
+        spaceRoomListMembersFlowCoordinator = coordinator
+
+        coordinator.actions
+            .sink { [weak self] action in
+                guard let self else { return }
+                switch action {
+                case .finished:
+                    spaceRoomListMembersFlowCoordinator = nil
+                case .presentCallScreen(let roomProxy):
+                    actionsSubject.send(.showCallScreen(roomProxy: roomProxy))
+                case .verifyUser(let userID):
+                    actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
+                }
+            }
+            .store(in: &spaceRoomListCancellables)
+
+        coordinator.start(animated: animated)
+    }
+
+    private func presentSpaceInviteUsers(roomProxy: JoinedRoomProxyProtocol, animated: Bool) {
+        guard let navigationStackCoordinator = spaceRoomListNavigationStackCoordinator else { return }
+
+        // Prevent duplicate push
+        guard spaceRoomListMembersFlowCoordinator == nil else {
+            MXLog.warning("Space room list members flow coordinator already exists, ignoring duplicate presentation request")
+            return
+        }
+
+        // Use RoomMembersFlowCoordinator with inviteUsers entry point to go directly to invite screen
+        let coordinator = RoomMembersFlowCoordinator(entryPoint: .inviteUsers,
                                                       roomProxy: roomProxy,
                                                       navigationStackCoordinator: navigationStackCoordinator,
                                                       flowParameters: flowParameters)

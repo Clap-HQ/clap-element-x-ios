@@ -82,6 +82,9 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
         case .displayMembers:
             guard let roomProxy = state.roomProxy else { return }
             actionsSubject.send(.displayMembers(roomProxy: roomProxy))
+        case .inviteUsers:
+            guard let roomProxy = state.roomProxy else { return }
+            actionsSubject.send(.inviteUsers(roomProxy: roomProxy))
         case .spaceSettings:
             guard let roomProxy = state.roomProxy else { return }
             actionsSubject.send(.displaySpaceSettings(roomProxy: roomProxy))
@@ -263,6 +266,16 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] isEnabled, roomInfo in
                         guard let self else { return }
+                        // canManageSpaceChildren is always based on power levels, independent of spaceSettingsEnabled
+                        if let powerLevels = roomInfo.powerLevels {
+                            state.canManageSpaceChildren = powerLevels.canOwnUser(sendStateEvent: .spaceChild)
+                            state.canInviteUsers = powerLevels.canOwnUserInvite()
+                        } else {
+                            state.canManageSpaceChildren = false
+                            state.canInviteUsers = false
+                        }
+
+                        // canEditBaseInfo and canEditRolesAndPermissions require spaceSettingsEnabled
                         guard isEnabled, let powerLevels = roomInfo.powerLevels else {
                             state.canEditBaseInfo = false
                             state.canEditRolesAndPermissions = false
