@@ -205,21 +205,22 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
 //            }
 //
             if let replyDetails = timelineItem.properties.replyDetails {
-                // Visible reply view - uses full bubble width for separator
-                VStack(alignment: .leading, spacing: 8) {
-                    TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails, isOutgoing: timelineItem.isOutgoing)
-                        .onTapGesture {
-                            context.send(viewAction: .focusOnEventID(replyDetails.eventID))
-                        }
-
-                    Rectangle()
-                        .fill(Color.compound.borderDisabled)
-                        .frame(height: 1)
-                }
-                .layoutPriority(TimelineBubbleLayout.Priority.visibleQuote)
-
-                // Hidden reply view - used for layout calculation (determines bubble width)
                 TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails, isOutgoing: timelineItem.isOutgoing)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 8)
+                    .overlay(alignment: .bottom) {
+                        Rectangle()
+                            .fill(Color.compound.borderDisabled)
+                            .frame(height: 1)
+                    }
+                    .layoutPriority(TimelineBubbleLayout.Priority.visibleQuote)
+                    .onTapGesture {
+                        context.send(viewAction: .focusOnEventID(replyDetails.eventID))
+                    }
+
+                TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails, isOutgoing: timelineItem.isOutgoing)
+                    .fixedSize(horizontal: false, vertical: true)
                     .layoutPriority(TimelineBubbleLayout.Priority.hiddenQuote)
                     .hidden()
             }
