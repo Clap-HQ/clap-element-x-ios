@@ -196,31 +196,31 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                               color: timelineItem.bubbleBackgroundColor)
     }
 
-    /// Space reserved for timestamp label outside the bubble
-    private let timestampSpacing: CGFloat = 48
-
     @ViewBuilder
     private var bubbleWithTimestamp: some View {
-        messageBubbleWithActions
-            .timelineItemAccessibility(timelineItem) {
-                context.send(viewAction: .displayTimelineItemMenu(itemID: timelineItem.id))
-            }
-            .overlay(alignment: timelineItem.isOutgoing ? .bottomLeading : .bottomTrailing) {
+        HStack(alignment: .bottom, spacing: 4) {
+            if timelineItem.isOutgoing {
                 timestampLabel
-                    .alignmentGuide(timelineItem.isOutgoing ? .leading : .trailing) { d in
-                        timelineItem.isOutgoing ? d[.trailing] + 4 : d[.leading] - 4
-                    }
             }
-            .padding(timelineItem.isOutgoing ? .leading : .trailing, timestampSpacing)
+
+            messageBubbleWithActions
+                .timelineItemAccessibility(timelineItem) {
+                    context.send(viewAction: .displayTimelineItemMenu(itemID: timelineItem.id))
+                }
+                .layoutPriority(1)
+
+            if !timelineItem.isOutgoing {
+                timestampLabel
+            }
+        }
     }
 
-    @ViewBuilder
     private var timestampLabel: some View {
         Text(timelineItem.localizedSendInfo)
             .font(.compound.bodyXS)
             .foregroundStyle(.compound.textSecondary)
-            .multilineTextAlignment(timelineItem.isOutgoing ? .trailing : .leading)
             .fixedSize()
+            .layoutPriority(0)
     }
     
     @ViewBuilder
