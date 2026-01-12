@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Każdy może znaleźć i dołączyć do tego pokoju. Możesz to zmienić w dowolnym momencie w ustawieniach pokoju.";
 "screen_space_create_room_encryption_title" = "Włącz szyfrowanie end-to-end";
 "screen_space_create_room_encryption_description" = "Nie będzie można tego później wyłączyć. Mostki i większość botów jeszcze nie działa.";
+
+"screen_thread_list_title" = "Wątki";
+"screen_thread_list_empty_title" = "Brak wątków";
+"screen_thread_list_empty_description" = "Rozpocznij wątek, odpowiadając na dowolną wiadomość";
+"screen_thread_activity_title" = "Aktywność wątków";
+"screen_thread_activity_empty_title" = "Brak nieprzeczytanych wątków";
+"screen_thread_activity_empty_description" = "Wszystko przeczytane!";

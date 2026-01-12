@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Любой может найти и присоединиться к этой комнате. Вы можете изменить это в любое время в настройках комнаты.";
 "screen_space_create_room_encryption_title" = "Включить сквозное шифрование";
 "screen_space_create_room_encryption_description" = "Вы не сможете отключить это позже. Мосты и большинство ботов пока не будут работать.";
+
+"screen_thread_list_title" = "Обсуждения";
+"screen_thread_list_empty_title" = "Пока нет обсуждений";
+"screen_thread_list_empty_description" = "Начните обсуждение, ответив на любое сообщение";
+"screen_thread_activity_title" = "Активность обсуждений";
+"screen_thread_activity_empty_title" = "Нет непрочитанных обсуждений";
+"screen_thread_activity_empty_description" = "Вы всё прочитали!";

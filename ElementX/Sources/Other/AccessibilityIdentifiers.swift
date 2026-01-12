@@ -104,7 +104,7 @@ enum A11yIdentifiers {
         let userAvatar = "home_screen-user_avatar"
         let recoveryKeyConfirmationBannerContinue = "home_screen-recovery_key_confirmation_continue"
         let startChat = "home_screen-start_chat"
-        
+
         let roomNamePrefix = "home_screen-room_name"
         func roomName(_ name: String) -> String {
             "\(roomNamePrefix):\(name)"
@@ -149,6 +149,7 @@ enum A11yIdentifiers {
         let attachmentPickerTextFormatting = "room-attachment_picker_text_formatting"
         let timelineItemActionMenu = "room-timeline_item_action_menu"
         let joinCall = "room-join_call"
+        let threadListButton = "room-thread_list_button"
         let scrollToBottom = "room-scroll_to_bottom"
         
         let messageComposer = "room-message_composer"

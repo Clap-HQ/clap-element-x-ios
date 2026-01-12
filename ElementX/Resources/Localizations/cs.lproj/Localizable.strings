@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Kdokoli může tuto místnost najít a připojit se. Toto můžete kdykoli změnit v nastavení místnosti.";
 "screen_space_create_room_encryption_title" = "Povolit koncové šifrování";
 "screen_space_create_room_encryption_description" = "Později to nelze zakázat. Propojení a většina botů zatím nebude fungovat.";
+
+"screen_thread_list_title" = "Vlákna";
+"screen_thread_list_empty_title" = "Zatím žádná vlákna";
+"screen_thread_list_empty_description" = "Začněte vlákno odpovědí na jakoukoli zprávu";
+"screen_thread_activity_title" = "Aktivita vláken";
+"screen_thread_activity_empty_title" = "Žádná nepřečtená vlákna";
+"screen_thread_activity_empty_description" = "Vše je přečteno!";

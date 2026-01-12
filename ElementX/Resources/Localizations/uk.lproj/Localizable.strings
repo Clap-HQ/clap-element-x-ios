@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Будь-хто може знайти та приєднатися до цієї кімнати. Ви можете змінити це в будь-який час у налаштуваннях кімнати.";
 "screen_space_create_room_encryption_title" = "Увімкнути наскрізне шифрування";
 "screen_space_create_room_encryption_description" = "Ви не зможете вимкнути це пізніше. Мости й більшість ботів поки не працюватимуть.";
+
+"screen_thread_list_title" = "Гілки";
+"screen_thread_list_empty_title" = "Ще немає гілок";
+"screen_thread_list_empty_description" = "Почніть гілку, відповівши на будь-яке повідомлення";
+"screen_thread_activity_title" = "Активність гілок";
+"screen_thread_activity_empty_title" = "Немає непрочитаних гілок";
+"screen_thread_activity_empty_description" = "Ви все прочитали!";

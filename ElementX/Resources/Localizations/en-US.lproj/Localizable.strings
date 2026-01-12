@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Anyone can find and join this room. You can change this at any time from room settings.";
 "screen_space_create_room_encryption_title" = "Enable end-to-end encryption";
 "screen_space_create_room_encryption_description" = "You can't disable this later. Bridges & most bots won't work yet.";
+
+"screen_thread_list_title" = "Threads";
+"screen_thread_list_empty_title" = "No threads yet";
+"screen_thread_list_empty_description" = "Start a thread by replying to any message";
+"screen_thread_activity_title" = "Thread Activity";
+"screen_thread_activity_empty_title" = "No unread threads";
+"screen_thread_activity_empty_description" = "You're all caught up!";

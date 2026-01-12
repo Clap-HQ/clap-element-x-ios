@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Bárki megtalálhatja és csatlakozhat ehhez a szobához. Ezt bármikor megváltoztathatod a szoba beállításaiban.";
 "screen_space_create_room_encryption_title" = "Végpontok közti titkosítás engedélyezése";
 "screen_space_create_room_encryption_description" = "Ezt később nem lehet kikapcsolni. A hidak és a legtöbb bot egyelőre nem fog működni.";
+
+"screen_thread_list_title" = "Szálak";
+"screen_thread_list_empty_title" = "Még nincsenek szálak";
+"screen_thread_list_empty_description" = "Indítson szálat bármely üzenetre válaszolva";
+"screen_thread_activity_title" = "Szál aktivitás";
+"screen_thread_activity_empty_title" = "Nincsenek olvasatlan szálak";
+"screen_thread_activity_empty_description" = "Mindent elolvasott!";

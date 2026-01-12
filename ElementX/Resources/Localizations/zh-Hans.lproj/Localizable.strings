@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "任何人都可以找到并加入此房间。您可以随时在房间设置中更改此设置。";
 "screen_space_create_room_encryption_title" = "启用端到端加密";
 "screen_space_create_room_encryption_description" = "之后你无法停用。桥接和大多数机器人也不能工作。";
+
+"screen_thread_list_title" = "消息列";
+"screen_thread_list_empty_title" = "暂无消息列";
+"screen_thread_list_empty_description" = "回复任意消息以开始消息列";
+"screen_thread_activity_title" = "消息列活动";
+"screen_thread_activity_empty_title" = "没有未读消息列";
+"screen_thread_activity_empty_description" = "您已全部看完！";

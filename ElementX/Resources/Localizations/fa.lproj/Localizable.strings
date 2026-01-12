@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "هر کسی می‌تواند این اتاق را پیدا کند و بپیوندد. شما می‌توانید این را در هر زمان در تنظیمات اتاق تغییر دهید.";
 "screen_space_create_room_encryption_title" = "فعال کردن رمزگذاری سرتاسری";
 "screen_space_create_room_encryption_description" = "شما نمی‌توانید این را بعداً غیرفعال کنید. پل‌ها و اکثر ربات‌ها هنوز کار نخواهند کرد.";
+
+"screen_thread_list_title" = "رشته‌ها";
+"screen_thread_list_empty_title" = "هنوز رشته‌ای وجود ندارد";
+"screen_thread_list_empty_description" = "با پاسخ دادن به هر پیامی یک رشته شروع کنید";
+"screen_thread_activity_title" = "فعالیت رشته‌ها";
+"screen_thread_activity_empty_title" = "رشته خوانده نشده‌ای وجود ندارد";
+"screen_thread_activity_empty_description" = "همه چیز را خوانده‌اید!";

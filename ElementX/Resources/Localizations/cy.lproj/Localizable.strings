@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Gall unrhyw un ddod o hyd i'r ystafell hon ac ymuno. Gallwch newid hyn unrhyw bryd yn y gosodiadau ystafell.";
 "screen_space_create_room_encryption_title" = "Galluogi amgryptio pen-i-ben";
 "screen_space_create_room_encryption_description" = "Allwch chi ddim analluogi hyn yn nes ymlaen. Ni fydd pontydd a'r mwyafrif o fotiau'n gweithio eto.";
+
+"screen_thread_list_title" = "Edafedd";
+"screen_thread_list_empty_title" = "Dim edafedd eto";
+"screen_thread_list_empty_description" = "Dechreuwch edefyn drwy ateb unrhyw neges";
+"screen_thread_activity_title" = "Gweithgaredd Edafedd";
+"screen_thread_activity_empty_title" = "Dim edafedd heb eu darllen";
+"screen_thread_activity_empty_description" = "Rydych chi wedi dal i fyny!";

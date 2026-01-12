@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Cualquiera puede encontrar y unirse a esta sala. Puedes cambiar esto en cualquier momento desde la configuración de la sala.";
 "screen_space_create_room_encryption_title" = "Activar el cifrado de extremo a extremo";
 "screen_space_create_room_encryption_description" = "No podrás desactivarlo más adelante. Los puentes y la mayoría de bots todavía no funcionarán.";
+
+"screen_thread_list_title" = "Hilos";
+"screen_thread_list_empty_title" = "Aún no hay hilos";
+"screen_thread_list_empty_description" = "Inicia un hilo respondiendo a cualquier mensaje";
+"screen_thread_activity_title" = "Actividad de hilos";
+"screen_thread_activity_empty_title" = "No hay hilos sin leer";
+"screen_thread_activity_empty_description" = "¡Estás al día!";

@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "任何人都可以找到並加入此聊天室。您可以隨時在聊天室設定中變更。";
 "screen_space_create_room_encryption_title" = "啟用端對端加密";
 "screen_space_create_room_encryption_description" = "您無法在稍後停用此功能。橋接與大多數的聊天機器人也會無法運作。";
+
+"screen_thread_list_title" = "討論串";
+"screen_thread_list_empty_title" = "尚無討論串";
+"screen_thread_list_empty_description" = "回覆任何訊息以開始討論串";
+"screen_thread_activity_title" = "討論串活動";
+"screen_thread_activity_empty_title" = "沒有未讀討論串";
+"screen_thread_activity_empty_description" = "您已全部看完！";

@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Chiunque può trovare e unirsi a questa stanza. Puoi modificarlo in qualsiasi momento dalle impostazioni della stanza.";
 "screen_space_create_room_encryption_title" = "Attiva crittografia end-to-end";
 "screen_space_create_room_encryption_description" = "Non potrai più disattivarla. I bridge e molti bot non funzioneranno.";
+
+"screen_thread_list_title" = "Thread";
+"screen_thread_list_empty_title" = "Nessun thread ancora";
+"screen_thread_list_empty_description" = "Inizia un thread rispondendo a qualsiasi messaggio";
+"screen_thread_activity_title" = "Attività dei thread";
+"screen_thread_activity_empty_title" = "Nessun thread non letto";
+"screen_thread_activity_empty_description" = "Sei in pari!";

@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Οποιοσδήποτε μπορεί να βρει και να συμμετάσχει σε αυτό το δωμάτιο. Μπορείτε να το αλλάξετε ανά πάσα στιγμή στις ρυθμίσεις δωματίου.";
 "screen_space_create_room_encryption_title" = "Ενεργοποίηση κρυπτογράφησης από άκρο-σε-άκρο";
 "screen_space_create_room_encryption_description" = "Δεν μπορείτε να το απενεργοποιήσετε αργότερα. Οι γέφυρες και τα περισσότερα ρομπότ δεν μπορούν να λειτουργήσουν ακόμα.";
+
+"screen_thread_list_title" = "Νήματα";
+"screen_thread_list_empty_title" = "Δεν υπάρχουν νήματα ακόμα";
+"screen_thread_list_empty_description" = "Ξεκινήστε ένα νήμα απαντώντας σε οποιοδήποτε μήνυμα";
+"screen_thread_activity_title" = "Δραστηριότητα Νημάτων";
+"screen_thread_activity_empty_title" = "Δεν υπάρχουν μη αναγνωσμένα νήματα";
+"screen_thread_activity_empty_description" = "Είστε ενημερωμένοι!";

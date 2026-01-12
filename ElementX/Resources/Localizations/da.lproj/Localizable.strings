@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Alle kan finde og deltage i dette rum. Du kan ændre dette når som helst i rumindstillingerne.";
 "screen_space_create_room_encryption_title" = "Aktivér end-to-end kryptering";
 "screen_space_create_room_encryption_description" = "Du kan ikke deaktivere dette senere. Broer og de fleste bots vil ikke virke endnu.";
+
+"screen_thread_list_title" = "Tråde";
+"screen_thread_list_empty_title" = "Ingen tråde endnu";
+"screen_thread_list_empty_description" = "Start en tråd ved at besvare en besked";
+"screen_thread_activity_title" = "Trådaktivitet";
+"screen_thread_activity_empty_title" = "Ingen ulæste tråde";
+"screen_thread_activity_empty_description" = "Du er helt opdateret!";

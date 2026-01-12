@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Har kim bu xonani topishi va qo'shilishi mumkin. Buni istalgan vaqtda xona sozlamalarida o'zgartirishingiz mumkin.";
 "screen_space_create_room_encryption_title" = "Uchi-uchiga shifrlashni yoqish";
 "screen_space_create_room_encryption_description" = "Buni keyinroq o'chirib bo'lmaydi. Ko'priklar va aksariyat botlar hali ishlamaydi.";
+
+"screen_thread_list_title" = "Mavzular";
+"screen_thread_list_empty_title" = "Hozircha mavzular yo'q";
+"screen_thread_list_empty_description" = "Istalgan xabarga javob berib mavzu boshlang";
+"screen_thread_activity_title" = "Mavzular faoliyati";
+"screen_thread_activity_empty_title" = "O'qilmagan mavzular yo'q";
+"screen_thread_activity_empty_description" = "Hammasini o'qib chiqdingiz!";

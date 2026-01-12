@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Siapa pun dapat menemukan dan bergabung ke ruangan ini. Anda dapat mengubah ini kapan saja di pengaturan ruangan.";
 "screen_space_create_room_encryption_title" = "Aktifkan enkripsi ujung ke ujung";
 "screen_space_create_room_encryption_description" = "Anda tidak dapat menonaktifkannya nanti. Jembatan & kebanyakan bot belum dapat digunakan.";
+
+"screen_thread_list_title" = "Utas";
+"screen_thread_list_empty_title" = "Belum ada utas";
+"screen_thread_list_empty_description" = "Mulai utas dengan membalas pesan apa pun";
+"screen_thread_activity_title" = "Aktivitas Utas";
+"screen_thread_activity_empty_title" = "Tidak ada utas yang belum dibaca";
+"screen_thread_activity_empty_description" = "Anda sudah membaca semuanya!";

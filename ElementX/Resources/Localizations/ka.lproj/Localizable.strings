@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "ნებისმიერს შეუძლია იპოვოს და შეუერთდეს ამ ოთახს. თქვენ შეგიძლიათ შეცვალოთ ეს ნებისმიერ დროს ოთახის პარამეტრებში.";
 "screen_space_create_room_encryption_title" = "ბოლოდან ბოლომდე დაშიფვრის ჩართვა";
 "screen_space_create_room_encryption_description" = "თქვენ არ შეგიძლიათ გამორთოთ ეს მოგვიანებით. ხიდები და ბოტების უმეტესობა ჯერ არ იმუშავებს.";
+
+"screen_thread_list_title" = "თემები";
+"screen_thread_list_empty_title" = "ჯერ თემები არ არის";
+"screen_thread_list_empty_description" = "დაიწყეთ თემა ნებისმიერ შეტყობინებაზე პასუხით";
+"screen_thread_activity_title" = "თემების აქტივობა";
+"screen_thread_activity_empty_title" = "წაუკითხავი თემები არ არის";
+"screen_thread_activity_empty_description" = "ყველაფერი წაკითხული გაქვთ!";

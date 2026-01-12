@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Bet kas gali rasti ir prisijungti prie šio kambario. Galite tai pakeisti bet kada kambario nustatymuose.";
 "screen_space_create_room_encryption_title" = "Įjungti ištisąjį šifravimą";
 "screen_space_create_room_encryption_description" = "Vėliau negalėsite to išjungti. Tiltai ir dauguma robotų dar neveiks.";
+
+"screen_thread_list_title" = "Gijos";
+"screen_thread_list_empty_title" = "Gijų dar nėra";
+"screen_thread_list_empty_description" = "Pradėkite giją atsakydami į bet kurią žinutę";
+"screen_thread_activity_title" = "Gijų veikla";
+"screen_thread_activity_empty_title" = "Nėra neskaitytų gijų";
+"screen_thread_activity_empty_description" = "Viską perskaitėte!";

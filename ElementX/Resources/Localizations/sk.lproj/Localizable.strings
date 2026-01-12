@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Ktokoľvek môže túto miestnosť nájsť a pripojiť sa. Môžete to kedykoľvek zmeniť v nastaveniach miestnosti.";
 "screen_space_create_room_encryption_title" = "Zapnúť end-to-end šifrovanie";
 "screen_space_create_room_encryption_description" = "Toto neskôr nemôžete vypnúť. Premostenia a väčšina botov zatiaľ nebudú fungovať.";
+
+"screen_thread_list_title" = "Vlákna";
+"screen_thread_list_empty_title" = "Zatiaľ žiadne vlákna";
+"screen_thread_list_empty_description" = "Začnite vlákno odpoveďou na ľubovoľnú správu";
+"screen_thread_activity_title" = "Aktivita vlákien";
+"screen_thread_activity_empty_title" = "Žiadne neprečítané vlákna";
+"screen_thread_activity_empty_description" = "Všetko je prečítané!";

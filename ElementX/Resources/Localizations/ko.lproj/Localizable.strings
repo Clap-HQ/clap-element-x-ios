@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "누구나 이 방을 찾고 참여할 수 있습니다. 방 설정에서 언제든지 변경할 수 있습니다.";
 "screen_space_create_room_encryption_title" = "종단간 암호화 활성화";
 "screen_space_create_room_encryption_description" = "나중에 이 기능을 비활성화할 수 없습니다. 브릿지와 대부분의 봇은 아직 작동하지 않습니다.";
+
+"screen_thread_list_title" = "스레드";
+"screen_thread_list_empty_title" = "아직 스레드가 없습니다";
+"screen_thread_list_empty_description" = "메시지에 답장하여 스레드를 시작하세요";
+"screen_thread_activity_title" = "스레드 활동";
+"screen_thread_activity_empty_title" = "읽지 않은 스레드가 없습니다";
+"screen_thread_activity_empty_description" = "모두 확인했습니다!";

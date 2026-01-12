@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Tout le monde peut trouver et rejoindre ce salon. Vous pouvez modifier cela à tout moment dans les paramètres du salon.";
 "screen_space_create_room_encryption_title" = "Activer le chiffrement de bout en bout";
 "screen_space_create_room_encryption_description" = "Vous ne pourrez pas le désactiver plus tard. Les passerelles et la plupart des bots ne fonctionneront pas pour le moment.";
+
+"screen_thread_list_title" = "Fils de discussion";
+"screen_thread_list_empty_title" = "Pas encore de fils de discussion";
+"screen_thread_list_empty_description" = "Démarrez un fil de discussion en répondant à un message";
+"screen_thread_activity_title" = "Activité des fils";
+"screen_thread_activity_empty_title" = "Aucun fil non lu";
+"screen_thread_activity_empty_description" = "Vous êtes à jour !";

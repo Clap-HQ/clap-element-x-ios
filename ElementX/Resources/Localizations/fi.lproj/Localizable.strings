@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Kuka tahansa voi löytää tämän huoneen ja liittyä siihen. Voit muuttaa tätä milloin tahansa huoneen asetuksissa.";
 "screen_space_create_room_encryption_title" = "Ota päästä päähän -salaus käyttöön";
 "screen_space_create_room_encryption_description" = "Et voi poistaa tätä käytöstä myöhemmin. SIllat ja useimmat botit eivät vielä toimi.";
+
+"screen_thread_list_title" = "Ketjut";
+"screen_thread_list_empty_title" = "Ei ketjuja vielä";
+"screen_thread_list_empty_description" = "Aloita ketju vastaamalla mihin tahansa viestiin";
+"screen_thread_activity_title" = "Ketjujen toiminta";
+"screen_thread_activity_empty_title" = "Ei lukemattomia ketjuja";
+"screen_thread_activity_empty_description" = "Olet ajan tasalla!";

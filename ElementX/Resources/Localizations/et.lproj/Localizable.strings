@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Kõik saavad seda jututuba leida ja sellega liituda. Seda saab igal ajal jututoa seadetes muuta.";
 "screen_space_create_room_encryption_title" = "Võta läbiv krüptimine kasutusele";
 "screen_space_create_room_encryption_description" = "Seda funktsionaalsust sa ei saa hiljem kinni keerata. Sõnumisillad ja enamus roboteid veel ei oska seda kasutada.";
+
+"screen_thread_list_title" = "Lõimed";
+"screen_thread_list_empty_title" = "Lõimesid veel pole";
+"screen_thread_list_empty_description" = "Alusta lõime, vastates suvalisele sõnumile";
+"screen_thread_activity_title" = "Lõimede tegevus";
+"screen_thread_activity_empty_title" = "Lugemata lõimesid pole";
+"screen_thread_activity_empty_description" = "Oled kõigega kursis!";

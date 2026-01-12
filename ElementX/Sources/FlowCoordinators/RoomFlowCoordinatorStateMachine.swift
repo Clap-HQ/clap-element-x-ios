@@ -60,6 +60,7 @@ extension RoomFlowCoordinator {
         case joinRoomScreen
         case room
         case thread(threadRootEventID: String, previousState: State)
+        case threadList(previousState: State)
         case roomDetails(isRoot: Bool)
         case roomDetailsEditScreen
         case notificationSettings
@@ -112,6 +113,9 @@ extension RoomFlowCoordinator {
         
         case presentThread(threadRootEventID: String, focusEventID: String?)
         case dismissThread
+
+        case presentThreadList
+        case dismissThreadList
         
         case startSpaceFlow
         case finishedSpaceFlow
@@ -239,6 +243,14 @@ extension RoomFlowCoordinator {
                 return .thread(threadRootEventID: threadRootEventID, previousState: fromState)
             case (.thread(_, let previousState), .dismissThread):
                 return previousState
+
+            // Thread List
+            case (.room, .presentThreadList):
+                return .threadList(previousState: fromState)
+            case (.threadList(let previousState), .dismissThreadList):
+                return previousState
+            case (.threadList, .presentThread(let threadRootEventID, _)):
+                return .thread(threadRootEventID: threadRootEventID, previousState: fromState)
                 
             case (.thread, .presentReportContent(let itemID, let senderID)):
                 return .reportContent(itemID: itemID, senderID: senderID, previousState: fromState)

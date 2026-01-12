@@ -171,14 +171,30 @@ struct RoomScreen: View {
         
         if !ProcessInfo.processInfo.isiOSAppOnMac {
             ToolbarItem(placement: .primaryAction) {
-                if context.viewState.shouldShowCallButton {
-                    callButton
-                        .disabled(!context.viewState.canJoinCall)
+                HStack(spacing: 16) {
+                    threadListButton
+
+                    if context.viewState.shouldShowCallButton {
+                        callButton
+                            .disabled(!context.viewState.canJoinCall)
+                    }
                 }
             }
         }
     }
-    
+
+    private var threadListButton: some View {
+        Button {
+            context.send(viewAction: .displayThreadList)
+        } label: {
+            CompoundIcon(\.threads)
+                .padding(4)
+                .contentShape(Rectangle())
+        }
+        .accessibilityLabel(L10n.screenThreadListTitle)
+        .accessibilityIdentifier(A11yIdentifiers.roomScreen.threadListButton)
+    }
+
     @ViewBuilder
     private var callButton: some View {
         if context.viewState.hasOngoingCall {
@@ -196,6 +212,8 @@ struct RoomScreen: View {
                 context.send(viewAction: .displayCall)
             } label: {
                 CompoundIcon(\.videoCallSolid)
+                    .padding(4)
+                    .contentShape(Rectangle())
             }
             .accessibilityLabel(L10n.a11yStartCall)
             .accessibilityIdentifier(A11yIdentifiers.roomScreen.joinCall)

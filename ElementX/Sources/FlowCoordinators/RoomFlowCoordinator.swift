@@ -87,7 +87,16 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
     private var spaceFlowCoordinator: SpaceFlowCoordinator?
     // periphery:ignore - retaining purpose
     private var membersFlowCoordinator: RoomMembersFlowCoordinator?
-    
+    // periphery:ignore - retaining purpose
+    private var threadListScreenCoordinator: ThreadListScreenCoordinator?
+
+    private lazy var threadsService: ThreadsService = {
+        let clientProxy = userSession.clientProxy
+        return ThreadsService(homeserverURL: clientProxy.homeserver) { [weak clientProxy] in
+            clientProxy?.accessToken
+        }
+    }()
+
     private let stateMachine: StateMachine<State, Event> = .init(state: .initial)
     
     private var cancellables = Set<AnyCancellable>()
@@ -392,10 +401,17 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
                 startPinnedEventsTimelineFlow()
                 
             // Thread
-                
+
             case (_, .presentThread(let threadRootEventID, let focusEventID), .thread):
                 Task { await self.presentThread(threadRootEventID: threadRootEventID, focusEventID: focusEventID, animated: animated) }
-                
+
+            // Thread List
+
+            case (.room, .presentThreadList, .threadList):
+                presentThreadList(animated: animated)
+            case (.threadList, .dismissThreadList, _):
+                dismissThreadList(animated: animated)
+
             // Thread + Room
                 
             case (_, .startSpaceFlow, .spaceFlow):
@@ -715,6 +731,8 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
                     stateMachine.tryEvent(.presentKnockRequestsListScreen)
                 case .presentThread(let threadRootEventID, let focussedEventID):
                     stateMachine.tryEvent(.presentThread(threadRootEventID: threadRootEventID, focusEventID: focussedEventID))
+                case .presentThreadList:
+                    stateMachine.tryEvent(.presentThreadList)
                 case .presentRoom(let roomID, let via):
                     stateMachine.tryEvent(.startChildFlow(roomID: roomID,
                                                           via: via,
@@ -808,7 +826,41 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
         
         childThreadScreenCoordinators.append(coordinator)
     }
-    
+
+    private func presentThreadList(animated: Bool) {
+        let sheetNavigationStackCoordinator = NavigationStackCoordinator()
+        let coordinator = ThreadListScreenCoordinator(parameters: .init(roomProxy: roomProxy,
+                                                                        threadsService: threadsService,
+                                                                        mediaProvider: userSession.mediaProvider))
+
+        coordinator.actions
+            .sink { [weak self] action in
+                guard let self else { return }
+
+                switch action {
+                case .dismiss:
+                    stateMachine.tryEvent(.dismissThreadList)
+                case .selectThread(let rootEventID):
+                    stateMachine.tryEvent(.dismissThreadList)
+                    stateMachine.tryEvent(.presentThread(threadRootEventID: rootEventID, focusEventID: nil))
+                }
+            }
+            .store(in: &cancellables)
+
+        threadListScreenCoordinator = coordinator
+        coordinator.start()
+        sheetNavigationStackCoordinator.setRootCoordinator(coordinator)
+
+        navigationStackCoordinator.setSheetCoordinator(sheetNavigationStackCoordinator) { [weak self] in
+            self?.threadListScreenCoordinator = nil
+        }
+    }
+
+    private func dismissThreadList(animated: Bool) {
+        navigationStackCoordinator.setSheetCoordinator(nil)
+        threadListScreenCoordinator = nil
+    }
+
     private func presentJoinRoomScreen(via: [String], animated: Bool) {
         let coordinator = JoinRoomScreenCoordinator(parameters: .init(source: .generic(roomID: roomID, via: via),
                                                                       userSession: userSession,

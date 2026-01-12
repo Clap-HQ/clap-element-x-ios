@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "کوئی بھی اس کمرے کو تلاش کر کے شامل ہو سکتا ہے۔ آپ اسے کمرے کی ترتیبات میں کسی بھی وقت تبدیل کر سکتے ہیں۔";
 "screen_space_create_room_encryption_title" = "اینڈ ٹو اینڈ انکرپشن فعال کریں";
 "screen_space_create_room_encryption_description" = "آپ اسے بعد میں غیر فعال نہیں کر سکتے۔ پل اور زیادہ تر بوٹس ابھی تک کام نہیں کریں گے۔";
+
+"screen_thread_list_title" = "تھریڈز";
+"screen_thread_list_empty_title" = "ابھی تک کوئی تھریڈ نہیں";
+"screen_thread_list_empty_description" = "کسی بھی پیغام کا جواب دے کر تھریڈ شروع کریں";
+"screen_thread_activity_title" = "تھریڈ سرگرمی";
+"screen_thread_activity_empty_title" = "کوئی غیر پڑھے تھریڈز نہیں";
+"screen_thread_activity_empty_description" = "آپ نے سب پڑھ لیا!";

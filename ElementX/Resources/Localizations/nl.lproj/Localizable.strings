@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Iedereen kan deze kamer vinden en lid worden. Je kunt dit op elk moment wijzigen in de kamerinstellingen.";
 "screen_space_create_room_encryption_title" = "Eind-tot-eind-versleuteling inschakelen";
 "screen_space_create_room_encryption_description" = "Je kan dit later niet uitschakelen. Bruggen en de meeste bots zullen nog niet werken.";
+
+"screen_thread_list_title" = "Threads";
+"screen_thread_list_empty_title" = "Nog geen threads";
+"screen_thread_list_empty_description" = "Start een thread door op een bericht te reageren";
+"screen_thread_activity_title" = "Thread-activiteit";
+"screen_thread_activity_empty_title" = "Geen ongelezen threads";
+"screen_thread_activity_empty_description" = "Je bent helemaal bij!";

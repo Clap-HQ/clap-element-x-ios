@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Любы можа знайсці і далучыцца да гэтага пакоя. Вы можаце змяніць гэта ў любы час у наладах пакоя.";
 "screen_space_create_room_encryption_title" = "Уключыць скразное шыфраванне";
 "screen_space_create_room_encryption_description" = "Вы не зможаце адключыць гэта пазней. Масты і большасць ботаў пакуль не будуць працаваць.";
+
+"screen_thread_list_title" = "Галіны";
+"screen_thread_list_empty_title" = "Пакуль няма галін";
+"screen_thread_list_empty_description" = "Пачніце галіну, адказаўшы на любое паведамленне";
+"screen_thread_activity_title" = "Актыўнасць галін";
+"screen_thread_activity_empty_title" = "Няма непрачытаных галін";
+"screen_thread_activity_empty_description" = "Вы ўсё прачыталі!";

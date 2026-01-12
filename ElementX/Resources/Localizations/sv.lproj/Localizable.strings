@@ -1494,3 +1494,10 @@
 "screen_space_create_room_visibility_public_description" = "Vem som helst kan hitta och gå med i detta rum. Du kan ändra detta när som helst i rumsinställningarna.";
 "screen_space_create_room_encryption_title" = "Aktivera totalsträckskryptering";
 "screen_space_create_room_encryption_description" = "Du kan inte inaktivera detta senare. Bryggor och de flesta bottar kommer inte fungera än.";
+
+"screen_thread_list_title" = "Trådar";
+"screen_thread_list_empty_title" = "Inga trådar ännu";
+"screen_thread_list_empty_description" = "Starta en tråd genom att svara på ett meddelande";
+"screen_thread_activity_title" = "Trådaktivitet";
+"screen_thread_activity_empty_title" = "Inga olästa trådar";
+"screen_thread_activity_empty_description" = "Du är helt i kapp!";
