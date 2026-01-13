@@ -105,7 +105,10 @@ extension ClientProxyMock {
         resetIdentityReturnValue = .success(IdentityResetHandleSDKMock(.init()))
         
         spaceService = SpaceServiceProxyMock(configuration.spaceServiceConfiguration)
-        
+        matrixAPI = MatrixAPIServiceMock()
+        clapAPI = ClapAPIServiceMock()
+        createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
+
         roomForIdentifierClosure = { [weak self] identifier in
             if let room = self?.roomSummaryProvider.roomListPublisher.value.first(where: { $0.id == identifier }) {
                 let joinedRoomIDs = configuration.overrides.joinedRoomIDs

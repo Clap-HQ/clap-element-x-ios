@@ -127,7 +127,13 @@ protocol ClientProxyProtocol: AnyObject {
     var sessionVerificationController: SessionVerificationControllerProxyProtocol? { get }
     
     var spaceService: SpaceServiceProxyProtocol { get }
-    
+
+    /// Direct Matrix REST API calls (/_matrix/...) - used when SDK doesn't expose certain APIs
+    var matrixAPI: MatrixAPIServiceProtocol { get }
+
+    /// Clap-specific REST API calls (/_clap/...)
+    var clapAPI: ClapAPIServiceProtocol { get }
+
     var isReportRoomSupported: Bool { get async }
     
     var isLiveKitRTCSupported: Bool { get async }
