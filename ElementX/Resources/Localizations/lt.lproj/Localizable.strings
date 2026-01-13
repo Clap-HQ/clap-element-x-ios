@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Bet kas gali rasti ir prisijungti prie šio kambario. Galite tai pakeisti bet kada kambario nustatymuose.";
 "screen_space_create_room_encryption_title" = "Įjungti ištisąjį šifravimą";
 "screen_space_create_room_encryption_description" = "Vėliau negalėsite to išjungti. Tiltai ir dauguma robotų dar neveiks.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Taip pat pašalinti iš visų kambarių";

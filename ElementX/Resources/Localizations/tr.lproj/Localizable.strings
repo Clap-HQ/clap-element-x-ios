@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Herkes bu odayı bulabilir ve katılabilir. Bunu istediğiniz zaman oda ayarlarından değiştirebilirsiniz.";
 "screen_space_create_room_encryption_title" = "Uçtan uca şifrelemeyi etkinleştir";
 "screen_space_create_room_encryption_description" = "Bunu daha sonra devre dışı bırakamazsınız. Köprüler ve çoğu bot henüz çalışmayacaktır.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Tüm odalardan da kaldır";

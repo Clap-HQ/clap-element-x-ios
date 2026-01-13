@@ -1364,6 +1364,8 @@ internal enum L10n {
   internal static var screenBottomSheetManageRoomMemberRemove: String { return L10n.tr("Localizable", "screen_bottom_sheet_manage_room_member_remove") }
   /// Remove member and ban from joining in the future?
   internal static var screenBottomSheetManageRoomMemberRemoveConfirmationTitle: String { return L10n.tr("Localizable", "screen_bottom_sheet_manage_room_member_remove_confirmation_title") }
+  /// Also remove from all rooms
+  internal static var screenBottomSheetManageRoomMemberRemoveFromAllRooms: String { return L10n.tr("Localizable", "screen_bottom_sheet_manage_room_member_remove_from_all_rooms") }
   /// Removing %1$@…
   internal static func screenBottomSheetManageRoomMemberRemovingUser(_ p1: Any) -> String {
     return L10n.tr("Localizable", "screen_bottom_sheet_manage_room_member_removing_user", String(describing: p1))

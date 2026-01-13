@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "کوئی بھی اس کمرے کو تلاش کر کے شامل ہو سکتا ہے۔ آپ اسے کمرے کی ترتیبات میں کسی بھی وقت تبدیل کر سکتے ہیں۔";
 "screen_space_create_room_encryption_title" = "اینڈ ٹو اینڈ انکرپشن فعال کریں";
 "screen_space_create_room_encryption_description" = "آپ اسے بعد میں غیر فعال نہیں کر سکتے۔ پل اور زیادہ تر بوٹس ابھی تک کام نہیں کریں گے۔";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "تمام کمروں سے بھی ہٹائیں";

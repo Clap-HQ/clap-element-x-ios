@@ -69,6 +69,9 @@ struct ManageRoomMemberSheetView: View {
         .presentationDragIndicator(.visible)
         .presentationDetents([.large, .fraction(0.67)]) // Maybe find a way to use the ideal height somehow?
         .alert(item: $context.alertInfo)
+        .sheet(item: $context.kickMemberConfirmation) { viewModel in
+            KickMemberConfirmationView(context: viewModel.context)
+        }
     }
 }
 
@@ -112,6 +115,7 @@ private extension ManageRoomMemberSheetViewModel {
                                                                  canBan: canBan,
                                                                  ownPowerLevel: powerLevel),
                                               roomProxy: JoinedRoomProxyMock(.init()),
+                                              clapSpaceAPI: ClapSpaceAPIMock(),
                                               userIndicatorController: UserIndicatorControllerMock(),
                                               analyticsService: ServiceLocator.shared.analytics,
                                               mediaProvider: MediaProviderMock(configuration: .init()))

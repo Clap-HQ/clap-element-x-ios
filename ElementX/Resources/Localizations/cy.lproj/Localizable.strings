@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Gall unrhyw un ddod o hyd i'r ystafell hon ac ymuno. Gallwch newid hyn unrhyw bryd yn y gosodiadau ystafell.";
 "screen_space_create_room_encryption_title" = "Galluogi amgryptio pen-i-ben";
 "screen_space_create_room_encryption_description" = "Allwch chi ddim analluogi hyn yn nes ymlaen. Ni fydd pontydd a'r mwyafrif o fotiau'n gweithio eto.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Hefyd dileu o bob ystafell";

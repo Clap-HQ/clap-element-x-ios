@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Edonork aurkitu eta batu dezake gela honetara. Hau edozein unetan alda dezakezu gelaren ezarpenetan.";
 "screen_space_create_room_encryption_title" = "Gaitu muturretik muturrerako enkriptatzea";
 "screen_space_create_room_encryption_description" = "Ezin duzu hau geroago desgaitu. Zubiak eta bot gehienak oraindik ez dira funtzionatuko.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Kendu gela guztietatik ere";

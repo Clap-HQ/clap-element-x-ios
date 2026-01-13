@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Bárki megtalálhatja és csatlakozhat ehhez a szobához. Ezt bármikor megváltoztathatja a szoba beállításaiban.";
 "screen_space_create_room_encryption_title" = "Végpontok közti titkosítás engedélyezése";
 "screen_space_create_room_encryption_description" = "Ezt később nem lehet kikapcsolni. A hidak és a legtöbb bot egyelőre nem fog működni.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Eltávolítás az összes szobából is";

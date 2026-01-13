@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Chiunque può trovare e unirsi a questa stanza. Puoi modificarlo in qualsiasi momento dalle impostazioni della stanza.";
 "screen_space_create_room_encryption_title" = "Attiva crittografia end-to-end";
 "screen_space_create_room_encryption_description" = "Non potrai più disattivarla. I bridge e molti bot non funzioneranno.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Rimuovi anche da tutte le stanze";

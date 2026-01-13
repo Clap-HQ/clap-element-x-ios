@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Siapa pun dapat menemukan dan bergabung ke ruangan ini. Anda dapat mengubah ini kapan saja di pengaturan ruangan.";
 "screen_space_create_room_encryption_title" = "Aktifkan enkripsi ujung ke ujung";
 "screen_space_create_room_encryption_description" = "Anda tidak dapat menonaktifkannya nanti. Jembatan & kebanyakan bot belum dapat digunakan.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Juga keluarkan dari semua ruangan";

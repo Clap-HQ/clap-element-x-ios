@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Любой может найти и присоединиться к этой комнате. Вы можете изменить это в любое время в настройках комнаты.";
 "screen_space_create_room_encryption_title" = "Включить сквозное шифрование";
 "screen_space_create_room_encryption_description" = "Вы не сможете отключить это позже. Мосты и большинство ботов пока не будут работать.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Также удалить из всех комнат";

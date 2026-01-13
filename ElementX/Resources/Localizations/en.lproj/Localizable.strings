@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Anyone can find and join this room. You can change this at any time from room settings.";
 "screen_space_create_room_encryption_title" = "Enable end-to-end encryption";
 "screen_space_create_room_encryption_description" = "You can't disable this later. Bridges & most bots won't work yet.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Also remove from all rooms";

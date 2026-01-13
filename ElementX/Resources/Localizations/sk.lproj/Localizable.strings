@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Ktokoľvek môže túto miestnosť nájsť a pripojiť sa. Môžete to kedykoľvek zmeniť v nastaveniach miestnosti.";
 "screen_space_create_room_encryption_title" = "Zapnúť end-to-end šifrovanie";
 "screen_space_create_room_encryption_description" = "Toto neskôr nemôžete vypnúť. Premostenia a väčšina botov zatiaľ nebudú fungovať.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Tiež odstrániť zo všetkých miestností";

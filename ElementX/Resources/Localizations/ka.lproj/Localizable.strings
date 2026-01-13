@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "ნებისმიერს შეუძლია იპოვოს და შეუერთდეს ამ ოთახს. თქვენ შეგიძლიათ შეცვალოთ ეს ნებისმიერ დროს ოთახის პარამეტრებში.";
 "screen_space_create_room_encryption_title" = "ბოლოდან ბოლომდე დაშიფვრის ჩართვა";
 "screen_space_create_room_encryption_description" = "თქვენ არ შეგიძლიათ გამორთოთ ეს მოგვიანებით. ხიდები და ბოტების უმეტესობა ჯერ არ იმუშავებს.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "ასევე წაშლა ყველა ოთახიდან";

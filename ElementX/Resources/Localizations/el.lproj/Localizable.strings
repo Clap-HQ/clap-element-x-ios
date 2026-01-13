@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Οποιοσδήποτε μπορεί να βρει και να συμμετάσχει σε αυτή την αίθουσα. Μπορείτε να το αλλάξετε ανά πάσα στιγμή στις ρυθμίσεις αίθουσας.";
 "screen_space_create_room_encryption_title" = "Ενεργοποίηση κρυπτογράφησης από άκρο-σε-άκρο";
 "screen_space_create_room_encryption_description" = "Δεν μπορείτε να το απενεργοποιήσετε αργότερα. Οι γέφυρες και τα περισσότερα ρομπότ δεν μπορούν να λειτουργήσουν ακόμα.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Επίσης αφαίρεση από όλα τα δωμάτια";

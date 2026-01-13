@@ -290,6 +290,7 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
                                                                           canBan: state.canCurrentUserBan,
                                                                           ownPowerLevel: currentUserProxy?.powerLevel ?? .init(value: 0)),
                                                        roomProxy: roomProxy,
+                                                       clapSpaceAPI: userSession.clientProxy.clapAPI.spaces,
                                                        userIndicatorController: userIndicatorController,
                                                        analyticsService: analyticsService,
                                                        mediaProvider: userSession.mediaProvider)

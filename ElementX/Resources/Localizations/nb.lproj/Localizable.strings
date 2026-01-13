@@ -1501,3 +1501,4 @@
 "screen_space_create_room_visibility_public_description" = "Alle kan finne og bli med i dette rommet. Du kan endre dette når som helst i rominnstillingene.";
 "screen_space_create_room_encryption_title" = "Aktiver ende-til-ende-kryptering";
 "screen_space_create_room_encryption_description" = "Du kan ikke deaktivere dette senere. Broer og de fleste bot'er fungerer ikke ennå.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Fjern også fra alle rom";
