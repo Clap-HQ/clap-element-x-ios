@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "Aktivitas Utas";
 "screen_thread_activity_empty_title" = "Tidak ada utas yang belum dibaca";
 "screen_thread_activity_empty_description" = "Anda sudah membaca semuanya!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Juga keluarkan dari semua ruangan";

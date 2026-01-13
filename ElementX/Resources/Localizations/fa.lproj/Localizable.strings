@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "فعالیت رشته‌ها";
 "screen_thread_activity_empty_title" = "رشته خوانده نشده‌ای وجود ندارد";
 "screen_thread_activity_empty_description" = "همه چیز را خوانده‌اید!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "همچنین از همه اتاق‌ها حذف شود";

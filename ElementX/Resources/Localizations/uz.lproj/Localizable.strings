@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "Mavzular faoliyati";
 "screen_thread_activity_empty_title" = "O'qilmagan mavzular yo'q";
 "screen_thread_activity_empty_description" = "Hammasini o'qib chiqdingiz!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Barcha xonalardan ham olib tashlash";

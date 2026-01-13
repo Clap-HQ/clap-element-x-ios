@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "Harien jarduera";
 "screen_thread_activity_empty_title" = "Ez dago irakurri gabeko haririk";
 "screen_thread_activity_empty_description" = "Egunean zaude!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Kendu gela guztietatik ere";

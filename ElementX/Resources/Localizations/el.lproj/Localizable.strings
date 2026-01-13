@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "Δραστηριότητα Νημάτων";
 "screen_thread_activity_empty_title" = "Δεν υπάρχουν μη αναγνωσμένα νήματα";
 "screen_thread_activity_empty_description" = "Είστε ενημερωμένοι!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Επίσης αφαίρεση από όλα τα δωμάτια";

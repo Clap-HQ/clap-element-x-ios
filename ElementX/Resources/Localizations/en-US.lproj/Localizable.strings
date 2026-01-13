@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "Thread Activity";
 "screen_thread_activity_empty_title" = "No unread threads";
 "screen_thread_activity_empty_description" = "You're all caught up!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Also remove from all rooms";

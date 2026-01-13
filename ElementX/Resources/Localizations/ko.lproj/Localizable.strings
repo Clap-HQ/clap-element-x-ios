@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "스레드 활동";
 "screen_thread_activity_empty_title" = "읽지 않은 스레드가 없습니다";
 "screen_thread_activity_empty_description" = "모두 확인했습니다!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "모든 방에서도 내보내기";

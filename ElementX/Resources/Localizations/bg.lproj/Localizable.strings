@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "Активност в нишките";
 "screen_thread_activity_empty_title" = "Няма непрочетени нишки";
 "screen_thread_activity_empty_description" = "Всичко е прочетено!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Също премахни от всички стаи";

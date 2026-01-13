@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "Thread-Aktivität";
 "screen_thread_activity_empty_title" = "Keine ungelesenen Threads";
 "screen_thread_activity_empty_description" = "Du bist auf dem neuesten Stand!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Auch aus allen Räumen entfernen";

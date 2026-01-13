@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "Aktivita vláken";
 "screen_thread_activity_empty_title" = "Žádná nepřečtená vlákna";
 "screen_thread_activity_empty_description" = "Vše je přečteno!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Také odebrat ze všech místností";

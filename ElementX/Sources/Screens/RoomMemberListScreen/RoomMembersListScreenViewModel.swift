@@ -167,6 +167,7 @@ class RoomMembersListScreenViewModel: RoomMembersListScreenViewModelType, RoomMe
                                                                                       canBan: state.canBanUsers,
                                                                                       ownPowerLevel: currentUserProxy?.powerLevel ?? .init(value: 0)),
                                                                    roomProxy: roomProxy,
+                                                                   clapSpaceAPI: userSession.clientProxy.clapAPI.spaces,
                                                                    userIndicatorController: userIndicatorController,
                                                                    analyticsService: analytics,
                                                                    mediaProvider: userSession.mediaProvider)

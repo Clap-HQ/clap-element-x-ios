@@ -14,7 +14,7 @@ class ClapAPIServiceMock: ClapAPIServiceProtocol {
 class ClapSpaceAPIMock: ClapSpaceAPIProtocol {
     var removeMemberFromAllChildRoomsResult: Result<ClapSpaceMemberRemovalResult, ClapAPIError> = .success(.init(removed: [], failed: []))
 
-    func removeMemberFromAllChildRooms(spaceID: String, userID: String, reason: String?) async -> Result<ClapSpaceMemberRemovalResult, ClapAPIError> {
+    func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, ClapAPIError> {
         removeMemberFromAllChildRoomsResult
     }
 }

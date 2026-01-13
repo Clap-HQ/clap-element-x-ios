@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "Trådaktivitet";
 "screen_thread_activity_empty_title" = "Inga olästa trådar";
 "screen_thread_activity_empty_description" = "Du är helt i kapp!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Ta även bort från alla rum";

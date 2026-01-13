@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "Actividad de hilos";
 "screen_thread_activity_empty_title" = "No hay hilos sin leer";
 "screen_thread_activity_empty_description" = "¡Estás al día!";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "También eliminar de todas las salas";

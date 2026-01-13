@@ -1501,3 +1501,4 @@
 "screen_thread_activity_title" = "討論串活動";
 "screen_thread_activity_empty_title" = "沒有未讀討論串";
 "screen_thread_activity_empty_description" = "您已全部看完！";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "同時從所有聊天室移除";
