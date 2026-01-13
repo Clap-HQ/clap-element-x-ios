@@ -105,7 +105,8 @@ extension ClientProxyMock {
         resetIdentityReturnValue = .success(IdentityResetHandleSDKMock(.init()))
         
         spaceService = SpaceServiceProxyMock(configuration.spaceServiceConfiguration)
-        spaceChildService = SpaceChildServiceMock()
+        matrixAPI = MatrixAPIServiceMock()
+        clapAPI = ClapAPIServiceMock()
         createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
 
         roomForIdentifierClosure = { [weak self] identifier in

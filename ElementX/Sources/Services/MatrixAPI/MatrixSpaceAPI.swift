@@ -7,9 +7,9 @@
 
 import Foundation
 
-/// Service for managing space-child relationships via Matrix REST API
+/// Implementation of Matrix Space API endpoints using direct REST calls
 /// Used when MatrixRustSDK doesn't expose state event APIs
-class SpaceChildService: SpaceChildServiceProtocol {
+class MatrixSpaceAPI: MatrixSpaceAPIProtocol {
     private let homeserverURL: String
     private let accessTokenProvider: () -> String?
     private let session: URLSession
@@ -19,42 +19,36 @@ class SpaceChildService: SpaceChildServiceProtocol {
         URL(string: homeserverURL)?.host ?? homeserverURL
     }
 
-    /// Initialize with an access token provider closure that fetches the current token
-    /// - Parameters:
-    ///   - homeserverURL: The homeserver base URL
-    ///   - accessTokenProvider: A closure that returns the current access token
-    ///   - session: URLSession to use for requests
     init(homeserverURL: String, accessTokenProvider: @escaping () -> String?, session: URLSession = .shared) {
         self.homeserverURL = homeserverURL
         self.accessTokenProvider = accessTokenProvider
         self.session = session
     }
 
-    // MARK: - SpaceChildServiceProtocol
+    // MARK: - MatrixSpaceAPIProtocol
 
-    func addChildToSpace(spaceID: String, childRoomID: String, suggested: Bool) async -> Result<Void, SpaceChildServiceError> {
+    func addChildToSpace(spaceID: String, childRoomID: String, suggested: Bool) async -> Result<Void, MatrixAPIError> {
         let body = SpaceChildContent(via: [homeserverDomain], suggested: suggested)
         return await sendStateEvent(roomID: spaceID, eventType: "m.space.child", stateKey: childRoomID, content: body)
     }
 
-    func removeChildFromSpace(spaceID: String, childRoomID: String) async -> Result<Void, SpaceChildServiceError> {
-        // Sending an empty object removes the relationship
+    func removeChildFromSpace(spaceID: String, childRoomID: String) async -> Result<Void, MatrixAPIError> {
         let body = EmptyContent()
         return await sendStateEvent(roomID: spaceID, eventType: "m.space.child", stateKey: childRoomID, content: body)
     }
 
-    func setSpaceParent(roomID: String, spaceID: String, canonical: Bool) async -> Result<Void, SpaceChildServiceError> {
+    func setSpaceParent(roomID: String, spaceID: String, canonical: Bool) async -> Result<Void, MatrixAPIError> {
         let body = SpaceParentContent(via: [homeserverDomain], canonical: canonical)
         return await sendStateEvent(roomID: roomID, eventType: "m.space.parent", stateKey: spaceID, content: body)
     }
 
-    func setRestrictedJoinRule(roomID: String, spaceID: String) async -> Result<Void, SpaceChildServiceError> {
+    func setRestrictedJoinRule(roomID: String, spaceID: String) async -> Result<Void, MatrixAPIError> {
         let allowRule = JoinRuleAllowCondition(type: "m.room_membership", roomId: spaceID)
         let body = JoinRulesContent(joinRule: "restricted", allow: [allowRule])
         return await sendStateEvent(roomID: roomID, eventType: "m.room.join_rules", stateKey: "", content: body)
     }
 
-    func setPublicJoinRule(roomID: String) async -> Result<Void, SpaceChildServiceError> {
+    func setPublicJoinRule(roomID: String) async -> Result<Void, MatrixAPIError> {
         let body = JoinRulesContent(joinRule: "public", allow: nil)
         return await sendStateEvent(roomID: roomID, eventType: "m.room.join_rules", stateKey: "", content: body)
     }
@@ -64,14 +58,12 @@ class SpaceChildService: SpaceChildServiceProtocol {
     private func sendStateEvent<T: Encodable>(roomID: String,
                                                eventType: String,
                                                stateKey: String,
-                                               content: T) async -> Result<Void, SpaceChildServiceError> {
-        // URL encode the room ID and state key (they contain special characters like ! and :)
+                                               content: T) async -> Result<Void, MatrixAPIError> {
         guard let encodedRoomID = roomID.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
               let encodedStateKey = stateKey.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
             return .failure(.invalidURL)
         }
 
-        // Remove trailing slash from homeserver URL if present to avoid double slashes
         let baseURL = homeserverURL.hasSuffix("/") ? String(homeserverURL.dropLast()) : homeserverURL
         let urlString = "\(baseURL)/_matrix/client/v3/rooms/\(encodedRoomID)/state/\(eventType)/\(encodedStateKey)"
 
@@ -104,7 +96,7 @@ class SpaceChildService: SpaceChildServiceProtocol {
             let (data, response) = try await session.dataWithRetry(for: request)
 
             guard let httpResponse = response as? HTTPURLResponse else {
-                return .failure(.networkError(NSError(domain: "SpaceChildService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])))
+                return .failure(.networkError(NSError(domain: "MatrixSpaceAPI", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])))
             }
 
             switch httpResponse.statusCode {

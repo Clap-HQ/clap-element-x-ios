@@ -60,7 +60,9 @@ class ClientProxy: ClientProxyProtocol {
     
     let spaceService: SpaceServiceProxyProtocol
 
-    let spaceChildService: SpaceChildServiceProtocol
+    let matrixAPI: MatrixAPIServiceProtocol
+
+    let clapAPI: ClapAPIServiceProtocol
 
     private static var roomCreationPowerLevelOverrides: PowerLevels {
         .init(usersDefault: nil,
@@ -176,9 +178,15 @@ class ClientProxy: ClientProxyProtocol {
         
         spaceService = SpaceServiceProxy(spaceService: client.spaceService())
 
-        // Initialize SpaceChildService with a closure that fetches the current access token
-        // This ensures we always use the latest token, even after token refresh
-        spaceChildService = SpaceChildService(homeserverURL: client.homeserver()) { [weak client] in
+        // Initialize MatrixAPIService for direct Matrix REST API calls
+        // Used when MatrixRustSDK doesn't expose certain APIs
+        matrixAPI = MatrixAPIService(homeserverURL: client.homeserver()) { [weak client] in
+            guard let client else { return nil }
+            return try? client.session().accessToken
+        }
+
+        // Initialize ClapAPIService for Clap-specific REST API calls
+        clapAPI = ClapAPIService(homeserverURL: client.homeserver()) { [weak client] in
             guard let client else { return nil }
             return try? client.session().accessToken
         }
@@ -533,7 +541,7 @@ class ClientProxy: ClientProxyProtocol {
         MXLog.info("Room created: \(roomID), now adding to space: \(spaceID)")
 
         // 2. Set m.space.child on the space (makes the room visible in the space)
-        let addChildResult = await spaceChildService.addChildToSpace(spaceID: spaceID,
+        let addChildResult = await matrixAPI.spaces.addChildToSpace(spaceID: spaceID,
                                                                       childRoomID: roomID,
                                                                       suggested: false)
         switch addChildResult {
@@ -544,7 +552,7 @@ class ClientProxy: ClientProxyProtocol {
         }
 
         // 3. Set m.space.parent on the room (declares the room's parent)
-        let setParentResult = await spaceChildService.setSpaceParent(roomID: roomID,
+        let setParentResult = await matrixAPI.spaces.setSpaceParent(roomID: roomID,
                                                                       spaceID: spaceID,
                                                                       canonical: true)
         switch setParentResult {
@@ -558,7 +566,7 @@ class ClientProxy: ClientProxyProtocol {
         switch visibility {
         case .spaceMembers:
             // Restricted: only space members can join
-            let joinRuleResult = await spaceChildService.setRestrictedJoinRule(roomID: roomID, spaceID: spaceID)
+            let joinRuleResult = await matrixAPI.spaces.setRestrictedJoinRule(roomID: roomID, spaceID: spaceID)
             switch joinRuleResult {
             case .success:
                 MXLog.info("Successfully set restricted join rule for room \(roomID)")
@@ -567,7 +575,7 @@ class ClientProxy: ClientProxyProtocol {
             }
         case .publicRoom:
             // Public: anyone can join
-            let joinRuleResult = await spaceChildService.setPublicJoinRule(roomID: roomID)
+            let joinRuleResult = await matrixAPI.spaces.setPublicJoinRule(roomID: roomID)
             switch joinRuleResult {
             case .success:
                 MXLog.info("Successfully set public join rule for room \(roomID)")

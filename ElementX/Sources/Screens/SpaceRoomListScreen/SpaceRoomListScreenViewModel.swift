@@ -273,8 +273,8 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
         defer { hideLoadingIndicator() }
 
         let spaceID = state.spaceID
-        let result = await clientProxy.spaceChildService.removeChildFromSpace(spaceID: spaceID,
-                                                                               childRoomID: roomID)
+        let result = await clientProxy.matrixAPI.spaces.removeChildFromSpace(spaceID: spaceID,
+                                                                                childRoomID: roomID)
         switch result {
         case .success:
             // Refresh the space room list to reflect the removal

@@ -131,7 +131,11 @@ protocol ClientProxyProtocol: AnyObject {
     
     var spaceService: SpaceServiceProxyProtocol { get }
 
-    var spaceChildService: SpaceChildServiceProtocol { get }
+    /// Direct Matrix REST API calls (/_matrix/...) - used when SDK doesn't expose certain APIs
+    var matrixAPI: MatrixAPIServiceProtocol { get }
+
+    /// Clap-specific REST API calls (/_clap/...)
+    var clapAPI: ClapAPIServiceProtocol { get }
 
     var isReportRoomSupported: Bool { get async }
     

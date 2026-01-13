@@ -2299,11 +2299,16 @@ class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
         set(value) { underlyingSpaceService = value }
     }
     var underlyingSpaceService: SpaceServiceProxyProtocol!
-    var spaceChildService: SpaceChildServiceProtocol {
-        get { return underlyingSpaceChildService }
-        set(value) { underlyingSpaceChildService = value }
+    var matrixAPI: MatrixAPIServiceProtocol {
+        get { return underlyingMatrixAPI }
+        set(value) { underlyingMatrixAPI = value }
     }
-    var underlyingSpaceChildService: SpaceChildServiceProtocol!
+    var underlyingMatrixAPI: MatrixAPIServiceProtocol!
+    var clapAPI: ClapAPIServiceProtocol {
+        get { return underlyingClapAPI }
+        set(value) { underlyingClapAPI = value }
+    }
+    var underlyingClapAPI: ClapAPIServiceProtocol!
     var isReportRoomSupportedCallsCount = 0
     var isReportRoomSupportedCalled: Bool {
         return isReportRoomSupportedCallsCount > 0
