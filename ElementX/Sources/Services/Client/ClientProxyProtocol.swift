@@ -150,8 +150,10 @@ protocol ClientProxyProtocol: AnyObject {
     func startSync()
 
     func stopSync()
-    
-    func stopSync(completion: (() -> Void)?) // Hopefully this will become async once we get SE-0371.
+
+    func stopSync(completion: (() -> Void)?)
+
+    func stopSync() async
     
     func expireSyncSessions() async
         

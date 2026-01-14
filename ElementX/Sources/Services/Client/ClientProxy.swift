@@ -422,12 +422,12 @@ class ClientProxy: ClientProxyProtocol {
     
     func stopSync(completion: (() -> Void)?) {
         MXLog.info("Stopping sync")
-        
+
         if restartTask != nil {
             MXLog.warning("Removing the sync service restart task.")
             restartTask = nil
         }
-        
+
         // Capture the sync service strongly as this method is called on deinit and so the
         // existence of self when the Task executes is questionable and would sometimes crash.
         // Note: This isn't strictly necessary now given the unwrap above, but leaving the code as
@@ -436,12 +436,24 @@ class ClientProxy: ClientProxyProtocol {
             defer {
                 completion?()
             }
-            
+
             await syncService.stop()
             MXLog.info("Sync stopped")
         }
     }
-    
+
+    func stopSync() async {
+        MXLog.info("Stopping sync (async)")
+
+        if restartTask != nil {
+            MXLog.warning("Removing the sync service restart task.")
+            restartTask = nil
+        }
+
+        await syncService.stop()
+        MXLog.info("Sync stopped (async)")
+    }
+
     func expireSyncSessions() async {
         await syncService.expireSessions()
     }
