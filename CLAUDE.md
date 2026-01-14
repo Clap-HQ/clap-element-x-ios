@@ -10,6 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Branches**: `clap/develop` (development), `clap/main` (production)
 - **Homeserver**: dev.clap.ac (development), clap.ac (production)
 - **Stack**: SwiftUI, Combine, Swift 6.1, iOS 18.5+
+- **Version**: 0.0.6 (current)
 
 ## Core Architecture
 
@@ -35,14 +36,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```
 ElementX/Sources/
 ├── Application/       # App entry point, AppSettings, AppCoordinator
-├── Services/          # Business logic services (29 modules)
+├── Services/          # Business logic services (32 modules)
 │   ├── Client/        # MatrixRustSDK client wrapper
 │   ├── Room/          # Room-related logic
 │   ├── Timeline/      # Timeline/message management
 │   ├── Keychain/      # Keychain access
-│   └── Analytics/     # PostHog analytics
-├── FlowCoordinators/  # Screen flow management (23 coordinators)
-├── Screens/           # UI screens (55+ screens, MVVM pattern)
+│   ├── Analytics/     # PostHog analytics
+│   ├── MatrixAPI/     # Matrix REST API service
+│   └── ClapAPI/       # Clap-specific API service
+├── FlowCoordinators/  # Screen flow management (21 coordinators)
+├── Screens/           # UI screens (56 screens, MVVM pattern)
 ├── Other/             # Utilities, extensions, InfoPlistReader, etc.
 ├── Mocks/             # Test mock objects (Sourcery generated)
 └── Generated/         # SwiftGen, Sourcery auto-generated code
@@ -240,9 +243,11 @@ Developer-only flags managed in `DeveloperModeSettings.swift`:
 
 | Flag | Description | Default |
 |------|-------------|---------|
-| `showCustomHomeserver` | Show custom homeserver selection UI at login | true only in Clap Dev |
-| `showQRCodeLogin` | Show QR code login button | true only in Clap Dev |
-| `groupSpaceChannels` | Hide space-affiliated channels from chat tab and show them under space cells | true |
+| `showCustomHomeserver` | Show custom homeserver selection UI at login | false |
+| `showQRCodeLogin` | Show QR code login button | false |
+| `groupSpaceRooms` | Hide space-affiliated rooms from chat tab and show them under space cells | true |
+| `spaceSettingsEnabled` | Enable space settings and permissions management (original app setting via @AppStorage) | true |
+| `showDeveloperSettings` | Show developer-only settings (View Source, Labs, Report a Problem) | false |
 
 ```swift
 // Usage example
@@ -252,9 +257,9 @@ if settings.showCustomHomeserver {
 }
 ```
 
-### Space Channel Grouping
+### Space Room Grouping
 
-When `groupSpaceChannels` is enabled:
+When `groupSpaceRooms` is enabled:
 
 1. **Chat tab behavior**:
    - Space cells appear in the chat list, sorted by most recent child room activity
@@ -266,15 +271,17 @@ When `groupSpaceChannels` is enabled:
    - Line 1: `SpaceName • 25` (member count) + timestamp (or chevron if no messages)
    - Line 2: `[ChannelName] Last message...` (up to 2 lines)
 
-3. **Space channel list**:
-   - Tapping a space cell navigates to `SpaceChannelListScreen`
-   - Shows joined channels (with context menu for leave/settings)
-   - Shows unjoined channels with join button
+3. **Space room list**:
+   - Tapping a space cell navigates to `SpaceRoomListScreen`
+   - Shows joined rooms (with context menu for leave/settings/remove from space)
+   - Shows unjoined rooms with join button
+   - Create room in space from toolbar menu
 
 4. **Related files**:
    - `HomeScreenViewModel.swift` - Space children tracking, filtering, and aggregation logic
    - `HomeScreenSpaceCell.swift` - Space cell UI with badges and last message
-   - `SpaceChannelListScreen/` - Space channel list screen (Coordinator, ViewModel, View)
+   - `SpaceRoomListScreen/` - Space room list screen (Coordinator, ViewModel, View)
+   - `CreateRoomInSpaceScreen/` - Create room in space screen
 
 ### Related Files
 
@@ -449,6 +456,26 @@ git merge v1.x.x
 - `ElementX/SupportingFiles/target.yml` (build settings)
 - `AppSettings.swift` (URL settings)
 - `InfoPlistReader.swift` (custom keys)
+
+## Clap-specific APIs
+
+### MatrixAPI Service
+
+REST API service for Matrix protocol endpoints not covered by MatrixRustSDK:
+
+- `MatrixSpaceAPI` - Space state management (m.space.child, m.space.parent, join rules)
+
+### ClapAPI Service
+
+REST API service for Clap-specific backend endpoints:
+
+- `ClapSpaceAPI` - Space member management (kick from all child rooms)
+
+```swift
+// Usage
+let clapAPI = ClapAPIService(homeserverURL: "https://clap.ac", accessTokenProvider: { token })
+let result = await clapAPI.spaces.removeMemberFromAllChildRooms(spaceID: spaceID, userID: userID)
+```
 
 ## Related Repositories
 

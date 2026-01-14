@@ -16,11 +16,14 @@
 10. [빌드 구성](#10-빌드-구성)
 11. [홈서버 설정](#11-홈서버-설정)
 12. [인증 화면 커스터마이징](#12-인증-화면-커스터마이징)
-13. [Space 채널 그룹화 기능](#13-space-채널-그룹화-기능)
+13. [Space 룸 그룹화 기능](#13-space-룸-그룹화-기능)
 14. [딥링크 설정](#14-딥링크-설정)
 15. [CI/CD 설정](#15-cicd-설정)
 16. [푸시 알림 설정](#16-푸시-알림-설정)
 17. [Space 내 룸 생성/삭제 기능](#17-space-내-룸-생성삭제-기능)
+18. [Thread 목록 화면](#18-thread-목록-화면)
+19. [API 서비스 구조](#19-api-서비스-구조)
+20. [Space 멤버 관리](#20-space-멤버-관리)
 
 ---
 
@@ -247,34 +250,34 @@ Settings에서 토글 가능한 개발자 전용 기능
 // DeveloperModeSettings.swift
 final class DeveloperModeSettings {
     /// 로그인 화면에서 커스텀 홈서버 선택 버튼 표시 여부
-    @UserPreference(key: "showCustomHomeserver", defaultValue: false)
+    @UserPreference(key: "showCustomHomeserver", defaultValue: false, storageType: .userDefaults(store))
     var showCustomHomeserver: Bool
 
     /// 로그인 화면에서 QR 코드 로그인 버튼 표시 여부
-    @UserPreference(key: "showQRCodeLogin", defaultValue: false)
+    @UserPreference(key: "showQRCodeLogin", defaultValue: false, storageType: .userDefaults(store))
     var showQRCodeLogin: Bool
 
-    /// Space 소속 채널을 채팅 탭에서 숨기고 Space 셀 아래에 표시할지 여부
-    @UserPreference(key: "groupSpaceRooms", defaultValue: true)
+    /// Space 소속 룸을 채팅 탭에서 숨기고 Space 셀 아래에 표시할지 여부
+    @UserPreference(key: "groupSpaceRooms", defaultValue: true, storageType: .userDefaults(store))
     var groupSpaceRooms: Bool
-
-    /// Space 설정 및 권한 관리 기능 활성화 여부 (AppSettings에 저장)
-    /// @AppStorage("spaceSettingsEnabled")로 바인딩
-    // spaceSettingsEnabled: Bool (default: true)
 
     /// 개발자 전용 설정 옵션 표시 여부
     /// View Source, Hide Invite Avatars, Timeline Media, Labs, Report a Problem 포함
-    @UserPreference(key: "showDeveloperSettings", defaultValue: false)
+    @UserPreference(key: "showDeveloperSettings", defaultValue: false, storageType: .userDefaults(store))
     var showDeveloperSettings: Bool
 }
+
+// DeveloperModeScreen.swift (원본 앱의 설정값 사용)
+@AppStorage("spaceSettingsEnabled", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
+private var spaceSettingsEnabled = true  // Space 설정 및 권한 관리 기능 활성화
 ```
 
 | 설정 | 설명 | 기본값 |
 |------|------|--------|
 | `showCustomHomeserver` | 로그인 시 커스텀 홈서버 선택 UI 표시 | false |
 | `showQRCodeLogin` | QR 코드 로그인 버튼 표시 | false |
-| `groupSpaceRooms` | Space 채널 그룹화 기능 활성화 | true |
-| `spaceSettingsEnabled` | Space 설정 및 권한 관리 기능 활성화 | true |
+| `groupSpaceRooms` | Space 룸 그룹화 기능 활성화 | true |
+| `spaceSettingsEnabled` | Space 설정 및 권한 관리 기능 활성화 (원본 앱 설정) | true |
 | `showDeveloperSettings` | 개발자 전용 설정 옵션 표시 | false |
 
 ### showDeveloperSettings로 제어되는 항목
@@ -427,9 +430,9 @@ showCustomHomeserver: ServiceLocator.shared.developerModeSettings.showCustomHome
 
 ---
 
-## 13. Space 채널 그룹화 기능
+## 13. Space 룸 그룹화 기능
 
-`groupSpaceRooms` 설정 활성화 시 Space 소속 채널을 채팅 탭에서 숨기고 Space 셀 아래에 그룹화
+`groupSpaceRooms` 설정 활성화 시 Space 소속 룸을 채팅 탭에서 숨기고 Space 셀 아래에 그룹화
 
 ### 기능 동작
 
@@ -488,7 +491,7 @@ if developerModeSettings.groupSpaceRooms, !spaceRoomListProxies.isEmpty {
 
 - [HomeScreenViewModel.swift](ElementX/Sources/Screens/HomeScreen/HomeScreenViewModel.swift) - Space 자식 추적, 필터링, 집계 로직
 - [HomeScreenSpaceCell.swift](ElementX/Sources/Screens/HomeScreen/View/HomeScreenSpaceCell.swift) - Space 셀 UI
-- [SpaceChannelListScreen/](ElementX/Sources/Screens/SpaceChannelListScreen/) - Space 채널 목록 화면
+- [SpaceRoomListScreen/](ElementX/Sources/Screens/SpaceRoomListScreen/) - Space 룸 목록 화면
 
 ### 관련 커밋
 
@@ -762,4 +765,128 @@ let canManageSpaceChildren = powerLevels.canOwnUser(sendStateEvent: .spaceChild)
 
 ---
 
-*문서 작성일: 2026-01-06*
+## 18. Thread 목록 화면
+
+룸 내 모든 Thread를 조회하는 전용 화면
+
+> **Note**: MatrixRustSDK에는 threads 목록 API가 없어서 Matrix REST API (`/threads`)를 직접 호출
+
+### 기능 개요
+
+- 툴바의 Thread 버튼으로 Thread 목록 화면 열기
+- 모든 Thread 또는 내가 참여한 Thread 필터링
+- Thread 탭 시 해당 Thread로 이동
+
+### API 엔드포인트
+
+```
+GET /_matrix/client/v1/rooms/{roomId}/threads
+Parameters:
+  - include: "all" | "participated"
+  - limit: 20 (페이지당)
+  - from: 페이지네이션 토큰
+```
+
+### 관련 파일
+
+- [ThreadListScreen/](ElementX/Sources/Screens/ThreadListScreen/) - Thread 목록 화면
+- [MatrixThreadAPI.swift](ElementX/Sources/Services/MatrixAPI/MatrixThreadAPI.swift) - Thread API 구현
+
+### 관련 커밋
+
+- `b91cb80c3` feat: Add thread list screen with Matrix /threads API
+- `10b7ba259` fix: Update state machine on thread list modal dismiss
+
+---
+
+## 19. API 서비스 구조
+
+MatrixRustSDK로 커버되지 않는 API를 위한 REST API 서비스 레이어
+
+### 서비스 구조
+
+```
+Services/
+├── MatrixAPI/                    # Matrix 프로토콜 REST API
+│   ├── MatrixAPIService.swift    # 서비스 진입점
+│   ├── MatrixSpaceAPI.swift      # Space 관련 API (m.space.child, m.space.parent)
+│   └── MatrixThreadAPI.swift     # Thread 목록 API
+└── ClapAPI/                      # Clap 전용 REST API
+    ├── ClapAPIService.swift      # 서비스 진입점
+    └── ClapSpaceAPI.swift        # Space 멤버 관리 API
+```
+
+### MatrixAPIService
+
+Matrix 프로토콜 표준 API 중 SDK에 없는 기능:
+
+```swift
+protocol MatrixAPIServiceProtocol {
+    var spaces: MatrixSpaceAPIProtocol { get }
+    var threads: MatrixThreadAPIProtocol { get }
+}
+
+// Space API
+protocol MatrixSpaceAPIProtocol {
+    func addChildToSpace(spaceID: String, childRoomID: String, suggested: Bool) async -> Result<Void, MatrixAPIError>
+    func removeChildFromSpace(spaceID: String, childRoomID: String) async -> Result<Void, MatrixAPIError>
+    func setSpaceParent(roomID: String, spaceID: String, canonical: Bool) async -> Result<Void, MatrixAPIError>
+    func setRestrictedJoinRule(roomID: String, spaceID: String) async -> Result<Void, MatrixAPIError>
+}
+```
+
+### ClapAPIService
+
+Clap 백엔드 전용 API:
+
+```swift
+protocol ClapAPIServiceProtocol {
+    var spaces: ClapSpaceAPIProtocol { get }
+}
+
+// Space API
+protocol ClapSpaceAPIProtocol {
+    /// Space의 모든 하위 룸에서 멤버 제거 (kick)
+    func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, ClapAPIError>
+}
+```
+
+### 관련 커밋
+
+- `98e195d57` refactor: Restructure API services into MatrixAPI and ClapAPI
+
+---
+
+## 20. Space 멤버 관리
+
+Space 멤버 목록에서 멤버 관리 기능
+
+### 기능 개요
+
+- Space 멤버 목록에서 멤버 선택 시 관리 시트 표시
+- "Kick from space" 옵션으로 Space 및 모든 하위 룸에서 제거
+- Clap 백엔드 `/_clap/client/v1/spaces/{spaceId}/remove` API 사용
+
+### API 엔드포인트
+
+```
+POST /_clap/client/v1/spaces/{spaceId}/remove
+Body: {"user_id": "@user:clap.ac"}
+Response: {
+  "kicked_rooms": ["!room1:clap.ac", "!room2:clap.ac"],
+  "failed_rooms": []
+}
+```
+
+### 관련 파일
+
+- [ManageRoomMemberSheet/](ElementX/Sources/Screens/ManageRoomMemberSheet/) - 멤버 관리 시트
+- [ClapSpaceAPI.swift](ElementX/Sources/Services/ClapAPI/ClapSpaceAPI.swift) - API 구현
+
+### 관련 커밋
+
+- `9328706ab` feat: Add Clap API integration for space member kick
+
+---
+
+*문서 작성일: 2026-01-14*
