@@ -853,6 +853,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
 
         navigationStackCoordinator.setSheetCoordinator(sheetNavigationStackCoordinator) { [weak self] in
             self?.threadListScreenCoordinator = nil
+            self?.stateMachine.tryEvent(.dismissThreadList)
         }
     }
 
