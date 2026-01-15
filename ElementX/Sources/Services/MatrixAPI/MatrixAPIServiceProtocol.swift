@@ -11,4 +11,6 @@ import Foundation
 protocol MatrixAPIServiceProtocol {
     /// Space-related Matrix API endpoints
     var spaces: MatrixSpaceAPIProtocol { get }
+    /// Thread-related Matrix API endpoints
+    var threads: MatrixThreadsAPIProtocol { get }
 }

@@ -9,6 +9,7 @@ import Foundation
 
 class MatrixAPIServiceMock: MatrixAPIServiceProtocol {
     var spaces: MatrixSpaceAPIProtocol = MatrixSpaceAPIMock()
+    var threads: MatrixThreadsAPIProtocol = MatrixThreadsAPIMock()
 }
 
 class MatrixSpaceAPIMock: MatrixSpaceAPIProtocol {
@@ -36,5 +37,13 @@ class MatrixSpaceAPIMock: MatrixSpaceAPIProtocol {
 
     func setPublicJoinRule(roomID: String) async -> Result<Void, RESTAPIError> {
         setPublicJoinRuleResult
+    }
+}
+
+class MatrixThreadsAPIMock: MatrixThreadsAPIProtocol {
+    var fetchThreadsResult: Result<ThreadListResponse, RESTAPIError> = .success(ThreadListResponse(chunk: [], nextBatch: nil))
+
+    func fetchThreads(roomID: String, from: String?, include: ThreadIncludeFilter, limit: Int) async -> Result<ThreadListResponse, RESTAPIError> {
+        fetchThreadsResult
     }
 }

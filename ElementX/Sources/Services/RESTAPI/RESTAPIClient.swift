@@ -137,6 +137,7 @@ struct RESTAPIRequest {
     let method: HTTPMethod
     let pathTemplate: String
     let pathParameters: [String]
+    let queryParameters: [String: String]
     let body: AnyEncodable?
 
     /// Creates a request with path parameters that will be automatically percent-encoded
@@ -144,11 +145,17 @@ struct RESTAPIRequest {
     ///   - method: HTTP method
     ///   - pathTemplate: Path with %@ placeholders for parameters (e.g., "/_clap/client/v1/spaces/%@/remove")
     ///   - pathParameters: Values to substitute for %@ placeholders (will be percent-encoded)
+    ///   - queryParameters: Query string parameters (will be properly URL-encoded via URLComponents)
     ///   - body: Optional request body
-    init(method: HTTPMethod, pathTemplate: String, pathParameters: [String] = [], body: (some Encodable)? = Optional<EmptyBody>.none) {
+    init(method: HTTPMethod,
+         pathTemplate: String,
+         pathParameters: [String] = [],
+         queryParameters: [String: String] = [:],
+         body: (some Encodable)? = Optional<EmptyBody>.none) {
         self.method = method
         self.pathTemplate = pathTemplate
         self.pathParameters = pathParameters
+        self.queryParameters = queryParameters
         self.body = body.map { AnyEncodable($0) }
     }
 
@@ -162,7 +169,17 @@ struct RESTAPIRequest {
                 path.replaceSubrange(range, with: encoded)
             }
         }
-        return URL(string: "\(baseURL)\(path)")
+
+        // Use URLComponents for proper query parameter encoding
+        guard var components = URLComponents(string: "\(baseURL)\(path)") else {
+            return nil
+        }
+
+        if !queryParameters.isEmpty {
+            components.queryItems = queryParameters.map { URLQueryItem(name: $0.key, value: $0.value) }
+        }
+
+        return components.url
     }
 }
 

@@ -294,7 +294,7 @@ class ClientProxy: ClientProxyProtocol {
     var homeserver: String {
         client.homeserver()
     }
-    
+
     var canDeactivateAccount: Bool {
         client.canDeactivateAccount()
     }

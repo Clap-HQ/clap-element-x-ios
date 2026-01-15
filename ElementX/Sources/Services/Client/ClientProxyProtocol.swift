@@ -88,7 +88,7 @@ protocol ClientProxyProtocol: AnyObject {
     var deviceID: String? { get }
 
     var homeserver: String { get }
-    
+
     var canDeactivateAccount: Bool { get }
     
     var userIDServerName: String? { get }

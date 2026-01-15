@@ -7,13 +7,13 @@
 
 import Foundation
 
-/// Details of a failed room removal
-struct ClapSpaceMemberRemovalFailure: Decodable {
-    let roomId: String
+/// Details of a failed room operation
+struct ClapSpaceRoomOperationFailure: Decodable {
+    let roomID: String
     let error: String
 
     enum CodingKeys: String, CodingKey {
-        case roomId = "room_id"
+        case roomID = "room_id"
         case error
     }
 }
