@@ -75,8 +75,16 @@ class SpaceDetailScreenViewModel: SpaceDetailScreenViewModelType, SpaceDetailScr
                 case .confirm:
                     Task {
                         self.showLoadingIndicator()
-                        defer { self.hideLoadingIndicator() }
-                        _ = await self.clientProxy.clapAPI.spaces.joinAllChildRooms(spaceID: self.state.spaceID)
+                        let result = await self.clientProxy.clapAPI.spaces.joinAllChildRooms(spaceID: self.state.spaceID)
+                        self.hideLoadingIndicator()
+
+                        switch result {
+                        case .success(let response):
+                            MXLog.info("Joined \(response.joined.count) rooms, \(response.failed.count) failed")
+                        case .failure(let error):
+                            MXLog.error("Failed to join all rooms: \(error)")
+                            self.showFailureIndicator()
+                        }
                     }
                 case .cancel:
                     break

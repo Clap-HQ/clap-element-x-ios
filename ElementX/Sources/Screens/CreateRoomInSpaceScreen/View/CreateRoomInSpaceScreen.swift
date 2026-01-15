@@ -9,7 +9,7 @@ import Compound
 import SwiftUI
 
 struct CreateRoomInSpaceScreen: View {
-    @ObservedObject var context: CreateRoomInSpaceScreenViewModel.Context
+    @Bindable var context: CreateRoomInSpaceScreenViewModel.Context
     @FocusState private var focus: Focus?
 
     private enum Focus {

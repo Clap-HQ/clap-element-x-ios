@@ -45,7 +45,7 @@ class MatrixSpaceAPI: RESTAPIClient, MatrixSpaceAPIProtocol {
     func setRestrictedJoinRule(roomID: String, spaceID: String) async -> Result<Void, RESTAPIError> {
         let request = RESTAPIRequest(
             method: .put,
-            pathTemplate: "/_matrix/client/v3/rooms/%@/state/m.room.join_rules/",
+            pathTemplate: "/_matrix/client/v3/rooms/%@/state/m.room.join_rules",
             pathParameters: [roomID],
             body: JoinRulesContent(joinRule: "restricted", allow: [JoinRuleAllowCondition(type: "m.room_membership", roomId: spaceID)])
         )
@@ -55,7 +55,7 @@ class MatrixSpaceAPI: RESTAPIClient, MatrixSpaceAPIProtocol {
     func setPublicJoinRule(roomID: String) async -> Result<Void, RESTAPIError> {
         let request = RESTAPIRequest(
             method: .put,
-            pathTemplate: "/_matrix/client/v3/rooms/%@/state/m.room.join_rules/",
+            pathTemplate: "/_matrix/client/v3/rooms/%@/state/m.room.join_rules",
             pathParameters: [roomID],
             body: JoinRulesContent(joinRule: "public", allow: nil)
         )

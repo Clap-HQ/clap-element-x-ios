@@ -13,7 +13,7 @@ typealias ThreadListScreenViewModelType = StateStoreViewModel<ThreadListScreenVi
 
 class ThreadListScreenViewModel: ThreadListScreenViewModelType, ThreadListScreenViewModelProtocol {
     private let roomProxy: JoinedRoomProxyProtocol
-    private let threadsService: ThreadsService
+    private let threadsAPI: MatrixThreadsAPIProtocol
     private let userID: String
 
     /// Pagination token for loading more threads
@@ -28,10 +28,10 @@ class ThreadListScreenViewModel: ThreadListScreenViewModelType, ThreadListScreen
     }
 
     init(roomProxy: JoinedRoomProxyProtocol,
-         threadsService: ThreadsService,
+         threadsAPI: MatrixThreadsAPIProtocol,
          mediaProvider: MediaProviderProtocol) {
         self.roomProxy = roomProxy
-        self.threadsService = threadsService
+        self.threadsAPI = threadsAPI
         self.userID = roomProxy.ownUserID
 
         let roomName = roomProxy.infoPublisher.value.displayName ?? roomProxy.id
@@ -65,7 +65,7 @@ class ThreadListScreenViewModel: ThreadListScreenViewModelType, ThreadListScreen
                 ($0.userID, (displayName: $0.displayName, avatarURL: $0.avatarURL))
             })
 
-            let result = await threadsService.fetchThreads(roomID: roomProxy.id, limit: 20)
+            let result = await threadsAPI.fetchThreads(roomID: roomProxy.id, limit: 20)
 
             switch result {
             case .success(let response):
@@ -112,7 +112,7 @@ class ThreadListScreenViewModel: ThreadListScreenViewModelType, ThreadListScreen
                 ($0.userID, (displayName: $0.displayName, avatarURL: $0.avatarURL))
             })
 
-            let result = await threadsService.fetchThreads(roomID: roomProxy.id, from: nextBatch, limit: 20)
+            let result = await threadsAPI.fetchThreads(roomID: roomProxy.id, from: nextBatch, limit: 20)
 
             switch result {
             case .success(let response):
@@ -219,7 +219,7 @@ class ThreadListScreenViewModel: ThreadListScreenViewModelType, ThreadListScreen
                 case .messageLike(let content):
                     switch content {
                     case .roomMessage(let messageType, _):
-                        return extractTextFromSDKMessageType(messageType)
+                        return extractTextFromMessageType(messageType)
                     case .poll(let question):
                         return question
                     default:
@@ -238,8 +238,8 @@ class ThreadListScreenViewModel: ThreadListScreenViewModelType, ThreadListScreen
         }
     }
 
-    /// Extract text content from SDK MessageType
-    private func extractTextFromSDKMessageType(_ messageType: MessageType) -> String {
+    /// Extract text content from SDK MessageType (unified for both API and timeline sources)
+    private func extractTextFromMessageType(_ messageType: MessageType) -> String {
         switch messageType {
         case .text(let content):
             return content.body
@@ -341,29 +341,6 @@ class ThreadListScreenViewModel: ThreadListScreenViewModelType, ThreadListScreen
             return question
         case .sticker(let body, _, _):
             return body
-        default:
-            return L10n.commonMessage
-        }
-    }
-
-    private func extractTextFromMessageType(_ messageType: MessageType) -> String {
-        switch messageType {
-        case .text(let textContent):
-            return textContent.body
-        case .emote(let emoteContent):
-            return emoteContent.body
-        case .notice(let noticeContent):
-            return noticeContent.body
-        case .image(let imageContent):
-            return imageContent.filename
-        case .video(let videoContent):
-            return videoContent.filename
-        case .audio(let audioContent):
-            return audioContent.filename
-        case .file(let fileContent):
-            return fileContent.filename
-        case .location(let locationContent):
-            return locationContent.body
         default:
             return L10n.commonMessage
         }

@@ -295,10 +295,6 @@ class ClientProxy: ClientProxyProtocol {
         client.homeserver()
     }
 
-    var accessToken: String? {
-        try? client.session().accessToken
-    }
-
     var canDeactivateAccount: Bool {
         client.canDeactivateAccount()
     }

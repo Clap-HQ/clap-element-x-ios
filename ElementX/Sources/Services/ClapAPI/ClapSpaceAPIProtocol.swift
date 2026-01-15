@@ -9,11 +9,11 @@ import Foundation
 
 /// Details of a failed room operation
 struct ClapSpaceRoomOperationFailure: Decodable {
-    let roomId: String
+    let roomID: String
     let error: String
 
     enum CodingKeys: String, CodingKey {
-        case roomId = "room_id"
+        case roomID = "room_id"
         case error
     }
 }

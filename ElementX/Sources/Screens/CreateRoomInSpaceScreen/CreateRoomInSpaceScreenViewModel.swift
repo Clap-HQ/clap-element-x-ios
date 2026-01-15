@@ -8,7 +8,7 @@
 import Combine
 import SwiftUI
 
-typealias CreateRoomInSpaceScreenViewModelType = StateStoreViewModel<CreateRoomInSpaceScreenViewState, CreateRoomInSpaceScreenViewAction>
+typealias CreateRoomInSpaceScreenViewModelType = StateStoreViewModelV2<CreateRoomInSpaceScreenViewState, CreateRoomInSpaceScreenViewAction>
 
 class CreateRoomInSpaceScreenViewModel: CreateRoomInSpaceScreenViewModelType, CreateRoomInSpaceScreenViewModelProtocol {
     private let userSession: UserSessionProtocol

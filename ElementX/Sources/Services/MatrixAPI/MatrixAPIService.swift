@@ -20,6 +20,12 @@ class MatrixAPIService: MatrixAPIServiceProtocol {
         session: session
     )
 
+    private(set) lazy var threads: MatrixThreadsAPIProtocol = MatrixThreadsAPI(
+        homeserverURL: homeserverURL,
+        accessTokenProvider: accessTokenProvider,
+        session: session
+    )
+
     init(homeserverURL: String, accessTokenProvider: @escaping () -> String?, session: URLSession = .shared) {
         self.homeserverURL = homeserverURL
         self.accessTokenProvider = accessTokenProvider

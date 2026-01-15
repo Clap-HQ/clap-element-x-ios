@@ -74,7 +74,7 @@ class ManageRoomMemberSheetViewModel: ManageRoomMemberSheetViewModelType, Manage
                     message: L10n.screenBottomSheetManageRoomMemberKickMemberConfirmationDescription,
                     primaryButton: .init(title: L10n.actionCancel, role: .cancel) { },
                     secondaryButton: .init(title: L10n.screenBottomSheetManageRoomMemberKickMemberConfirmationAction) { [weak self] in
-                        Task { await self?.kickMember(id: memberID, name: memberName, reason: reason, removeFromChildRooms: false) }
+                        Task { await self?.kickMember(id: memberID, name: memberName, reason: reason, removeFromAllChildRooms: false) }
                     },
                     textFields: [.init(placeholder: L10n.commonReason,
                                        text: reasonBinding,
@@ -101,7 +101,7 @@ class ManageRoomMemberSheetViewModel: ManageRoomMemberSheetViewModelType, Manage
         }
     }
 
-    private func kickMember(id: String, name: String?, reason: String?, removeFromChildRooms: Bool = false) async {
+    private func kickMember(id: String, name: String?, reason: String?, removeFromAllChildRooms: Bool = false) async {
         let indicatorTitle = L10n.screenBottomSheetManageRoomMemberRemovingUser(name ?? id)
         showManageMemberIndicator(title: indicatorTitle)
 
@@ -109,7 +109,7 @@ class ManageRoomMemberSheetViewModel: ManageRoomMemberSheetViewModelType, Manage
         switch await roomProxy.kickUser(id, reason: reason) {
         case .success:
             // 2. If this is a space and user opted to remove from child rooms, call Clap API
-            if roomProxy.infoPublisher.value.isSpace, removeFromChildRooms {
+            if roomProxy.infoPublisher.value.isSpace, removeFromAllChildRooms {
                 let removalResult = await clapSpaceAPI.removeMemberFromAllChildRooms(
                     spaceID: roomProxy.id,
                     userID: id
@@ -138,7 +138,7 @@ class ManageRoomMemberSheetViewModel: ManageRoomMemberSheetViewModelType, Manage
                 switch action {
                 case .confirm(let removeFromAllRooms):
                     state.bindings.kickMemberConfirmation = nil
-                    Task { await self.kickMember(id: memberID, name: memberName, reason: nil, removeFromChildRooms: removeFromAllRooms) }
+                    Task { await self.kickMember(id: memberID, name: memberName, reason: nil, removeFromAllChildRooms: removeFromAllRooms) }
                 case .cancel:
                     state.bindings.kickMemberConfirmation = nil
                 }
