@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Aktifkan enkripsi ujung ke ujung";
 "screen_space_create_room_encryption_description" = "Anda tidak dapat menonaktifkannya nanti. Jembatan & kebanyakan bot belum dapat digunakan.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Juga keluarkan dari semua ruangan";
+"screen_join_all_rooms_confirmation_title" = "Bergabung ke semua ruangan?";
+"screen_join_all_rooms_confirmation_subtitle" = "Apakah Anda ingin bergabung ke semua ruangan di %@?";
+"screen_join_all_rooms_confirmation_action" = "Bergabung ke semua";

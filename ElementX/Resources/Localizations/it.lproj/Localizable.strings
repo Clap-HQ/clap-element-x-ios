@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Attiva crittografia end-to-end";
 "screen_space_create_room_encryption_description" = "Non potrai più disattivarla. I bridge e molti bot non funzioneranno.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Rimuovi anche da tutte le stanze";
+"screen_join_all_rooms_confirmation_title" = "Unirsi a tutte le stanze?";
+"screen_join_all_rooms_confirmation_subtitle" = "Vuoi unirti a tutte le stanze in %@?";
+"screen_join_all_rooms_confirmation_action" = "Unisciti a tutte";

@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Uçtan uca şifrelemeyi etkinleştir";
 "screen_space_create_room_encryption_description" = "Bunu daha sonra devre dışı bırakamazsınız. Köprüler ve çoğu bot henüz çalışmayacaktır.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Tüm odalardan da kaldır";
+"screen_join_all_rooms_confirmation_title" = "Tüm odalara katıl?";
+"screen_join_all_rooms_confirmation_subtitle" = "%@ içindeki tüm odalara katılmak ister misiniz?";
+"screen_join_all_rooms_confirmation_action" = "Tümüne katıl";

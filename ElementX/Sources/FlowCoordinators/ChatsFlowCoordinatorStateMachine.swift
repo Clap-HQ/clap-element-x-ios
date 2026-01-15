@@ -73,7 +73,7 @@ class ChatsFlowCoordinatorStateMachine {
     
     struct EventUserInfo {
         let animated: Bool
-        var spaceRoomListProxy: SpaceRoomListProxyProtocol?
+        var spaceEntryPoint: SpaceFlowCoordinatorEntryPoint?
     }
 
     /// Events that can be triggered on the AppCoordinator state machine

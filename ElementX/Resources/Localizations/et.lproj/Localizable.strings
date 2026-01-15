@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Võta läbiv krüptimine kasutusele";
 "screen_space_create_room_encryption_description" = "Seda funktsionaalsust sa ei saa hiljem kinni keerata. Sõnumisillad ja enamus roboteid veel ei oska seda kasutada.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Eemalda ka kõigist tubadest";
+"screen_join_all_rooms_confirmation_title" = "Liitu kõigi tubadega?";
+"screen_join_all_rooms_confirmation_subtitle" = "Kas soovid liituda kõigi tubadega kohas %@?";
+"screen_join_all_rooms_confirmation_action" = "Liitu kõigiga";

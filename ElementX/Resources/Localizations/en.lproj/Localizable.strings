@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Enable end-to-end encryption";
 "screen_space_create_room_encryption_description" = "You can't disable this later. Bridges & most bots won't work yet.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Also remove from all rooms";
+"screen_join_all_rooms_confirmation_title" = "Join all rooms?";
+"screen_join_all_rooms_confirmation_subtitle" = "Would you like to join all rooms in %@?";
+"screen_join_all_rooms_confirmation_action" = "Join all rooms";

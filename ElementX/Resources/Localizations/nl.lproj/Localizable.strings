@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Eind-tot-eind-versleuteling inschakelen";
 "screen_space_create_room_encryption_description" = "Je kan dit later niet uitschakelen. Bruggen en de meeste bots zullen nog niet werken.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Ook uit alle kamers verwijderen";
+"screen_join_all_rooms_confirmation_title" = "Alle kamers betreden?";
+"screen_join_all_rooms_confirmation_subtitle" = "Wil je alle kamers in %@ betreden?";
+"screen_join_all_rooms_confirmation_action" = "Alle betreden";

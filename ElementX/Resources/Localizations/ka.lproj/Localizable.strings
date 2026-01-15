@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "ბოლოდან ბოლომდე დაშიფვრის ჩართვა";
 "screen_space_create_room_encryption_description" = "თქვენ არ შეგიძლიათ გამორთოთ ეს მოგვიანებით. ხიდები და ბოტების უმეტესობა ჯერ არ იმუშავებს.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "ასევე წაშლა ყველა ოთახიდან";
+"screen_join_all_rooms_confirmation_title" = "ყველა ოთახში გაწევრიანება?";
+"screen_join_all_rooms_confirmation_subtitle" = "გსურთ გაწევრიანდეთ ყველა ოთახში %@-ში?";
+"screen_join_all_rooms_confirmation_action" = "ყველაში გაწევრიანება";

@@ -478,7 +478,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
     private func selectSpace(spaceID: String) async {
         switch await spaceService.spaceRoomList(spaceID: spaceID) {
         case .success(let spaceRoomListProxy):
-            actionsSubject.send(.presentSpaceRoomList(spaceRoomListProxy))
+            actionsSubject.send(.presentSpaceDetail(spaceRoomListProxy))
         case .failure(let error):
             MXLog.error("Failed to get space room list: \(error)")
             displayError()
@@ -703,10 +703,11 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
     private func finishAcceptInvite(roomProxy: InvitedRoomProxyProtocol) async {
         if roomProxy.info.isSpace {
             let spaceService = userSession.clientProxy.spaceService
-            
+
             switch await spaceService.spaceRoomList(spaceID: roomProxy.id) {
             case .success(let spaceRoomListProxy):
-                actionsSubject.send(.presentSpace(spaceRoomListProxy))
+                // Navigate to SpaceDetailScreen first, then show join all rooms confirmation there
+                actionsSubject.send(.presentSpaceDetail(spaceRoomListProxy, showJoinAllRoomsConfirmation: true))
             case .failure(let error):
                 MXLog.error("Failed to get the space room list after accepting invite: \(error)")
                 displayError()
@@ -715,7 +716,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         } else {
             actionsSubject.send(.presentRoom(roomIdentifier: roomProxy.id))
         }
-        
+
         analyticsService.trackJoinedRoom(isDM: roomProxy.info.isDirect,
                                          isSpace: roomProxy.info.isSpace,
                                          activeMemberCount: UInt(roomProxy.info.activeMembersCount))

@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "启用端到端加密";
 "screen_space_create_room_encryption_description" = "之后你无法停用。桥接和大多数机器人也不能工作。";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "同时从所有房间移除";
+"screen_join_all_rooms_confirmation_title" = "加入所有房间？";
+"screen_join_all_rooms_confirmation_subtitle" = "您想加入 %@ 中的所有房间吗？";
+"screen_join_all_rooms_confirmation_action" = "全部加入";

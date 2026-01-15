@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Aktivera totalsträckskryptering";
 "screen_space_create_room_encryption_description" = "Du kan inte inaktivera detta senare. Bryggor och de flesta bottar kommer inte att fungera ännu.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Ta även bort från alla rum";
+"screen_join_all_rooms_confirmation_title" = "Gå med i alla rum?";
+"screen_join_all_rooms_confirmation_subtitle" = "Vill du gå med i alla rum i %@?";
+"screen_join_all_rooms_confirmation_action" = "Gå med i alla";

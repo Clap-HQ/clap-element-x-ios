@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Ota päästä päähän -salaus käyttöön";
 "screen_space_create_room_encryption_description" = "Et voi poistaa tätä käytöstä myöhemmin. SIllat ja useimmat botit eivät vielä toimi.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Poista myös kaikista huoneista";
+"screen_join_all_rooms_confirmation_title" = "Liity kaikkiin huoneisiin?";
+"screen_join_all_rooms_confirmation_subtitle" = "Haluatko liittyä kaikkiin huoneisiin tilassa %@?";
+"screen_join_all_rooms_confirmation_action" = "Liity kaikkiin";

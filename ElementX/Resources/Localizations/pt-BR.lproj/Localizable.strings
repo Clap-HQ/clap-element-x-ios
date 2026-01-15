@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Ativar a criptografia de ponta a ponta";
 "screen_space_create_room_encryption_description" = "Você não pode desativar isso mais tarde. As pontes e a maioria dos bots ainda não funcionarão.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Também remover de todas as salas";
+"screen_join_all_rooms_confirmation_title" = "Entrar em todas as salas?";
+"screen_join_all_rooms_confirmation_subtitle" = "Gostaria de entrar em todas as salas em %@?";
+"screen_join_all_rooms_confirmation_action" = "Entrar em todas";

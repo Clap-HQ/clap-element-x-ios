@@ -331,12 +331,12 @@ class JoinRoomScreenViewModel: JoinRoomScreenViewModelType, JoinRoomScreenViewMo
     private func finishJoinAction() async {
         let roomID = state.roomID
         appSettings.seenInvites.remove(roomID)
-        
+
         guard state.roomDetails?.isSpace == true else {
             actionsSubject.send(.joined(.roomID(roomID)))
             return
         }
-        
+
         switch await clientProxy.spaceService.spaceRoomList(spaceID: roomID) {
         case .success(let spaceRoomListProxy):
             actionsSubject.send(.joined(.space(spaceRoomListProxy)))

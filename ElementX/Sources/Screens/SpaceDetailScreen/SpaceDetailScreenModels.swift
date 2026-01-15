@@ -9,7 +9,7 @@
 import Combine
 import Foundation
 
-enum SpaceRoomListScreenViewModelAction {
+enum SpaceDetailScreenViewModelAction {
     case selectRoom(roomID: String)
     case showRoomDetails(roomID: String)
     case dismiss
@@ -21,8 +21,8 @@ enum SpaceRoomListScreenViewModelAction {
     case leftSpace
 }
 
-enum SpaceRoomListScreenViewAction {
-    case selectRoom(SpaceRoomListItem)
+enum SpaceDetailScreenViewAction {
+    case selectRoom(SpaceChildRoomItem)
     case joinRoom(SpaceRoomProxyProtocol)
     case showRoomDetails(roomID: String)
     case markAsRead(roomID: String)
@@ -39,15 +39,15 @@ enum SpaceRoomListScreenViewAction {
     case leaveSpace
 }
 
-struct SpaceRoomListScreenViewState: BindableState {
+struct SpaceDetailScreenViewState: BindableState {
     let spaceID: String
     var spaceName: String
     var spaceAvatarURL: URL?
     var spaceMemberCount: Int
     var spaceTopic: String?
 
-    var joinedRooms: [SpaceRoomListItem] = []
-    var unjoinedRooms: [SpaceRoomListItem] = []
+    var joinedRooms: [SpaceChildRoomItem] = []
+    var unjoinedRooms: [SpaceChildRoomItem] = []
     var joiningRoomIDs: Set<String> = []
 
     // Space menu properties
@@ -62,7 +62,7 @@ struct SpaceRoomListScreenViewState: BindableState {
         canEditBaseInfo || canEditRolesAndPermissions
     }
 
-    var bindings = SpaceRoomListScreenViewStateBindings()
+    var bindings = SpaceDetailScreenViewStateBindings()
 
     var spaceAvatar: RoomAvatar {
         .space(id: spaceID, name: spaceName, avatarURL: spaceAvatarURL)
@@ -77,9 +77,10 @@ struct SpaceRoomListScreenViewState: BindableState {
     }
 }
 
-struct SpaceRoomListScreenViewStateBindings {
+struct SpaceDetailScreenViewStateBindings {
     var leaveSpaceViewModel: LeaveSpaceViewModel?
     var removeRoomConfirmation: RemoveRoomConfirmation?
+    var joinAllRoomsConfirmation: JoinAllRoomsConfirmationViewModel?
 }
 
 /// Confirmation data for removing a room from space
@@ -89,8 +90,8 @@ struct RemoveRoomConfirmation: Identifiable {
     let roomName: String
 }
 
-/// An item in the space room list
-enum SpaceRoomListItem: Identifiable, Equatable {
+/// An item representing a child room in a space
+enum SpaceChildRoomItem: Identifiable, Equatable {
     /// A joined room with chat-list style display (shows last message, timestamp, etc.)
     /// Uses HomeScreenRoom for consistency with the main room list
     case joined(HomeScreenRoom)
@@ -118,7 +119,7 @@ enum SpaceRoomListItem: Identifiable, Equatable {
         }
     }
 
-    static func == (lhs: SpaceRoomListItem, rhs: SpaceRoomListItem) -> Bool {
+    static func == (lhs: SpaceChildRoomItem, rhs: SpaceChildRoomItem) -> Bool {
         lhs.id == rhs.id
     }
 }

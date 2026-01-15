@@ -24,8 +24,8 @@ enum HomeScreenCoordinatorAction {
     case presentRoomDetails(roomIdentifier: String)
     case presentReportRoom(roomIdentifier: String)
     case presentDeclineAndBlock(userID: String, roomID: String)
-    case presentSpace(SpaceRoomListProxyProtocol)
-    case presentSpaceRoomList(SpaceRoomListProxyProtocol)
+    /// Navigate to SpaceDetailScreen. Set `showJoinAllRoomsConfirmation` to show the confirmation sheet after navigation.
+    case presentSpaceDetail(SpaceRoomListProxyProtocol, showJoinAllRoomsConfirmation: Bool = false)
     case roomLeft(roomIdentifier: String)
     case spaceLeft(spaceID: String)
     case transferOwnership(roomIdentifier: String)
@@ -73,10 +73,8 @@ final class HomeScreenCoordinator: CoordinatorProtocol {
                     actionsSubject.send(.presentReportRoom(roomIdentifier: roomIdentifier))
                 case .presentDeclineAndBlock(let userID, let roomID):
                     actionsSubject.send(.presentDeclineAndBlock(userID: userID, roomID: roomID))
-                case .presentSpace(let spaceRoomListProxy):
-                    actionsSubject.send(.presentSpace(spaceRoomListProxy))
-                case .presentSpaceRoomList(let spaceRoomListProxy):
-                    actionsSubject.send(.presentSpaceRoomList(spaceRoomListProxy))
+                case .presentSpaceDetail(let spaceRoomListProxy, let showJoinAllRoomsConfirmation):
+                    actionsSubject.send(.presentSpaceDetail(spaceRoomListProxy, showJoinAllRoomsConfirmation: showJoinAllRoomsConfirmation))
                 case .roomLeft(roomIdentifier: let roomIdentifier):
                     actionsSubject.send(.roomLeft(roomIdentifier: roomIdentifier))
                 case .spaceLeft(let spaceID):

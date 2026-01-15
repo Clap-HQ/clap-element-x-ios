@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Aktiver ende-til-ende-kryptering";
 "screen_space_create_room_encryption_description" = "Du kan ikke deaktivere dette senere. Broer og de fleste bot'er fungerer ikke ennå.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Fjern også fra alle rom";
+"screen_join_all_rooms_confirmation_title" = "Bli med i alle rom?";
+"screen_join_all_rooms_confirmation_subtitle" = "Vil du bli med i alle rom i %@?";
+"screen_join_all_rooms_confirmation_action" = "Bli med i alle";

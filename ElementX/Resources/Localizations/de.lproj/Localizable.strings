@@ -1502,3 +1502,6 @@
 "screen_space_create_room_encryption_title" = "Ende-zu-Ende-Verschlüsselung aktivieren";
 "screen_space_create_room_encryption_description" = "Du kannst dies später nicht deaktivieren. Brücken und die meisten Bots werden noch nicht funktionieren.";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Auch aus allen Räumen entfernen";
+"screen_join_all_rooms_confirmation_title" = "Allen Räumen beitreten?";
+"screen_join_all_rooms_confirmation_subtitle" = "Möchtest du allen Räumen in %@ beitreten?";
+"screen_join_all_rooms_confirmation_action" = "Allen beitreten";
