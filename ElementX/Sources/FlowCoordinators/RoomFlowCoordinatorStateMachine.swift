@@ -99,7 +99,7 @@ extension RoomFlowCoordinator {
     struct EventUserInfo {
         let animated: Bool
         var timelineController: TimelineControllerProtocol?
-        var spaceEntryPoint: SpaceFlowCoordinatorEntryPoint?
+        var spaceRoomListProxy: SpaceRoomListProxyProtocol?
         var authorizedSpacesSelection: AuthorizedSpacesSelection?
     }
 

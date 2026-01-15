@@ -74,6 +74,8 @@ class SpaceDetailScreenViewModel: SpaceDetailScreenViewModelType, SpaceDetailScr
                 switch action {
                 case .confirm:
                     Task {
+                        self.showLoadingIndicator()
+                        defer { self.hideLoadingIndicator() }
                         _ = await self.clientProxy.clapAPI.spaces.joinAllChildRooms(spaceID: self.state.spaceID)
                     }
                 case .cancel:

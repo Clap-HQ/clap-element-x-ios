@@ -282,6 +282,7 @@ When `groupSpaceRooms` is enabled:
 4. **Related files**:
    - `HomeScreenViewModel.swift` - Space children tracking, filtering, and aggregation logic
    - `HomeScreenSpaceCell.swift` - Space cell UI with badges and last message
+   - `SpaceDetailFlowCoordinator.swift` - Flow coordinator for SpaceDetailScreen navigation
    - `SpaceDetailScreen/` - Space detail screen (Coordinator, ViewModel, View, JoinAllRoomsConfirmation)
    - `CreateRoomInSpaceScreen/` - Create room in space screen
 

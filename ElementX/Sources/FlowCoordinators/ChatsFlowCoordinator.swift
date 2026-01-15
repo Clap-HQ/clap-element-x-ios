@@ -45,27 +45,9 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
     private var globalSearchScreenCoordinator: GlobalSearchScreenCoordinator?
 
     // periphery:ignore - retaining purpose
-    private var spaceDetailNavigationStackCoordinator: NavigationStackCoordinator?
-    // periphery:ignore - retaining purpose
-    private var spaceDetailCoordinator: SpaceDetailScreenCoordinator?
-    // periphery:ignore - retaining purpose
-    private var spaceDetailRoomFlowCoordinator: RoomFlowCoordinator?
-    // periphery:ignore - retaining purpose
-    private var spaceDetailRoomDetailsCoordinator: RoomFlowCoordinator?
-    // periphery:ignore - retaining purpose
-    private var spaceDetailMembersFlowCoordinator: RoomMembersFlowCoordinator?
-    // periphery:ignore - retaining purpose
-    private var spaceDetailMemberDetailsCoordinator: RoomMemberDetailsScreenCoordinator?
-    // periphery:ignore - retaining purpose
-    private var spaceDetailSpaceSettingsFlowCoordinator: RoomFlowCoordinator?
-    // periphery:ignore - retaining purpose
-    private var createRoomInSpaceCoordinator: CreateRoomInSpaceScreenCoordinator?
-    // periphery:ignore - retaining purpose
-    private var createRoomInSpaceNavigationStackCoordinator: NavigationStackCoordinator?
+    private var spaceDetailFlowCoordinator: SpaceDetailFlowCoordinator?
     // periphery:ignore - retaining purpose
     private var homeScreenCoordinator: HomeScreenCoordinator?
-
-    private var spaceDetailCancellables = Set<AnyCancellable>()
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -223,10 +205,20 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
                 dismissRoomFlow(animated: animated)
             
             case(.roomList, .startSpaceFlow, .roomList):
-                guard let entryPoint = userInfo?.spaceEntryPoint else { fatalError("A space entry point is required.") }
-                startSpaceFlow(entryPoint: entryPoint, animated: animated)
+                guard let spaceRoomListProxy = userInfo?.spaceRoomListProxy else { fatalError("A space room list proxy is required.") }
+                startSpaceFlow(spaceRoomListProxy: spaceRoomListProxy, animated: animated)
             case (.roomList, .finishedSpaceFlow, .roomList):
                 dismissSpaceFlow(animated: animated)
+
+            // Clap: SpaceDetailFlow transitions
+            case (.roomList, .startSpaceDetailFlow, .roomList):
+                guard let spaceRoomListProxy = userInfo?.spaceRoomListProxy else { fatalError("A space room list proxy is required.") }
+                let shouldShowConfirmation = userInfo?.shouldShowJoinAllRoomsConfirmation ?? false
+                startSpaceDetailFlow(spaceRoomListProxy: spaceRoomListProxy,
+                                     shouldShowJoinAllRoomsConfirmation: shouldShowConfirmation,
+                                     animated: animated)
+            case (.roomList, .finishedSpaceDetailFlow, .roomList):
+                dismissSpaceDetailFlow(animated: animated)
                 
             case (.roomList, .feedbackScreen, .feedbackScreen):
                 bugReportFlowCoordinator = BugReportFlowCoordinator(parameters: .init(presentationMode: .sheet(sidebarNavigationStackCoordinator),
@@ -406,18 +398,10 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
                 case .presentReportRoom(let roomID):
                     stateMachine.processEvent(.presentReportRoomScreen(roomID: roomID))
                 case .presentSpaceDetail(let spaceRoomListProxy, let showJoinAllRoomsConfirmation):
-                    // SpaceDetailScreen을 표시하는 두 가지 플로우:
-                    // 1. SpaceFlowCoordinator 경유: 스페이스 초대 수락 후 사용. 상태 머신 기반,
-                    //    일괄 참여 확인 시트 지원. 일부 액션 미구현 (showRoomDetails, inviteUsers,
-                    //    createRoomInSpace, removedRoomFromSpace).
-                    // 2. startSpaceDetailFlow 직접 호출: 홈에서 스페이스 셀 탭 시 사용.
-                    //    경량 플로우, 모든 기능 지원.
-                    // TODO: SpaceScreen이 완전히 SpaceDetailScreen으로 대체되면 플로우 통합 검토.
-                    if showJoinAllRoomsConfirmation {
-                        stateMachine.processEvent(.startSpaceFlow, userInfo: .init(animated: true, spaceEntryPoint: .spaceDetailAfterJoin(spaceRoomListProxy)))
-                    } else {
-                        self.startSpaceDetailFlow(spaceRoomListProxy: spaceRoomListProxy, animated: true)
-                    }
+                    stateMachine.processEvent(.startSpaceDetailFlow,
+                                              userInfo: .init(animated: true,
+                                                              spaceRoomListProxy: spaceRoomListProxy,
+                                                              shouldShowJoinAllRoomsConfirmation: showJoinAllRoomsConfirmation))
                 case .roomLeft(let roomID):
                     if case .roomList(detailState: .room(let detailStateRoomID)) = stateMachine.state,
                        detailStateRoomID == roomID {
@@ -425,8 +409,9 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
                     }
                 case .spaceLeft(let spaceID):
                     // Dismiss space detail if the left space was being displayed
-                    if spaceDetailCoordinator != nil {
-                        dismissSpaceDetailFlow(animated: true)
+                    if spaceDetailFlowCoordinator != nil {
+                        spaceDetailFlowCoordinator?.clearRoute(animated: true)
+                        spaceDetailFlowCoordinator = nil
                     }
                 case .presentSettingsScreen:
                     actionsSubject.send(.showSettings)
@@ -527,16 +512,22 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
                 actionsSubject.send(.showCallScreen(roomProxy: roomProxy))
             case .verifyUser(let userID):
                 actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
-            case .continueWithSpaceFlow(let entryPoint):
-                stateMachine.processEvent(.startSpaceFlow, userInfo: .init(animated: false, spaceEntryPoint: entryPoint))
+            case .continueWithSpaceFlow(let spaceRoomListProxy):
+                // Clap: Navigate to SpaceDetailScreen without JoinAllRoomsConfirmation
+                stateMachine.processEvent(.startSpaceDetailFlow, userInfo: .init(animated: true, spaceRoomListProxy: spaceRoomListProxy))
+            case .continueWithSpaceDetailFlow(let spaceRoomListProxy):
+                // Clap: Navigate to SpaceDetailScreen with JoinAllRoomsConfirmation
+                stateMachine.processEvent(.startSpaceDetailFlow, userInfo: .init(animated: true,
+                                                                                  spaceRoomListProxy: spaceRoomListProxy,
+                                                                                  shouldShowJoinAllRoomsConfirmation: true))
             case .finished:
                 stateMachine.processEvent(.deselectRoom)
             }
         }
         .store(in: &cancellables)
-        
+
         roomFlowCoordinator = coordinator
-        
+
         navigationSplitCoordinator.setDetailCoordinator(navigationStackCoordinator, animated: animated)
         
         switch entryPoint {
@@ -568,10 +559,10 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
     }
     
     // MARK: Space Flow
-    
-    private func startSpaceFlow(entryPoint: SpaceFlowCoordinatorEntryPoint, animated: Bool) {
+
+    private func startSpaceFlow(spaceRoomListProxy: SpaceRoomListProxyProtocol, animated: Bool) {
         let navigationStackCoordinator = NavigationStackCoordinator(navigationSplitCoordinator: navigationSplitCoordinator)
-        let coordinator = SpaceFlowCoordinator(entryPoint: entryPoint,
+        let coordinator = SpaceFlowCoordinator(entryPoint: .space(spaceRoomListProxy),
                                                spaceServiceProxy: userSession.clientProxy.spaceService,
                                                isChildFlow: false,
                                                navigationStackCoordinator: navigationStackCoordinator,
@@ -589,11 +580,11 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
                 }
             }
             .store(in: &cancellables)
-        
+
         spaceFlowCoordinator = coordinator
-        
+
         navigationSplitCoordinator.setDetailCoordinator(navigationStackCoordinator, animated: animated)
-        
+
         coordinator.start()
     }
     
@@ -605,307 +596,50 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
 
     // MARK: Space Detail Flow
 
-    private func startSpaceDetailFlow(spaceRoomListProxy: SpaceRoomListProxyProtocol, animated: Bool) {
-        // Clear any existing flow first
-        dismissSpaceDetailFlow(animated: false)
+    /// Called by state machine transition handler
+    private func dismissSpaceDetailFlow(animated: Bool) {
+        navigationSplitCoordinator.setDetailCoordinator(nil, animated: animated)
+        spaceDetailFlowCoordinator = nil
+    }
 
-        let navigationStackCoordinator = NavigationStackCoordinator(navigationSplitCoordinator: navigationSplitCoordinator)
-        spaceDetailNavigationStackCoordinator = navigationStackCoordinator
+    /// Starts space detail flow. Sends finishedSpaceDetailFlow event on dismiss.
+    private func startSpaceDetailFlow(spaceRoomListProxy: SpaceRoomListProxyProtocol,
+                                      shouldShowJoinAllRoomsConfirmation: Bool = false,
+                                      animated: Bool) {
+        // Clear any existing flows. We don't call dismissRoomFlow here as it would
+        // set detail to nil, which would cause a flash during transition.
+        roomFlowCoordinator = nil
+        spaceDetailFlowCoordinator?.clearRoute(animated: false)
+        spaceDetailFlowCoordinator = nil
 
-        let coordinator = SpaceDetailScreenCoordinator(parameters: .init(spaceRoomListProxy: spaceRoomListProxy,
-                                                                         spaceServiceProxy: userSession.clientProxy.spaceService,
-                                                                         userSession: userSession,
-                                                                         appSettings: flowParameters.appSettings,
-                                                                         userIndicatorController: flowParameters.userIndicatorController))
-        spaceDetailCoordinator = coordinator
+        let coordinator = SpaceDetailFlowCoordinator(spaceRoomListProxy: spaceRoomListProxy,
+                                                     navigationSplitCoordinator: navigationSplitCoordinator,
+                                                     flowParameters: flowParameters,
+                                                     shouldShowJoinAllRoomsConfirmation: shouldShowJoinAllRoomsConfirmation)
+
+        coordinator.refreshHomeScreenSpaceChildren = { [weak self] spaceID in
+            await self?.homeScreenCoordinator?.refreshSpaceChildren(for: spaceID)
+        }
 
         coordinator.actionsPublisher
             .sink { [weak self] action in
                 guard let self else { return }
                 switch action {
-                case .selectRoom(let roomID):
-                    presentRoomInSpaceDetail(roomID: roomID, animated: true)
-                case .showRoomDetails(let roomID):
-                    presentRoomDetailsInSpaceDetail(roomID: roomID, animated: true)
-                case .dismiss:
-                    dismissSpaceDetailFlow(animated: true)
-                case .displayMembers(let roomProxy):
-                    presentSpaceMembers(roomProxy: roomProxy, animated: true)
-                case .inviteUsers(let roomProxy):
-                    presentSpaceInviteUsers(roomProxy: roomProxy, animated: true)
-                case .displaySpaceSettings(let roomProxy):
-                    presentSpaceSettings(roomProxy: roomProxy, animated: true)
-                case .presentCreateRoomInSpace(let spaceID, let spaceName):
-                    presentCreateRoomInSpace(spaceID: spaceID, spaceName: spaceName, animated: true)
-                case .removedRoomFromSpace(let spaceID):
-                    Task { [weak self] in
-                        await self?.homeScreenCoordinator?.refreshSpaceChildren(for: spaceID)
-                    }
-                case .leftSpace:
-                    dismissSpaceDetailFlow(animated: true)
-                }
-            }
-            .store(in: &spaceDetailCancellables)
-
-        coordinator.start()
-        navigationStackCoordinator.setRootCoordinator(coordinator)
-        navigationSplitCoordinator.setDetailCoordinator(navigationStackCoordinator, animated: animated)
-    }
-
-    private func dismissSpaceDetailFlow(animated: Bool) {
-        // Clear all cancellables first to prevent duplicate actions
-        spaceDetailCancellables.removeAll()
-
-        navigationSplitCoordinator.setDetailCoordinator(nil, animated: animated)
-        spaceDetailNavigationStackCoordinator = nil
-        spaceDetailCoordinator = nil
-        spaceDetailRoomFlowCoordinator = nil
-        spaceDetailRoomDetailsCoordinator = nil
-        spaceDetailMembersFlowCoordinator = nil
-        spaceDetailMemberDetailsCoordinator = nil
-        spaceDetailSpaceSettingsFlowCoordinator = nil
-        createRoomInSpaceCoordinator = nil
-    }
-
-    private func presentSpaceMembers(roomProxy: JoinedRoomProxyProtocol, animated: Bool) {
-        guard let navigationStackCoordinator = spaceDetailNavigationStackCoordinator else { return }
-
-        // Prevent duplicate push
-        guard spaceDetailMembersFlowCoordinator == nil else {
-            MXLog.warning("Space detail members flow coordinator already exists, ignoring duplicate presentation request")
-            return
-        }
-
-        // Use RoomMembersFlowCoordinator which handles all member list actions including invite
-        let coordinator = RoomMembersFlowCoordinator(entryPoint: .roomMembersList,
-                                                      roomProxy: roomProxy,
-                                                      navigationStackCoordinator: navigationStackCoordinator,
-                                                      flowParameters: flowParameters)
-        spaceDetailMembersFlowCoordinator = coordinator
-
-        coordinator.actions
-            .sink { [weak self] action in
-                guard let self else { return }
-                switch action {
-                case .finished:
-                    spaceDetailMembersFlowCoordinator = nil
                 case .presentCallScreen(let roomProxy):
                     actionsSubject.send(.showCallScreen(roomProxy: roomProxy))
-                case .verifyUser(let userID):
-                    actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
+                case .sessionVerification(let flow):
+                    actionsSubject.send(.sessionVerification(flow))
+                case .continueWithSpaceFlow(let spaceRoomListProxy):
+                    // Clap: Navigate to SpaceDetailScreen for nested space navigation
+                    stateMachine.processEvent(.startSpaceDetailFlow, userInfo: .init(animated: true, spaceRoomListProxy: spaceRoomListProxy))
+                case .finished:
+                    stateMachine.processEvent(.finishedSpaceDetailFlow)
                 }
             }
-            .store(in: &spaceDetailCancellables)
+            .store(in: &cancellables)
 
+        spaceDetailFlowCoordinator = coordinator
         coordinator.start(animated: animated)
-    }
-
-    private func presentSpaceInviteUsers(roomProxy: JoinedRoomProxyProtocol, animated: Bool) {
-        guard let navigationStackCoordinator = spaceDetailNavigationStackCoordinator else { return }
-
-        // Prevent duplicate push
-        guard spaceDetailMembersFlowCoordinator == nil else {
-            MXLog.warning("Space detail members flow coordinator already exists, ignoring duplicate presentation request")
-            return
-        }
-
-        // Use RoomMembersFlowCoordinator with inviteUsers entry point to go directly to invite screen
-        let coordinator = RoomMembersFlowCoordinator(entryPoint: .inviteUsers,
-                                                      roomProxy: roomProxy,
-                                                      navigationStackCoordinator: navigationStackCoordinator,
-                                                      flowParameters: flowParameters)
-        spaceDetailMembersFlowCoordinator = coordinator
-
-        coordinator.actions
-            .sink { [weak self] action in
-                guard let self else { return }
-                switch action {
-                case .finished:
-                    spaceDetailMembersFlowCoordinator = nil
-                case .presentCallScreen(let roomProxy):
-                    actionsSubject.send(.showCallScreen(roomProxy: roomProxy))
-                case .verifyUser(let userID):
-                    actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
-                }
-            }
-            .store(in: &spaceDetailCancellables)
-
-        coordinator.start(animated: animated)
-    }
-
-    private func presentSpaceSettings(roomProxy: JoinedRoomProxyProtocol, animated: Bool) {
-        guard let navigationStackCoordinator = spaceDetailNavigationStackCoordinator else { return }
-
-        // Prevent duplicate push - reuse the same coordinator property as room flow
-        guard spaceDetailSpaceSettingsFlowCoordinator == nil else {
-            MXLog.warning("Space detail space settings flow coordinator already exists, ignoring duplicate presentation request")
-            return
-        }
-
-        // Use RoomFlowCoordinator which already handles all RoomDetailsScreenCoordinator actions
-        let coordinator = RoomFlowCoordinator(roomID: roomProxy.id,
-                                              isChildFlow: true,
-                                              navigationStackCoordinator: navigationStackCoordinator,
-                                              flowParameters: flowParameters)
-        spaceDetailSpaceSettingsFlowCoordinator = coordinator
-
-        coordinator.actions
-            .sink { [weak self] action in
-                guard let self else { return }
-                switch action {
-                case .presentCallScreen(let roomProxy):
-                    actionsSubject.send(.showCallScreen(roomProxy: roomProxy))
-                case .verifyUser(let userID):
-                    actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
-                case .continueWithSpaceFlow:
-                    // Not applicable for space settings
-                    break
-                case .finished:
-                    spaceDetailSpaceSettingsFlowCoordinator = nil
-                }
-            }
-            .store(in: &spaceDetailCancellables)
-
-        // Navigate directly to room details screen
-        coordinator.handleAppRoute(.roomDetails(roomID: roomProxy.id), animated: animated)
-    }
-
-    private func presentRoomInSpaceDetail(roomID: String, animated: Bool) {
-        guard let navigationStackCoordinator = spaceDetailNavigationStackCoordinator else { return }
-
-        // Avoid presenting the same room twice
-        guard spaceDetailRoomFlowCoordinator == nil else {
-            MXLog.warning("Space detail room flow coordinator already exists, ignoring duplicate presentation request")
-            return
-        }
-
-        let coordinator = RoomFlowCoordinator(roomID: roomID,
-                                              isChildFlow: true,
-                                              navigationStackCoordinator: navigationStackCoordinator,
-                                              flowParameters: flowParameters)
-
-        coordinator.actions
-            .sink { [weak self] action in
-                guard let self else { return }
-                switch action {
-                case .presentCallScreen(let roomProxy):
-                    actionsSubject.send(.showCallScreen(roomProxy: roomProxy))
-                case .verifyUser(let userID):
-                    actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
-                case .continueWithSpaceFlow(let entryPoint):
-                    stateMachine.processEvent(.startSpaceFlow, userInfo: .init(animated: false, spaceEntryPoint: entryPoint))
-                case .finished:
-                    self.spaceDetailRoomFlowCoordinator = nil
-                }
-            }
-            .store(in: &spaceDetailCancellables)
-
-        spaceDetailRoomFlowCoordinator = coordinator
-        coordinator.handleAppRoute(.room(roomID: roomID, via: []), animated: animated)
-    }
-
-    private func presentRoomDetailsInSpaceDetail(roomID: String, animated: Bool) {
-        guard let navigationStackCoordinator = spaceDetailNavigationStackCoordinator else { return }
-
-        // Avoid presenting room details twice - reuse the same coordinator property
-        guard spaceDetailRoomDetailsCoordinator == nil else {
-            MXLog.warning("Space detail room details coordinator already exists, ignoring duplicate presentation request")
-            return
-        }
-
-        // Use RoomFlowCoordinator which handles all RoomDetailsScreenCoordinator actions
-        let coordinator = RoomFlowCoordinator(roomID: roomID,
-                                              isChildFlow: true,
-                                              navigationStackCoordinator: navigationStackCoordinator,
-                                              flowParameters: flowParameters)
-        spaceDetailRoomDetailsCoordinator = coordinator
-
-        coordinator.actions
-            .sink { [weak self] action in
-                guard let self else { return }
-                switch action {
-                case .presentCallScreen(let roomProxy):
-                    actionsSubject.send(.showCallScreen(roomProxy: roomProxy))
-                case .verifyUser(let userID):
-                    actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
-                case .continueWithSpaceFlow:
-                    // Not applicable for room details
-                    break
-                case .finished:
-                    spaceDetailRoomDetailsCoordinator = nil
-                }
-            }
-            .store(in: &spaceDetailCancellables)
-
-        // Navigate directly to room details screen
-        coordinator.handleAppRoute(.roomDetails(roomID: roomID), animated: animated)
-    }
-
-    private func presentCreateRoomInSpace(spaceID: String, spaceName: String, animated: Bool) {
-        guard createRoomInSpaceCoordinator == nil else {
-            MXLog.warning("Create room in space coordinator already exists, ignoring duplicate presentation request")
-            return
-        }
-
-        let navigationStackCoordinator = NavigationStackCoordinator()
-        createRoomInSpaceNavigationStackCoordinator = navigationStackCoordinator
-        let coordinator = CreateRoomInSpaceScreenCoordinator(parameters: .init(spaceID: spaceID,
-                                                                                spaceName: spaceName,
-                                                                                userSession: userSession,
-                                                                                userIndicatorController: flowParameters.userIndicatorController,
-                                                                                appSettings: flowParameters.appSettings))
-        createRoomInSpaceCoordinator = coordinator
-
-        coordinator.actions
-            .sink { [weak self] action in
-                guard let self else { return }
-                switch action {
-                case .createdRoom(let roomID):
-                    navigationSplitCoordinator.setSheetCoordinator(nil)
-                    createRoomInSpaceCoordinator = nil
-                    createRoomInSpaceNavigationStackCoordinator = nil
-                    // Refresh both space detail and home screen space children
-                    Task { [weak self] in
-                        await self?.spaceDetailCoordinator?.refreshSpaceChildren()
-                        await self?.homeScreenCoordinator?.refreshSpaceChildren(for: spaceID)
-                    }
-                    // Navigate to the newly created room
-                    presentRoomInSpaceDetail(roomID: roomID, animated: true)
-                case .dismiss:
-                    navigationSplitCoordinator.setSheetCoordinator(nil)
-                    createRoomInSpaceCoordinator = nil
-                    createRoomInSpaceNavigationStackCoordinator = nil
-                case .displayMediaPickerWithMode(let mode):
-                    presentMediaPicker(mode: mode, coordinator: coordinator)
-                }
-            }
-            .store(in: &spaceDetailCancellables)
-
-        coordinator.start()
-        navigationStackCoordinator.setRootCoordinator(coordinator)
-        navigationSplitCoordinator.setSheetCoordinator(navigationStackCoordinator, animated: animated) { [weak self] in
-            self?.createRoomInSpaceCoordinator = nil
-            self?.createRoomInSpaceNavigationStackCoordinator = nil
-        }
-    }
-
-    private func presentMediaPicker(mode: MediaPickerScreenMode, coordinator: CreateRoomInSpaceScreenCoordinator) {
-        guard let navStackCoordinator = createRoomInSpaceNavigationStackCoordinator else { return }
-
-        let mediaPickerCoordinator = MediaPickerScreenCoordinator(mode: mode,
-                                                                   userIndicatorController: flowParameters.userIndicatorController,
-                                                                   orientationManager: flowParameters.windowManager) { [weak navStackCoordinator, weak coordinator] action in
-            switch action {
-            case .selectedMediaAtURLs(let urls):
-                if let url = urls.first {
-                    coordinator?.updateAvatar(fileURL: url)
-                }
-                navStackCoordinator?.setSheetCoordinator(nil)
-            case .cancel:
-                navStackCoordinator?.setSheetCoordinator(nil)
-            }
-        }
-        navStackCoordinator.setSheetCoordinator(mediaPickerCoordinator)
     }
 
     // MARK: Start Chat

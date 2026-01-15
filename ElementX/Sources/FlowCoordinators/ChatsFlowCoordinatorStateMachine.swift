@@ -73,7 +73,9 @@ class ChatsFlowCoordinatorStateMachine {
     
     struct EventUserInfo {
         let animated: Bool
-        var spaceEntryPoint: SpaceFlowCoordinatorEntryPoint?
+        var spaceRoomListProxy: SpaceRoomListProxyProtocol?
+        /// Clap: Whether to show JoinAllRoomsConfirmation sheet when presenting SpaceDetailScreen
+        var shouldShowJoinAllRoomsConfirmation: Bool = false
     }
 
     /// Events that can be triggered on the AppCoordinator state machine
@@ -89,12 +91,19 @@ class ChatsFlowCoordinatorStateMachine {
         /// The room screen has been dismissed
         case deselectRoom
         
-        /// Request presentation of a space.
+        /// Request presentation of a space (upstream: SpaceScreen).
         ///
         /// The space's `RoomListProxyProtocol` must be provided in the `EventUserInfo`.
         case startSpaceFlow
         /// The space has been dismissed.
         case finishedSpaceFlow
+
+        /// Clap: Request presentation of a space detail (SpaceDetailScreen).
+        ///
+        /// The space's `SpaceRoomListProxyProtocol` must be provided in the `EventUserInfo`.
+        case startSpaceDetailFlow
+        /// Clap: The space detail has been dismissed.
+        case finishedSpaceDetailFlow
         
         /// Request presentation of the feedback screen
         case feedbackScreen
@@ -161,6 +170,13 @@ class ChatsFlowCoordinatorStateMachine {
             case (.roomList, .startSpaceFlow):
                 return .roomList(detailState: .space)
             case (.roomList, .finishedSpaceFlow):
+                return .roomList(detailState: nil)
+
+            // Clap: SpaceDetailFlow uses same .space detailState
+            // Can be triggered from roomList (nil or .room detailState) when navigating to a space
+            case (.roomList, .startSpaceDetailFlow):
+                return .roomList(detailState: .space)
+            case (.roomList, .finishedSpaceDetailFlow):
                 return .roomList(detailState: nil)
                 
             case (.roomList(let detailState), .feedbackScreen):

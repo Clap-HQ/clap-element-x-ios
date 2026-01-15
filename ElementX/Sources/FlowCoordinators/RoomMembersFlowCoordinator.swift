@@ -362,7 +362,7 @@ final class RoomMembersFlowCoordinator: FlowCoordinatorProtocol {
                     actionsSubject.send(.presentCallScreen(roomProxy: roomProxy))
                 case .verifyUser(let userID):
                     actionsSubject.send(.verifyUser(userID: userID))
-                case .continueWithSpaceFlow:
+                case .continueWithSpaceFlow, .continueWithSpaceDetailFlow:
                     fatalError("Will never trigger because only direct chats can be displayed in this flow")
                 case .finished:
                     stateMachine.tryEvent(.stopRoomFlow)
