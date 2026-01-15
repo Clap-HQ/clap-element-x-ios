@@ -34,5 +34,10 @@ protocol ClapSpaceAPIProtocol {
     ///   - userID: The Matrix ID of the user to remove
     ///   - reason: Optional reason for removal
     /// - Returns: Result containing removed/failed room IDs or an error
-    func removeMemberFromAllChildRooms(spaceID: String, userID: String, reason: String?) async -> Result<ClapSpaceMemberRemovalResult, ClapAPIError>
+    func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, RESTAPIError>
+
+    /// Joins all child rooms in a space
+    /// - Parameter spaceID: The ID of the space
+    /// - Returns: Result containing joined/failed room IDs or an error
+    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, RESTAPIError>
 }
