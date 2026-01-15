@@ -1098,6 +1098,10 @@ class AppCoordinator: AppCoordinatorProtocol, AuthenticationFlowCoordinatorDeleg
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationDidEnterBackground),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(applicationWillTerminate),
@@ -1147,6 +1151,20 @@ class AppCoordinator: AppCoordinatorProtocol, AuthenticationFlowCoordinatorDeleg
         MXLog.info("Application did become active")
         endActiveBackgroundTask()
         startSync()
+    }
+
+    @objc
+    private func applicationDidEnterBackground() {
+        MXLog.info("Application did enter background")
+
+        // Stop sync immediately when entering background to prevent 0xdead10cc crash.
+        // iOS may suspend the app before the background task expiration handler runs,
+        // so we must release database locks proactively.
+        // Use the existing background task to ensure we have time to complete the stop.
+        Task { @MainActor in
+            await stopSyncAndWait(isBackgroundTask: true)
+            endActiveBackgroundTask()
+        }
     }
     
     private func endActiveBackgroundTask() {
