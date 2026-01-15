@@ -213,6 +213,10 @@ class AuthenticationFlowCoordinator: FlowCoordinatorProtocol {
             }
             self?.showOIDCAuthentication(oidcData: oidcData, presentationAnchor: window, fromState: context.fromState)
         }
+        // Ignore duplicate OIDC authentication requests when already in oidcAuthentication state
+        stateMachine.addRoutes(event: .continueWithOIDC, transitions: [.oidcAuthentication => .oidcAuthentication]) { _ in
+            MXLog.warning("Ignoring duplicate continueWithOIDC event while already in oidcAuthentication state")
+        }
         stateMachine.addRoutes(event: .cancelledOIDCAuthentication(previousState: .serverConfirmationScreen), transitions: [.oidcAuthentication => .serverConfirmationScreen])
         stateMachine.addRoutes(event: .cancelledOIDCAuthentication(previousState: .startScreen), transitions: [.oidcAuthentication => .startScreen])
         
@@ -388,6 +392,12 @@ class AuthenticationFlowCoordinator: FlowCoordinatorProtocol {
     }
     
     private func showOIDCAuthentication(oidcData: OIDCAuthorizationDataProxy, presentationAnchor: UIWindow, fromState: State) {
+        // Prevent duplicate OIDC authentication requests
+        guard oidcPresenter == nil else {
+            MXLog.warning("OIDC authentication already in progress, ignoring duplicate request")
+            return
+        }
+
         let presenter = OIDCAuthenticationPresenter(authenticationService: authenticationService,
                                                     oidcRedirectURL: appSettings.oidcRedirectURL,
                                                     presentationAnchor: presentationAnchor,
