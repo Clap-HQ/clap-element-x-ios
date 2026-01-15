@@ -408,6 +408,9 @@ struct HomeScreenSpace: Identifiable, Equatable {
     /// Whether this space has unread notifications (for highlighting)
     let isHighlighted: Bool
 
+    /// The visibility of the space (public, private, restricted)
+    let visibility: SpaceRoomProxyVisibility?
+
     var avatar: RoomAvatar {
         .space(id: id, name: name, avatarURL: avatarURL)
     }
@@ -430,6 +433,7 @@ struct HomeScreenSpace: Identifiable, Equatable {
         self.lastMessageRoomName = lastMessageRoomName
         self.badges = badges
         self.isHighlighted = isHighlighted
+        self.visibility = spaceProxy.visibility
     }
 
     init(id: String, name: String, avatarURL: URL?, memberCount: Int, childrenCount: Int,
@@ -438,7 +442,8 @@ struct HomeScreenSpace: Identifiable, Equatable {
          lastMessage: AttributedString? = nil,
          lastMessageRoomName: String? = nil,
          badges: Badges = .init(isDotShown: false, isMentionShown: false, isMuteShown: false),
-         isHighlighted: Bool = false) {
+         isHighlighted: Bool = false,
+         visibility: SpaceRoomProxyVisibility? = nil) {
         self.id = id
         self.name = name
         self.avatarURL = avatarURL
@@ -450,6 +455,7 @@ struct HomeScreenSpace: Identifiable, Equatable {
         self.lastMessageRoomName = lastMessageRoomName
         self.badges = badges
         self.isHighlighted = isHighlighted
+        self.visibility = visibility
     }
 }
 

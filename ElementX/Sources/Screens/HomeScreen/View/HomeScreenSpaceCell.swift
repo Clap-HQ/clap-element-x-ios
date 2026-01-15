@@ -117,6 +117,24 @@ struct HomeScreenSpaceCell: View {
         }
     }
 
+    private var visibilityTitle: String {
+        switch space.visibility {
+        case .public: L10n.commonPublicSpace
+        case .private: L10n.commonPrivateSpace
+        case .restricted: L10n.commonSharedSpace
+        case .none: L10n.commonPrivateSpace
+        }
+    }
+
+    private var visibilityIcon: KeyPath<CompoundIcons, Image> {
+        switch space.visibility {
+        case .public: \.public
+        case .private: \.lockSolid
+        case .restricted: \.space
+        case .none: \.lockSolid
+        }
+    }
+
     private var subtitle: some View {
         VStack(alignment: .leading, spacing: 4) {
             // First line: last message with room name prefix
@@ -135,12 +153,12 @@ struct HomeScreenSpaceCell: View {
                 }
             }
 
-            // Second line: Space • X members
+            // Second line: Public/Private Space • X members
             HStack(spacing: 4) {
-                CompoundIcon(\.public, size: .xSmall, relativeTo: .compound.bodyMD)
+                CompoundIcon(visibilityIcon, size: .xSmall, relativeTo: .compound.bodyMD)
                     .foregroundStyle(.compound.iconTertiary)
 
-                Text(L10n.commonSpace)
+                Text(visibilityTitle)
                     .font(.compound.bodyMD)
                     .foregroundColor(.compound.textSecondary)
                     .lineLimit(1)
@@ -165,6 +183,7 @@ struct HomeScreenSpaceCell_Previews: PreviewProvider, TestablePreview {
 
     static var previews: some View {
         VStack(spacing: 0) {
+            // Public space
             HomeScreenSpaceCell(
                 space: HomeScreenSpace(id: "!space1:matrix.org",
                                        name: "Engineering Team",
@@ -174,11 +193,13 @@ struct HomeScreenSpaceCell_Previews: PreviewProvider, TestablePreview {
                                        lastMessageDate: Date(),
                                        timestamp: "Now",
                                        lastMessage: "Let's discuss the new feature",
-                                       lastMessageRoomName: "General"),
+                                       lastMessageRoomName: "General",
+                                       visibility: .public),
                 isSelected: false,
                 mediaProvider: mediaProvider
             ) { _ in }
 
+            // Private space
             HomeScreenSpaceCell(
                 space: HomeScreenSpace(id: "!space2:matrix.org",
                                        name: "Design Community",
@@ -190,14 +211,31 @@ struct HomeScreenSpaceCell_Previews: PreviewProvider, TestablePreview {
                                        lastMessage: "Check out the new mockups!",
                                        lastMessageRoomName: "Design Reviews",
                                        badges: .init(isDotShown: true, isMentionShown: false, isMuteShown: false),
-                                       isHighlighted: true),
+                                       isHighlighted: true,
+                                       visibility: .private),
                 isSelected: true,
                 mediaProvider: mediaProvider
             ) { _ in }
 
-            // Space without messages
+            // Shared (restricted) space
             HomeScreenSpaceCell(
                 space: HomeScreenSpace(id: "!space3:matrix.org",
+                                       name: "Shared Space",
+                                       avatarURL: nil,
+                                       memberCount: 50,
+                                       childrenCount: 8,
+                                       lastMessageDate: Date().addingTimeInterval(-7200),
+                                       timestamp: "2h",
+                                       lastMessage: "Meeting at 3pm",
+                                       lastMessageRoomName: "Announcements",
+                                       visibility: .restricted),
+                isSelected: false,
+                mediaProvider: mediaProvider
+            ) { _ in }
+
+            // Space without messages (nil visibility defaults to private)
+            HomeScreenSpaceCell(
+                space: HomeScreenSpace(id: "!space4:matrix.org",
                                        name: "Empty Space",
                                        avatarURL: nil,
                                        memberCount: 5,
