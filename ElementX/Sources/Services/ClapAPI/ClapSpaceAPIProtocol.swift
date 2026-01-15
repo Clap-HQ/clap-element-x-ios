@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// Details of a failed room removal
-struct ClapSpaceMemberRemovalFailure: Decodable {
+/// Details of a failed room operation
+struct ClapSpaceRoomOperationFailure: Decodable {
     let roomId: String
     let error: String
 
@@ -23,7 +23,15 @@ struct ClapSpaceMemberRemovalResult: Decodable {
     /// Room IDs where the user was successfully removed
     let removed: [String]
     /// Rooms where removal failed with error details
-    let failed: [ClapSpaceMemberRemovalFailure]
+    let failed: [ClapSpaceRoomOperationFailure]
+}
+
+/// Result of joining all child rooms in a space
+struct ClapSpaceJoinAllResult: Decodable {
+    /// Room IDs where the user successfully joined
+    let joined: [String]
+    /// Rooms where join failed with error details
+    let failed: [ClapSpaceRoomOperationFailure]
 }
 
 // sourcery: AutoMockable
@@ -34,4 +42,9 @@ protocol ClapSpaceAPIProtocol {
     ///   - userID: The Matrix ID of the user to remove
     /// - Returns: Result containing removed/failed room IDs or an error
     func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, ClapAPIError>
+
+    /// Joins all child rooms in a space
+    /// - Parameter spaceID: The ID of the space
+    /// - Returns: Result containing joined/failed room IDs or an error
+    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, ClapAPIError>
 }

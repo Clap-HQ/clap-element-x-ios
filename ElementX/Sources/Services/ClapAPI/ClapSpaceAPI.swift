@@ -84,6 +84,62 @@ class ClapSpaceAPI: ClapSpaceAPIProtocol {
             return .failure(.networkError(error))
         }
     }
+
+    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, ClapAPIError> {
+        guard let encodedSpaceID = spaceID.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+            return .failure(.invalidURL)
+        }
+
+        let baseURL = homeserverURL.hasSuffix("/") ? String(homeserverURL.dropLast()) : homeserverURL
+        let urlString = "\(baseURL)/_clap/client/v1/spaces/\(encodedSpaceID)/join-all"
+
+        guard let url = URL(string: urlString) else {
+            return .failure(.invalidURL)
+        }
+
+        guard let accessToken = accessTokenProvider() else {
+            return .failure(.unauthorized)
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+        do {
+            let (data, response) = try await session.dataWithRetry(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                return .failure(.networkError(NSError(domain: "ClapSpaceAPI", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])))
+            }
+
+            switch httpResponse.statusCode {
+            case 200:
+                do {
+                    let result = try JSONDecoder().decode(ClapSpaceJoinAllResult.self, from: data)
+                    return .success(result)
+                } catch {
+                    MXLog.error("Failed to decode Clap space join-all response")
+                    return .failure(.decodingError)
+                }
+            case 401:
+                MXLog.error("Unauthorized when calling Clap space join-all API")
+                return .failure(.unauthorized)
+            case 403:
+                MXLog.error("Forbidden when calling Clap space join-all API")
+                return .failure(.forbidden)
+            case 404:
+                MXLog.error("Space not found for join-all: \(spaceID)")
+                return .failure(.notFound)
+            default:
+                let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
+                MXLog.error("Clap space join-all API HTTP error \(httpResponse.statusCode)")
+                return .failure(.httpError(statusCode: httpResponse.statusCode, message: errorMessage))
+            }
+        } catch {
+            MXLog.error("Clap space join-all API network error: \(error)")
+            return .failure(.networkError(error))
+        }
+    }
 }
 
 // MARK: - Request Types

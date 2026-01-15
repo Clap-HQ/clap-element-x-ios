@@ -9,8 +9,8 @@
 import Compound
 import SwiftUI
 
-struct SpaceRoomListScreen: View {
-    @Bindable var context: SpaceRoomListScreenViewModel.Context
+struct SpaceDetailScreen: View {
+    @Bindable var context: SpaceDetailScreenViewModel.Context
 
     var body: some View {
         ScrollView {
@@ -35,6 +35,9 @@ struct SpaceRoomListScreen: View {
                 },
                 secondaryButton: .cancel()
             )
+        }
+        .sheet(item: $context.joinAllRoomsConfirmation) { viewModel in
+            JoinAllRoomsConfirmationView(context: viewModel.context)
         }
     }
 
@@ -194,16 +197,16 @@ struct SpaceRoomListScreen: View {
 
 // MARK: - Previews
 
-struct SpaceRoomListScreen_Previews: PreviewProvider, TestablePreview {
+struct SpaceDetailScreen_Previews: PreviewProvider, TestablePreview {
     static let viewModel = makeViewModel()
 
     static var previews: some View {
         NavigationStack {
-            SpaceRoomListScreen(context: viewModel.context)
+            SpaceDetailScreen(context: viewModel.context)
         }
     }
 
-    static func makeViewModel() -> SpaceRoomListScreenViewModel {
+    static func makeViewModel() -> SpaceDetailScreenViewModel {
         let spaceRoomProxy = SpaceRoomProxyMock(.init(id: "!space:matrix.org",
                                                       name: "Engineering Team",
                                                       isSpace: true,
@@ -216,10 +219,10 @@ struct SpaceRoomListScreen_Previews: PreviewProvider, TestablePreview {
         let clientProxy = ClientProxyMock(.init())
         let userSession = UserSessionMock(.init(clientProxy: clientProxy))
 
-        return SpaceRoomListScreenViewModel(spaceRoomListProxy: spaceRoomListProxy,
-                                            spaceServiceProxy: SpaceServiceProxyMock(.init()),
-                                            userSession: userSession,
-                                            appSettings: AppSettings(),
-                                            userIndicatorController: UserIndicatorControllerMock())
+        return SpaceDetailScreenViewModel(spaceRoomListProxy: spaceRoomListProxy,
+                                          spaceServiceProxy: SpaceServiceProxyMock(.init()),
+                                          userSession: userSession,
+                                          appSettings: AppSettings(),
+                                          userIndicatorController: UserIndicatorControllerMock())
     }
 }

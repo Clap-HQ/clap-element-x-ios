@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Histórico de push";
 "troubleshoot_notifications_entry_point_title" = "Corrigir notificações";
 
-"space_channel_list_joined_section_title" = "Salas em que você está";
-"space_channel_list_unjoined_section_title" = "Salas que você pode entrar";
+"space_room_list_joined_section_title" = "Salas em que você está";
+"space_room_list_unjoined_section_title" = "Salas que você pode entrar";
 
 "screen_space_create_room" = "Criar uma sala";
 "screen_space_remove_room" = "Remover do espaço";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Nenhum tópico não lido";
 "screen_thread_activity_empty_description" = "Está tudo em dia!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Também remover de todas as salas";
+
+"screen_join_all_rooms_confirmation_title" = "Entrar em todas as salas?";
+"screen_join_all_rooms_confirmation_subtitle" = "Gostaria de entrar em todas as salas em %@?";
+"screen_join_all_rooms_confirmation_action" = "Entrar em todas";

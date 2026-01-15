@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Troubleshoot notifications";
 
-"space_channel_list_joined_section_title" = "Zure gelak";
-"space_channel_list_unjoined_section_title" = "Elkartu zaitezkeen gelak";
+"space_room_list_joined_section_title" = "Zure gelak";
+"space_room_list_unjoined_section_title" = "Elkartu zaitezkeen gelak";
 
 "screen_space_create_room" = "Sortu gela";
 "screen_space_remove_room" = "Kendu espaziotik";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Ez dago irakurri gabeko haririk";
 "screen_thread_activity_empty_description" = "Egunean zaude!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Kendu gela guztietatik ere";
+
+"screen_join_all_rooms_confirmation_title" = "Gela guztietara batu?";
+"screen_join_all_rooms_confirmation_subtitle" = "%@-ko gela guztietara batu nahi duzu?";
+"screen_join_all_rooms_confirmation_action" = "Guztietara batu";

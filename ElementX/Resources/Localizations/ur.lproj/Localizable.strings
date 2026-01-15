@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "اطلاعات کا ازالہ کریں";
 
-"space_channel_list_joined_section_title" = "آپ جن کمروں میں ہیں";
-"space_channel_list_unjoined_section_title" = "کمرے جن میں آپ شامل ہو سکتے ہیں";
+"space_room_list_joined_section_title" = "آپ جن کمروں میں ہیں";
+"space_room_list_unjoined_section_title" = "کمرے جن میں آپ شامل ہو سکتے ہیں";
 
 "screen_space_create_room" = "کمرہ بنائیں";
 "screen_space_remove_room" = "اسپیس سے ہٹائیں";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "کوئی غیر پڑھے تھریڈز نہیں";
 "screen_thread_activity_empty_description" = "آپ نے سب پڑھ لیا!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "تمام کمروں سے بھی ہٹائیں";
+
+"screen_join_all_rooms_confirmation_title" = "تمام کمروں میں شامل ہوں؟";
+"screen_join_all_rooms_confirmation_subtitle" = "کیا آپ %@ میں تمام کمروں میں شامل ہونا چاہتے ہیں؟";
+"screen_join_all_rooms_confirmation_action" = "سب میں شامل ہوں";

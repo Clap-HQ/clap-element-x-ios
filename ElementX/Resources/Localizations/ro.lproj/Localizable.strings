@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Istoricul notificărilor";
 "troubleshoot_notifications_entry_point_title" = "Depanați notificările";
 
-"space_channel_list_joined_section_title" = "Camere în care ești";
-"space_channel_list_unjoined_section_title" = "Camere la care te poți alătura";
+"space_room_list_joined_section_title" = "Camere în care ești";
+"space_room_list_unjoined_section_title" = "Camere la care te poți alătura";
 
 "screen_space_create_room" = "Creează cameră";
 "screen_space_remove_room" = "Elimină din spațiu";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Nu există fire necitite";
 "screen_thread_activity_empty_description" = "Sunteți la curent!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "De asemenea, eliminați din toate camerele";
+
+"screen_join_all_rooms_confirmation_title" = "Te alături tuturor camerelor?";
+"screen_join_all_rooms_confirmation_subtitle" = "Vrei să te alături tuturor camerelor din %@?";
+"screen_join_all_rooms_confirmation_action" = "Alătură-te tuturor";

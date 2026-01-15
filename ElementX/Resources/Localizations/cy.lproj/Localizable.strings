@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Hanes gwthio";
 "troubleshoot_notifications_entry_point_title" = "Hysbysiadau datrys problemau";
 
-"space_channel_list_joined_section_title" = "Ystafelloedd rydych chi ynddynt";
-"space_channel_list_unjoined_section_title" = "Ystafelloedd y gallwch ymuno â nhw";
+"space_room_list_joined_section_title" = "Ystafelloedd rydych chi ynddynt";
+"space_room_list_unjoined_section_title" = "Ystafelloedd y gallwch ymuno â nhw";
 
 "screen_space_create_room" = "Creu ystafell";
 "screen_space_remove_room" = "Dileu o'r gofod";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Dim edafedd heb eu darllen";
 "screen_thread_activity_empty_description" = "Rydych chi wedi dal i fyny!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Hefyd dileu o bob ystafell";
+
+"screen_join_all_rooms_confirmation_title" = "Ymuno â'r holl ystafelloedd?";
+"screen_join_all_rooms_confirmation_subtitle" = "Hoffech chi ymuno â'r holl ystafelloedd yn %@?";
+"screen_join_all_rooms_confirmation_action" = "Ymuno â phawb";

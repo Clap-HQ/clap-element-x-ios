@@ -16,14 +16,23 @@ enum SpaceFlowCoordinatorAction {
     case finished
 }
 
+// TODO: SpaceScreen이 완전히 SpaceDetailScreen으로 대체되면 SpaceDetailFlowCoordinator로 분리 검토.
+// 현재는 SpaceFlowCoordinator가 SpaceScreen과 SpaceDetailScreen 두 화면을 모두 관리하고,
+// ChatsFlowCoordinator에도 SpaceDetail 관련 코드가 중복되어 있음.
 enum SpaceFlowCoordinatorEntryPoint {
+    /// Show space screen for an already joined space
     case space(SpaceRoomListProxyProtocol)
+    /// Show space detail screen after joining a space (with join all rooms confirmation)
+    case spaceDetailAfterJoin(SpaceRoomListProxyProtocol)
+    /// Show join space screen for an unjoined space
     case joinSpace(SpaceRoomProxyProtocol)
-    
+
     var spaceID: String {
         switch self {
-        case .space(let spaceRoomListProxy): spaceRoomListProxy.id
-        case .joinSpace(let spaceRoomProxy): spaceRoomProxy.id
+        case .space(let spaceRoomListProxy), .spaceDetailAfterJoin(let spaceRoomListProxy):
+            spaceRoomListProxy.id
+        case .joinSpace(let spaceRoomProxy):
+            spaceRoomProxy.id
         }
     }
 }
@@ -52,6 +61,8 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
         case joinSpace
         /// The root screen for this flow.
         case space
+        /// Shown as the root screen after joining a space (SpaceDetailScreen instead of SpaceScreen)
+        case spaceDetail
         /// A child (space) flow is in progress.
         case presentingChild(childSpaceID: String, previousState: State)
         /// A room flow is in progress
@@ -60,9 +71,9 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
         case membersFlow
         /// A space settings flow is in progress
         case settingsFlow
-        
+
         case rolesAndPermissionsFlow
-        
+
         case leftSpace
     }
     
@@ -71,9 +82,9 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
         case start
         /// The flow is being started for an unjoined space.
         case startUnjoined
-        
+
         /// The join space screen joined the space.
-        case joinedSpace
+        case joinedSpace(shouldShowJoinAllRoomsConfirmation: Bool)
         /// The space screen left the space.
         case leftSpace
         
@@ -99,12 +110,12 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
     
     private let stateMachine: StateMachine<State, Event>
     private var cancellables: Set<AnyCancellable> = []
-    
+
     private let actionsSubject: PassthroughSubject<SpaceFlowCoordinatorAction, Never> = .init()
     var actionsPublisher: AnyPublisher<SpaceFlowCoordinatorAction, Never> {
         actionsSubject.eraseToAnyPublisher()
     }
-    
+
     init(entryPoint: SpaceFlowCoordinatorEntryPoint,
          spaceServiceProxy: SpaceServiceProxyProtocol,
          isChildFlow: Bool,
@@ -114,17 +125,19 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
         self.spaceServiceProxy = spaceServiceProxy
         self.isChildFlow = isChildFlow
         self.flowParameters = flowParameters
-        
+
         self.navigationStackCoordinator = navigationStackCoordinator
-        
+
         stateMachine = .init(state: .initial)
         configureStateMachine()
     }
-    
+
     func start(animated: Bool) {
         switch entryPoint {
         case .space:
             stateMachine.tryEvent(.start)
+        case .spaceDetailAfterJoin:
+            stateMachine.tryEvent(.joinedSpace(shouldShowJoinAllRoomsConfirmation: true))
         case .joinSpace:
             stateMachine.tryEvent(.startUnjoined)
         }
@@ -139,7 +152,7 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
         switch stateMachine.state {
         case .initial:
             break
-        case .joinSpace, .space, .leftSpace:
+        case .joinSpace, .space, .spaceDetail, .leftSpace:
             if isChildFlow {
                 navigationStackCoordinator.pop(animated: animated)
             } else {
@@ -174,11 +187,21 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
         stateMachine.addRoutes(event: .startUnjoined, transitions: [.initial => .joinSpace]) { [weak self] _ in
             self?.presentJoinSpaceScreen()
         }
-        
-        stateMachine.addRoutes(event: .joinedSpace, transitions: [.joinSpace => .space]) { [weak self] _ in
-            self?.presentSpaceAfterJoining()
+
+        stateMachine.addRouteMapping { event, fromState, _ in
+            guard case .joinedSpace = event else { return nil }
+            switch fromState {
+            case .joinSpace, .initial:
+                return .spaceDetail
+            default:
+                return nil
+            }
+        } handler: { [weak self] context in
+            guard let self, case let .joinedSpace(shouldShowConfirmation) = context.event else { return }
+            presentSpaceDetailAfterJoining(shouldShowJoinAllRoomsConfirmation: shouldShowConfirmation)
         }
-        stateMachine.addRoutes(event: .leftSpace, transitions: [.space => .leftSpace]) { [weak self] _ in
+
+        stateMachine.addRoutes(event: .leftSpace, transitions: [.space => .leftSpace, .spaceDetail => .leftSpace]) { [weak self] _ in
             self?.clearRoute(animated: true)
         }
         
@@ -186,7 +209,7 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
             guard event == .startChildFlow else { return nil }
             guard let childEntryPoint = userInfo as? SpaceFlowCoordinatorEntryPoint else { fatalError("An entry point must be provided.") }
             return switch fromState {
-            case .space: .presentingChild(childSpaceID: childEntryPoint.spaceID, previousState: fromState)
+            case .space, .spaceDetail: .presentingChild(childSpaceID: childEntryPoint.spaceID, previousState: fromState)
             case .roomFlow(let previousState): .presentingChild(childSpaceID: childEntryPoint.spaceID, previousState: previousState)
             default: nil
             }
@@ -205,8 +228,12 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
         }
         
         stateMachine.addRouteMapping { event, fromState, _ in
-            guard case .startRoomFlow = event, case .space = fromState else { return nil }
-            return .roomFlow(previousState: fromState)
+            switch (event, fromState) {
+            case (.startRoomFlow, .space), (.startRoomFlow, .spaceDetail):
+                return .roomFlow(previousState: fromState)
+            default:
+                return nil
+            }
         } handler: { [weak self] context in
             guard let self, case let .startRoomFlow(roomID) = context.event else { return }
             startRoomFlow(roomID: roomID)
@@ -222,52 +249,62 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
         }
         
         stateMachine.addRouteMapping { event, fromState, _ in
-            guard case .startMembersFlow = event, case .space = fromState else {
+            switch (event, fromState) {
+            case (.startMembersFlow, .space), (.startMembersFlow, .spaceDetail):
+                return .membersFlow
+            default:
                 return nil
             }
-            return .membersFlow
         } handler: { [weak self] context in
             guard let self, let roomProxy = context.userInfo as? JoinedRoomProxyProtocol else {
                 fatalError("The room proxy must always be provided")
             }
             startMembersFlow(roomProxy: roomProxy)
         }
-        
+
         stateMachine.addRouteMapping { event, fromState, _ in
             guard event == .stopMembersFlow, case .membersFlow = fromState else { return nil }
-            return .space
+            return .spaceDetail
         } handler: { [weak self] _ in
             guard let self else { return }
             membersFlowCoordinator = nil
         }
-        
+
         stateMachine.addRouteMapping { event, fromState, _ in
-            guard event == .startSettingsFlow, case .space = fromState else { return nil }
-            return .settingsFlow
+            switch (event, fromState) {
+            case (.startSettingsFlow, .space), (.startSettingsFlow, .spaceDetail):
+                return .settingsFlow
+            default:
+                return nil
+            }
         } handler: { [weak self] context in
             guard let self, let roomProxy = context.userInfo as? JoinedRoomProxyProtocol else { return }
             startSettingsFlow(roomProxy: roomProxy)
         }
-        
+
         stateMachine.addRouteMapping { event, fromState, _ in
             guard event == .stopSettingsFlow, case .settingsFlow = fromState else { return nil }
-            return .space
+            return .spaceDetail
         } handler: { [weak self] _ in
             guard let self else { return }
             settingsFlowCoordinator = nil
         }
-        
+
         stateMachine.addRouteMapping { event, fromState, _ in
-            guard event == .startRolesAndPermissionsFlow, case .space = fromState else { return nil }
-            return .rolesAndPermissionsFlow
+            switch (event, fromState) {
+            case (.startRolesAndPermissionsFlow, .space), (.startRolesAndPermissionsFlow, .spaceDetail):
+                return .rolesAndPermissionsFlow
+            default:
+                return nil
+            }
         } handler: { [weak self] context in
             guard let self, let roomProxy = context.userInfo as? JoinedRoomProxyProtocol else { return }
             startRolesAndPermissionsFlow(roomProxy: roomProxy)
         }
-        
+
         stateMachine.addRouteMapping { event, fromState, _ in
             guard event == .stopRolesAndPermissionsFlow, case .rolesAndPermissionsFlow = fromState else { return nil }
-            return .space
+            return .spaceDetail
         } handler: { [weak self] _ in
             guard let self else { return }
             rolesAndPermissionsFlowCoordinator = nil
@@ -323,7 +360,7 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
     
     private func presentJoinSpaceScreen() {
         guard case let .joinSpace(spaceRoomProxy) = entryPoint else { fatalError("Attempting to join a space with the wrong entry point.") }
-        
+
         let parameters = JoinRoomScreenCoordinatorParameters(source: .space(spaceRoomProxy),
                                                              userSession: flowParameters.userSession,
                                                              userIndicatorController: flowParameters.userIndicatorController,
@@ -334,8 +371,8 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
                 guard let self else { return }
                 switch action {
                 case .joined(.space(let spaceRoomListProxy)):
-                    entryPoint = .space(spaceRoomListProxy)
-                    stateMachine.tryEvent(.joinedSpace)
+                    entryPoint = .spaceDetailAfterJoin(spaceRoomListProxy)
+                    stateMachine.tryEvent(.joinedSpace(shouldShowJoinAllRoomsConfirmation: true))
                 case .joined(.roomID):
                     MXLog.error("Expected to join a space, but got a room ID instead.")
                     clearRoute(animated: true)
@@ -347,7 +384,7 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
                 }
             }
             .store(in: &cancellables)
-        
+
         if isChildFlow {
             navigationStackCoordinator.push(coordinator) { [weak self] in
                 guard let self, stateMachine.state == .joinSpace else { return }
@@ -361,16 +398,64 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
         }
     }
     
-    private func presentSpaceAfterJoining() {
-        if isChildFlow {
-            navigationStackCoordinator.pop()
-        } else {
-            navigationStackCoordinator.setRootCoordinator(nil)
+    private func presentSpaceDetailAfterJoining(shouldShowJoinAllRoomsConfirmation: Bool) {
+        let spaceRoomListProxy: SpaceRoomListProxyProtocol
+        switch entryPoint {
+        case .space(let proxy), .spaceDetailAfterJoin(let proxy):
+            spaceRoomListProxy = proxy
+        case .joinSpace:
+            fatalError("Attempting to show a space detail with the wrong entry point.")
         }
-        
-        presentSpace()
+
+        let parameters = SpaceDetailScreenCoordinatorParameters(spaceRoomListProxy: spaceRoomListProxy,
+                                                                 spaceServiceProxy: spaceServiceProxy,
+                                                                 userSession: flowParameters.userSession,
+                                                                 appSettings: flowParameters.appSettings,
+                                                                 userIndicatorController: flowParameters.userIndicatorController)
+        let coordinator = SpaceDetailScreenCoordinator(parameters: parameters,
+                                                        shouldShowJoinAllRoomsConfirmation: shouldShowJoinAllRoomsConfirmation)
+        // 이 플로우는 스페이스 초대 수락 후 사용됨. 초대 수락 직후 컨텍스트에서는 덜 중요한
+        // 일부 액션은 의도적으로 미구현 상태.
+        // 전체 기능 지원은 ChatsFlowCoordinator.startSpaceDetailFlow 참고.
+        coordinator.actionsPublisher
+            .sink { [weak self] action in
+                guard let self else { return }
+                switch action {
+                case .selectRoom(let roomID):
+                    stateMachine.tryEvent(.startRoomFlow(roomID: roomID))
+                case .showRoomDetails:
+                    break // TODO: 필요시 구현
+                case .dismiss:
+                    stateMachine.tryEvent(.leftSpace)
+                case .displayMembers(let roomProxy):
+                    stateMachine.tryEvent(.startMembersFlow, userInfo: roomProxy)
+                case .inviteUsers:
+                    break // TODO: 필요시 구현
+                case .displaySpaceSettings(let roomProxy):
+                    stateMachine.tryEvent(.startSettingsFlow, userInfo: roomProxy)
+                case .presentCreateRoomInSpace:
+                    break // TODO: 필요시 구현
+                case .removedRoomFromSpace:
+                    break // TODO: 필요시 홈화면 새로고침 구현
+                case .leftSpace:
+                    stateMachine.tryEvent(.leftSpace)
+                }
+            }
+            .store(in: &cancellables)
+
+        if isChildFlow {
+            // Replace JoinRoomScreen with SpaceDetailScreen
+            navigationStackCoordinator.pop(animated: false)
+            navigationStackCoordinator.push(coordinator, animated: true) { [weak self] in
+                self?.actionsSubject.send(.finished)
+            }
+        } else {
+            navigationStackCoordinator.setRootCoordinator(coordinator) { [weak self] in
+                self?.actionsSubject.send(.finished)
+            }
+        }
     }
-    
+
     // MARK: - Other flows
     
     private func startChildFlow(with entryPoint: SpaceFlowCoordinatorEntryPoint) {
@@ -414,8 +499,8 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
                     actionsSubject.send(.presentCallScreen(roomProxy: roomProxy))
                 case .verifyUser(let userID):
                     actionsSubject.send(.verifyUser(userID: userID))
-                case .continueWithSpaceFlow(let spaceRoomListProxy):
-                    stateMachine.tryEvent(.startChildFlow, userInfo: SpaceFlowCoordinatorEntryPoint.space(spaceRoomListProxy))
+                case .continueWithSpaceFlow(let entryPoint):
+                    stateMachine.tryEvent(.startChildFlow, userInfo: entryPoint)
                 case .finished:
                     stateMachine.tryEvent(.stopRoomFlow)
                 }

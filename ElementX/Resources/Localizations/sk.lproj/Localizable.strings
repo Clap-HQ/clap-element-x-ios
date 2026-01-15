@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "História push oznámení";
 "troubleshoot_notifications_entry_point_title" = "Oznámenia riešení problémov";
 
-"space_channel_list_joined_section_title" = "Miestnosti, v ktorých ste";
-"space_channel_list_unjoined_section_title" = "Miestnosti, ku ktorým sa môžete pripojiť";
+"space_room_list_joined_section_title" = "Miestnosti, v ktorých ste";
+"space_room_list_unjoined_section_title" = "Miestnosti, ku ktorým sa môžete pripojiť";
 
 "screen_space_create_room" = "Vytvoriť miestnosť";
 "screen_space_remove_room" = "Odstrániť z priestoru";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Žiadne neprečítané vlákna";
 "screen_thread_activity_empty_description" = "Všetko je prečítané!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Tiež odstrániť zo všetkých miestností";
+
+"screen_join_all_rooms_confirmation_title" = "Pripojiť sa ku všetkým miestnostiam?";
+"screen_join_all_rooms_confirmation_subtitle" = "Chcete sa pripojiť ku všetkým miestnostiam v %@?";
+"screen_join_all_rooms_confirmation_action" = "Pripojiť sa ku všetkým";

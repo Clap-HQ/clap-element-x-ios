@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push-historikk";
 "troubleshoot_notifications_entry_point_title" = "Feilsøk varsler";
 
-"space_channel_list_joined_section_title" = "Rom du er med i";
-"space_channel_list_unjoined_section_title" = "Rom du kan bli med i";
+"space_room_list_joined_section_title" = "Rom du er med i";
+"space_room_list_unjoined_section_title" = "Rom du kan bli med i";
 
 "screen_space_create_room" = "Opprett rom";
 "screen_space_remove_room" = "Fjern fra området";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Ingen uleste tråder";
 "screen_thread_activity_empty_description" = "Du er oppdatert!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Fjern også fra alle rom";
+
+"screen_join_all_rooms_confirmation_title" = "Bli med i alle rom?";
+"screen_join_all_rooms_confirmation_subtitle" = "Vil du bli med i alle rom i %@?";
+"screen_join_all_rooms_confirmation_action" = "Bli med i alle";

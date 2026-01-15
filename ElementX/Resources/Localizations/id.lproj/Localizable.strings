@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Riwayat dorongan";
 "troubleshoot_notifications_entry_point_title" = "Pecahkan masalah notifikasi";
 
-"space_channel_list_joined_section_title" = "Ruangan yang Anda ikuti";
-"space_channel_list_unjoined_section_title" = "Ruangan yang dapat Anda ikuti";
+"space_room_list_joined_section_title" = "Ruangan yang Anda ikuti";
+"space_room_list_unjoined_section_title" = "Ruangan yang dapat Anda ikuti";
 
 "screen_space_create_room" = "Buat ruangan";
 "screen_space_remove_room" = "Keluarkan dari space";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Tidak ada utas yang belum dibaca";
 "screen_thread_activity_empty_description" = "Anda sudah membaca semuanya!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Juga keluarkan dari semua ruangan";
+
+"screen_join_all_rooms_confirmation_title" = "Bergabung ke semua ruangan?";
+"screen_join_all_rooms_confirmation_subtitle" = "Apakah Anda ingin bergabung ke semua ruangan di %@?";
+"screen_join_all_rooms_confirmation_action" = "Bergabung ke semua";

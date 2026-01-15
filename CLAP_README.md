@@ -453,8 +453,8 @@ showCustomHomeserver: ServiceLocator.shared.developerModeSettings.showCustomHome
    - 1행: Space 이름 + 멤버 수 + 타임스탬프 (메시지 없으면 chevron)
    - 2행: `[채널명] 마지막 메시지...` (최대 2줄)
 
-3. **Space 채널 목록 화면**
-   - Space 셀 탭 시 `SpaceChannelListScreen`으로 이동
+3. **Space 상세 화면**
+   - Space 셀 탭 시 `SpaceDetailScreen`으로 이동
    - 가입된 채널 표시 (컨텍스트 메뉴: 나가기/설정)
    - 미가입 채널은 Join 버튼과 함께 표시
 
@@ -491,7 +491,7 @@ if developerModeSettings.groupSpaceRooms, !spaceRoomListProxies.isEmpty {
 
 - [HomeScreenViewModel.swift](ElementX/Sources/Screens/HomeScreen/HomeScreenViewModel.swift) - Space 자식 추적, 필터링, 집계 로직
 - [HomeScreenSpaceCell.swift](ElementX/Sources/Screens/HomeScreen/View/HomeScreenSpaceCell.swift) - Space 셀 UI
-- [SpaceRoomListScreen/](ElementX/Sources/Screens/SpaceRoomListScreen/) - Space 룸 목록 화면
+- [SpaceDetailScreen/](ElementX/Sources/Screens/SpaceDetailScreen/) - Space 상세 화면
 
 ### 관련 커밋
 
@@ -696,9 +696,9 @@ Space 내에서 룸을 생성하는 화면
 - 공개 설정 선택 (Space Members/Private/Public)
 - 암호화 토글 (Public 제외)
 
-### SpaceRoomListScreen 메뉴
+### SpaceDetailScreen 메뉴
 
-Space 채널 목록 화면의 툴바 메뉴에 룸 생성/제거 기능 추가
+Space 상세 화면의 툴바 메뉴에 룸 생성/제거 기능 추가
 
 **메뉴 구조:**
 ```
@@ -729,7 +729,7 @@ Space 채널 목록 화면의 툴바 메뉴에 룸 생성/제거 기능 추가
 `m.space.child` state event 전송 권한 필요
 
 ```swift
-// SpaceRoomListScreenViewModel.swift
+// SpaceDetailScreenViewModel.swift
 let canManageSpaceChildren = powerLevels.canOwnUser(sendStateEvent: .spaceChild)
 ```
 
@@ -743,9 +743,9 @@ let canManageSpaceChildren = powerLevels.canOwnUser(sendStateEvent: .spaceChild)
 **수정:**
 - [ClientProxyProtocol.swift](ElementX/Sources/Services/Client/ClientProxyProtocol.swift) - `createRoomInSpace()` 추가
 - [ClientProxy.swift](ElementX/Sources/Services/Client/ClientProxy.swift) - 구현
-- [SpaceRoomListScreenModels.swift](ElementX/Sources/Screens/SpaceRoomListScreen/SpaceRoomListScreenModels.swift) - 액션/상태 추가
-- [SpaceRoomListScreenViewModel.swift](ElementX/Sources/Screens/SpaceRoomListScreen/SpaceRoomListScreenViewModel.swift) - 로직
-- [SpaceRoomListScreen.swift](ElementX/Sources/Screens/SpaceRoomListScreen/View/SpaceRoomListScreen.swift) - UI
+- [SpaceDetailScreenModels.swift](ElementX/Sources/Screens/SpaceDetailScreen/SpaceDetailScreenModels.swift) - 액션/상태 추가
+- [SpaceDetailScreenViewModel.swift](ElementX/Sources/Screens/SpaceDetailScreen/SpaceDetailScreenViewModel.swift) - 로직
+- [SpaceDetailScreen.swift](ElementX/Sources/Screens/SpaceDetailScreen/View/SpaceDetailScreen.swift) - UI
 
 ### 로컬라이제이션 키
 
@@ -848,6 +848,9 @@ protocol ClapAPIServiceProtocol {
 protocol ClapSpaceAPIProtocol {
     /// Space의 모든 하위 룸에서 멤버 제거 (kick)
     func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, ClapAPIError>
+
+    /// Space의 모든 하위 룸에 일괄 참여
+    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, ClapAPIError>
 }
 ```
 
@@ -859,28 +862,137 @@ protocol ClapSpaceAPIProtocol {
 
 ## 20. Space 멤버 관리
 
-Space 멤버 목록에서 멤버 관리 기능
+Space 멤버 관리 기능: 멤버 강퇴(kick) 및 초대 수락 후 일괄 참여
 
-### 기능 개요
+### 20.1 멤버 강퇴 (Kick from Space)
 
+Space 멤버 목록에서 멤버를 선택하여 Space 및 모든 하위 룸에서 제거
+
+**기능:**
 - Space 멤버 목록에서 멤버 선택 시 관리 시트 표시
-- "Kick from space" 옵션으로 Space 및 모든 하위 룸에서 제거
-- Clap 백엔드 `/_clap/client/v1/spaces/{spaceId}/remove` API 사용
+- "Kick from space" 옵션으로 Space 및 모든 하위 룸에서 일괄 제거
+- Clap 백엔드 API 사용
 
-### API 엔드포인트
-
+**API 엔드포인트:**
 ```
 POST /_clap/client/v1/spaces/{spaceId}/remove
 Body: {"user_id": "@user:clap.ac"}
 Response: {
-  "kicked_rooms": ["!room1:clap.ac", "!room2:clap.ac"],
-  "failed_rooms": []
+  "removed": ["!room1:clap.ac", "!room2:clap.ac"],
+  "failed": [{"room_id": "!room3:clap.ac", "error": "User is banned"}]
 }
 ```
 
-### 관련 파일
-
+**관련 파일:**
 - [ManageRoomMemberSheet/](ElementX/Sources/Screens/ManageRoomMemberSheet/) - 멤버 관리 시트
+
+### 20.2 Space 초대 수락 후 일괄 참여
+
+Space 초대를 수락한 후, 해당 Space의 모든 하위 룸에 일괄 참여할 수 있는 기능
+
+**사용자 흐름:**
+
+1. JoinRoomScreen에서 Space 초대 수락
+2. Space 가입 완료 시 SpaceDetailScreen으로 자동 이동
+3. 일괄 참여 확인 시트 표시:
+
+```
+┌─────────────────────────────────────────────────┐
+│              [BigIcon: takePhoto]               │
+│                                                 │
+│          모든 룸에 참여할까요?                   │
+│   {SpaceName}의 모든 룸에 참여하시겠습니까?       │
+│                                                 │
+│         ┌───────────────────────┐              │
+│         │      모두 참여         │              │
+│         └───────────────────────┘              │
+│                  건너뛰기                        │
+└─────────────────────────────────────────────────┘
+```
+
+- "모두 참여" 선택: ClapSpaceAPI를 통해 모든 하위 룸에 일괄 참여
+- "건너뛰기" 선택: 시트 닫기, 개별 룸 선택적 참여 가능
+
+**네비게이션 플로우:**
+
+```
+JoinRoomScreen (Space 초대)
+    │
+    ├── 수락 버튼 탭
+    │
+    ▼
+SpaceFlowCoordinator
+    │
+    ├── entryPoint = .spaceDetailAfterJoin(spaceRoomListProxy)
+    ├── stateMachine.tryEvent(.joinedSpace(shouldShowJoinAllRoomsConfirmation: true))
+    │
+    ▼
+SpaceDetailScreen
+    │
+    ├── shouldShowJoinAllRoomsConfirmation = true
+    ├── showJoinAllRoomsConfirmation() 호출
+    │
+    ▼
+JoinAllRoomsConfirmationView (시트)
+```
+
+**SpaceFlowCoordinatorEntryPoint:**
+
+```swift
+enum SpaceFlowCoordinatorEntryPoint {
+    /// 이미 가입된 Space 표시
+    case space(SpaceRoomListProxyProtocol)
+
+    /// Space 가입 후 상세 화면 표시 (일괄 참여 확인 포함)
+    case spaceDetailAfterJoin(SpaceRoomListProxyProtocol)
+
+    /// 미가입 Space의 가입 화면 표시
+    case joinSpace(SpaceRoomProxyProtocol)
+}
+```
+
+**API 엔드포인트:**
+
+```
+POST /_clap/client/v1/spaces/{spaceId}/join-all
+Response: {
+  "joined": ["!room1:clap.ac", "!room2:clap.ac"],
+  "failed": [{"room_id": "!room3:clap.ac", "error": "User is banned"}]
+}
+```
+
+**관련 파일:**
+- [JoinAllRoomsConfirmation/](ElementX/Sources/Screens/SpaceDetailScreen/JoinAllRoomsConfirmation/) - 일괄 참여 확인 시트
+  - `JoinAllRoomsConfirmationModels.swift` - ViewState, ViewAction 정의
+  - `JoinAllRoomsConfirmationViewModel.swift` - 비즈니스 로직
+  - `JoinAllRoomsConfirmationView.swift` - SwiftUI View
+- [SpaceDetailScreenModels.swift](ElementX/Sources/Screens/SpaceDetailScreen/SpaceDetailScreenModels.swift) - `joinAllRoomsConfirmation` 바인딩
+- [SpaceDetailScreenViewModel.swift](ElementX/Sources/Screens/SpaceDetailScreen/SpaceDetailScreenViewModel.swift) - `showJoinAllRoomsConfirmation()`
+- [SpaceFlowCoordinator.swift](ElementX/Sources/FlowCoordinators/SpaceFlowCoordinator.swift) - `spaceDetailAfterJoin` 엔트리 포인트
+
+**로컬라이제이션 키:**
+
+```
+"screen_join_all_rooms_confirmation_title" = "모든 룸에 참여할까요?";
+"screen_join_all_rooms_confirmation_subtitle" = "%@의 모든 룸에 참여하시겠습니까?";
+"screen_join_all_rooms_confirmation_action" = "모두 참여";
+```
+
+### ClapSpaceAPI 전체 구현
+
+```swift
+protocol ClapSpaceAPIProtocol {
+    /// Space의 모든 하위 룸에서 멤버 제거 (kick)
+    func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, ClapAPIError>
+
+    /// Space의 모든 하위 룸에 일괄 참여
+    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, ClapAPIError>
+}
+```
+
+### 공통 관련 파일
+
+- [ClapSpaceAPIProtocol.swift](ElementX/Sources/Services/ClapAPI/ClapSpaceAPIProtocol.swift) - 프로토콜 정의
 - [ClapSpaceAPI.swift](ElementX/Sources/Services/ClapAPI/ClapSpaceAPI.swift) - API 구현
 
 ### 관련 커밋

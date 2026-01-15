@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "История уведомлений";
 "troubleshoot_notifications_entry_point_title" = "Уведомления об устранении неполадок";
 
-"space_channel_list_joined_section_title" = "Комнаты, в которых вы состоите";
-"space_channel_list_unjoined_section_title" = "Комнаты, в которые вы можете вступить";
+"space_room_list_joined_section_title" = "Комнаты, в которых вы состоите";
+"space_room_list_unjoined_section_title" = "Комнаты, в которые вы можете вступить";
 
 "screen_space_create_room" = "Создать комнату";
 "screen_space_remove_room" = "Исключить из пространства";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Нет непрочитанных обсуждений";
 "screen_thread_activity_empty_description" = "Вы всё прочитали!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Также удалить из всех комнат";
+
+"screen_join_all_rooms_confirmation_title" = "Присоединиться ко всем комнатам?";
+"screen_join_all_rooms_confirmation_subtitle" = "Хотите присоединиться ко всем комнатам в %@?";
+"screen_join_all_rooms_confirmation_action" = "Присоединиться ко всем";

@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "推送历史记录";
 "troubleshoot_notifications_entry_point_title" = "排查通知问题";
 
-"space_channel_list_joined_section_title" = "您加入的房间";
-"space_channel_list_unjoined_section_title" = "可加入的房间";
+"space_room_list_joined_section_title" = "您加入的房间";
+"space_room_list_unjoined_section_title" = "可加入的房间";
 
 "screen_space_create_room" = "创建房间";
 "screen_space_remove_room" = "从空间移除";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "没有未读消息列";
 "screen_thread_activity_empty_description" = "您已全部看完！";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "同时从所有房间移除";
+
+"screen_join_all_rooms_confirmation_title" = "加入所有房间？";
+"screen_join_all_rooms_confirmation_subtitle" = "您想加入 %@ 中的所有房间吗？";
+"screen_join_all_rooms_confirmation_action" = "全部加入";

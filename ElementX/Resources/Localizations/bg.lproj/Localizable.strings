@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Отстраняване на неизправности с известията";
 
-"space_channel_list_joined_section_title" = "Стаи, в които сте";
-"space_channel_list_unjoined_section_title" = "Стаи, към които можете да се присъедините";
+"space_room_list_joined_section_title" = "Стаи, в които сте";
+"space_room_list_unjoined_section_title" = "Стаи, към които можете да се присъедините";
 
 "screen_space_create_room" = "Създаване на стая";
 "screen_space_remove_room" = "Премахване от пространството";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Няма непрочетени нишки";
 "screen_thread_activity_empty_description" = "Всичко е прочетено!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Също премахни от всички стаи";
+
+"screen_join_all_rooms_confirmation_title" = "Присъединяване към всички стаи?";
+"screen_join_all_rooms_confirmation_subtitle" = "Искате ли да се присъедините към всички стаи в %@?";
+"screen_join_all_rooms_confirmation_action" = "Присъединяване към всички";

@@ -271,16 +271,17 @@ When `groupSpaceRooms` is enabled:
    - Line 1: `SpaceName • 25` (member count) + timestamp (or chevron if no messages)
    - Line 2: `[ChannelName] Last message...` (up to 2 lines)
 
-3. **Space room list**:
-   - Tapping a space cell navigates to `SpaceRoomListScreen`
+3. **Space detail screen**:
+   - Tapping a space cell navigates to `SpaceDetailScreen`
    - Shows joined rooms (with context menu for leave/settings/remove from space)
    - Shows unjoined rooms with join button
    - Create room in space from toolbar menu
+   - "Join all rooms" confirmation sheet after accepting space invite
 
 4. **Related files**:
    - `HomeScreenViewModel.swift` - Space children tracking, filtering, and aggregation logic
    - `HomeScreenSpaceCell.swift` - Space cell UI with badges and last message
-   - `SpaceRoomListScreen/` - Space room list screen (Coordinator, ViewModel, View)
+   - `SpaceDetailScreen/` - Space detail screen (Coordinator, ViewModel, View, JoinAllRoomsConfirmation)
    - `CreateRoomInSpaceScreen/` - Create room in space screen
 
 ### Related Files
@@ -469,13 +470,21 @@ REST API service for Matrix protocol endpoints not covered by MatrixRustSDK:
 
 REST API service for Clap-specific backend endpoints:
 
-- `ClapSpaceAPI` - Space member management (kick from all child rooms)
+- `ClapSpaceAPI` - Space member management
+  - `removeMemberFromAllChildRooms(spaceID:userID:)` - Kick member from space and all child rooms
+  - `joinAllChildRooms(spaceID:)` - Join all child rooms after accepting space invite
 
 ```swift
-// Usage
-let clapAPI = ClapAPIService(homeserverURL: "https://clap.ac", accessTokenProvider: { token })
-let result = await clapAPI.spaces.removeMemberFromAllChildRooms(spaceID: spaceID, userID: userID)
+// Kick member from space
+let result = await clientProxy.clapAPI.spaces.removeMemberFromAllChildRooms(spaceID: spaceID, userID: userID)
+
+// Join all child rooms after space invite
+let result = await clientProxy.clapAPI.spaces.joinAllChildRooms(spaceID: spaceID)
 ```
+
+**API Endpoints:**
+- `POST /_clap/client/v1/spaces/{spaceId}/remove` - Remove member from all child rooms
+- `POST /_clap/client/v1/spaces/{spaceId}/join-all` - Join all child rooms
 
 ## Related Repositories
 

@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Ιστορικό push";
 "troubleshoot_notifications_entry_point_title" = "Αντιμετώπιση προβλημάτων ειδοποιήσεων";
 
-"space_channel_list_joined_section_title" = "Δωμάτια στα οποία συμμετέχετε";
-"space_channel_list_unjoined_section_title" = "Δωμάτια στα οποία μπορείτε να συμμετάσχετε";
+"space_room_list_joined_section_title" = "Δωμάτια στα οποία συμμετέχετε";
+"space_room_list_unjoined_section_title" = "Δωμάτια στα οποία μπορείτε να συμμετάσχετε";
 
 "screen_space_create_room" = "Δημιουργία δωματίου";
 "screen_space_remove_room" = "Αφαίρεση από τον χώρο";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Δεν υπάρχουν μη αναγνωσμένα νήματα";
 "screen_thread_activity_empty_description" = "Είστε ενημερωμένοι!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Επίσης αφαίρεση από όλα τα δωμάτια";
+
+"screen_join_all_rooms_confirmation_title" = "Συμμετοχή σε όλα τα δωμάτια;";
+"screen_join_all_rooms_confirmation_subtitle" = "Θέλετε να συμμετάσχετε σε όλα τα δωμάτια στο %@;";
+"screen_join_all_rooms_confirmation_action" = "Συμμετοχή σε όλα";

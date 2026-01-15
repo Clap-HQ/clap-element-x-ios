@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push-historik";
 "troubleshoot_notifications_entry_point_title" = "Fejlfinding af meddelelser";
 
-"space_channel_list_joined_section_title" = "Rum du er med i";
-"space_channel_list_unjoined_section_title" = "Rum du kan deltage i";
+"space_room_list_joined_section_title" = "Rum du er med i";
+"space_room_list_unjoined_section_title" = "Rum du kan deltage i";
 
 "screen_space_create_room" = "Opret rum";
 "screen_space_remove_room" = "Spær fra gruppe";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Ingen ulæste tråde";
 "screen_thread_activity_empty_description" = "Du er helt opdateret!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Fjern også fra alle rum";
+
+"screen_join_all_rooms_confirmation_title" = "Deltag i alle rum?";
+"screen_join_all_rooms_confirmation_subtitle" = "Vil du deltage i alle rum i %@?";
+"screen_join_all_rooms_confirmation_action" = "Deltag i alle";

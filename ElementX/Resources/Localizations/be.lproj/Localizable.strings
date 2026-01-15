@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Выпраўленне непаладак з апавяшчэннямі";
 
-"space_channel_list_joined_section_title" = "Пакоі, у якіх вы знаходзіцеся";
-"space_channel_list_unjoined_section_title" = "Пакоі, да якіх вы можаце далучыцца";
+"space_room_list_joined_section_title" = "Пакоі, у якіх вы знаходзіцеся";
+"space_room_list_unjoined_section_title" = "Пакоі, да якіх вы можаце далучыцца";
 
 "screen_space_create_room" = "Стварыць пакой";
 "screen_space_remove_room" = "Выдаліць з прасторы";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Няма непрачытаных галін";
 "screen_thread_activity_empty_description" = "Вы ўсё прачыталі!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Таксама выдаліць з усіх пакояў";
+
+"screen_join_all_rooms_confirmation_title" = "Далучыцца да ўсіх пакояў?";
+"screen_join_all_rooms_confirmation_subtitle" = "Хочаце далучыцца да ўсіх пакояў у %@?";
+"screen_join_all_rooms_confirmation_action" = "Далучыцца да ўсіх";

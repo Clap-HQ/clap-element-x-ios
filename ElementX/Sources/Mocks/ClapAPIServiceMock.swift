@@ -13,8 +13,13 @@ class ClapAPIServiceMock: ClapAPIServiceProtocol {
 
 class ClapSpaceAPIMock: ClapSpaceAPIProtocol {
     var removeMemberFromAllChildRoomsResult: Result<ClapSpaceMemberRemovalResult, ClapAPIError> = .success(.init(removed: [], failed: []))
+    var joinAllChildRoomsResult: Result<ClapSpaceJoinAllResult, ClapAPIError> = .success(.init(joined: [], failed: []))
 
     func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, ClapAPIError> {
         removeMemberFromAllChildRoomsResult
+    }
+
+    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, ClapAPIError> {
+        joinAllChildRoomsResult
     }
 }

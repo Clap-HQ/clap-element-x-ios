@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Problemen met meldingen oplossen";
 
-"space_channel_list_joined_section_title" = "Kamers waar je in zit";
-"space_channel_list_unjoined_section_title" = "Kamers waar je aan kunt deelnemen";
+"space_room_list_joined_section_title" = "Kamers waar je in zit";
+"space_room_list_unjoined_section_title" = "Kamers waar je aan kunt deelnemen";
 
 "screen_space_create_room" = "Ruimte aanmaken";
 "screen_space_remove_room" = "Verwijder van space";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Geen ongelezen threads";
 "screen_thread_activity_empty_description" = "Je bent helemaal bij!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Ook uit alle kamers verwijderen";
+
+"screen_join_all_rooms_confirmation_title" = "Alle kamers betreden?";
+"screen_join_all_rooms_confirmation_subtitle" = "Wil je alle kamers in %@ betreden?";
+"screen_join_all_rooms_confirmation_action" = "Alle betreden";

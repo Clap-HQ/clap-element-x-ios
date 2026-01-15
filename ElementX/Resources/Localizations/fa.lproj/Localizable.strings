@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "تاریخچهٔ آگاهی‌های ارسالی";
 "troubleshoot_notifications_entry_point_title" = "رفع‌اشکال آگاهی‌ها";
 
-"space_channel_list_joined_section_title" = "اتاق‌هایی که عضو هستید";
-"space_channel_list_unjoined_section_title" = "اتاق‌هایی که می‌توانید بپیوندید";
+"space_room_list_joined_section_title" = "اتاق‌هایی که عضو هستید";
+"space_room_list_unjoined_section_title" = "اتاق‌هایی که می‌توانید بپیوندید";
 
 "screen_space_create_room" = "ایجاد اتاق";
 "screen_space_remove_room" = "حذف از فضا";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "رشته خوانده نشده‌ای وجود ندارد";
 "screen_thread_activity_empty_description" = "همه چیز را خوانده‌اید!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "همچنین از همه اتاق‌ها حذف شود";
+
+"screen_join_all_rooms_confirmation_title" = "پیوستن به همه اتاق‌ها؟";
+"screen_join_all_rooms_confirmation_subtitle" = "آیا می‌خواهید به همه اتاق‌های %@ بپیوندید؟";
+"screen_join_all_rooms_confirmation_action" = "پیوستن به همه";

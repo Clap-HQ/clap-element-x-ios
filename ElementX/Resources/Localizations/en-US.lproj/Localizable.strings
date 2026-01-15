@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Troubleshoot notifications";
 
-"space_channel_list_joined_section_title" = "Rooms you're in";
-"space_channel_list_unjoined_section_title" = "Rooms you can join";
+"space_room_list_joined_section_title" = "Rooms you're in";
+"space_room_list_unjoined_section_title" = "Rooms you can join";
 
 "screen_space_create_room" = "Create room";
 "screen_space_remove_room" = "Remove from space";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "No unread threads";
 "screen_thread_activity_empty_description" = "You're all caught up!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Also remove from all rooms";
+
+"screen_join_all_rooms_confirmation_title" = "Join all rooms?";
+"screen_join_all_rooms_confirmation_subtitle" = "Would you like to join all rooms in %@?";
+"screen_join_all_rooms_confirmation_action" = "Join all rooms";

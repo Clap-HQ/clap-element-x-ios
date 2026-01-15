@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Historique des Push";
 "troubleshoot_notifications_entry_point_title" = "Dépanner les notifications";
 
-"space_channel_list_joined_section_title" = "Salons auxquels vous participez";
-"space_channel_list_unjoined_section_title" = "Salons que vous pouvez rejoindre";
+"space_room_list_joined_section_title" = "Salons auxquels vous participez";
+"space_room_list_unjoined_section_title" = "Salons que vous pouvez rejoindre";
 
 "screen_space_create_room" = "Créer un salon";
 "screen_space_remove_room" = "Supprimer de l'espace";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Aucun fil non lu";
 "screen_thread_activity_empty_description" = "Vous êtes à jour !";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Également supprimer de tous les salons";
+
+"screen_join_all_rooms_confirmation_title" = "Rejoindre tous les salons ?";
+"screen_join_all_rooms_confirmation_subtitle" = "Voulez-vous rejoindre tous les salons de %@ ?";
+"screen_join_all_rooms_confirmation_action" = "Rejoindre tous";

@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push-historik";
 "troubleshoot_notifications_entry_point_title" = "Felsök aviseringar";
 
-"space_channel_list_joined_section_title" = "Rum du är med i";
-"space_channel_list_unjoined_section_title" = "Rum du kan gå med i";
+"space_room_list_joined_section_title" = "Rum du är med i";
+"space_room_list_unjoined_section_title" = "Rum du kan gå med i";
 
 "screen_space_create_room" = "Skapa rum";
 "screen_space_remove_room" = "Ta bort från utrymme";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Inga olästa trådar";
 "screen_thread_activity_empty_description" = "Du är helt i kapp!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Ta även bort från alla rum";
+
+"screen_join_all_rooms_confirmation_title" = "Gå med i alla rum?";
+"screen_join_all_rooms_confirmation_subtitle" = "Vill du gå med i alla rum i %@?";
+"screen_join_all_rooms_confirmation_action" = "Gå med i alla";

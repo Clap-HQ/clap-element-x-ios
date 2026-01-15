@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Sorun Giderme Bildirimleri";
 
-"space_channel_list_joined_section_title" = "Katıldığınız odalar";
-"space_channel_list_unjoined_section_title" = "Katılabileceğiniz odalar";
+"space_room_list_joined_section_title" = "Katıldığınız odalar";
+"space_room_list_unjoined_section_title" = "Katılabileceğiniz odalar";
 
 "screen_space_create_room" = "Oda oluştur";
 "screen_space_remove_room" = "Alandan kaldır";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Okunmamış konu yok";
 "screen_thread_activity_empty_description" = "Her şeyi okudunuz!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Tüm odalardan da kaldır";
+
+"screen_join_all_rooms_confirmation_title" = "Tüm odalara katıl?";
+"screen_join_all_rooms_confirmation_subtitle" = "%@ içindeki tüm odalara katılmak ister misiniz?";
+"screen_join_all_rooms_confirmation_action" = "Tümüne katıl";

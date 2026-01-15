@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Cronologia push";
 "troubleshoot_notifications_entry_point_title" = "Risoluzione di problemi delle notifiche";
 
-"space_channel_list_joined_section_title" = "Stanze a cui partecipi";
-"space_channel_list_unjoined_section_title" = "Stanze a cui puoi unirti";
+"space_room_list_joined_section_title" = "Stanze a cui partecipi";
+"space_room_list_unjoined_section_title" = "Stanze a cui puoi unirti";
 
 "screen_space_create_room" = "Crea stanza";
 "screen_space_remove_room" = "Rimuovi dallo spazio";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Nessun thread non letto";
 "screen_thread_activity_empty_description" = "Sei in pari!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Rimuovi anche da tutte le stanze";
+
+"screen_join_all_rooms_confirmation_title" = "Unirsi a tutte le stanze?";
+"screen_join_all_rooms_confirmation_subtitle" = "Vuoi unirti a tutte le stanze in %@?";
+"screen_join_all_rooms_confirmation_action" = "Unisciti a tutte";

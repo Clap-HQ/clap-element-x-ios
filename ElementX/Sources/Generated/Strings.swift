@@ -1716,6 +1716,14 @@ internal enum L10n {
   internal static func screenInvitesInvitedYou(_ p1: Any, _ p2: Any) -> String {
     return L10n.tr("Localizable", "screen_invites_invited_you", String(describing: p1), String(describing: p2))
   }
+  /// Join all rooms
+  internal static var screenJoinAllRoomsConfirmationAction: String { return L10n.tr("Localizable", "screen_join_all_rooms_confirmation_action") }
+  /// Would you like to join all rooms in %@?
+  internal static func screenJoinAllRoomsConfirmationSubtitle(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "screen_join_all_rooms_confirmation_subtitle", String(describing: p1))
+  }
+  /// Join all rooms?
+  internal static var screenJoinAllRoomsConfirmationTitle: String { return L10n.tr("Localizable", "screen_join_all_rooms_confirmation_title") }
   /// You were banned by %1$@.
   internal static func screenJoinRoomBanByMessage(_ p1: Any) -> String {
     return L10n.tr("Localizable", "screen_join_room_ban_by_message", String(describing: p1))

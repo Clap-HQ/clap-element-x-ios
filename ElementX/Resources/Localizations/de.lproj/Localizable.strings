@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Verlauf pushen";
 "troubleshoot_notifications_entry_point_title" = "Fehlerbehebung für Benachrichtigungen";
 
-"space_channel_list_joined_section_title" = "Räume, denen Sie beigetreten sind";
-"space_channel_list_unjoined_section_title" = "Räume, denen Sie beitreten können";
+"space_room_list_joined_section_title" = "Räume, denen Sie beigetreten sind";
+"space_room_list_unjoined_section_title" = "Räume, denen Sie beitreten können";
 
 "screen_space_create_room" = "Chat erstellen";
 "screen_space_remove_room" = "Aus Space entfernen";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Keine ungelesenen Threads";
 "screen_thread_activity_empty_description" = "Du bist auf dem neuesten Stand!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Auch aus allen Räumen entfernen";
+
+"screen_join_all_rooms_confirmation_title" = "Allen Räumen beitreten?";
+"screen_join_all_rooms_confirmation_subtitle" = "Möchtest du allen Räumen in %@ beitreten?";
+"screen_join_all_rooms_confirmation_action" = "Allen beitreten";

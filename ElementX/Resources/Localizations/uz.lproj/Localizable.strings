@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Bildirishnoma tarixi";
 "troubleshoot_notifications_entry_point_title" = "Bildirishnomalar bilan bog‘liq muammolarni bartaraf etish";
 
-"space_channel_list_joined_section_title" = "Siz aʼzo boʻlgan xonalar";
-"space_channel_list_unjoined_section_title" = "Qoʻshilishingiz mumkin boʻlgan xonalar";
+"space_room_list_joined_section_title" = "Siz aʼzo boʻlgan xonalar";
+"space_room_list_unjoined_section_title" = "Qoʻshilishingiz mumkin boʻlgan xonalar";
 
 "screen_space_create_room" = "Xona yaratish";
 "screen_space_remove_room" = "Fazoviydan olib tashlash";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "O'qilmagan mavzular yo'q";
 "screen_thread_activity_empty_description" = "Hammasini o'qib chiqdingiz!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Barcha xonalardan ham olib tashlash";
+
+"screen_join_all_rooms_confirmation_title" = "Barcha xonalarga qo'shilasizmi?";
+"screen_join_all_rooms_confirmation_subtitle" = "%@ dagi barcha xonalarga qo'shilmoqchimisiz?";
+"screen_join_all_rooms_confirmation_action" = "Hammaga qo'shilish";

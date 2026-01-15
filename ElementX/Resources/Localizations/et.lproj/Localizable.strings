@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Tõuketeadete ajalugu";
 "troubleshoot_notifications_entry_point_title" = "Teavituste veaotsing";
 
-"space_channel_list_joined_section_title" = "Toad, milles olete";
-"space_channel_list_unjoined_section_title" = "Toad, millega saate liituda";
+"space_room_list_joined_section_title" = "Toad, milles olete";
+"space_room_list_unjoined_section_title" = "Toad, millega saate liituda";
 
 "screen_space_create_room" = "Loo jututuba";
 "screen_space_remove_room" = "Eemalda sellest kogukonnast";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Lugemata lõimesid pole";
 "screen_thread_activity_empty_description" = "Oled kõigega kursis!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Eemalda ka kõigist tubadest";
+
+"screen_join_all_rooms_confirmation_title" = "Liitu kõigi tubadega?";
+"screen_join_all_rooms_confirmation_subtitle" = "Kas soovid liituda kõigi tubadega kohas %@?";
+"screen_join_all_rooms_confirmation_action" = "Liitu kõigiga";

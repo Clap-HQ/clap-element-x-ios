@@ -1477,8 +1477,8 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Historia powiadomień Push";
 "troubleshoot_notifications_entry_point_title" = "Rozwiązywanie problemów powiadomień";
 
-"space_channel_list_joined_section_title" = "Pokoje, w których jesteś";
-"space_channel_list_unjoined_section_title" = "Pokoje, do których możesz dołączyć";
+"space_room_list_joined_section_title" = "Pokoje, w których jesteś";
+"space_room_list_unjoined_section_title" = "Pokoje, do których możesz dołączyć";
 
 "screen_space_create_room" = "Utwórz pokój";
 "screen_space_remove_room" = "Usuń z przestrzeni";
@@ -1502,3 +1502,7 @@
 "screen_thread_activity_empty_title" = "Brak nieprzeczytanych wątków";
 "screen_thread_activity_empty_description" = "Wszystko przeczytane!";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Usuń również ze wszystkich pokoi";
+
+"screen_join_all_rooms_confirmation_title" = "Dołączyć do wszystkich pokojów?";
+"screen_join_all_rooms_confirmation_subtitle" = "Czy chcesz dołączyć do wszystkich pokojów w %@?";
+"screen_join_all_rooms_confirmation_action" = "Dołącz do wszystkich";

@@ -15,8 +15,8 @@ enum HomeScreenViewModelAction {
     case presentRoomDetails(roomIdentifier: String)
     case presentReportRoom(roomIdentifier: String)
     case presentDeclineAndBlock(userID: String, roomID: String)
-    case presentSpace(SpaceRoomListProxyProtocol)
-    case presentSpaceRoomList(SpaceRoomListProxyProtocol)
+    /// Navigate to SpaceDetailScreen. Set `showJoinAllRoomsConfirmation` to show the confirmation sheet after navigation.
+    case presentSpaceDetail(SpaceRoomListProxyProtocol, showJoinAllRoomsConfirmation: Bool = false)
     case roomLeft(roomIdentifier: String)
     case spaceLeft(spaceID: String)
     case transferOwnership(roomIdentifier: String)
