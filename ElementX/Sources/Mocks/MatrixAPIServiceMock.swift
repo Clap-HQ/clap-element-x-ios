@@ -12,29 +12,29 @@ class MatrixAPIServiceMock: MatrixAPIServiceProtocol {
 }
 
 class MatrixSpaceAPIMock: MatrixSpaceAPIProtocol {
-    var addChildToSpaceResult: Result<Void, MatrixAPIError> = .success(())
-    var removeChildFromSpaceResult: Result<Void, MatrixAPIError> = .success(())
-    var setSpaceParentResult: Result<Void, MatrixAPIError> = .success(())
-    var setRestrictedJoinRuleResult: Result<Void, MatrixAPIError> = .success(())
-    var setPublicJoinRuleResult: Result<Void, MatrixAPIError> = .success(())
+    var addChildToSpaceResult: Result<Void, RESTAPIError> = .success(())
+    var removeChildFromSpaceResult: Result<Void, RESTAPIError> = .success(())
+    var setSpaceParentResult: Result<Void, RESTAPIError> = .success(())
+    var setRestrictedJoinRuleResult: Result<Void, RESTAPIError> = .success(())
+    var setPublicJoinRuleResult: Result<Void, RESTAPIError> = .success(())
 
-    func addChildToSpace(spaceID: String, childRoomID: String, suggested: Bool) async -> Result<Void, MatrixAPIError> {
+    func addChildToSpace(spaceID: String, childRoomID: String, suggested: Bool) async -> Result<Void, RESTAPIError> {
         addChildToSpaceResult
     }
 
-    func removeChildFromSpace(spaceID: String, childRoomID: String) async -> Result<Void, MatrixAPIError> {
+    func removeChildFromSpace(spaceID: String, childRoomID: String) async -> Result<Void, RESTAPIError> {
         removeChildFromSpaceResult
     }
 
-    func setSpaceParent(roomID: String, spaceID: String, canonical: Bool) async -> Result<Void, MatrixAPIError> {
+    func setSpaceParent(roomID: String, spaceID: String, canonical: Bool) async -> Result<Void, RESTAPIError> {
         setSpaceParentResult
     }
 
-    func setRestrictedJoinRule(roomID: String, spaceID: String) async -> Result<Void, MatrixAPIError> {
+    func setRestrictedJoinRule(roomID: String, spaceID: String) async -> Result<Void, RESTAPIError> {
         setRestrictedJoinRuleResult
     }
 
-    func setPublicJoinRule(roomID: String) async -> Result<Void, MatrixAPIError> {
+    func setPublicJoinRule(roomID: String) async -> Result<Void, RESTAPIError> {
         setPublicJoinRuleResult
     }
 }

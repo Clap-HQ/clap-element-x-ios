@@ -807,13 +807,60 @@ MatrixRustSDK로 커버되지 않는 API를 위한 REST API 서비스 레이어
 
 ```
 Services/
-├── MatrixAPI/                    # Matrix 프로토콜 REST API
-│   ├── MatrixAPIService.swift    # 서비스 진입점
-│   ├── MatrixSpaceAPI.swift      # Space 관련 API (m.space.child, m.space.parent)
-│   └── MatrixThreadAPI.swift     # Thread 목록 API
-└── ClapAPI/                      # Clap 전용 REST API
-    ├── ClapAPIService.swift      # 서비스 진입점
-    └── ClapSpaceAPI.swift        # Space 멤버 관리 API
+├── RESTAPI/                           # 공통 REST API 인프라
+│   ├── RESTAPIClient.swift            # HTTP 요청/응답 처리 (base class)
+│   └── RESTAPIError.swift             # 통합 에러 타입
+├── MatrixAPI/                         # Matrix 프로토콜 REST API (/_matrix/...)
+│   ├── MatrixAPIService.swift         # 서비스 진입점
+│   ├── MatrixAPIServiceProtocol.swift
+│   ├── MatrixSpaceAPI.swift           # Space 관련 API (RESTAPIClient 상속)
+│   └── MatrixSpaceAPIProtocol.swift
+└── ClapAPI/                           # Clap 전용 REST API (/_clap/...)
+    ├── ClapAPIService.swift           # 서비스 진입점
+    ├── ClapAPIServiceProtocol.swift
+    ├── ClapSpaceAPI.swift             # Space 멤버 관리 API (RESTAPIClient 상속)
+    └── ClapSpaceAPIProtocol.swift
+```
+
+### RESTAPIClient (공통 인프라)
+
+모든 REST API 호출의 공통 로직을 처리하는 베이스 클래스:
+
+```swift
+class RESTAPIClient {
+    let homeserverURL: String
+    let accessTokenProvider: () -> String?
+    let session: URLSession
+
+    // 응답 디코딩
+    func execute<T: Decodable>(_ request: RESTAPIRequest) async -> Result<T, RESTAPIError>
+
+    // 응답 없는 요청
+    func execute(_ request: RESTAPIRequest) async -> Result<Void, RESTAPIError>
+}
+
+struct RESTAPIRequest {
+    let method: HTTPMethod
+    let pathTemplate: String      // "/_clap/client/v1/spaces/%@/remove"
+    let pathParameters: [String]  // 자동 percent-encoding
+    let body: AnyEncodable?
+}
+```
+
+### RESTAPIError (통합 에러)
+
+```swift
+enum RESTAPIError: Error {
+    case invalidURL
+    case invalidResponse
+    case networkError(String)
+    case httpError(statusCode: Int, message: String)
+    case unauthorized
+    case forbidden
+    case notFound
+    case encodingError
+    case decodingError
+}
 ```
 
 ### MatrixAPIService
@@ -823,15 +870,14 @@ Matrix 프로토콜 표준 API 중 SDK에 없는 기능:
 ```swift
 protocol MatrixAPIServiceProtocol {
     var spaces: MatrixSpaceAPIProtocol { get }
-    var threads: MatrixThreadAPIProtocol { get }
 }
 
-// Space API
 protocol MatrixSpaceAPIProtocol {
-    func addChildToSpace(spaceID: String, childRoomID: String, suggested: Bool) async -> Result<Void, MatrixAPIError>
-    func removeChildFromSpace(spaceID: String, childRoomID: String) async -> Result<Void, MatrixAPIError>
-    func setSpaceParent(roomID: String, spaceID: String, canonical: Bool) async -> Result<Void, MatrixAPIError>
-    func setRestrictedJoinRule(roomID: String, spaceID: String) async -> Result<Void, MatrixAPIError>
+    func addChildToSpace(spaceID: String, childRoomID: String, suggested: Bool) async -> Result<Void, RESTAPIError>
+    func removeChildFromSpace(spaceID: String, childRoomID: String) async -> Result<Void, RESTAPIError>
+    func setSpaceParent(roomID: String, spaceID: String, canonical: Bool) async -> Result<Void, RESTAPIError>
+    func setRestrictedJoinRule(roomID: String, spaceID: String) async -> Result<Void, RESTAPIError>
+    func setPublicJoinRule(roomID: String) async -> Result<Void, RESTAPIError>
 }
 ```
 
@@ -844,13 +890,25 @@ protocol ClapAPIServiceProtocol {
     var spaces: ClapSpaceAPIProtocol { get }
 }
 
-// Space API
 protocol ClapSpaceAPIProtocol {
-    /// Space의 모든 하위 룸에서 멤버 제거 (kick)
-    func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, ClapAPIError>
+    func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, RESTAPIError>
+    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, RESTAPIError>
+}
+```
 
-    /// Space의 모든 하위 룸에 일괄 참여
-    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, ClapAPIError>
+### API 구현 예시
+
+```swift
+// ClapSpaceAPI.swift - RESTAPIClient 상속
+class ClapSpaceAPI: RESTAPIClient, ClapSpaceAPIProtocol {
+    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, RESTAPIError> {
+        let request = RESTAPIRequest(
+            method: .post,
+            pathTemplate: "/_clap/client/v1/spaces/%@/join-all",
+            pathParameters: [spaceID]  // 자동 percent-encoding
+        )
+        return await execute(request)
+    }
 }
 ```
 
@@ -983,10 +1041,10 @@ Response: {
 ```swift
 protocol ClapSpaceAPIProtocol {
     /// Space의 모든 하위 룸에서 멤버 제거 (kick)
-    func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, ClapAPIError>
+    func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, RESTAPIError>
 
     /// Space의 모든 하위 룸에 일괄 참여
-    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, ClapAPIError>
+    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, RESTAPIError>
 }
 ```
 
