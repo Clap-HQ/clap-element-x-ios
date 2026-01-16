@@ -15,6 +15,12 @@ final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIG
     var allowsTextSelection = false
     private var pillViews = NSHashTable<UIView>.weakObjects()
 
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        // Remove all drag interactions to prevent text movement
+        interactions.compactMap { $0 as? UIDragInteraction }.forEach { removeInteraction($0) }
+    }
+
     override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
         // We don't need to change the behaviour on MacOS
         if !ProcessInfo.processInfo.isiOSAppOnMac {
@@ -243,7 +249,7 @@ struct MessageText: UIViewRepresentable {
             }
             textView.selectedTextRange = nil
         }
-        
+
         func textView(_ textView: UITextView, primaryActionFor textItem: UITextItem, defaultAction: UIAction) -> UIAction? {
             if case .link(let url) = textItem.content {
                 return .init(title: defaultAction.title,
