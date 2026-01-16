@@ -87,11 +87,9 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
     private func setupRoomSubscriptionObserver() {
         roomIDsToSubscribePublisher
             .removeDuplicates()
-            .throttle(for: 0.5, scheduler: DispatchQueue.main, latest: true)
-            .filter { [weak self] roomIDs in
-                guard let self else { return false }
-                return !roomIDs.isEmpty && shouldUpdateVisibleRange
-            }
+            // Use shorter throttle for faster unread badge updates
+            .throttle(for: 0.1, scheduler: DispatchQueue.main, latest: true)
+            .filter { !$0.isEmpty }
             .sink { [weak self] roomIDs in
                 guard let self else { return }
                 Task { [weak self, roomListService] in
