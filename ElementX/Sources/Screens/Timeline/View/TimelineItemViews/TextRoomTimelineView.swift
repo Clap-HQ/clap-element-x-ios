@@ -23,12 +23,16 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
     @State private var linkMetadata: OrderedDictionary<URL, LinkMetadataProviderItem>
     @State private var showFullMessageSheet = false
 
-    private var textContent: String {
-        timelineItem.body
+    /// Returns the visible text content (from formattedBody if available, otherwise body)
+    private var visibleTextContent: String {
+        if let formattedBody = timelineItem.content.formattedBody {
+            return String(formattedBody.characters)
+        }
+        return timelineItem.body
     }
 
     private var lineCount: Int {
-        textContent.components(separatedBy: "\n").count
+        visibleTextContent.components(separatedBy: "\n").count
     }
 
     private var exceedsLineLimit: Bool {
@@ -36,7 +40,7 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
     }
 
     private var exceedsCharacterLimit: Bool {
-        textContent.count > Self.maxCharacterCount
+        visibleTextContent.count > Self.maxCharacterCount
     }
 
     private var shouldTruncate: Bool {

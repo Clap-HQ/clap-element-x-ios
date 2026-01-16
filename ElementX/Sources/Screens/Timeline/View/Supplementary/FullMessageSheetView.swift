@@ -18,7 +18,8 @@ struct FullMessageSheetView: View {
         NavigationStack {
             ScrollView {
                 if let attributedString = timelineItem.content.formattedBody {
-                    MessageText(attributedString: adjustedAttributedString(attributedString))
+                    MessageText(attributedString: adjustedAttributedString(attributedString),
+                                allowsTextSelection: true)
                         .tint(.compound.textLinkExternal)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(16)
@@ -45,7 +46,6 @@ struct FullMessageSheetView: View {
         .presentationDetents([.large])
     }
 
-    /// Adjusts code block background color for better visibility in modal
     private func adjustedAttributedString(_ original: AttributedString) -> AttributedString {
         var adjusted = original
 
@@ -55,10 +55,22 @@ struct FullMessageSheetView: View {
         container.foregroundColor = UIColor.compound.textPrimary
         adjusted.mergeAttributes(container, mergePolicy: .keepCurrent)
 
-        // Apply code block colors
         for run in adjusted.runs {
+            let range = run.range
+
+            // Apply blockquote styles with indentation
+            if run.blockquote == true {
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.firstLineHeadIndent = 12
+                paragraphStyle.headIndent = 12
+
+                adjusted[range].paragraphStyle = paragraphStyle
+                adjusted[range].foregroundColor = UIColor.compound.textSecondary
+                adjusted[range].font = UIFont.preferredFont(forTextStyle: .subheadline)
+            }
+
+            // Apply code block colors
             if run.codeBlock == true {
-                let range = run.range
                 adjusted[range].backgroundColor = UIColor.compound._bgCodeBlock(isOutgoing: false)
                 adjusted[range].foregroundColor = UIColor.compound._textCodeBlock(isOutgoing: false)
             }
