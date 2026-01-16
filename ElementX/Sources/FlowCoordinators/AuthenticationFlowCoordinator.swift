@@ -197,6 +197,11 @@ class AuthenticationFlowCoordinator: FlowCoordinatorProtocol {
             self?.showServerConfirmationScreen(authenticationFlow: .register)
         }
         stateMachine.addRoutes(event: .cancelledServerConfirmation, transitions: [.serverConfirmationScreen => .startScreen])
+        // Ignore cancelledServerConfirmation when in oidcAuthentication state
+        // This can happen when navigation stack pops serverConfirmationScreen while OIDC is in progress
+        stateMachine.addRoutes(event: .cancelledServerConfirmation, transitions: [.oidcAuthentication => .oidcAuthentication]) { _ in
+            MXLog.warning("Ignoring cancelledServerConfirmation event while in oidcAuthentication state")
+        }
         
         stateMachine.addRoutes(event: .changeServer(.login), transitions: [.serverConfirmationScreen => .serverSelectionScreen]) { [weak self] _ in
             self?.showServerSelectionScreen(authenticationFlow: .login)
@@ -227,6 +232,11 @@ class AuthenticationFlowCoordinator: FlowCoordinatorProtocol {
         }
         stateMachine.addRoutes(event: .cancelledPasswordLogin(previousState: .serverConfirmationScreen), transitions: [.loginScreen => .serverConfirmationScreen])
         stateMachine.addRoutes(event: .cancelledPasswordLogin(previousState: .startScreen), transitions: [.loginScreen => .startScreen])
+        // Ignore cancelledServerConfirmation when in loginScreen state
+        // This can happen when navigation stack pops serverConfirmationScreen while login is in progress
+        stateMachine.addRoutes(event: .cancelledServerConfirmation, transitions: [.loginScreen => .loginScreen]) { _ in
+            MXLog.warning("Ignoring cancelledServerConfirmation event while in loginScreen state")
+        }
         
         // Bug Report
         
