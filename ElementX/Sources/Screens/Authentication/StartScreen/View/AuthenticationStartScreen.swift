@@ -48,9 +48,7 @@ struct AuthenticationStartScreen: View {
             }
         }
         .navigationBarHidden(true)
-        .background {
-            AuthenticationStartScreenBackgroundImage()
-        }
+        .background(Color.compound.bgCanvasClap)
         .introspect(.window, on: .supportedVersions) { window in
             context.send(viewAction: .updateWindow(window))
         }
@@ -74,10 +72,10 @@ struct AuthenticationStartScreen: View {
                         .font(.compound.headingLGBold)
                         .foregroundColor(.compound.textPrimary)
                         .multilineTextAlignment(.center)
-                    Text(L10n.screenOnboardingWelcomeMessage(InfoPlistReader.main.productionAppName))
-                        .font(.compound.bodyLG)
-                        .foregroundColor(.compound.textSecondary)
-                        .multilineTextAlignment(.center)
+//                    Text(L10n.screenOnboardingWelcomeMessage(InfoPlistReader.main.productionAppName))
+//                        .font(.compound.bodyLG)
+//                        .foregroundColor(.compound.textSecondary)
+//                        .multilineTextAlignment(.center)
                 }
                 .padding()
                 .fixedSize(horizontal: false, vertical: true)
@@ -102,7 +100,7 @@ struct AuthenticationStartScreen: View {
             }
             
             Button { context.send(viewAction: .login) } label: {
-                Text(context.viewState.loginButtonTitle)
+                Text(L10n.actionSignIn)
             }
             .buttonStyle(.compound(.primary))
             .accessibilityIdentifier(A11yIdentifiers.authenticationStartScreen.signIn)

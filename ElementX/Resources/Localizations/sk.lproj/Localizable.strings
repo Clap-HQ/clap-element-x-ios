@@ -142,6 +142,7 @@
 "action_share" = "Zdieľať";
 "action_share_link" = "Zdieľať odkaz";
 "action_show" = "Zobraziť";
+"action_sign_in" = "Prihlásiť sa";
 "action_sign_in_again" = "Prihláste sa znova";
 "action_signout" = "Odhlásiť sa";
 "action_signout_anyway" = "Napriek tomu sa odhlásiť";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Vytvoriť účet";
 "screen_onboarding_welcome_message" = "Vitajte v najrýchlejšom %1$@ vôbec. Nadupaný pre rýchlosť a jednoduchosť.";
 "screen_onboarding_welcome_subtitle" = "Vitajte v %1$@. Nadupaný, pre rýchlosť a jednoduchosť.";
-"screen_onboarding_welcome_title" = "Buďte vo svojom elemente";
+"screen_onboarding_welcome_title" = "Vitajte v Clap";
 "screen_polls_history_empty_ongoing" = "Nepodarilo sa nájsť žiadne prebiehajúce ankety.";
 "screen_polls_history_empty_past" = "Nie je možné nájsť žiadne predchádzajúce ankety.";
 "screen_polls_history_filter_ongoing" = "Prebiehajúce";

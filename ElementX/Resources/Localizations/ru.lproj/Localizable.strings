@@ -142,6 +142,7 @@
 "action_share" = "Поделиться";
 "action_share_link" = "Поделиться ссылкой";
 "action_show" = "Показать";
+"action_sign_in" = "Войти";
 "action_sign_in_again" = "Повторите вход";
 "action_signout" = "Выйти";
 "action_signout_anyway" = "Все равно выйти";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Создать учетную запись";
 "screen_onboarding_welcome_message" = "Добро пожаловать в самый быстрый клиент %1$@. Ориентирован на скорость и простоту.";
 "screen_onboarding_welcome_subtitle" = "Добро пожаловать в %1$@. Ориентирован на скорость и простоту.";
-"screen_onboarding_welcome_title" = "Чувствуйте себя как дома с Element";
+"screen_onboarding_welcome_title" = "Добро пожаловать в Clap";
 "screen_polls_history_empty_ongoing" = "Не найдено текущих опросов.";
 "screen_polls_history_empty_past" = "Не найдено прошлых опросов.";
 "screen_polls_history_filter_ongoing" = "Текущие";

@@ -26,7 +26,7 @@ struct PinnedEventsTimelineScreen: View {
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
-            .background(.compound.bgRoomScreen)
+            .background(.compound.bgCanvasClap)
             .interactiveDismissDisabled()
             .timelineMediaPreview(viewModel: $context.mediaPreviewViewModel)
     }

@@ -142,6 +142,7 @@
 "action_share" = "Поділитися";
 "action_share_link" = "Поділитися посиланням";
 "action_show" = "Показати";
+"action_sign_in" = "Увійти";
 "action_sign_in_again" = "Увійдіть знову";
 "action_signout" = "Вийти";
 "action_signout_anyway" = "Все одно вийти";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Створити обліковий запис";
 "screen_onboarding_welcome_message" = "Ласкаво просимо до найшвидшого %1$@. Заряджений для швидкості та простоти.";
 "screen_onboarding_welcome_subtitle" = "Ласкаво просимо до %1$@. Заряджений, для швидкості та простоти.";
-"screen_onboarding_welcome_title" = "Будьте у своєму element";
+"screen_onboarding_welcome_title" = "Ласкаво просимо до Clap";
 "screen_polls_history_empty_ongoing" = "Не вдалося знайти жодних поточних опитувань.";
 "screen_polls_history_empty_past" = "Не вдалося знайти жодних минулих опитувань.";
 "screen_polls_history_filter_ongoing" = "Поточні";

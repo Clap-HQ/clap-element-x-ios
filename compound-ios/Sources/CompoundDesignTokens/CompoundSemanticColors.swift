@@ -25,10 +25,9 @@ public class CompoundUIColorTokens {
 //    public let bgBadgeDefault = UIColor(named: "bgBadgeDefault", in: Bundle.module, compatibleWith: nil)!
     public let bgBadgeDefault = CompoundCoreUIColorTokens.clapBgBadgeDefault
     public let bgBadgeInfo = UIColor(named: "bgBadgeInfo", in: Bundle.module, compatibleWith: nil)!
-//    public let bgCanvasDefault = CompoundCoreUIColorTokens.themeBg
-    public let bgCanvasDefault = CompoundCoreUIColorTokens.clapThemeBg
+    public let bgCanvasDefault = CompoundCoreUIColorTokens.themeBg
     public let bgCanvasDefaultLevel1 = UIColor(named: "bgCanvasDefaultLevel1", in: Bundle.module, compatibleWith: nil)!
-    public let bgRoomScreen = CompoundCoreUIColorTokens.clapRoomBg
+    public let bgCanvasClap = CompoundCoreUIColorTokens.clapThemeBg
     public let bgCanvasDisabled = CompoundCoreUIColorTokens.gray200
     public let bgCriticalHovered = CompoundCoreUIColorTokens.red1000
     public let bgCriticalPrimary = CompoundCoreUIColorTokens.red900
@@ -82,7 +81,7 @@ public class CompoundUIColorTokens {
     public let iconDisabled = CompoundCoreUIColorTokens.gray700
     public let iconInfoPrimary = CompoundCoreUIColorTokens.blue900
 //    public let iconOnSolidPrimary = CompoundCoreUIColorTokens.themeBg
-    public let iconOnSolidPrimary = CompoundCoreUIColorTokens.clapRoomBg
+    public let iconOnSolidPrimary = CompoundCoreUIColorTokens.clapThemeBg
     public let iconPrimary = CompoundCoreUIColorTokens.gray1400
     public let iconPrimaryAlpha = CompoundCoreUIColorTokens.alphaGray1400
     public let iconQuaternary = CompoundCoreUIColorTokens.gray700
@@ -135,7 +134,7 @@ public class CompoundColorTokens {
     public var bgBadgeInfo: Color { Color(uiColor: uiTokens.bgBadgeInfo) }
     public var bgCanvasDefault: Color { Color(uiColor: uiTokens.bgCanvasDefault) }
     public var bgCanvasDefaultLevel1: Color { Color(uiColor: uiTokens.bgCanvasDefaultLevel1) }
-    public var bgRoomScreen: Color { Color(uiColor: uiTokens.bgRoomScreen) }
+    public var bgCanvasClap: Color { Color(uiColor: uiTokens.bgCanvasClap) }
     public var bgCanvasDisabled: Color { Color(uiColor: uiTokens.bgCanvasDisabled) }
     public var bgCriticalHovered: Color { Color(uiColor: uiTokens.bgCriticalHovered) }
     public var bgCriticalPrimary: Color { Color(uiColor: uiTokens.bgCriticalPrimary) }

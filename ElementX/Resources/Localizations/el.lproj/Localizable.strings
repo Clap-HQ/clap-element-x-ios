@@ -142,6 +142,7 @@
 "action_share" = "Κοινή χρήση";
 "action_share_link" = "Κοινή χρήση συνδέσμου";
 "action_show" = "Εμφάνιση";
+"action_sign_in" = "Σύνδεση";
 "action_sign_in_again" = "Συνδέσου ξανά";
 "action_signout" = "Αποσύνδεση";
 "action_signout_anyway" = "Αποσύνδεση ούτως ή άλλως";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Δημιουργία λογαριασμού";
 "screen_onboarding_welcome_message" = "Καλώς ήλθατε στο γρηγορότερο %1$@ όλων των εποχών. Υπερτροφοδοτούμενο με ταχύτητα και απλότητα.";
 "screen_onboarding_welcome_subtitle" = "Καλώς ήρθες στο %1$@. Υπερφορτισμένο, για ταχύτητα και απλότητα.";
-"screen_onboarding_welcome_title" = "Μείνε στο element σου";
+"screen_onboarding_welcome_title" = "Καλώς ήρθατε στο Clap";
 "screen_polls_history_empty_ongoing" = "Δεν είναι δυνατή η εύρεση ενεργών δημοσκοπήσεων";
 "screen_polls_history_empty_past" = "Δεν είναι δυνατή η εύρεση παλιών δημοσκοπήσεων";
 "screen_polls_history_filter_ongoing" = "Σε εξέλιξη";

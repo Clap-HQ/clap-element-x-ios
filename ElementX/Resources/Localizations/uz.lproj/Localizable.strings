@@ -142,6 +142,7 @@
 "action_share" = "Ulashish";
 "action_share_link" = "Havolani ulashing";
 "action_show" = "Koʻrsatish";
+"action_sign_in" = "Kirish";
 "action_sign_in_again" = "Qaytadan kiring";
 "action_signout" = "Tizimdan chiqish";
 "action_signout_anyway" = "Baribir tizimdan chiqing";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Hisob yaratish";
 "screen_onboarding_welcome_message" = "Eng tezkor %1$@ga xush kelibsiz. Tezlik va oddylik uchun super zaryadlangan.";
 "screen_onboarding_welcome_subtitle" = "%1$@ga Xush kelibsiz. Tezlik va oddylik uchun o'ta zaryadlangan.";
-"screen_onboarding_welcome_title" = "Elementingizda bo'ling";
+"screen_onboarding_welcome_title" = "Clap'ga xush kelibsiz";
 "screen_polls_history_empty_ongoing" = "Davom etayotgan soʻrovlar topilmadi.";
 "screen_polls_history_empty_past" = "Avvalgi soʻrovnomalar topilmadi.";
 "screen_polls_history_filter_ongoing" = "Jarayonda";

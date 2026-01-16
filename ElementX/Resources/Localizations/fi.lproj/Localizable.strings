@@ -142,6 +142,7 @@
 "action_share" = "Jaa";
 "action_share_link" = "Jaa linkki";
 "action_show" = "Näytä";
+"action_sign_in" = "Kirjaudu sisään";
 "action_sign_in_again" = "Kirjaudu uudelleen";
 "action_signout" = "Kirjaudu ulos";
 "action_signout_anyway" = "Kirjaudu ulos silti";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Luo tili";
 "screen_onboarding_welcome_message" = "Tervetuloa kaikkien aikojen nopeimpaan %1$@ -sovellukseen. Ahdettu nopeudella ja yksinkertaisuudella.";
 "screen_onboarding_welcome_subtitle" = "Tervetuloa %1$@ -sovellukseen. Ahdettu nopeudella ja yksinkertaisuudella.";
-"screen_onboarding_welcome_title" = "Ole elementissäsi";
+"screen_onboarding_welcome_title" = "Tervetuloa Clap-sovellukseen";
 "screen_polls_history_empty_ongoing" = "Meneillään olevia kyselyjä ei löytynyt.";
 "screen_polls_history_empty_past" = "Aiempia kyselyjä ei löytynyt.";
 "screen_polls_history_filter_ongoing" = "Meneillään olevat";

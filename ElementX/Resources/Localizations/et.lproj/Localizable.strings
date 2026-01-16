@@ -142,6 +142,7 @@
 "action_share" = "Jaga";
 "action_share_link" = "Jaga linki";
 "action_show" = "Näita";
+"action_sign_in" = "Logi sisse";
 "action_sign_in_again" = "Logi uuesti sisse";
 "action_signout" = "Logi välja";
 "action_signout_anyway" = "Ikkagi logi välja";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Loo kasutajakonto";
 "screen_onboarding_welcome_message" = "Läbi aegade kiireim ja mugavaim %1$@.";
 "screen_onboarding_welcome_subtitle" = "Tere tulemast kasutama kiiret ja lihtsat suhtlusrakendust %1$@.";
-"screen_onboarding_welcome_title" = "Ole oma elemendis";
+"screen_onboarding_welcome_title" = "Tere tulemast Clap-i";
 "screen_polls_history_empty_ongoing" = "Ei leia ühtegi käimasolevat küsitlust.";
 "screen_polls_history_empty_past" = "Ei leia ühtegi varasemat küsitlust.";
 "screen_polls_history_filter_ongoing" = "Käimasolev küsitlus";

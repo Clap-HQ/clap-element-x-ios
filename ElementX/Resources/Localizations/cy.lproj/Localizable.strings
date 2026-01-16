@@ -142,6 +142,7 @@
 "action_share" = "Rhannu";
 "action_share_link" = "Rhannwch ddolen";
 "action_show" = "Dangos";
+"action_sign_in" = "Mewngofnodi";
 "action_sign_in_again" = "Mewngofnodi eto";
 "action_signout" = "Allgofnodi";
 "action_signout_anyway" = "Allgofnodi beth bynnag";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Creu cyfrif";
 "screen_onboarding_welcome_message" = "Croeso i'r %1$@ cyflymaf erioed. Yn nodedig am gyflymder a symlrwydd.";
 "screen_onboarding_welcome_subtitle" = "Croeso i %1$@. Yn nodedig ar gyfer cyflymder a symlrwydd.";
-"screen_onboarding_welcome_title" = "Byddwch yn eich elfen";
+"screen_onboarding_welcome_title" = "Croeso i Clap";
 "screen_polls_history_empty_ongoing" = "Methu dod o hyd i unrhyw bleidleisiau cyfredol.";
 "screen_polls_history_empty_past" = "Methu dod o hyd i unrhyw bleidleisiau blaenorol.";
 "screen_polls_history_filter_ongoing" = "Parhaus";
