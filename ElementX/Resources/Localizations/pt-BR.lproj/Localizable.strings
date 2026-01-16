@@ -142,6 +142,7 @@
 "action_share" = "Compartilhar";
 "action_share_link" = "Compartilhar link";
 "action_show" = "Mostrar";
+"action_sign_in" = "Entrar";
 "action_sign_in_again" = "Entrar novamente";
 "action_signout" = "Sair";
 "action_signout_anyway" = "Sair mesmo assim";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Criar conta";
 "screen_onboarding_welcome_message" = "Boas-vindas ao %1$@ mais rápido de todos os tempos. Turbinado para velocidade e simplicidade.";
 "screen_onboarding_welcome_subtitle" = "Bem-vindo ao %1$@. Turbinado, para velocidade e simplicidade";
-"screen_onboarding_welcome_title" = "Esteja no seu elemento";
+"screen_onboarding_welcome_title" = "Bem-vindo ao Clap";
 "screen_polls_history_empty_ongoing" = "Não foi possível encontrar nenhuma enquete em andamento.";
 "screen_polls_history_empty_past" = "Não foi possível encontrar nenhuma enquete anterior.";
 "screen_polls_history_filter_ongoing" = "Em andamento";

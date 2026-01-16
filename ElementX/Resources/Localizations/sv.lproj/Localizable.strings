@@ -142,6 +142,7 @@
 "action_share" = "Dela";
 "action_share_link" = "Dela länk";
 "action_show" = "Visa";
+"action_sign_in" = "Logga in";
 "action_sign_in_again" = "Logga in igen";
 "action_signout" = "Logga ut";
 "action_signout_anyway" = "Logga ut ändå";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Skapa konto";
 "screen_onboarding_welcome_message" = "Välkommen till den snabbaste %1$@ någonsin. Superladdad för snabbhet och enkelhet.";
 "screen_onboarding_welcome_subtitle" = "Välkommen till %1$@. Superladdad, för snabbhet och enkelhet.";
-"screen_onboarding_welcome_title" = "Var i ditt rätta element";
+"screen_onboarding_welcome_title" = "Välkommen till Clap";
 "screen_polls_history_empty_ongoing" = "Kan inte hitta några pågående omröstningar.";
 "screen_polls_history_empty_past" = "Kan inte hitta några tidigare omröstningar.";
 "screen_polls_history_filter_ongoing" = "Pågående";

@@ -142,6 +142,7 @@
 "action_share" = "Sdílet";
 "action_share_link" = "Sdílet odkaz";
 "action_show" = "Zobrazit";
+"action_sign_in" = "Přihlásit se";
 "action_sign_in_again" = "Přihlásit se znovu";
 "action_signout" = "Odhlásit se";
 "action_signout_anyway" = "Přesto se odhlásit";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Vytvořit účet";
 "screen_onboarding_welcome_message" = "Vítejte v dosud nejrychlejším %1$@u. Vylepšený pro rychlost a jednoduchost.";
 "screen_onboarding_welcome_subtitle" = "Vítejte v %1$@u. Vylepšený, pro rychlost a jednoduchost.";
-"screen_onboarding_welcome_title" = "Buďte ve svém živlu";
+"screen_onboarding_welcome_title" = "Vítejte v Clap";
 "screen_polls_history_empty_ongoing" = "Nelze najít žádná probíhající hlasování.";
 "screen_polls_history_empty_past" = "Nelze najít žádná minulá hlasování.";
 "screen_polls_history_filter_ongoing" = "Probíhající";

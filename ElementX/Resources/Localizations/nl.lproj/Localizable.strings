@@ -142,6 +142,7 @@
 "action_share" = "Delen";
 "action_share_link" = "Link delen";
 "action_show" = "Toon";
+"action_sign_in" = "Inloggen";
 "action_sign_in_again" = "Log opnieuw in";
 "action_signout" = "Uitloggen";
 "action_signout_anyway" = "Toch uitloggen";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Account aanmaken";
 "screen_onboarding_welcome_message" = "Welkom bij de snelste %1$@ ooit. Supercharged, voor snelheid en eenvoud.";
 "screen_onboarding_welcome_subtitle" = "Welkom bij %1$@. Supercharged, voor snelheid en eenvoud.";
-"screen_onboarding_welcome_title" = "Wees in je element";
+"screen_onboarding_welcome_title" = "Welkom bij Clap";
 "screen_polls_history_empty_ongoing" = "Kan geen actieve peilingen vinden.";
 "screen_polls_history_empty_past" = "Kan geen eerdere peilingen vinden.";
 "screen_polls_history_filter_ongoing" = "Actief";

@@ -142,6 +142,7 @@
 "action_share" = "Del";
 "action_share_link" = "Del link";
 "action_show" = "Vis";
+"action_sign_in" = "Log ind";
 "action_sign_in_again" = "Log ind igen";
 "action_signout" = "Log ud";
 "action_signout_anyway" = "Log ud alligevel";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Opret konto";
 "screen_onboarding_welcome_message" = "Velkommen til den hurtigste %1$@ nogensinde. Supercharged til hastighed og enkelhed.";
 "screen_onboarding_welcome_subtitle" = "Velkommen til %1$@. Ladet med hastighed og enkelhed.";
-"screen_onboarding_welcome_title" = "Vær i dit rette Element";
+"screen_onboarding_welcome_title" = "Velkommen til Clap";
 "screen_polls_history_empty_ongoing" = "Kan ikke finde nogen igangværende afstemninger.";
 "screen_polls_history_empty_past" = "Kan ikke finde nogen tidligere afstemninger.";
 "screen_polls_history_filter_ongoing" = "Igangværende";

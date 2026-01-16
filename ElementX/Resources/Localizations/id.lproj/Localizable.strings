@@ -142,6 +142,7 @@
 "action_share" = "Bagikan";
 "action_share_link" = "Bagikan tautan";
 "action_show" = "Tampilkan";
+"action_sign_in" = "Masuk";
 "action_sign_in_again" = "Masuk lagi";
 "action_signout" = "Keluar dari akun";
 "action_signout_anyway" = "Keluar saja";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Buat akun";
 "screen_onboarding_welcome_message" = "Selamat datang di %1$@ tercepat yang pernah ada. Berdaya besar untuk kecepatan dan kesederhanaan.";
 "screen_onboarding_welcome_subtitle" = "Selamat datang di %1$@. Berdaya penuh, untuk kecepatan dan kesederhanaan.";
-"screen_onboarding_welcome_title" = "Berada di elemen Anda";
+"screen_onboarding_welcome_title" = "Selamat datang di Clap";
 "screen_polls_history_empty_ongoing" = "Tidak dapat menemukan pemungutan suara yang sedang berlangsung.";
 "screen_polls_history_empty_past" = "Tidak dapat menemukan pemungutan suara sebelumnya.";
 "screen_polls_history_filter_ongoing" = "Sedang berlangsung";

@@ -142,6 +142,7 @@
 "action_share" = "分享";
 "action_share_link" = "分享連結";
 "action_show" = "顯示";
+"action_sign_in" = "登入";
 "action_sign_in_again" = "再登入一次";
 "action_signout" = "登出";
 "action_signout_anyway" = "直接登出";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "建立帳號";
 "screen_onboarding_welcome_message" = "歡迎使用有史以來最快的 %1$@。速度超快，操作簡便。";
 "screen_onboarding_welcome_subtitle" = "歡迎使用 %1$@。速度超快且簡單。";
-"screen_onboarding_welcome_title" = "Be in your element";
+"screen_onboarding_welcome_title" = "歡迎使用 Clap";
 "screen_polls_history_empty_ongoing" = "沒有進行中的投票。";
 "screen_polls_history_empty_past" = "沒有已結束的投票。";
 "screen_polls_history_filter_ongoing" = "進行中";

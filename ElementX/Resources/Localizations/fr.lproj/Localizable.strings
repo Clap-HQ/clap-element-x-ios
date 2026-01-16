@@ -142,6 +142,7 @@
 "action_share" = "Partager";
 "action_share_link" = "Partager le lien";
 "action_show" = "Afficher";
+"action_sign_in" = "Se connecter";
 "action_sign_in_again" = "Se connecter à nouveau";
 "action_signout" = "Se déconnecter";
 "action_signout_anyway" = "Se déconnecter quand même";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Créer un compte";
 "screen_onboarding_welcome_message" = "Bienvenue dans l’application %1$@ la plus rapide de tous les temps. Boosté pour plus de rapidité et de simplicité.";
 "screen_onboarding_welcome_subtitle" = "Bienvenue sur %1$@. Boosté, pour plus de rapidité et de simplicité.";
-"screen_onboarding_welcome_title" = "Soyez dans votre Element";
+"screen_onboarding_welcome_title" = "Bienvenue sur Clap";
 "screen_polls_history_empty_ongoing" = "Impossible de trouver des sondages en cours.";
 "screen_polls_history_empty_past" = "Impossible de trouver des sondages terminés.";
 "screen_polls_history_filter_ongoing" = "En cours";

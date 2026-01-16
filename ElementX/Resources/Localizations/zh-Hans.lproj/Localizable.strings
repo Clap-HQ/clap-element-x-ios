@@ -142,6 +142,7 @@
 "action_share" = "分享";
 "action_share_link" = "分享链接";
 "action_show" = "显示";
+"action_sign_in" = "登录";
 "action_sign_in_again" = "再次登录";
 "action_signout" = "登出";
 "action_signout_anyway" = "仍然登出";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "创建账户";
 "screen_onboarding_welcome_message" = "欢迎使用 %1$@，快而简约的消息应用。";
 "screen_onboarding_welcome_subtitle" = "欢迎使用 %1$@，速度与简洁的极致。";
-"screen_onboarding_welcome_title" = "融入您的 Element";
+"screen_onboarding_welcome_title" = "欢迎使用 Clap";
 "screen_polls_history_empty_ongoing" = "无法找到正在进行的投票。";
 "screen_polls_history_empty_past" = "无法找到历史投票";
 "screen_polls_history_filter_ongoing" = "正在进行";

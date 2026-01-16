@@ -322,6 +322,8 @@ internal enum L10n {
   internal static var actionShareLink: String { return L10n.tr("Localizable", "action_share_link") }
   /// Show
   internal static var actionShow: String { return L10n.tr("Localizable", "action_show") }
+  /// Sign in
+  internal static var actionSignIn: String { return L10n.tr("Localizable", "action_sign_in") }
   /// Sign in again
   internal static var actionSignInAgain: String { return L10n.tr("Localizable", "action_sign_in_again") }
   /// Sign out
@@ -2080,7 +2082,7 @@ internal enum L10n {
   internal static func screenOnboardingWelcomeSubtitle(_ p1: Any) -> String {
     return L10n.tr("Localizable", "screen_onboarding_welcome_subtitle", String(describing: p1))
   }
-  /// Be in your element
+  /// Welcome to Clap
   internal static var screenOnboardingWelcomeTitle: String { return L10n.tr("Localizable", "screen_onboarding_welcome_title") }
   /// Press on a message and choose “%1$@” to include here.
   internal static func screenPinnedTimelineEmptyStateDescription(_ p1: Any) -> String {

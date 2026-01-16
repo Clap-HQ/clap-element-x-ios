@@ -24,7 +24,7 @@ struct ThreadTimelineScreen: View {
         
     var body: some View {
         TimelineView(timelineContext: timelineContext)
-            .background(.compound.bgRoomScreen)
+            .background(.compound.bgCanvasClap)
             .toolbarRole(RoomHeaderView.toolbarRole)
             .navigationTitle(L10n.commonThread)
             .navigationBarTitleDisplayMode(.inline)
@@ -39,7 +39,7 @@ struct ThreadTimelineScreen: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 composer
                     .padding(.top, 8)
-                    .background(Color.compound.bgRoomScreen.ignoresSafeArea())
+                    .background(Color.compound.bgCanvasClap.ignoresSafeArea())
                     .environmentObject(timelineContext)
                     .environment(\.timelineContext, timelineContext)
                     // Make sure the reply header honours the hideTimelineMedia setting too.

@@ -42,9 +42,11 @@ struct ServerConfirmationScreenViewState: BindableState {
         case .confirmation(let accountProvider):
             switch authenticationFlow {
             case .login:
-                L10n.screenServerConfirmationTitleLogin(accountProvider)
+//                L10n.screenServerConfirmationTitleLogin(accountProvider)
+                L10n.actionSignIn
             case .register:
-                L10n.screenServerConfirmationTitleRegister(accountProvider)
+//                L10n.screenServerConfirmationTitleRegister(accountProvider)
+                L10n.screenCreateAccountTitle
             }
         case .picker:
             L10n.screenServerConfirmationTitlePickerMode

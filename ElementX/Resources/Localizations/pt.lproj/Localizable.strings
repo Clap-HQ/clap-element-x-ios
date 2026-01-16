@@ -142,6 +142,7 @@
 "action_share" = "Partilhar";
 "action_share_link" = "Partilhar ligação";
 "action_show" = "Mostrar";
+"action_sign_in" = "Iniciar sessão";
 "action_sign_in_again" = "Iniciar sessão novamente";
 "action_signout" = "Terminar sessão";
 "action_signout_anyway" = "Terminar mesmo assim";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Criar conta";
 "screen_onboarding_welcome_message" = "Bem-vindo(a) à %1$@ mais rápida de sempre. Super rápida e simples.";
 "screen_onboarding_welcome_subtitle" = "Bem-vindo(a) à %1$@. Revitalizado, rápido e simples.";
-"screen_onboarding_welcome_title" = "A liberdade do teu elemento";
+"screen_onboarding_welcome_title" = "Bem-vindo ao Clap";
 "screen_polls_history_empty_ongoing" = "Não foi possível encontrar nenhuma sondagem em curso.";
 "screen_polls_history_empty_past" = "Não foi possível encontrar nenhuma sondagem anterior.";
 "screen_polls_history_filter_ongoing" = "Em curso";

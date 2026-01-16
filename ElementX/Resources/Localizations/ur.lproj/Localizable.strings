@@ -142,6 +142,7 @@
 "action_share" = "اشتراک کریں";
 "action_share_link" = "ربط کا اشتراک کریں";
 "action_show" = "Show";
+"action_sign_in" = "داخل ہوں";
 "action_sign_in_again" = "دوبارہ داخل ہوں";
 "action_signout" = "خارج ہوں";
 "action_signout_anyway" = "بہرحال خارج ہوں";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "کھاتہ تخلیق کریں";
 "screen_onboarding_welcome_message" = "اب تک کی تیز ترین %1$@ میں خوش آمدید۔ رفتار اور سادگی کے لئے مشحون";
 "screen_onboarding_welcome_subtitle" = "%1$@ پر خوش آمدید۔ شحن فائق شدہ، رفتار اور سادگی کیلئے۔";
-"screen_onboarding_welcome_title" = "اپنے عنصر میں رہیں";
+"screen_onboarding_welcome_title" = "Clap میں خوش آمدید";
 "screen_polls_history_empty_ongoing" = "کوئی جاری رائے شماری ہا نہیں مل سکے۔";
 "screen_polls_history_empty_past" = "ماضی کے کوئی رائے شماری ہا نہیں مل سکے۔";
 "screen_polls_history_filter_ongoing" = "جاری";

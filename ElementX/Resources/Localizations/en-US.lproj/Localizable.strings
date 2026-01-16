@@ -142,6 +142,7 @@
 "action_share" = "Share";
 "action_share_link" = "Share link";
 "action_show" = "Show";
+"action_sign_in" = "Sign in";
 "action_sign_in_again" = "Sign in again";
 "action_signout" = "Sign out";
 "action_signout_anyway" = "Sign out anyway";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Create account";
 "screen_onboarding_welcome_message" = "Welcome to the fastest %1$@ ever. Supercharged for speed and simplicity.";
 "screen_onboarding_welcome_subtitle" = "Welcome to %1$@. Supercharged, for speed and simplicity.";
-"screen_onboarding_welcome_title" = "Be in your element";
+"screen_onboarding_welcome_title" = "Welcome to Clap";
 "screen_polls_history_empty_ongoing" = "Can't find any ongoing polls.";
 "screen_polls_history_empty_past" = "Can't find any past polls.";
 "screen_polls_history_filter_ongoing" = "Ongoing";

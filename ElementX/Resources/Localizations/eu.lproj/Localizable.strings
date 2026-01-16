@@ -142,6 +142,7 @@
 "action_share" = "Partekatu";
 "action_share_link" = "Partekatu esteka";
 "action_show" = "Erakutsi";
+"action_sign_in" = "Hasi saioa";
 "action_sign_in_again" = "Hasi saioa berriro";
 "action_signout" = "Amaitu saioa";
 "action_signout_anyway" = "Amaitu saioa edonola ere";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Sortu kontua";
 "screen_onboarding_welcome_message" = "Ongi etorri inoizko %1$@ azkarrenera. Abiaduraz eta sinpletasunaz gainkargatua.";
 "screen_onboarding_welcome_subtitle" = "Ongi etorri %1$@-ra. Abiaduraz eta sinpletasunez gainezka.";
-"screen_onboarding_welcome_title" = "Egon zure saltsan";
+"screen_onboarding_welcome_title" = "Ongi etorri Clap-era";
 "screen_polls_history_empty_ongoing" = "Ezin da abian dagoen inkestarik aurkitu.";
 "screen_polls_history_empty_past" = "Ezin da iraungitako inkestarik aurkitu.";
 "screen_polls_history_filter_ongoing" = "Abian direnak";
