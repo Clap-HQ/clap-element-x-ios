@@ -35,17 +35,17 @@ struct EncryptedRoomTimelineView: View {
     var body: some View {
         TimelineStyler(timelineItem: timelineItem) {
             Label(timelineItem.body, icon: icon, iconSize: .small, relativeTo: .compound.bodyLG)
-                .labelStyle(RoomTimelineViewLabelStyle())
+                .labelStyle(RoomTimelineViewPlaceholderLabelStyle())
                 .font(.compound.bodyLG)
         }
     }
 }
 
-struct RoomTimelineViewLabelStyle: LabelStyle {
+struct RoomTimelineViewPlaceholderLabelStyle: LabelStyle {
     @Environment(\.timelineBubbleIsOutgoing) private var isOutgoing
     
     func makeBody(configuration: Configuration) -> some View {
-        HStack(alignment: .center, spacing: 8) {
+        HStack(alignment: .top, spacing: 8) {
             configuration.icon
                 .foregroundColor(Color.compound.iconBubble(isOutgoing: isOutgoing))
             configuration.title

@@ -214,8 +214,8 @@ class ThreadListScreenViewModel: ThreadListScreenViewModelType, ThreadListScreen
         switch result {
         case .success(let timelineEvent):
             do {
-                let eventType = try timelineEvent.eventType()
-                switch eventType {
+                let eventContent = try timelineEvent.content()
+                switch eventContent {
                 case .messageLike(let content):
                     switch content {
                     case .roomMessage(let messageType, _):
@@ -229,7 +229,7 @@ class ThreadListScreenViewModel: ThreadListScreenViewModelType, ThreadListScreen
                     return nil
                 }
             } catch {
-                MXLog.error("Failed to get event type for \(eventID): \(error)")
+                MXLog.error("Failed to get event content for \(eventID): \(error)")
                 return nil
             }
         case .failure(let error):

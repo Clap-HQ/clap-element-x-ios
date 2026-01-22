@@ -176,8 +176,8 @@ class ClientProxy: ClientProxyProtocol {
         
         secureBackupController = SecureBackupController(encryption: client.encryption())
         
-        spaceService = SpaceServiceProxy(spaceService: client.spaceService())
-
+        spaceService = await SpaceServiceProxy(spaceService: client.spaceService())
+        
         // Initialize MatrixAPIService for direct Matrix REST API calls
         // Used when MatrixRustSDK doesn't expose certain APIs
         matrixAPI = MatrixAPIService(homeserverURL: client.homeserver()) { [weak client] in
@@ -325,6 +325,17 @@ class ClientProxy: ClientProxyProtocol {
                 return try await client.isLivekitRtcSupported()
             } catch {
                 MXLog.error("Failed checking LiveKit RTC support with error: \(error)")
+                return false
+            }
+        }
+    }
+    
+    var isLoginWithQRCodeSupported: Bool {
+        get async {
+            do {
+                return try await client.isLoginWithQrCodeSupported()
+            } catch {
+                MXLog.error("Failed checking QR code support with error: \(error)")
                 return false
             }
         }
@@ -480,25 +491,26 @@ class ClientProxy: ClientProxyProtocol {
     
     func createRoom(name: String,
                     topic: String?,
-                    isRoomPrivate: Bool,
-                    isKnockingOnly: Bool,
+                    accessType: CreateRoomAccessType,
+                    isSpace: Bool,
                     userIDs: [String],
                     avatarURL: URL?,
                     aliasLocalPart: String?) async -> Result<String, ClientProxyError> {
         do {
             let parameters = CreateRoomParameters(name: name,
                                                   topic: topic,
-                                                  isEncrypted: isRoomPrivate,
+                                                  isEncrypted: accessType.isEncrypted,
                                                   isDirect: false,
-                                                  visibility: isRoomPrivate ? .private : .public,
-                                                  preset: isRoomPrivate ? .privateChat : .publicChat,
+                                                  visibility: accessType.visibility,
+                                                  preset: accessType.preset,
                                                   invite: userIDs,
                                                   avatar: avatarURL?.absoluteString,
-                                                  powerLevelContentOverride: isKnockingOnly ? Self.knockingRoomCreationPowerLevelOverrides : Self.roomCreationPowerLevelOverrides,
-                                                  joinRuleOverride: isKnockingOnly ? .knock : nil,
-                                                  historyVisibilityOverride: isRoomPrivate ? .invited : nil,
+                                                  powerLevelContentOverride: accessType == .askToJoin ? Self.knockingRoomCreationPowerLevelOverrides : Self.roomCreationPowerLevelOverrides,
+                                                  joinRuleOverride: accessType.joinRuleOverride,
+                                                  historyVisibilityOverride: accessType.historyVisibilityOverride,
                                                   // This is an FFI naming mistake, what is required is the `aliasLocalPart` not the whole alias
-                                                  canonicalAlias: aliasLocalPart)
+                                                  canonicalAlias: aliasLocalPart,
+                                                  isSpace: isSpace)
             let roomID = try await client.createRoom(request: parameters)
             
             await waitForRoomToSync(roomID: roomID)
@@ -516,15 +528,16 @@ class ClientProxy: ClientProxyProtocol {
                            visibility: SpaceRoomVisibility,
                            isEncrypted: Bool,
                            avatarURL: URL?) async -> Result<String, ClientProxyError> {
-        // Determine isRoomPrivate based on visibility
-        // Public rooms are not private, all others are private
-        let isRoomPrivate = visibility != .publicRoom
+        // Determine accessType based on visibility
+        // Public rooms use .public, encrypted private rooms use .private
+        let accessType: CreateRoomAccessType = visibility == .publicRoom ? .public : .private
 
         // 1. Create the room using existing method
+        // Note: Encryption is handled by createRoom when accessType is .private
         let createResult = await createRoom(name: name,
                                             topic: topic,
-                                            isRoomPrivate: isRoomPrivate,
-                                            isKnockingOnly: false,
+                                            accessType: isEncrypted ? accessType : .public,
+                                            isSpace: false,
                                             userIDs: [],
                                             avatarURL: avatarURL,
                                             aliasLocalPart: nil)
@@ -797,13 +810,9 @@ class ClientProxy: ClientProxyProtocol {
             return .failure(.sdkError(error))
         }
     }
-
-    func logout() async {
-        do {
-            try await client.logout()
-        } catch {
-            MXLog.error("Failed logging out with error: \(error)")
-        }
+    
+    func linkNewDeviceService() -> LinkNewDeviceServiceProtocol {
+        LinkNewDeviceService(handler: client.newGrantLoginWithQrCodeHandler())
     }
     
     func deactivateAccount(password: String?, eraseData: Bool) async -> Result<Void, ClientProxyError> {
@@ -813,6 +822,14 @@ class ClientProxy: ClientProxyProtocol {
             return .success(())
         } catch {
             return .failure(.sdkError(error))
+        }
+    }
+    
+    func logout() async {
+        do {
+            try await client.logout()
+        } catch {
+            MXLog.error("Failed logging out with error: \(error)")
         }
     }
     
@@ -881,6 +898,24 @@ class ClientProxy: ClientProxyProtocol {
             return try await .success(client.clearCaches(syncService: syncService))
         } catch {
             MXLog.error("Failed clearing client caches with error: \(error)")
+            return .failure(.sdkError(error))
+        }
+    }
+    
+    func optimizeStores() async -> Result<Void, ClientProxyError> {
+        do {
+            return try await .success(client.optimizeStores())
+        } catch {
+            MXLog.error("Failed optimizing client stores with error: \(error)")
+            return .failure(.sdkError(error))
+        }
+    }
+    
+    func storeSizes() async -> Result<StoreSizes, ClientProxyError> {
+        do {
+            return try await .success(client.getStoreSizes())
+        } catch {
+            MXLog.error("Failed optimizing client stores with error: \(error)")
             return .failure(.sdkError(error))
         }
     }
@@ -1357,6 +1392,38 @@ private extension TimelineMediaVisibility {
             .off
         case .privateOnly:
             .private
+        }
+    }
+}
+
+private extension CreateRoomAccessType {
+    var isEncrypted: Bool {
+        switch self {
+        case .public:
+            false
+        case .askToJoin, .private:
+            true
+        }
+    }
+    
+    var visibility: RoomVisibility {
+        isPrivate ? .private : .public
+    }
+    
+    var preset: RoomPreset {
+        isPrivate ? .privateChat : .publicChat
+    }
+    
+    var historyVisibilityOverride: RoomHistoryVisibility? {
+        isPrivate ? .invited : nil
+    }
+    
+    var joinRuleOverride: JoinRule? {
+        switch self {
+        case .askToJoin:
+            .knock
+        case .private, .public:
+            nil
         }
     }
 }

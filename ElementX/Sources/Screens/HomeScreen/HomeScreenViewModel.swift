@@ -295,7 +295,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
     private func setupSpaceSubscriptions() {
         // React to groupSpaceRooms setting changes
         developerModeSettings.$groupSpaceRooms
-            .combineLatest(spaceService.joinedSpacesPublisher)
+            .combineLatest(spaceService.topLevelSpacesPublisher)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _, spaces in
                 guard let self else { return }
@@ -304,7 +304,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             .store(in: &cancellables)
     }
 
-    private func updateSpaces(from spaceProxies: [SpaceRoomProxyProtocol]) {
+    private func updateSpaces(from spaceProxies: [SpaceServiceRoomProtocol]) {
         // Only show space cells if groupSpaceRooms is enabled
         if developerModeSettings.groupSpaceRooms {
             // Track child rooms for each space to hide them from main chat list
@@ -323,7 +323,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         }
     }
 
-    private func updateSpaceChildrenTracking(for spaceProxies: [SpaceRoomProxyProtocol]) async {
+    private func updateSpaceChildrenTracking(for spaceProxies: [SpaceServiceRoomProtocol]) async {
         let currentSpaceIDs = Set(spaceProxies.map(\.id))
         let existingSpaceIDs = Set(spaceRoomListProxies.keys)
 
@@ -425,7 +425,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         let summaryByID = Dictionary(uniqueKeysWithValues: summaries.map { ($0.id, $0) })
 
         state.spaces = spaceRoomListProxies.compactMap { spaceID, proxy -> HomeScreenSpace? in
-            guard let spaceProxy = spaceService.joinedSpacesPublisher.value.first(where: { $0.id == spaceID }) else {
+            guard let spaceProxy = spaceService.topLevelSpacesPublisher.value.first(where: { $0.id == spaceID }) else {
                 return nil
             }
 

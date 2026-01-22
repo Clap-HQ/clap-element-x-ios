@@ -12,6 +12,7 @@ import UIKit
 enum SettingsScreenViewModelAction: Equatable {
     case close
     case userDetails
+    case linkNewDevice
     case manageAccount(url: URL)
     case analytics
     case appLock
@@ -36,6 +37,7 @@ enum SettingsScreenSecuritySectionMode {
 struct SettingsScreenViewState: BindableState {
     var deviceID: String?
     var userID: String
+    var showLinkNewDeviceButton: Bool
     var accountProfileURL: URL?
     var accountSessionsListURL: URL?
     var showAccountDeactivation: Bool
@@ -68,6 +70,7 @@ enum SettingsScreenViewAction {
     case about
     case blockedUsers
     case secureBackup
+    case linkNewDevice
     case manageAccount(url: URL)
     case notifications
     case enableDeveloperOptions
