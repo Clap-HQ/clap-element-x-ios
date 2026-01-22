@@ -16,10 +16,13 @@ enum SpaceRoomListProxyError: Error {
 // sourcery: AutoMockable
 protocol SpaceRoomListProxyProtocol {
     var id: String { get }
-    
+
     var spaceRoomProxyPublisher: CurrentValuePublisher<SpaceRoomProxyProtocol, Never> { get }
     var spaceRoomsPublisher: CurrentValuePublisher<[SpaceRoomProxyProtocol], Never> { get }
     var paginationStatePublisher: CurrentValuePublisher<SpaceRoomListPaginationState, Never> { get }
-    
+
     func paginate() async
+
+    /// Releases SDK resources to prevent holding database locks during background suspension.
+    func cleanup()
 }

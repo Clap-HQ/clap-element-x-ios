@@ -150,6 +150,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         
         setupRoomListSubscriptions()
         setupSpaceSubscriptions()
+        setupBackgroundObserver()
 
         // updateRooms() will be called by subscriptions
         // When groupSpaceRooms is enabled, rooms will be updated after space tracking completes
@@ -302,6 +303,31 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             .store(in: &cancellables)
     }
 
+    private func setupBackgroundObserver() {
+        // Observe app entering background to cleanup SDK resources
+        NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.cleanupSpaceProxiesForBackground()
+            }
+            .store(in: &cancellables)
+
+        // Observe app becoming active to re-setup space tracking
+        NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                // Re-setup space subscriptions when returning to foreground
+                if developerModeSettings.groupSpaceRooms {
+                    let spaces = spaceService.joinedSpacesPublisher.value
+                    Task { [weak self] in
+                        await self?.updateSpaceChildrenTracking(for: spaces)
+                    }
+                }
+            }
+            .store(in: &cancellables)
+    }
+
     private func updateSpaces(from spaceProxies: [SpaceRoomProxyProtocol]) {
         // Only show space cells if groupSpaceRooms is enabled
         if developerModeSettings.groupSpaceRooms {
@@ -334,37 +360,42 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             }
         }
 
-        // Add tracking for new spaces
+        // Add tracking for new spaces (or all spaces when returning from background)
         let newSpaceIDs = currentSpaceIDs.subtracting(existingSpaceIDs)
+
+        // Collect all new proxies first, then add them all at once to avoid partial rebuilds
+        var newProxies: [(String, SpaceRoomListProxyProtocol)] = []
         for spaceID in newSpaceIDs {
             switch await spaceService.spaceRoomList(spaceID: spaceID) {
             case .success(let spaceRoomListProxy):
                 // Paginate to load all children
                 await spaceRoomListProxy.paginate()
-
-                await MainActor.run {
-                    spaceRoomListProxies[spaceID] = spaceRoomListProxy
-
-                    // Subscribe to space's child rooms
-                    let cancellable = spaceRoomListProxy.spaceRoomsPublisher
-                        .receive(on: DispatchQueue.main)
-                        .sink { [weak self] _ in
-                            self?.rebuildSpaceChildrenRoomIDs()
-                        }
-                    spaceChildrenCancellables[spaceID] = cancellable
-                }
+                newProxies.append((spaceID, spaceRoomListProxy))
 
             case .failure(let error):
                 MXLog.error("Failed to get space room list for tracking children: \(error)")
             }
         }
 
-        // Rebuild after any changes or on initial load
+        // Add all proxies and subscriptions at once
         await MainActor.run {
+            for (spaceID, spaceRoomListProxy) in newProxies {
+                spaceRoomListProxies[spaceID] = spaceRoomListProxy
+
+                // Subscribe to space's child rooms
+                let cancellable = spaceRoomListProxy.spaceRoomsPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] _ in
+                        self?.rebuildSpaceChildrenRoomIDs()
+                    }
+                spaceChildrenCancellables[spaceID] = cancellable
+            }
+
             // Mark as loaded after first successful tracking setup
             let wasLoaded = isSpaceChildrenLoaded
             isSpaceChildrenLoaded = true
 
+            // Rebuild only after all proxies are loaded
             rebuildSpaceChildrenRoomIDs()
 
             // If this was the first load, update room list mode
@@ -393,6 +424,26 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
 
         rebuildSpacesWithAggregatedInfo()
         updateRooms()
+    }
+
+    /// Releases all SDK resources held by space room list proxies to prevent 0xdead10cc crashes.
+    /// Call this when the app enters background to release database locks.
+    private func cleanupSpaceProxiesForBackground() {
+        guard developerModeSettings.groupSpaceRooms else { return }
+
+        MXLog.info("HomeScreenViewModel: Cleaning up \(spaceRoomListProxies.count) space proxies for background")
+
+        // Cancel all Combine subscriptions
+        spaceChildrenCancellables.removeAll()
+
+        // Release SDK TaskHandles in each proxy
+        for (_, proxy) in spaceRoomListProxies {
+            proxy.cleanup()
+        }
+
+        // Clear the proxies - they will be recreated when app returns to foreground
+        // Note: Keep spaceChildrenRoomIDs to prevent rooms from briefly appearing when returning to foreground
+        spaceRoomListProxies.removeAll()
     }
 
     /// Refreshes the space children tracking for a specific space

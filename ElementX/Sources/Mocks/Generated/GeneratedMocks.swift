@@ -16584,6 +16584,42 @@ class SpaceRoomListProxyMock: SpaceRoomListProxyProtocol, @unchecked Sendable {
         paginateCallsCount += 1
         await paginateClosure?()
     }
+
+    //MARK: - cleanup
+
+    var cleanupUnderlyingCallsCount = 0
+    var cleanupCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return cleanupUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = cleanupUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                cleanupUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    cleanupUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var cleanupCalled: Bool {
+        return cleanupCallsCount > 0
+    }
+    var cleanupClosure: (() -> Void)?
+
+    func cleanup() {
+        cleanupCallsCount += 1
+        cleanupClosure?()
+    }
 }
 class SpaceRoomProxyMock: SpaceRoomProxyProtocol, @unchecked Sendable {
     var id: String {

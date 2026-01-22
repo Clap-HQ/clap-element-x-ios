@@ -59,7 +59,20 @@ class SpaceRoomListProxy: SpaceRoomListProxyProtocol {
             MXLog.error("Pagination failure: \(error)")
         }
     }
-    
+
+    /// Releases all SDK TaskHandles to prevent holding database locks during background suspension.
+    /// Call this when the app enters background to prevent 0xdead10cc crashes.
+    func cleanup() {
+        MXLog.info("SpaceRoomListProxy cleanup: releasing SDK listeners for space \(id)")
+        spaceRoomProxyHandle = nil
+        spaceRoomsHandle = nil
+        // Note: paginationStateHandle is let, so it will be released when this object is deallocated
+    }
+
+    deinit {
+        MXLog.info("SpaceRoomListProxy deinit for space \(id)")
+    }
+
     // MARK: - Private
     
     private func handleUpdates(_ updates: [SpaceListUpdate]) {
