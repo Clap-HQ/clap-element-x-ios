@@ -1098,10 +1098,6 @@ class AppCoordinator: AppCoordinatorProtocol, AuthenticationFlowCoordinatorDeleg
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(applicationDidEnterBackground),
-                                               name: UIApplication.didEnterBackgroundNotification,
-                                               object: nil)
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(applicationWillTerminate),
@@ -1135,12 +1131,14 @@ class AppCoordinator: AppCoordinatorProtocol, AuthenticationFlowCoordinatorDeleg
         guard backgroundTask == nil else {
             return
         }
-
+        
         backgroundTask = appMediator.beginBackgroundTask {
             MXLog.info("Background task is about to expire.")
-
-            Task { @MainActor in
-                await self.stopSyncAndWait(isBackgroundTask: true)
+            
+            // We're intentionally strongly retaining self here to an EXC_BAD_ACCESS
+            // `backgroundTask` will be eventually released in `endActiveBackgroundTask`
+            // https://sentry.tools.element.io/organizations/element/issues/4477794/events/9cfd04e4d045440f87498809cf718de5/
+            self.stopSync(isBackgroundTask: true) {
                 self.endActiveBackgroundTask()
             }
         }
@@ -1151,20 +1149,6 @@ class AppCoordinator: AppCoordinatorProtocol, AuthenticationFlowCoordinatorDeleg
         MXLog.info("Application did become active")
         endActiveBackgroundTask()
         startSync()
-    }
-
-    @objc
-    private func applicationDidEnterBackground() {
-        MXLog.info("Application did enter background")
-
-        // Stop sync immediately when entering background to prevent 0xdead10cc crash.
-        // iOS may suspend the app before the background task expiration handler runs,
-        // so we must release database locks proactively.
-        // Use the existing background task to ensure we have time to complete the stop.
-        Task { @MainActor in
-            await stopSyncAndWait(isBackgroundTask: true)
-            endActiveBackgroundTask()
-        }
     }
     
     private func endActiveBackgroundTask() {
@@ -1213,13 +1197,20 @@ class AppCoordinator: AppCoordinatorProtocol, AuthenticationFlowCoordinatorDeleg
         // This is important for the app to keep refreshing in the background
         scheduleBackgroundAppRefresh()
         
+        /// We have a lot of crashes stemming here which we previously believed are caused by stopSync not being async
+        /// on the client proxy side (see the comment on that method). We have now realised that will likely not fix anything but
+        /// we also noticed this does not crash on the main thread, even though the whole AppCoordinator is on the Main actor.
+        /// As such, we introduced a MainActor conformance on the expirationHandler but we are also assuming main actor
+        /// isolated in the `stopSync` method above.
+        /// https://sentry.tools.element.io/organizations/element/issues/4477794/
         task.expirationHandler = { @Sendable [weak self] in
             MXLog.info("Background app refresh task is about to expire.")
-
+            
             Task { @MainActor in
-                await self?.stopSyncAndWait(isBackgroundTask: true)
-                MXLog.info("Marking Background app refresh task as complete.")
-                task.setTaskCompleted(success: true)
+                self?.stopSync(isBackgroundTask: true) {
+                    MXLog.info("Marking Background app refresh task as complete.")
+                    task.setTaskCompleted(success: true)
+                }
             }
         }
         
@@ -1239,25 +1230,13 @@ class AppCoordinator: AppCoordinatorProtocol, AuthenticationFlowCoordinatorDeleg
                 guard let self else { return }
                 MXLog.info("Background app refresh finished")
                 backgroundRefreshSyncObserver?.cancel()
-
+                
                 // Make sure we stop the sync loop, otherwise the ongoing request is immediately
                 // handled the next time the app refreshes, which can trigger timeout failures.
-                Task { @MainActor in
-                    await self.stopSyncAndWait(isBackgroundTask: true)
+                stopSync(isBackgroundTask: true) {
                     MXLog.info("Marking Background app refresh task as complete.")
                     task.setTaskCompleted(success: true)
                 }
             }
-    }
-
-    /// Async version of stopSync that waits for the sync to actually stop before returning.
-    /// This prevents 0xdead10cc crashes where iOS kills the app for holding database locks while suspended.
-    private func stopSyncAndWait(isBackgroundTask: Bool) async {
-        if isBackgroundTask, UIApplication.shared.applicationState == .active {
-            return
-        }
-
-        await userSession?.clientProxy.stopSync()
-        clientProxyObserver = nil
     }
 }

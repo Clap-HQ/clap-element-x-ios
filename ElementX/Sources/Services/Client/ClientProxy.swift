@@ -438,18 +438,6 @@ class ClientProxy: ClientProxyProtocol {
         }
     }
 
-    func stopSync() async {
-        MXLog.info("Stopping sync (async)")
-
-        if restartTask != nil {
-            MXLog.warning("Removing the sync service restart task.")
-            restartTask = nil
-        }
-
-        await syncService.stop()
-        MXLog.info("Sync stopped (async)")
-    }
-
     func expireSyncSessions() async {
         await syncService.expireSessions()
     }

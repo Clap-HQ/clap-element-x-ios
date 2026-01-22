@@ -150,8 +150,6 @@ protocol ClientProxyProtocol: AnyObject {
 
     func stopSync(completion: (() -> Void)?)
 
-    func stopSync() async
-    
     func expireSyncSessions() async
         
     func accountURL(action: AccountManagementAction) async -> URL?
