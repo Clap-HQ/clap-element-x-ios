@@ -931,9 +931,8 @@
 		9C63171267E22FEB288EC860 /* RoomHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1627F2D56477BD331F6D732C /* RoomHeaderView.swift */; };
 		9CBB04365408F9D6F46BA3A7 /* PinnedEventsTimelineFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54AAF72E821B4084B7E4298 /* PinnedEventsTimelineFlowCoordinator.swift */; };
 		9CCF6711DD50BFF8B5ACE9CF /* ReportRoomScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276833816F5DEB1CE3B8BE1E /* ReportRoomScreen.swift */; };
-		9D2E03DB175A6AB14589076D /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 416E37E60AAD2933F9191476 /* AsyncAlgorithms */; };
 		9D139FE26C57DBB025955D9F /* ThreadListScreenModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D7897F107611682D1F0A6E /* ThreadListScreenModels.swift */; };
-		9D2E03DB175A6AB14589076D /* AnalyticsEvents in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3F7BCCB18C15B30CCA39A9 /* AnalyticsEvents */; };
+		9D2E03DB175A6AB14589076D /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 416E37E60AAD2933F9191476 /* AsyncAlgorithms */; };
 		9D79B94493FB32249F7E472F /* PlaceholderAvatarImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C705E605EF57C19DBE86FFA1 /* PlaceholderAvatarImage.swift */; };
 		9D9690D2FD4CD26FF670620F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C75EF87651B00A176AB08E97 /* AppDelegate.swift */; };
 		9DB4B303ECC05F0F33582594 /* SpacesAnnouncementSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DA8FFD31B18324CC04A823 /* SpacesAnnouncementSheetView.swift */; };
@@ -1171,7 +1170,6 @@
 		C6AC34B731F4F853E9D15146 /* AnalyticsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2397174D0DC3918A7A8A7B /* AnalyticsConfiguration.swift */; };
 		C6C06DDA8881260303FBA3A0 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2141693488CE5446BB391964 /* Date.swift */; };
 		C7234938C77150DC7FC9A054 /* KickMemberConfirmationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B19CA79D9374B2A0497ADCF /* KickMemberConfirmationViewModel.swift */; };
-		C73CF79A578133D3AB7FB83D /* SpaceRoomProxyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF771312D208C8002A2F05C4 /* SpaceRoomProxyMock.swift */; };
 		C76892321558E75101E68ED6 /* ReadableFrameModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398817652FA8ABAE0A31AC6D /* ReadableFrameModifier.swift */; };
 		C7774720A4B2E34693E3227C /* RoomNotificationSettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8896CDD20CA2D87EA3B848A1 /* RoomNotificationSettingsScreen.swift */; };
 		C797C0B4CF45C66CD1921252 /* SoftLogoutScreenViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC43313F21511C853D34544E /* SoftLogoutScreenViewModelTests.swift */; };
@@ -7310,7 +7308,7 @@
 						DevelopmentTeam = DFDZD34G7P;
 					};
 					676A87694F0F247B2AF1A142 = {
-						DevelopmentTeam = 7J4U792NQT;
+						DevelopmentTeam = DFDZD34G7P;
 					};
 					7A17BE29BAC81ADBAC6349D9 = {
 						DevelopmentTeam = DFDZD34G7P;
@@ -8847,9 +8845,6 @@
 				0DAB08C117E0391F3ADB2031 /* SpaceRoomListProxy.swift in Sources */,
 				9FBF0078657CA4F2A9747E98 /* SpaceRoomListProxyMock.swift in Sources */,
 				2EAA1B35D9CA24F090F48792 /* SpaceRoomListProxyProtocol.swift in Sources */,
-				24D4E0BBC2ECD2AAD84E7159 /* SpaceRoomProxy.swift in Sources */,
-				C73CF79A578133D3AB7FB83D /* SpaceRoomProxyMock.swift in Sources */,
-				BE8075CA131C5EA3665C9E0D /* SpaceRoomProxyProtocol.swift in Sources */,
 				FE98CBD1A02F644E7A3F88B1 /* SpaceRoomUnjoinedCell.swift in Sources */,
 				6CAADDC6318E41C7D7AA9526 /* SpaceScreen.swift in Sources */,
 				EF1C1A5D212B14FFCE0E7C83 /* SpaceScreenCoordinator.swift in Sources */,
