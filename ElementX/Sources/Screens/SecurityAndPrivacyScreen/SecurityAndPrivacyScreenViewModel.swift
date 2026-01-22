@@ -38,7 +38,8 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
                                                                        historyVisibility: roomProxy.infoPublisher.value.historyVisibility.toSecurityAndPrivacyHistoryVisibility,
                                                                        isSpace: roomProxy.infoPublisher.value.isSpace,
                                                                        isKnockingEnabled: appSettings.knockingEnabled,
-                                                                       isSpaceSettingsEnabled: appSettings.spaceSettingsEnabled))
+                                                                       isSpaceSettingsEnabled: appSettings.spaceSettingsEnabled,
+                                                                       historySharingDetailsURL: appSettings.historySharingDetailsURL))
         
         if let powerLevels = roomProxy.infoPublisher.value.powerLevels {
             setupPermissions(powerLevels: powerLevels)
@@ -47,12 +48,7 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
         setupRoomDirectoryVisibility()
         setupSubscriptions()
         Task {
-            switch await clientProxy.spaceService.joinedParents(childID: roomProxy.id) {
-            case .success(let joinedParentSpaces):
-                state.joinedParentSpaces = joinedParentSpaces
-            case .failure:
-                break
-            }
+            await setupSelectableJoinedSpaces()
         }
     }
     
@@ -91,6 +87,7 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
     
     private func setupSubscriptions() {
         context.$viewState
+            .drop { $0.isSpace || !$0.canEditHistoryVisibility }
             .map(\.availableVisibilityOptions)
             .removeDuplicates()
             // To allow the view to update properly
@@ -101,6 +98,20 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
                 let desiredHistoryVisibility = state.bindings.desiredSettings.historyVisibility
                 if !availableVisibilityOptions.contains(desiredHistoryVisibility) {
                     state.bindings.desiredSettings.historyVisibility = desiredHistoryVisibility.fallbackOption
+                }
+            }
+            .store(in: &cancellables)
+        
+        context.$viewState
+            .drop { !$0.canEditAddress }
+            .map(\.bindings.desiredSettings.accessType)
+            .removeDuplicates()
+            // To allow the view to update properly
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] accessType in
+                guard let self else { return }
+                if state.bindings.desiredSettings.isVisibileInRoomDirectory == true, !accessType.isAddressRequired {
+                    state.bindings.desiredSettings.isVisibileInRoomDirectory = false
                 }
             }
             .store(in: &cancellables)
@@ -149,7 +160,7 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
     }
     
     private func setupPermissions(powerLevels: RoomPowerLevelsProxyProtocol) {
-        state.canEditAddress = powerLevels.canOwnUser(sendStateEvent: .roomAliases)
+        state.canEditAddress = powerLevels.canOwnUser(sendStateEvent: .roomCanonicalAlias)
         state.canEditJoinRule = powerLevels.canOwnUser(sendStateEvent: .roomJoinRules)
         state.canEditHistoryVisibility = powerLevels.canOwnUser(sendStateEvent: .roomHistoryVisibility)
         state.canEnableEncryption = powerLevels.canOwnUser(sendStateEvent: .roomEncryption)
@@ -233,6 +244,8 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
         
         if shouldDismiss, !hasFailures {
             actionsSubject.send(.dismiss)
+        } else if !shouldDismiss {
+            await setupSelectableJoinedSpaces()
         }
     }
     
@@ -243,8 +256,8 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
         }
         
         switch state.spaceSelection {
-        case .singleJoined(let joinedParent):
-            state.bindings.desiredSettings.accessType = .spaceMembers(spaceIDs: [joinedParent.id])
+        case .singleJoined(let joinedSpace):
+            state.bindings.desiredSettings.accessType = .spaceMembers(spaceIDs: [joinedSpace.id])
         case .singleUnknown(let id):
             state.bindings.desiredSettings.accessType = .spaceMembers(spaceIDs: [id])
         case .empty:
@@ -261,8 +274,8 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
         }
         
         switch state.spaceSelection {
-        case .singleJoined(let joinedParent):
-            state.bindings.desiredSettings.accessType = .askToJoinWithSpaceMembers(spaceIDs: [joinedParent.id])
+        case .singleJoined(let joinedSpace):
+            state.bindings.desiredSettings.accessType = .askToJoinWithSpaceMembers(spaceIDs: [joinedSpace.id])
         case .singleUnknown(let id):
             state.bindings.desiredSettings.accessType = .askToJoinWithSpaceMembers(spaceIDs: [id])
         case .empty:
@@ -273,12 +286,12 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
     }
 
     private func displayManageAuthorizedSpacesScreen(isAskToJoin: Bool) {
-        let joinedParentSpaces = state.joinedParentSpaces
+        let joinedSpaces = state.selectableJoinedSpaces
         let unknownSpaceIDs = state.currentSettings.accessType.spaceIDs.filter { id in
-            !joinedParentSpaces.contains { $0.id == id }
+            !joinedSpaces.contains { $0.id == id }
         }
         let selectedIDs = Set(state.bindings.desiredSettings.accessType.spaceIDs)
-        let authorizedSpacesSelection = AuthorizedSpacesSelection(joinedParentSpaces: joinedParentSpaces,
+        let authorizedSpacesSelection = AuthorizedSpacesSelection(joinedSpaces: joinedSpaces,
                                                                   unknownSpacesIDs: unknownSpaceIDs,
                                                                   initialSelectedIDs: selectedIDs)
         authorizedSpacesSelection.selectedIDs
@@ -289,6 +302,28 @@ class SecurityAndPrivacyScreenViewModel: SecurityAndPrivacyScreenViewModelType, 
             .store(in: &cancellables)
         
         actionsSubject.send(.displayManageAuthorizedSpacesScreen(authorizedSpacesSelection))
+    }
+    
+    private func setupSelectableJoinedSpaces() async {
+        var joinedParentSpaces: [SpaceServiceRoomProtocol] = []
+        switch await clientProxy.spaceService.joinedParents(childID: roomProxy.id) {
+        case .success(let value):
+            joinedParentSpaces = value
+        case .failure:
+            break
+        }
+        
+        var nonParentJoinedSpaces: [SpaceServiceRoomProtocol] = []
+        for spaceID in state.currentSettings.accessType.spaceIDs where !joinedParentSpaces.contains(where: { $0.id == spaceID }) {
+            if case let .success(.some(space)) = await clientProxy.spaceService.spaceForIdentifier(spaceID: spaceID) {
+                nonParentJoinedSpaces.append(space)
+            }
+        }
+        
+        // By default we only want to allow selection among joined parents but
+        // if there is a non parent joined space already set in the access type
+        // we also include it in the known spaces selection list.
+        state.selectableJoinedSpaces = joinedParentSpaces + nonParentJoinedSpaces
     }
     
     private static let loadingIndicatorIdentifier = "\(EditRoomAddressScreenViewModel.self)-Loading"
@@ -326,11 +361,11 @@ private extension RoomHistoryVisibility {
     var toSecurityAndPrivacyHistoryVisibility: SecurityAndPrivacyHistoryVisibility {
         switch self {
         case .joined, .invited:
-            return .sinceInvite
+            return .invited
         case .shared, .custom:
-            return .sinceSelection
+            return .shared
         case .worldReadable:
-            return .anyone
+            return .worldReadable
         }
     }
 }
@@ -338,11 +373,11 @@ private extension RoomHistoryVisibility {
 private extension SecurityAndPrivacyHistoryVisibility {
     var toRoomHistoryVisibility: RoomHistoryVisibility {
         switch self {
-        case .sinceSelection:
+        case .shared:
             return .shared
-        case .sinceInvite:
+        case .invited:
             return .invited
-        case .anyone:
+        case .worldReadable:
             return .worldReadable
         }
     }

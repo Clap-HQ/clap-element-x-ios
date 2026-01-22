@@ -23,7 +23,7 @@ enum SpaceDetailScreenViewModelAction {
 
 enum SpaceDetailScreenViewAction {
     case selectRoom(SpaceChildRoomItem)
-    case joinRoom(SpaceRoomProxyProtocol)
+    case joinRoom(SpaceServiceRoomProtocol)
     case showRoomDetails(roomID: String)
     case markAsRead(roomID: String)
     case markAsUnread(roomID: String)
@@ -94,7 +94,7 @@ enum SpaceChildRoomItem: Identifiable, Equatable {
     /// A joined room with chat-list style display (shows last message, timestamp, etc.)
     case joined(JoinedRoomInfo)
     /// An unjoined room with join button
-    case unjoined(SpaceRoomProxyProtocol)
+    case unjoined(SpaceServiceRoomProtocol)
 
     var id: String {
         switch self {

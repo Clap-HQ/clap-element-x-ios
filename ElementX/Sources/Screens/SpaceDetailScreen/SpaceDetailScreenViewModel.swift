@@ -40,7 +40,7 @@ class SpaceDetailScreenViewModel: SpaceDetailScreenViewModelType, SpaceDetailScr
         self.appSettings = appSettings
         self.userIndicatorController = userIndicatorController
 
-        let spaceProxy = spaceRoomListProxy.spaceRoomProxyPublisher.value
+        let spaceProxy = spaceRoomListProxy.spaceServiceRoomPublisher.value
 
         super.init(initialViewState: SpaceDetailScreenViewState(
             spaceID: spaceRoomListProxy.id,
@@ -147,7 +147,7 @@ class SpaceDetailScreenViewModel: SpaceDetailScreenViewModelType, SpaceDetailScr
         // Clear previous subscriptions when replacing proxy
         spaceChildrenCancellables.removeAll()
 
-        spaceRoomListProxy.spaceRoomProxyPublisher
+        spaceRoomListProxy.spaceServiceRoomPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] spaceProxy in
                 guard let self else { return }
@@ -180,7 +180,7 @@ class SpaceDetailScreenViewModel: SpaceDetailScreenViewModelType, SpaceDetailScr
             .store(in: &spaceChildrenCancellables)
     }
 
-    private func updateRoomList(with spaceRooms: [SpaceRoomProxyProtocol], roomSummaries: [RoomSummary]) {
+    private func updateRoomList(with spaceRooms: [SpaceServiceRoomProtocol], roomSummaries: [RoomSummary]) {
         // Build a lookup dictionary for quick access
         let summaryByID = Dictionary(uniqueKeysWithValues: roomSummaries.map { ($0.id, $0) })
 
@@ -237,7 +237,7 @@ class SpaceDetailScreenViewModel: SpaceDetailScreenViewModelType, SpaceDetailScr
         clientProxy.roomSummaryProvider.subscribeToRooms(joinedRoomIDs)
     }
 
-    private func joinRoom(_ spaceRoom: SpaceRoomProxyProtocol) async {
+    private func joinRoom(_ spaceRoom: SpaceServiceRoomProtocol) async {
         state.joiningRoomIDs.insert(spaceRoom.id)
         defer { state.joiningRoomIDs.remove(spaceRoom.id) }
 

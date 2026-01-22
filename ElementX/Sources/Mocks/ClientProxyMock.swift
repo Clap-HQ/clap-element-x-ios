@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+import MatrixRustSDKMocks
 
 struct ClientProxyMockConfiguration {
     var homeserver = ""
@@ -72,7 +73,7 @@ extension ClientProxyMock {
         canDeactivateAccount = false
         directRoomForUserIDReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
         createDirectRoomWithExpectedRoomNameReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
-        createRoomNameTopicIsRoomPrivateIsKnockingOnlyUserIDsAvatarURLAliasLocalPartReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
+        createRoomNameTopicAccessTypeIsSpaceUserIDsAvatarURLAliasLocalPartReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
         canJoinRoomWithReturnValue = true
         joinRoomViaClosure = { roomID, _ in
             configuration.overrides.joinedRoomIDs.insert(roomID)
@@ -105,6 +106,8 @@ extension ClientProxyMock {
         resetIdentityReturnValue = .success(IdentityResetHandleSDKMock(.init()))
         
         spaceService = SpaceServiceProxyMock(configuration.spaceServiceConfiguration)
+        linkNewDeviceServiceReturnValue = LinkNewDeviceServiceMock(.init())
+        
         matrixAPI = MatrixAPIServiceMock()
         clapAPI = ClapAPIServiceMock()
         createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
@@ -124,8 +127,8 @@ extension ClientProxyMock {
                     roomProxy.loadOrFetchEventDetailsForReturnValue = .success(TimelineEventSDKMock())
                     return .joined(roomProxy)
                 }
-            } else if let spaceRoomProxy = configuration.spaceServiceConfiguration.joinedSpaces.first(where: { $0.id == identifier }) {
-                let roomProxy = await JoinedRoomProxyMock(.init(id: spaceRoomProxy.id, name: spaceRoomProxy.name, isSpace: spaceRoomProxy.isSpace))
+            } else if let spaceServiceRoom = configuration.spaceServiceConfiguration.topLevelSpaces.first(where: { $0.id == identifier }) {
+                let roomProxy = await JoinedRoomProxyMock(.init(id: spaceServiceRoom.id, name: spaceServiceRoom.name, isSpace: spaceServiceRoom.isSpace))
                 roomProxy.loadOrFetchEventDetailsForReturnValue = .success(TimelineEventSDKMock())
                 return .joined(roomProxy)
             } else {
@@ -147,10 +150,13 @@ extension ClientProxyMock {
         
         underlyingIsReportRoomSupported = true
         underlyingIsLiveKitRTCSupported = true
+        underlyingIsLoginWithQRCodeSupported = true
         
         underlyingTimelineMediaVisibilityPublisher = CurrentValueSubject<TimelineMediaVisibility, Never>(configuration.timelineMediaVisibility).asCurrentValuePublisher()
         underlyingHideInviteAvatarsPublisher = CurrentValueSubject<Bool, Never>(configuration.hideInviteAvatars).asCurrentValuePublisher()
         
         underlyingMaxMediaUploadSize = .success(configuration.maxMediaUploadSize)
+        
+        storeSizesReturnValue = .success(.init(cryptoStore: 1, stateStore: 9, eventCacheStore: 8, mediaStore: 6))
     }
 }

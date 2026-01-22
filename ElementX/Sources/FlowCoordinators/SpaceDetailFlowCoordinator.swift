@@ -22,7 +22,7 @@ enum SpaceDetailFlowCoordinatorEntryPoint {
     /// Show space detail screen after joining (with JoinAllRoomsConfirmation)
     case spaceDetailAfterJoin(SpaceRoomListProxyProtocol)
     /// Show join space screen first, then space detail after joining
-    case joinSpace(SpaceRoomProxyProtocol)
+    case joinSpace(SpaceServiceRoomProtocol)
 }
 
 /// A flow coordinator for SpaceDetailScreen when accessed from the home screen.
@@ -112,7 +112,7 @@ class SpaceDetailFlowCoordinator: FlowCoordinatorProtocol {
 
     // MARK: - Join Space
 
-    private func presentJoinSpaceScreen(spaceRoomProxy: SpaceRoomProxyProtocol, animated: Bool) {
+    private func presentJoinSpaceScreen(spaceRoomProxy: SpaceServiceRoomProtocol, animated: Bool) {
         let parameters = JoinRoomScreenCoordinatorParameters(source: .space(spaceRoomProxy),
                                                              userSession: userSession,
                                                              userIndicatorController: flowParameters.userIndicatorController,
