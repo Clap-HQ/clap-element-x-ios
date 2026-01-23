@@ -197,6 +197,11 @@ class AuthenticationFlowCoordinator: FlowCoordinatorProtocol {
             self?.showServerConfirmationScreen(authenticationFlow: .register)
         }
         stateMachine.addRoutes(event: .cancelledServerConfirmation, transitions: [.serverConfirmationScreen => .startScreen])
+        // Ignore cancelledServerConfirmation when in oidcAuthentication state
+        // This can happen when navigation stack pops serverConfirmationScreen while OIDC is in progress
+        stateMachine.addRoutes(event: .cancelledServerConfirmation, transitions: [.oidcAuthentication => .oidcAuthentication]) { _ in
+            MXLog.warning("Ignoring cancelledServerConfirmation event while in oidcAuthentication state")
+        }
         
         stateMachine.addRoutes(event: .changeServer(.login), transitions: [.serverConfirmationScreen => .serverSelectionScreen]) { [weak self] _ in
             self?.showServerSelectionScreen(authenticationFlow: .login)
@@ -213,6 +218,10 @@ class AuthenticationFlowCoordinator: FlowCoordinatorProtocol {
             }
             self?.showOIDCAuthentication(oidcData: oidcData, presentationAnchor: window, fromState: context.fromState)
         }
+        // Ignore duplicate OIDC authentication requests when already in oidcAuthentication state
+        stateMachine.addRoutes(event: .continueWithOIDC, transitions: [.oidcAuthentication => .oidcAuthentication]) { _ in
+            MXLog.warning("Ignoring duplicate continueWithOIDC event while already in oidcAuthentication state")
+        }
         stateMachine.addRoutes(event: .cancelledOIDCAuthentication(previousState: .serverConfirmationScreen), transitions: [.oidcAuthentication => .serverConfirmationScreen])
         stateMachine.addRoutes(event: .cancelledOIDCAuthentication(previousState: .startScreen), transitions: [.oidcAuthentication => .startScreen])
         
@@ -223,6 +232,11 @@ class AuthenticationFlowCoordinator: FlowCoordinatorProtocol {
         }
         stateMachine.addRoutes(event: .cancelledPasswordLogin(previousState: .serverConfirmationScreen), transitions: [.loginScreen => .serverConfirmationScreen])
         stateMachine.addRoutes(event: .cancelledPasswordLogin(previousState: .startScreen), transitions: [.loginScreen => .startScreen])
+        // Ignore cancelledServerConfirmation when in loginScreen state
+        // This can happen when navigation stack pops serverConfirmationScreen while login is in progress
+        stateMachine.addRoutes(event: .cancelledServerConfirmation, transitions: [.loginScreen => .loginScreen]) { _ in
+            MXLog.warning("Ignoring cancelledServerConfirmation event while in loginScreen state")
+        }
         
         // Bug Report
         
@@ -388,6 +402,12 @@ class AuthenticationFlowCoordinator: FlowCoordinatorProtocol {
     }
     
     private func showOIDCAuthentication(oidcData: OIDCAuthorizationDataProxy, presentationAnchor: UIWindow, fromState: State) {
+        // Prevent duplicate OIDC authentication requests
+        guard oidcPresenter == nil else {
+            MXLog.warning("OIDC authentication already in progress, ignoring duplicate request")
+            return
+        }
+
         let presenter = OIDCAuthenticationPresenter(authenticationService: authenticationService,
                                                     oidcRedirectURL: appSettings.oidcRedirectURL,
                                                     presentationAnchor: presentationAnchor,

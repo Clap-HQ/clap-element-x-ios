@@ -183,16 +183,19 @@ final class AppSettings {
     /// The task identifier used for background app refresh. Also used in main target's the Info.plist
     let backgroundAppRefreshTaskIdentifier = "io.element.elementx.background.refresh"
 
+    /// Base URL derived from clapHomeserver for OIDC and app info URLs.
+    private var clapBaseURL: String { "https://\(InfoPlistReader.main.clapHomeserver)" }
+
     /// A URL where users can go read more about the app.
-    private(set) var websiteURL: URL = "https://element.io"
+    private(set) lazy var websiteURL: URL = URL(string: clapBaseURL)!
     /// A URL that contains the app's logo that may be used when showing content in a web view.
-    private(set) var logoURL: URL = "https://element.io/mobile-icon.png"
+    private(set) lazy var logoURL: URL = URL(string: "\(clapBaseURL)/mobile-icon.png")!
     /// A URL that contains that app's copyright notice.
-    private(set) var copyrightURL: URL = "https://element.io/copyright"
+    private(set) lazy var copyrightURL: URL = URL(string: "\(clapBaseURL)/copyright")!
     /// A URL that contains the app's Terms of use.
-    private(set) var acceptableUseURL: URL = "https://element.io/acceptable-use-policy-terms"
+    private(set) lazy var acceptableUseURL: URL = URL(string: "\(clapBaseURL)/acceptable-use-policy-terms")!
     /// A URL that contains the app's Privacy Policy.
-    private(set) var privacyURL: URL = "https://element.io/privacy"
+    private(set) lazy var privacyURL: URL = URL(string: "\(clapBaseURL)/privacy")!
     /// A URL where users can go read more about encryption in general.
     private(set) var encryptionURL: URL = "https://element.io/help#encryption"
     /// A URL where users can go read more about device verification..
@@ -229,7 +232,7 @@ final class AppSettings {
     /// Any pre-defined static client registrations for OIDC issuers.
     let oidcStaticRegistrations: [URL: String] = ["https://id.thirdroom.io/realms/thirdroom": "elementx"]
     /// The redirect URL used for OIDC. This no longer uses universal links so we don't need the bundle ID to avoid conflicts between Element X, Nightly and PR builds.
-    private(set) var oidcRedirectURL: URL = "https://element.io/oidc/login"
+    private(set) lazy var oidcRedirectURL: URL = URL(string: "\(clapBaseURL)/oidc/login")!
     
     private(set) lazy var oidcConfiguration = OIDCConfiguration(clientName: InfoPlistReader.main.bundleDisplayName,
                                                                 redirectURI: oidcRedirectURL,

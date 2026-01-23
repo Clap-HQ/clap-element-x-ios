@@ -35,15 +35,20 @@ class OIDCAuthenticationPresenter: NSObject {
             let session = ASWebAuthenticationSession(url: oidcData.url, callback: .oidcRedirectURL(oidcRedirectURL)) { url, error in
                 continuation.resume(returning: (url, error))
             }
-            
+
             session.prefersEphemeralWebBrowserSession = false
             session.presentationContextProvider = self
             session.additionalHeaderFields = [
                 "X-Element-User-Agent": UserAgentBuilder.makeASCIIUserAgent()
             ]
-            
+
             activeSession = session
-            session.start()
+            if !session.start() {
+                MXLog.error("Failed to start ASWebAuthenticationSession - presentationAnchor may be invalid or another session is active")
+                activeSession = nil
+                continuation.resume(returning: (nil, nil))
+                return
+            }
         }
         
         activeSession = nil
