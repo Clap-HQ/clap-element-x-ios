@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 source ci_common.sh
 
@@ -6,11 +7,21 @@ setup_xcode_cloud_environment
 
 install_xcode_cloud_brew_dependencies
 
-if [ "$CI_WORKFLOW" = "Nightly" ]; then
-    bundle exec fastlane config_nightly build_number:"$CI_BUILD_NUMBER"
-elif [ "$CI_WORKFLOW" = "Element Pro" ]; then
-    # Xcode Cloud automatically fetches the submodules.
-    bundle exec fastlane config_element_pro
-else
-    bundle exec fastlane config_production
-fi
+# Set build number (YYMMDDHHMM format) in project.yml before xcodegen
+BUILD_NUMBER=$(date +%y%m%d%H%M)
+echo "🔢 Setting build number to: $BUILD_NUMBER"
+
+# Update CURRENT_PROJECT_VERSION in project.yml
+sed -i '' "s/CURRENT_PROJECT_VERSION: .*/CURRENT_PROJECT_VERSION: $BUILD_NUMBER/" project.yml
+
+# Verify the change
+echo "📋 Verifying project.yml:"
+grep "CURRENT_PROJECT_VERSION" project.yml
+
+# Generate Xcode project
+echo "🔧 Running XcodeGen..."
+xcodegen
+
+# Double-check with agvtool
+echo "📋 Current version after xcodegen:"
+agvtool what-version

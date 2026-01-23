@@ -1,21 +1,18 @@
 #!/bin/sh
+set -e
 
-source ci_common.sh
+# Generate TestFlight "What to Test" notes with build timestamp
+if [ -d "$CI_APP_STORE_SIGNED_APP_PATH" ]; then
+    BUILD_TIME=$(date "+%Y-%m-%d %H:%M:%S KST")
 
-setup_xcode_cloud_environment
+    mkdir -p TestFlight
+    cat > TestFlight/WhatToTest.en-US.txt << EOF
+Build Time: $BUILD_TIME
+Branch: $CI_BRANCH
+Commit: $CI_COMMIT
+EOF
 
-# Xcode Cloud shallow clones the repo. We need to deepen it to fetch tags, commit history and be able to rebase main on develop at the end of releases.
-fetch_unshallow_repository
-
-# Upload dsyms no matter the workflow
-# Perform this step before releasing to github in case it fails.
-bundle exec fastlane upload_dsyms_to_sentry dsym_path:"$CI_ARCHIVE_PATH/dSYMs"
-
-generate_what_to_test_notes
-
-if [ "$CI_WORKFLOW" = "Release" ]; then
-    bundle exec fastlane release_to_github
-    bundle exec fastlane prepare_next_release
-elif [ "$CI_WORKFLOW" = "Nightly" ]; then
-    bundle exec fastlane tag_nightly build_number:"$CI_BUILD_NUMBER"
+    echo "✅ TestFlight notes created with build time: $BUILD_TIME"
 fi
+
+echo "✅ Build completed successfully"
