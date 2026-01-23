@@ -312,17 +312,37 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             }
             .store(in: &cancellables)
 
-        // Observe app becoming active to re-setup space tracking
+        // Observe app becoming active to wait for sync then re-setup space tracking
         NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
+                self?.waitForSyncAndRestoreSpaceTracking()
+            }
+            .store(in: &cancellables)
+    }
+
+    /// Waits for SDK sync to complete before restoring space tracking.
+    /// This prevents 0xdead10cc crashes by ensuring SDK database access happens only after
+    /// iOS has fully activated the app and sync is ready.
+    private func waitForSyncAndRestoreSpaceTracking() {
+        guard developerModeSettings.groupSpaceRooms else { return }
+        guard spaceRoomListProxies.isEmpty else {
+            MXLog.info("HomeScreenViewModel: Space proxies already exist, skipping restore")
+            return
+        }
+
+        MXLog.info("HomeScreenViewModel: Waiting for sync completion before restoring space tracking")
+
+        userSession.clientProxy.loadingStatePublisher
+            .filter { $0 == .notLoading }
+            .first()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
                 guard let self else { return }
-                // Re-setup space subscriptions when returning to foreground
-                if developerModeSettings.groupSpaceRooms {
-                    let spaces = spaceService.topLevelSpacesPublisher.value
-                    Task { [weak self] in
-                        await self?.updateSpaceChildrenTracking(for: spaces)
-                    }
+                MXLog.info("HomeScreenViewModel: Sync complete, restoring space tracking")
+                let spaces = spaceService.topLevelSpacesPublisher.value
+                Task {
+                    await self.updateSpaceChildrenTracking(for: spaces)
                 }
             }
             .store(in: &cancellables)
@@ -373,7 +393,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
                 newProxies.append((spaceID, spaceRoomListProxy))
 
             case .failure(let error):
-                MXLog.error("Failed to get space room list for tracking children: \(error)")
+                MXLog.error("HomeScreenViewModel: Failed to get space room list for tracking children: \(error)")
             }
         }
 
@@ -471,10 +491,10 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
                 // Rebuild room IDs to update filtering
                 rebuildSpaceChildrenRoomIDs()
             }
-            MXLog.info("Refreshed space children tracking for \(spaceID)")
+            MXLog.info("HomeScreenViewModel: Refreshed space children tracking for \(spaceID)")
 
         case .failure(let error):
-            MXLog.error("Failed to refresh space children for \(spaceID): \(error)")
+            MXLog.error("HomeScreenViewModel: Failed to refresh space children for \(spaceID): \(error)")
         }
     }
 
@@ -541,7 +561,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         case .success(let spaceRoomListProxy):
             actionsSubject.send(.presentSpaceDetail(spaceRoomListProxy))
         case .failure(let error):
-            MXLog.error("Failed to get space room list: \(error)")
+            MXLog.error("HomeScreenViewModel: Failed to get space room list: \(error)")
             displayError()
         }
     }
@@ -769,7 +789,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
                 // Navigate to SpaceDetailScreen first, then show join all rooms confirmation there
                 actionsSubject.send(.presentSpaceDetail(spaceRoomListProxy, showJoinAllRoomsConfirmation: true))
             case .failure(let error):
-                MXLog.error("Failed to get the space room list after accepting invite: \(error)")
+                MXLog.error("HomeScreenViewModel: Failed to get the space room list after accepting invite: \(error)")
                 displayError()
                 return
             }
