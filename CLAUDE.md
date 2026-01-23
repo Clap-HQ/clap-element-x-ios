@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Base**: Element X iOS
 - **Branches**: `clap/develop` (development), `clap/main` (production)
 - **Homeserver**: dev.clap.ac (development), clap.ac (production)
-- **Stack**: SwiftUI, Combine, Swift 6.1, iOS 18.5+
+- **Stack**: SwiftUI, Combine, Swift 6.1, iOS 18.0+
 
 ## Core Architecture
 
@@ -35,14 +35,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```
 ElementX/Sources/
 ├── Application/       # App entry point, AppSettings, AppCoordinator
-├── Services/          # Business logic services (29 modules)
+├── Services/          # Business logic services
 │   ├── Client/        # MatrixRustSDK client wrapper
 │   ├── Room/          # Room-related logic
 │   ├── Timeline/      # Timeline/message management
 │   ├── Keychain/      # Keychain access
 │   └── Analytics/     # PostHog analytics
-├── FlowCoordinators/  # Screen flow management (23 coordinators)
-├── Screens/           # UI screens (55+ screens, MVVM pattern)
+├── FlowCoordinators/  # Screen flow management
+├── Screens/           # UI screens (MVVM pattern)
 ├── Other/             # Utilities, extensions, InfoPlistReader, etc.
 ├── Mocks/             # Test mock objects (Sourcery generated)
 └── Generated/         # SwiftGen, Sourcery auto-generated code
@@ -234,43 +234,24 @@ private(set) lazy var oidcRedirectURL: URL = URL(string: "\(clapBaseURL)/oidc/lo
 private(set) lazy var websiteURL: URL = URL(string: clapBaseURL)!
 ```
 
-### Developer Mode Settings
-
-Developer-only flags managed in `DeveloperModeSettings.swift`:
-
-| Flag | Description | Default |
-|------|-------------|---------|
-| `showCustomHomeserver` | Show custom homeserver selection UI at login | true only in Clap Dev |
-| `showQRCodeLogin` | Show QR code login button | true only in Clap Dev |
-
-```swift
-// Usage example
-let settings = DeveloperModeSettings()
-if settings.showCustomHomeserver {
-    // Show custom homeserver UI
-}
-```
-
 ### Related Files
 
 | File | Role |
 |------|------|
-| `DeveloperModeSettings.swift` | Developer flag definitions |
-| `DeveloperModeScreen.swift` | Settings UI |
-| `AuthenticationStartScreen.swift` | Login screen (uses flags) |
 | `InfoPlistReader.swift` | Read Info.plist values |
+| `AppSettings.swift` | App-wide settings and URL configuration |
 
 ## Key Dependencies
 
 ### Element/Matrix Packages
 
-| Package | Version | Role |
-|---------|---------|------|
-| MatrixRustSDK | 25.12.10 | Matrix protocol implementation |
-| Compound | local | Element design system |
-| WysiwygComposer | 2.37.12 | Rich text editor |
-| EmbeddedElementCall | 0.16.0-rc.4 | Element Call integration |
-| AnalyticsEvents | 0.29.2 | Analytics events |
+| Package | Role |
+|---------|------|
+| MatrixRustSDK | Matrix protocol implementation |
+| Compound | Element design system (local package) |
+| WysiwygComposer | Rich text editor |
+| EmbeddedElementCall | Element Call integration |
+| AnalyticsEvents | Analytics events |
 
 ### External Packages
 
