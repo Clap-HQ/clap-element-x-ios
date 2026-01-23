@@ -23,8 +23,7 @@ struct SpaceListScreen: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbar }
         .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
-        // 상단 그라데이션 제거
-//        .toolbarBloom(hasSearchBar: false)
+        .toolbarBloom(hasSearchBar: false)
         .onAppear { context.send(viewAction: .screenAppeared) }
         .sheet(isPresented: $context.isPresentingFeatureAnnouncement) {
             SpacesAnnouncementSheetView(context: context)

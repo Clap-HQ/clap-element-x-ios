@@ -26,8 +26,7 @@ struct HomeScreen: View {
             .toolbar { toolbar }
             .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
             .track(screen: .Home)
-        // 상단 그라데이션 제거
-//            .toolbarBloom(hasSearchBar: true)
+            .toolbarBloom(hasSearchBar: true)
             .sentryTrace("\(Self.self)")
     }
     
