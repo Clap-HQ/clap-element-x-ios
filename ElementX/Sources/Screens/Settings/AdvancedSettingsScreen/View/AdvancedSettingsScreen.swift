@@ -12,8 +12,8 @@ import SwiftUI
 struct AdvancedSettingsScreen: View {
     @Bindable var context: AdvancedSettingsScreenViewModel.Context
 
-    @AppStorage("showDeveloperSettings", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
-    private var showDeveloperSettings = false
+    @AppStorage("showAdvancedOptions", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
+    private var showAdvancedOptions = false
 
     var body: some View {
         Form {
@@ -22,7 +22,7 @@ struct AdvancedSettingsScreen: View {
                         kind: .picker(selection: $context.appAppearance,
                                       items: AppAppearance.allCases.map { (title: $0.name, tag: $0) }))
 
-                if showDeveloperSettings {
+                if showAdvancedOptions {
                     ListRow(label: .plain(title: L10n.actionViewSource,
                                           description: L10n.screenAdvancedSettingsViewSourceDescription),
                             kind: .toggle($context.viewSourceEnabled))
@@ -40,7 +40,7 @@ struct AdvancedSettingsScreen: View {
                     }
             }
 
-            if showDeveloperSettings {
+            if showAdvancedOptions {
                 moderationAndSafetySection
                 timelineMediaSection
             }

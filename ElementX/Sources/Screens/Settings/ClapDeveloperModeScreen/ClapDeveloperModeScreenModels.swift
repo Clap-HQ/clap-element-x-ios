@@ -36,9 +36,9 @@ struct ClapDeveloperModeScreenViewStateBindings {
         set { clapDeveloperModeSettings.groupSpaceRooms = newValue }
     }
 
-    var showDeveloperSettings: Bool {
-        get { clapDeveloperModeSettings.showDeveloperSettings }
-        set { clapDeveloperModeSettings.showDeveloperSettings = newValue }
+    var showAdvancedOptions: Bool {
+        get { clapDeveloperModeSettings.showAdvancedOptions }
+        set { clapDeveloperModeSettings.showAdvancedOptions = newValue }
     }
 }
 

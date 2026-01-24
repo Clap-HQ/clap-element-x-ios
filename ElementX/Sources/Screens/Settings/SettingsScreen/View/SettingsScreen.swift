@@ -13,8 +13,8 @@ import SwiftUI
 struct SettingsScreen: View {
     let context: SettingsScreenViewModel.Context
 
-    @AppStorage("showDeveloperSettings", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
-    private var showDeveloperSettings = false
+    @AppStorage("showAdvancedOptions", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
+    private var showAdvancedOptions = false
 
     private var shouldHideManageAccountSection: Bool {
         context.viewState.accountProfileURL == nil &&
@@ -152,7 +152,7 @@ struct SettingsScreen: View {
                     })
                     .accessibilityIdentifier(A11yIdentifiers.settingsScreen.advancedSettings)
 
-            if showDeveloperSettings {
+            if showAdvancedOptions {
                 ListRow(label: .default(title: L10n.screenAdvancedSettingsLabs,
                                         icon: \.labs),
                         kind: .navigationLink {
@@ -167,7 +167,7 @@ struct SettingsScreen: View {
                     })
                     .accessibilityIdentifier(A11yIdentifiers.settingsScreen.about)
 
-            if context.viewState.isBugReportServiceEnabled, showDeveloperSettings {
+            if context.viewState.isBugReportServiceEnabled, showAdvancedOptions {
                 ListRow(label: .default(title: L10n.commonReportAProblem,
                                         icon: \.chatProblem),
                         kind: .navigationLink {

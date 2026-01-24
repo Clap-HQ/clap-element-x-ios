@@ -51,8 +51,8 @@ struct ClapDeveloperModeScreen: View {
             }
 
             Section {
-                Toggle(isOn: $context.showDeveloperSettings) {
-                    Text("Show Developer Settings")
+                Toggle(isOn: $context.showAdvancedOptions) {
+                    Text("Show Advanced Options")
                     Text("Show View Source, Hide Invite Avatars, Timeline Media, Labs, and Report a Problem options")
                         .font(.compound.bodySM)
                         .foregroundColor(.compound.textSecondary)

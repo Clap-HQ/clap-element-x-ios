@@ -15,7 +15,7 @@ final class ClapDeveloperModeSettings {
         case showCustomHomeserver
         case showQRCodeLogin
         case groupSpaceRooms
-        case showDeveloperSettings
+        case showAdvancedOptions
     }
 
     private static var suiteName: String = InfoPlistReader.main.appGroupIdentifier
@@ -34,7 +34,7 @@ final class ClapDeveloperModeSettings {
     @UserPreference(key: Keys.groupSpaceRooms, defaultValue: true, storageType: .userDefaults(store))
     var groupSpaceRooms
 
-    /// Whether to show developer-only settings options (View Source, Hide Invite Avatars, Timeline Media, Labs, Report a Problem).
-    @UserPreference(key: Keys.showDeveloperSettings, defaultValue: false, storageType: .userDefaults(store))
-    var showDeveloperSettings
+    /// Whether to show advanced options (View Source, Hide Invite Avatars, Timeline Media, Labs, Report a Problem).
+    @UserPreference(key: Keys.showAdvancedOptions, defaultValue: false, storageType: .userDefaults(store))
+    var showAdvancedOptions
 }
