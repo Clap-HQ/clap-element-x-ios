@@ -17,7 +17,8 @@ enum TimelineReplyViewPlacement {
 struct TimelineReplyView: View {
     let placement: TimelineReplyViewPlacement
     let timelineItemReplyDetails: TimelineItemReplyDetails?
-    
+    var isOutgoing = false
+
     var body: some View {
         if let timelineItemReplyDetails {
             switch timelineItemReplyDetails {
@@ -29,55 +30,66 @@ struct TimelineReplyView: View {
                         ReplyView(sender: sender,
                                   plainBody: content.caption ?? content.filename,
                                   formattedBody: content.formattedCaption,
-                                  icon: .init(kind: .systemIcon("waveform"), cornerRadii: iconCornerRadii))
+                                  icon: .init(kind: .systemIcon("waveform"), cornerRadii: iconCornerRadii),
+                                  isOutgoing: isOutgoing)
                     case .emote(let content):
                         ReplyView(sender: sender,
                                   plainBody: content.body,
-                                  formattedBody: content.formattedBody)
+                                  formattedBody: content.formattedBody,
+                                  isOutgoing: isOutgoing)
                     case .file(let content):
                         ReplyView(sender: sender,
                                   plainBody: content.caption ?? content.filename,
                                   formattedBody: content.formattedCaption,
-                                  icon: .init(kind: .icon(\.document), cornerRadii: iconCornerRadii))
+                                  icon: .init(kind: .icon(\.document), cornerRadii: iconCornerRadii),
+                                  isOutgoing: isOutgoing)
                     case .image(let content):
                         ReplyView(sender: sender,
                                   plainBody: content.caption ?? content.filename,
                                   formattedBody: content.formattedCaption,
-                                  icon: .init(kind: .mediaSource(content.thumbnailInfo?.source ?? content.imageInfo.source), cornerRadii: iconCornerRadii))
+                                  icon: .init(kind: .mediaSource(content.thumbnailInfo?.source ?? content.imageInfo.source), cornerRadii: iconCornerRadii),
+                                  isOutgoing: isOutgoing)
                     case .notice(let content):
                         ReplyView(sender: sender,
                                   plainBody: content.body,
-                                  formattedBody: content.formattedBody)
+                                  formattedBody: content.formattedBody,
+                                  isOutgoing: isOutgoing)
                     case .text(let content):
                         ReplyView(sender: sender,
                                   plainBody: content.body,
-                                  formattedBody: content.formattedBody)
+                                  formattedBody: content.formattedBody,
+                                  isOutgoing: isOutgoing)
                     case .video(let content):
                         ReplyView(sender: sender,
                                   plainBody: content.caption ?? content.filename,
                                   formattedBody: content.formattedCaption,
-                                  icon: content.thumbnailInfo.map { .init(kind: .mediaSource($0.source), cornerRadii: iconCornerRadii) })
+                                  icon: content.thumbnailInfo.map { .init(kind: .mediaSource($0.source), cornerRadii: iconCornerRadii) },
+                                  isOutgoing: isOutgoing)
                     case .voice:
                         ReplyView(sender: sender,
                                   plainBody: L10n.commonVoiceMessage,
                                   formattedBody: nil,
-                                  icon: .init(kind: .icon(\.micOn), cornerRadii: iconCornerRadii))
+                                  icon: .init(kind: .icon(\.micOn), cornerRadii: iconCornerRadii),
+                                  isOutgoing: isOutgoing)
                     case .location:
                         ReplyView(sender: sender,
                                   plainBody: L10n.commonSharedLocation,
                                   formattedBody: nil,
-                                  icon: .init(kind: .icon(\.locationPin), cornerRadii: iconCornerRadii))
+                                  icon: .init(kind: .icon(\.locationPin), cornerRadii: iconCornerRadii),
+                                  isOutgoing: isOutgoing)
                     }
                 case .poll(let question):
                     ReplyView(sender: sender,
                               plainBody: question,
                               formattedBody: nil,
-                              icon: .init(kind: .icon(\.polls), cornerRadii: iconCornerRadii))
+                              icon: .init(kind: .icon(\.polls), cornerRadii: iconCornerRadii),
+                              isOutgoing: isOutgoing)
                 case .redacted:
                     ReplyView(sender: sender,
                               plainBody: L10n.commonMessageRemoved,
                               formattedBody: nil,
-                              icon: .init(kind: .icon(\.delete), cornerRadii: iconCornerRadii))
+                              icon: .init(kind: .icon(\.delete), cornerRadii: iconCornerRadii),
+                              isOutgoing: isOutgoing)
                 }
             default:
                 LoadingReplyView()
@@ -110,43 +122,43 @@ struct TimelineReplyView: View {
                 case iconAsset(ImageAsset)
                 case icon(KeyPath<CompoundIcons, Image>)
             }
-            
+
             let kind: Kind
             let cornerRadii: Double
         }
-        
+
         @EnvironmentObject private var context: TimelineViewModel.Context
         @ScaledMetric private var imageContainerSize = 36.0
-        
+
         let sender: TimelineItemSender
         let plainBody: String
         let formattedBody: AttributedString?
-        
+
         var icon: Icon?
-        
+        var isOutgoing = false
+
         var body: some View {
             HStack(spacing: 8) {
-                iconView
-                    .frame(width: imageContainerSize, height: imageContainerSize)
-                    .foregroundColor(.compound.iconPrimary)
-                    .background(Color.compound.bgSubtlePrimary)
-                    .cornerRadius(icon?.cornerRadii ?? 0.0, corners: .allCorners)
-                    .accessibilityHidden(true)
-                
+                if icon != nil {
+                    iconView
+                        .frame(width: imageContainerSize, height: imageContainerSize)
+                        .foregroundColor(.compound.iconBubble(isOutgoing: isOutgoing))
+                        .cornerRadius(icon?.cornerRadii ?? 0.0, corners: .allCorners)
+                        .accessibilityHidden(true)
+                }
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text(sender.disambiguatedDisplayName ?? sender.id)
                         .font(.compound.bodySMSemibold)
-                        .foregroundColor(.compound.textPrimary)
+                        .foregroundColor(.compound.textBubbleSecondary(isOutgoing: isOutgoing))
                         .accessibilityLabel(L10n.commonInReplyTo(sender.disambiguatedDisplayName ?? sender.id))
-                    
+
                     Text(context.viewState.buildMessagePreview(formattedBody: formattedBody, plainBody: plainBody))
                         .font(.compound.bodyMD)
-                        .foregroundColor(.compound.textSecondary)
+                        .foregroundColor(.compound.textBubbleSecondary(isOutgoing: isOutgoing))
                         .tint(.compound.textLinkExternal)
                         .lineLimit(2)
                 }
-                .padding(.leading, icon == nil ? 8 : 0)
-                .padding(.trailing, 8)
             }
             .accessibilityElement(children: .combine)
         }

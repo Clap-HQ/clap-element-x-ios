@@ -11,7 +11,8 @@ import SwiftUI
 
 struct PollOptionView: View {
     @Environment(\.isEnabled) private var isEnabled
-    
+    @Environment(\.timelineBubbleIsOutgoing) private var isOutgoing
+
     let pollOption: Poll.Option
     let showVotes: Bool
     let isFinalResult: Bool
@@ -20,7 +21,7 @@ struct PollOptionView: View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             Image(systemSymbol: pollOption.isSelected ? .checkmarkCircleFill : .circle)
                 .font(.compound.bodyLG)
-                .foregroundColor(pollOption.isSelected && isEnabled ? .compound.iconPrimary : .compound.iconTertiary)
+                .foregroundColor(checkboxColor)
                 .accessibilityAddTraits(pollOption.isSelected ? .isSelected : [])
 
             VStack(spacing: 10) {
@@ -28,7 +29,7 @@ struct PollOptionView: View {
                     Text(pollOption.text)
                         .font(isFinalWinningOption ? .compound.bodyLGSemibold : .compound.bodyLG)
                         .multilineTextAlignment(.leading)
-                        .foregroundColor(.compound.textPrimary)
+                        .foregroundColor(.compound.textBubble(isOutgoing: isOutgoing))
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     if showVotes {
@@ -37,21 +38,29 @@ struct PollOptionView: View {
                                 CompoundIcon(asset: Asset.Images.pollWinner)
                                     .foregroundColor(.compound.iconAccentTertiary)
                                     .accessibilityLabel(L10n.a11yPollsWinningAnswer)
-                                
+
                                 Text(L10n.commonPollVotesCount(pollOption.votes))
                                     .font(.compound.bodySMSemibold)
-                                    .foregroundColor(.compound.textPrimary)
+                                    .foregroundColor(.compound.textBubble(isOutgoing: isOutgoing))
                             }
                         } else {
                             Text(L10n.commonPollVotesCount(pollOption.votes))
                                 .font(.compound.bodySM)
-                                .foregroundColor(.compound.textSecondary)
+                                .foregroundColor(.compound.textBubbleSecondary(isOutgoing: isOutgoing))
                         }
                     }
                 }
 
-                PollProgressView(progress: progress)
+                PollProgressView(progress: progress, isOutgoing: isOutgoing, isFinalWinningOption: isFinalWinningOption)
             }
+        }
+    }
+
+    private var checkboxColor: Color {
+        if pollOption.isSelected && isEnabled {
+            return .compound.iconBubble(isOutgoing: isOutgoing)
+        } else {
+            return .compound.textBubbleSecondary(isOutgoing: isOutgoing)
         }
     }
 
@@ -75,18 +84,25 @@ struct PollOptionView: View {
 
 private struct PollProgressView: View {
     let progress: Double
+    let isOutgoing: Bool
+    let isFinalWinningOption: Bool
 
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 Capsule()
-                    .foregroundColor(.compound._bgEmptyItemAlpha)
+                    .foregroundColor(.compound._bgPollProgressEmpty(isOutgoing: isOutgoing))
 
                 Capsule()
+                    .foregroundColor(filledColor)
                     .frame(maxWidth: progress * geometry.size.width)
             }
         }
         .frame(height: 6)
+    }
+
+    private var filledColor: Color {
+        isFinalWinningOption ? .compound.iconAccentTertiary : .compound._bgPollProgressFilled(isOutgoing: isOutgoing)
     }
 }
 
@@ -125,3 +141,4 @@ struct PollOptionView_Previews: PreviewProvider, TestablePreview {
         }
     }
 }
+

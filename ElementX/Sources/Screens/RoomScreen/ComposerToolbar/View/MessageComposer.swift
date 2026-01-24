@@ -24,6 +24,7 @@ struct MessageComposer: View {
     
     let composerFormattingEnabled: Bool
     let showResizeGrabber: Bool
+    let showBackground: Bool
     @Binding var isExpanded: Bool
     
     let sendAction: () -> Void
@@ -42,7 +43,7 @@ struct MessageComposer: View {
             }
             
             composerTextField
-                .messageComposerStyle(header: header)
+                .messageComposerStyle(header: header, showBackground: showBackground)
                 // Explicitly disable all animations to fix weirdness with the header immediately
                 // appearing whilst the text field and keyboard are still animating up to it.
                 .animation(.noAnimation, value: mode)
@@ -200,33 +201,37 @@ private struct MessageComposerHeaderLabelStyle: LabelStyle {
 // MARK: - Style
 
 extension View {
-    func messageComposerStyle(header: some View = EmptyView()) -> some View {
-        modifier(MessageComposerStyleModifier(header: header))
+    func messageComposerStyle(header: some View = EmptyView(), showBackground: Bool = true) -> some View {
+        modifier(MessageComposerStyleModifier(header: header, showBackground: showBackground))
     }
 }
 
 private struct MessageComposerStyleModifier<Header: View>: ViewModifier {
     private let composerShape = RoundedRectangle(cornerRadius: 21, style: .circular)
-    
+
     let header: Header
-    
+    let showBackground: Bool
+
+    @ViewBuilder
     func body(content: Content) -> some View {
-        VStack(alignment: .leading, spacing: -6) {
+        let baseView = VStack(alignment: .leading, spacing: -6) {
             header
-            
+
             content
                 .tint(.compound.iconAccentTertiary)
                 .padding(.vertical, 10)
         }
-        .padding(.horizontal, 12.0)
-        .clipShape(composerShape)
-        .background {
-            ZStack {
-                composerShape
-                    .fill(Color.compound.bgSubtleSecondary)
-                composerShape
-                    .stroke(Color.compound.borderInteractiveSecondary, lineWidth: 0.5)
-            }
+        .padding(.horizontal, showBackground ? 12.0 : 0)
+
+        if showBackground {
+            baseView
+                .clipShape(composerShape)
+                .background {
+                    composerShape
+                        .fill(Color.compound.bgSubtleSecondary)
+                }
+        } else {
+            baseView
         }
     }
 }
@@ -299,6 +304,7 @@ struct MessageComposer_Previews: PreviewProvider, TestablePreview {
                                placeholder: placeholder,
                                composerFormattingEnabled: false,
                                showResizeGrabber: false,
+                               showBackground: true,
                                isExpanded: .constant(false),
                                sendAction: { },
                                editAction: { },

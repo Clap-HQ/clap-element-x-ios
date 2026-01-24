@@ -32,8 +32,7 @@ struct ComposerToolbar: View {
                 bottomBar
             }
         }
-        .padding(.leading, 5)
-        .padding(.trailing, 8)
+        .padding(.horizontal, 8)
         .padding(.bottom, context.composerFormattingEnabled ? 8 : 12)
         .background {
             if context.composerFormattingEnabled {
@@ -79,20 +78,6 @@ struct ComposerToolbar: View {
     private var topBar: some View {
         topBarLayout {
             mainTopBarContent
-            
-            if !context.composerFormattingEnabled {
-                if context.viewState.isUploading {
-                    ProgressView()
-                        .scaledFrame(size: 44, relativeTo: .compound.headingLG)
-                        .padding(.leading, 3)
-                } else if context.viewState.showSendButton {
-                    sendButton
-                        .padding(.leading, 3)
-                } else {
-                    voiceMessageRecordingButton(mode: context.viewState.isVoiceMessageModeActivated ? .recording : .idle)
-                        .padding(.leading, 3)
-                }
-            }
         }
         .animation(.linear(duration: 0.15), value: context.viewState.composerMode)
     }
@@ -117,14 +102,48 @@ struct ComposerToolbar: View {
     @ViewBuilder
     private var mainTopBarContent: some View {
         ZStack(alignment: .bottom) {
-            topBarLayout {
-                if !context.composerFormattingEnabled {
+            if !context.composerFormattingEnabled {
+                // 통합된 입력창 스타일
+                HStack(alignment: .bottom, spacing: 0) {
                     RoomAttachmentPicker(context: context)
+                        .frame(width: 34, height: 34)
+                        .padding(.leading, 5)
+                        .padding(.trailing, 10)
+                        .padding(.bottom, 5)
+
+                    messageComposer
+                        .frame(minHeight: 44)
+
+                    if context.viewState.isUploading {
+                        ProgressView()
+                            .frame(width: 34, height: 34)
+                            .padding(.leading, 10)
+                            .padding(.trailing, 5)
+                            .padding(.bottom, 5)
+                    } else if context.viewState.showSendButton {
+                        sendButton
+                            .padding(.leading, 10)
+                            .padding(.trailing, 5)
+                            .padding(.bottom, 5)
+                    } else {
+                        voiceMessageRecordingButton(mode: context.viewState.isVoiceMessageModeActivated ? .recording : .idle)
+                            .padding(.leading, 10)
+                            .padding(.trailing, 5)
+                            .padding(.bottom, 5)
+                    }
                 }
-                messageComposer
+                .background(
+                    RoundedRectangle(cornerRadius: 22, style: .circular)
+                        .fill(Color.compound.bgSubtleSecondary)
+                )
+                .opacity(context.viewState.isVoiceMessageModeActivated ? 0 : 1)
+            } else {
+                topBarLayout {
+                    messageComposer
+                }
+                .opacity(context.viewState.isVoiceMessageModeActivated ? 0 : 1)
             }
-            .opacity(context.viewState.isVoiceMessageModeActivated ? 0 : 1)
-            
+
             if context.viewState.isVoiceMessageModeActivated {
                 voiceMessageContent
                     .fixedSize(horizontal: false, vertical: true)
@@ -140,8 +159,8 @@ struct ComposerToolbar: View {
             Image(Asset.Images.closeRte.name)
                 .resizable()
                 .scaledToFit()
-                .scaledFrame(size: 30, relativeTo: .compound.headingLG)
-                .scaledPadding(7, relativeTo: .compound.headingLG)
+                .scaledFrame(size: 34, relativeTo: .compound.headingLG)
+                .scaledPadding(5, relativeTo: .compound.headingLG)
         }
         .accessibilityLabel(L10n.richTextEditorCloseFormattingOptions)
         .accessibilityIdentifier(A11yIdentifiers.roomScreen.composerToolbar.closeFormattingOptions)
@@ -151,9 +170,9 @@ struct ComposerToolbar: View {
         Group {
             if context.viewState.composerMode.isEdit {
                 Button(action: sendMessage) {
-                    CompoundIcon(\.check, size: .medium, relativeTo: .compound.headingLG)
+                    CompoundIcon(\.check, size: .custom(22), relativeTo: .compound.headingLG)
                         .foregroundColor(.white)
-                        .scaledPadding(6, relativeTo: .compound.headingLG)
+                        .frame(width: 34, height: 34)
                         .background(.compound.iconAccentTertiary, in: Circle())
                         .accessibilityLabel(L10n.actionConfirm)
                 }
@@ -162,7 +181,6 @@ struct ComposerToolbar: View {
                     .accessibilityLabel(L10n.actionSend)
             }
         }
-        .scaledPadding(4, relativeTo: .compound.headingLG)
         .disabled(context.viewState.sendButtonDisabled)
         .animation(.linear(duration: 0.1).disabledDuringTests(), value: context.viewState.sendButtonDisabled)
         .keyboardShortcut(.return, modifiers: [.command])
@@ -178,6 +196,7 @@ struct ComposerToolbar: View {
                         placeholder: placeholder,
                         composerFormattingEnabled: context.composerFormattingEnabled,
                         showResizeGrabber: context.composerFormattingEnabled,
+                        showBackground: context.composerFormattingEnabled,
                         isExpanded: $context.composerExpanded) {
             sendMessage()
         } editAction: {
@@ -210,7 +229,7 @@ struct ComposerToolbar: View {
         }
         .onChange(of: context.composerFocused) { _, newValue in
             guard composerFocused != newValue else { return }
-            
+
             composerFocused = newValue
         }
         .onChange(of: composerFocused) { _, newValue in
@@ -271,21 +290,37 @@ struct ComposerToolbar: View {
     }
     
     // MARK: - Voice message
-    
+
     @ViewBuilder
     private var voiceMessageContent: some View {
         // Display the voice message composer above to keep the focus and keep the keyboard open if it's already open.
         switch context.viewState.composerMode {
         case .recordVoiceMessage(let state):
-            topBarLayout {
+            HStack(alignment: .center, spacing: 5) {
                 voiceMessageTrashButton
                 VoiceMessageRecordingComposer(recorderState: state)
+                voiceMessageRecordingButton(mode: .recording)
+                    .padding(.trailing, 5)
             }
+            .frame(minHeight: 44)
+            .padding(.leading, 5)
+            .background(
+                RoundedRectangle(cornerRadius: 22, style: .circular)
+                    .fill(Color.compound.bgSubtleSecondary)
+            )
         case .previewVoiceMessage(let state, let waveform, let isUploading):
-            topBarLayout {
+            HStack(alignment: .center, spacing: 5) {
                 voiceMessageTrashButton
                 voiceMessagePreviewComposer(audioPlayerState: state, waveform: waveform)
+                SendButton(action: sendMessage)
+                    .padding(.trailing, 5)
             }
+            .frame(minHeight: 44)
+            .padding(.leading, 5)
+            .background(
+                RoundedRectangle(cornerRadius: 22, style: .circular)
+                    .fill(Color.compound.bgSubtleSecondary)
+            )
             .disabled(isUploading)
         default:
             EmptyView()
@@ -304,10 +339,8 @@ struct ComposerToolbar: View {
         Button(role: .destructive) {
             context.send(viewAction: .voiceMessage(.deleteRecording))
         } label: {
-            CompoundIcon(\.delete)
-                .scaledToFit()
-                .scaledFrame(size: 30, relativeTo: .compound.headingLG)
-                .scaledPadding(7, relativeTo: .compound.headingLG)
+            CompoundIcon(\.delete, size: .custom(22), relativeTo: .compound.headingLG)
+                .frame(width: 34, height: 34)
         }
         .buttonStyle(.compound(.textLink))
         .accessibilityLabel(L10n.a11yDelete)
