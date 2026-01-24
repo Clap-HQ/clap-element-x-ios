@@ -23,7 +23,6 @@ struct SpaceListScreen: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbar }
         .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
-        .toolbarBloom(hasSearchBar: false)
         .onAppear { context.send(viewAction: .screenAppeared) }
         .sheet(isPresented: $context.isPresentingFeatureAnnouncement) {
             SpacesAnnouncementSheetView(context: context)
