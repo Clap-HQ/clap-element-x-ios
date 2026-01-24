@@ -12,8 +12,15 @@ import SwiftUI
 final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIGestureRecognizerDelegate {
     var timelineContext: TimelineViewModel.Context?
     var updateClosure: (() -> Void)?
+    var allowsTextSelection = false
     private var pillViews = NSHashTable<UIView>.weakObjects()
-        
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        // Remove all drag interactions to prevent text movement
+        interactions.compactMap { $0 as? UIDragInteraction }.forEach { removeInteraction($0) }
+    }
+
     override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
         // We don't need to change the behaviour on MacOS
         if !ProcessInfo.processInfo.isiOSAppOnMac {
@@ -21,9 +28,13 @@ final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIG
         }
         super.addGestureRecognizer(gestureRecognizer)
     }
-    
-    // This prevents the magnifying glass from showing up
+
+    // This prevents the magnifying glass from showing up (unless text selection is allowed)
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        // Allow long press for text selection when enabled
+        if allowsTextSelection {
+            return true
+        }
         if otherGestureRecognizer is UILongPressGestureRecognizer {
             return false
         }
@@ -53,23 +64,104 @@ final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIG
         }
         pillViews.removeAllObjects()
     }
+
+    override func copy(_ sender: Any?) {
+        guard allowsTextSelection,
+              let selectedRange = selectedTextRange,
+              !selectedRange.isEmpty else {
+            super.copy(sender)
+            return
+        }
+
+        let nsRange = NSRange(location: offset(from: beginningOfDocument, to: selectedRange.start),
+                              length: offset(from: selectedRange.start, to: selectedRange.end))
+
+        let selectedAttributedText = attributedText.attributedSubstring(from: nsRange)
+        UIPasteboard.general.string = convertToPlainText(selectedAttributedText)
+    }
+
+    /// Converts attributed string with pill attachments and links to plain text
+    private func convertToPlainText(_ attributedString: NSAttributedString) -> String {
+        var replacements: [(range: NSRange, text: String)] = []
+        let fullRange = NSRange(location: 0, length: attributedString.length)
+
+        attributedString.enumerateAttributes(in: fullRange, options: []) { attributes, range, _ in
+            if let pillAttachment = attributes[.attachment] as? PillTextAttachment {
+                replacements.append((range, pillDisplayText(for: pillAttachment.pillData)))
+            } else if let link = attributes[.link] as? URL {
+                let displayText = attributedString.attributedSubstring(from: range).string
+                let urlString = link.absoluteString
+
+                if !isDisplayTextMatchingURL(displayText, urlString: urlString) {
+                    replacements.append((range, "[\(displayText)](\(urlString))"))
+                }
+            }
+        }
+
+        guard !replacements.isEmpty else { return attributedString.string }
+
+        let result = NSMutableAttributedString(attributedString: attributedString)
+        for (range, text) in replacements.sorted(by: { $0.range.location > $1.range.location }) {
+            result.replaceCharacters(in: range, with: text)
+        }
+        return result.string
+    }
+
+    /// Checks if display text is essentially the same as the URL (ignoring scheme and trailing slashes)
+    private func isDisplayTextMatchingURL(_ displayText: String, urlString: String) -> Bool {
+        let normalizedDisplay = displayText.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        let normalizedURL = urlString
+            .replacingOccurrences(of: "https://", with: "")
+            .replacingOccurrences(of: "http://", with: "")
+            .trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+
+        return displayText == urlString || normalizedDisplay == normalizedURL
+    }
+
+    /// Gets display text for a pill based on its data
+    private func pillDisplayText(for pillData: PillTextAttachmentData) -> String {
+        switch pillData.type {
+        case .user(let userID):
+            // Try to get display name from room members
+            if let displayName = timelineContext?.viewState.members[userID]?.displayName {
+                return displayName
+            }
+            return userID
+        case .allUsers:
+            return "room"
+        case .roomAlias(let alias):
+            return alias
+        case .roomID(let roomID):
+            return roomID
+        case .event(let room):
+            switch room {
+            case .roomAlias(let alias):
+                return alias
+            case .roomID(let roomID):
+                return roomID
+            }
+        }
+    }
 }
 
 struct MessageText: UIViewRepresentable {
     @Environment(\.openURL) private var openURLAction
     @Environment(\.timelineContext) private var viewModel
     @State private var computedSizes = [Double: CGSize]()
-    
+
     @State var attributedString: AttributedString {
         didSet {
             computedSizes.removeAll()
         }
     }
 
+    var allowsTextSelection = false
+
     func makeUIView(context: Context) -> MessageTextView {
         // Need to use TextKit 1 for mentions
         let textView = MessageTextView(usingTextLayoutManager: false)
         textView.timelineContext = viewModel
+        textView.allowsTextSelection = allowsTextSelection
         textView.updateClosure = { [weak textView] in
             guard let textView else { return }
             do {
@@ -139,23 +231,25 @@ struct MessageText: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(openURLAction: openURLAction)
+        Coordinator(openURLAction: openURLAction, allowsTextSelection: allowsTextSelection)
     }
 
     final class Coordinator: NSObject, UITextViewDelegate {
         var openURLAction: OpenURLAction
+        let allowsTextSelection: Bool
 
-        init(openURLAction: OpenURLAction) {
+        init(openURLAction: OpenURLAction, allowsTextSelection: Bool) {
             self.openURLAction = openURLAction
+            self.allowsTextSelection = allowsTextSelection
         }
-        
+
         func textViewDidChangeSelection(_ textView: UITextView) {
-            guard !ProcessInfo.processInfo.isiOSAppOnMac else {
+            guard !allowsTextSelection, !ProcessInfo.processInfo.isiOSAppOnMac else {
                 return
             }
             textView.selectedTextRange = nil
         }
-        
+
         func textView(_ textView: UITextView, primaryActionFor textItem: UITextItem, defaultAction: UIAction) -> UIAction? {
             if case .link(let url) = textItem.content {
                 return .init(title: defaultAction.title,
