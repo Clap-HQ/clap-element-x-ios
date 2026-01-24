@@ -55,7 +55,7 @@ struct HomeScreenContent: View {
                         }
                     }
                     .isSearching($context.isSearchFieldFocused)
-                    .searchable(text: $context.searchQuery, placement: .navigationBarDrawer(displayMode: .always))
+                    .searchable(text: $context.searchQuery, placement: .navigationBarDrawer)
                     .compoundSearchField()
                     .disableAutocorrection(true)
                 }

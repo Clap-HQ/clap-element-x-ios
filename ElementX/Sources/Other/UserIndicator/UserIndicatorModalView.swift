@@ -15,41 +15,49 @@ struct UserIndicatorModalView: View {
 
     var body: some View {
         ZStack {
-            VStack(spacing: 12.0) {
-                if case .indeterminate = indicator.progress {
-                    ProgressView()
-                } else if case .published = indicator.progress {
-                    ProgressView(value: progressFraction)
-                }
-
-                HStack(spacing: 8) {
-                    if let iconName = indicator.iconName {
-                        Image(systemName: iconName)
-                            .font(titleFont)
-                            .foregroundColor(.compound.iconPrimary)
+            if case .indeterminate = indicator.progress {
+                ProgressView()
+                    .onReceive(indicator.progressPublisher) { progress in
+                        progressFraction = progress
                     }
-                    
-                    Text(indicator.title)
-                        .font(titleFont)
-                        .foregroundColor(.compound.textPrimary)
+                    .transition(.opacity)
+            } else if case .published = indicator.progress {
+                ProgressView(value: progressFraction)
+                    .onReceive(indicator.progressPublisher) { progress in
+                        progressFraction = progress
+                    }
+                    .transition(.opacity)
+            } else {
+                VStack(spacing: 12.0) {
+                    HStack(spacing: 8) {
+                        if let iconName = indicator.iconName {
+                            Image(systemName: iconName)
+                                .font(titleFont)
+                                .foregroundColor(.compound.iconPrimary)
+                        }
+
+                        Text(indicator.title)
+                            .font(titleFont)
+                            .foregroundColor(.compound.textPrimary)
+                    }
+
+                    if let message = indicator.message {
+                        Text(message)
+                            .font(.compound.bodyMD)
+                            .foregroundColor(.compound.textPrimary)
+                    }
                 }
-                
-                if let message = indicator.message {
-                    Text(message)
-                        .font(.compound.bodyMD)
-                        .foregroundColor(.compound.textPrimary)
+                .padding()
+                .frame(minWidth: 150.0)
+                .fixedSize(horizontal: true, vertical: false)
+                .background(Color.compound.bgSubtlePrimary)
+                .clipShape(RoundedCornerShape(radius: 12.0, corners: .allCorners))
+                .shadow(color: .black.opacity(0.1), radius: 10.0, y: 4.0)
+                .onReceive(indicator.progressPublisher) { progress in
+                    progressFraction = progress
                 }
+                .transition(.opacity)
             }
-            .padding()
-            .frame(minWidth: 150.0)
-            .fixedSize(horizontal: true, vertical: false)
-            .background(Color.compound.bgSubtlePrimary)
-            .clipShape(RoundedCornerShape(radius: 12.0, corners: .allCorners))
-            .shadow(color: .black.opacity(0.1), radius: 10.0, y: 4.0)
-            .onReceive(indicator.progressPublisher) { progress in
-                progressFraction = progress
-            }
-            .transition(.opacity)
         }
         .id(indicator.id)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
