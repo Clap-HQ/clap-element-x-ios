@@ -85,7 +85,7 @@ struct HomeScreenRoomCell: View {
                     .foregroundColor(.compound.textPrimary)
                     .lineLimit(1)
                 
-                if !room.isDirect, room.memberCount > 0 {
+                if !room.isDirectOneToOneRoom, room.memberCount > 0 {
                     Text("\(room.memberCount)")
                         .font(.compound.bodyMD)
                         .foregroundColor(.compound.textSecondary)

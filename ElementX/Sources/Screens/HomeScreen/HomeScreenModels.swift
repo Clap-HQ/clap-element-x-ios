@@ -190,7 +190,11 @@ struct HomeScreenRoom: Identifiable, Equatable {
     let memberCount: Int
 
     let isDirect: Bool
-    
+
+    var isDirectOneToOneRoom: Bool {
+        isDirect && memberCount <= 2
+    }
+
     let isHighlighted: Bool
     
     let isFavourite: Bool
@@ -264,7 +268,7 @@ extension HomeScreenRoom {
                                 isMuteShown: isMuteShown,
                                 isCallShown: isCallShown),
                   name: summary.name,
-                  memberCount: Int(summary.joinedMembersCount),
+                  memberCount: Int(summary.activeMembersCount),
                   isDirect: summary.isDirect,
                   isHighlighted: isHighlighted,
                   isFavourite: summary.isFavourite,
