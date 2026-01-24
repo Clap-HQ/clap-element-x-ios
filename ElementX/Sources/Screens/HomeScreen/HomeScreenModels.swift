@@ -264,7 +264,7 @@ extension HomeScreenRoom {
                                 isMuteShown: isMuteShown,
                                 isCallShown: isCallShown),
                   name: summary.name,
-                  memberCount: Int(summary.activeMembersCount),
+                  memberCount: Int(summary.joinedMembersCount),
                   isDirect: summary.isDirect,
                   isHighlighted: isHighlighted,
                   isFavourite: summary.isFavourite,

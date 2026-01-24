@@ -21,7 +21,16 @@ struct RoomHeaderView: View {
     let mediaProvider: MediaProviderProtocol?
 
     var body: some View {
-        content
+        if #available(iOS 26.0, *) {
+            // On iOS 26+ we use the toolbarRole(.editor) to leading align.
+            content
+        } else {
+            // On iOS 18 and lower, the editor role causes an animation glitch with the back button whenever
+            // you push a screen whilst the large title is visible on the room screen.
+            content
+                // So take up as much space as possible, with a leading alignment for use in the default principal toolbar position
+                .frame(idealWidth: .greatestFiniteMagnitude, maxWidth: .infinity, alignment: .leading)
+        }
     }
 
     private var content: some View {
