@@ -108,7 +108,7 @@ class SettingsFlowCoordinator: FlowCoordinatorProtocol {
                 case .developerOptions:
                     presentDeveloperOptions()
                 case .developerMode:
-                    presentDeveloperMode()
+                    presentClapDeveloperMode()
                 case .deactivateAccount:
                     presentDeactivateAccount()
                 }
@@ -241,8 +241,8 @@ class SettingsFlowCoordinator: FlowCoordinatorProtocol {
         navigationStackCoordinator.push(coordinator)
     }
 
-    private func presentDeveloperMode() {
-        let coordinator = DeveloperModeScreenCoordinator(developerModeSettings: ServiceLocator.shared.developerModeSettings)
+    private func presentClapDeveloperMode() {
+        let coordinator = ClapDeveloperModeScreenCoordinator(clapDeveloperModeSettings: ServiceLocator.shared.clapDeveloperModeSettings)
         navigationStackCoordinator.push(coordinator)
     }
 

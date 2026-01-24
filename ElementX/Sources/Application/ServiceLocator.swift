@@ -25,10 +25,10 @@ class ServiceLocator {
         settings = appSettings
     }
 
-    private(set) var developerModeSettings: DeveloperModeSettings!
+    private(set) var clapDeveloperModeSettings: ClapDeveloperModeSettings!
 
-    func register(developerModeSettings: DeveloperModeSettings) {
-        self.developerModeSettings = developerModeSettings
+    func register(clapDeveloperModeSettings: ClapDeveloperModeSettings) {
+        self.clapDeveloperModeSettings = clapDeveloperModeSettings
     }
 
     private(set) var analytics: AnalyticsService!

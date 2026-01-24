@@ -10,7 +10,7 @@ import Foundation
 
 /// Settings for Developer Mode feature flags.
 /// These flags control experimental features that are hidden from regular users.
-final class DeveloperModeSettings {
+final class ClapDeveloperModeSettings {
     private enum Keys: String {
         case showCustomHomeserver
         case showQRCodeLogin
@@ -20,11 +20,6 @@ final class DeveloperModeSettings {
 
     private static var suiteName: String = InfoPlistReader.main.appGroupIdentifier
     private static var store: UserDefaults! = UserDefaults(suiteName: suiteName)
-
-    /// Whether this is the Clap Dev scheme (Debug build)
-    private static var isClapDev: Bool {
-        InfoPlistReader.main.baseBundleIdentifier == "ac.clap.app.dev"
-    }
 
     /// Whether to show the custom homeserver option in the authentication flow.
     @UserPreference(key: Keys.showCustomHomeserver, defaultValue: false, storageType: .userDefaults(store))

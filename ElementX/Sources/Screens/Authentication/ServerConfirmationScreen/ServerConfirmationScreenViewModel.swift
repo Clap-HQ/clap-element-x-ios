@@ -40,7 +40,7 @@ class ServerConfirmationScreenViewModel: ServerConfirmationScreenViewModelType, 
         
         super.init(initialViewState: ServerConfirmationScreenViewState(mode: mode,
                                                                        authenticationFlow: authenticationFlow,
-                                                                       showCustomHomeserver: ServiceLocator.shared.developerModeSettings.showCustomHomeserver,
+                                                                       showCustomHomeserver: ServiceLocator.shared.clapDeveloperModeSettings.showCustomHomeserver,
                                                                        bindings: .init(pickerSelection: pickerSelection)))
         
         if case .confirmation = mode {

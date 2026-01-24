@@ -214,7 +214,7 @@ struct SettingsScreen: View {
     
     private var developerModeSection: some View {
         Section {
-            ListRow(label: .default(title: "Developer Mode",
+            ListRow(label: .default(title: "Clap Developer Mode",
                                     icon: \.admin),
                     kind: .navigationLink {
                         context.send(viewAction: .developerMode)

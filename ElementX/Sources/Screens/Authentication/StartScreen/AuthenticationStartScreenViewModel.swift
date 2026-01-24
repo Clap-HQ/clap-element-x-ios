@@ -36,7 +36,7 @@ class AuthenticationStartScreenViewModel: AuthenticationStartScreenViewModelType
         self.userIndicatorController = userIndicatorController
         canReportProblem = isBugReportServiceEnabled
 
-        let isQRCodeScanningSupported = !ProcessInfo.processInfo.isiOSAppOnMac && ServiceLocator.shared.developerModeSettings.showQRCodeLogin
+        let isQRCodeScanningSupported = !ProcessInfo.processInfo.isiOSAppOnMac && ServiceLocator.shared.clapDeveloperModeSettings.showQRCodeLogin
 
         let initialViewState = if !appSettings.allowOtherAccountProviders {
             // We don't show the create account button when custom providers are disallowed.

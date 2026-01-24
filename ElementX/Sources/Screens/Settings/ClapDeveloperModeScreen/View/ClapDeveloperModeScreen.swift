@@ -8,8 +8,8 @@
 import Compound
 import SwiftUI
 
-struct DeveloperModeScreen: View {
-    @Bindable var context: DeveloperModeScreenViewModel.Context
+struct ClapDeveloperModeScreen: View {
+    @Bindable var context: ClapDeveloperModeScreenViewModel.Context
 
     @AppStorage("spaceSettingsEnabled", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
     private var spaceSettingsEnabled = true
@@ -62,19 +62,19 @@ struct DeveloperModeScreen: View {
             }
         }
         .compoundList()
-        .navigationTitle("Developer Mode")
+        .navigationTitle("Clap Developer Mode")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 // MARK: - Previews
 
-struct DeveloperModeScreen_Previews: PreviewProvider {
-    static let viewModel = DeveloperModeScreenViewModel(developerModeSettings: ServiceLocator.shared.developerModeSettings)
+struct ClapDeveloperModeScreen_Previews: PreviewProvider {
+    static let viewModel = ClapDeveloperModeScreenViewModel(clapDeveloperModeSettings: ServiceLocator.shared.clapDeveloperModeSettings)
 
     static var previews: some View {
         NavigationStack {
-            DeveloperModeScreen(context: viewModel.context)
+            ClapDeveloperModeScreen(context: viewModel.context)
         }
     }
 }
