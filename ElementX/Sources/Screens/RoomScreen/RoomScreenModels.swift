@@ -36,6 +36,8 @@ enum RoomScreenViewAction {
 struct RoomScreenViewState: BindableState {
     var roomTitle = ""
     var roomAvatar: RoomAvatar
+    var memberCount: Int = 0
+    var isDirectOneToOneRoom: Bool = false
     var dmRecipientVerificationState: UserIdentityVerificationState?
     
     var lastScrollDirection: ScrollDirection?

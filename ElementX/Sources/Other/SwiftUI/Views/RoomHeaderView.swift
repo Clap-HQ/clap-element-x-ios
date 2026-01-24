@@ -14,10 +14,12 @@ struct RoomHeaderView: View {
     let roomName: String
     var roomSubtitle: String?
     let roomAvatar: RoomAvatar
+    var memberCount: Int = 0
+    var isDirectOneToOneRoom: Bool = false
     var dmRecipientVerificationState: UserIdentityVerificationState?
-    
+
     let mediaProvider: MediaProviderProtocol?
-    
+
     var body: some View {
         if #available(iOS 26.0, *) {
             // On iOS 26+ we use the toolbarRole(.editor) to leading align.
@@ -30,38 +32,35 @@ struct RoomHeaderView: View {
                 .frame(idealWidth: .greatestFiniteMagnitude, maxWidth: .infinity, alignment: .leading)
         }
     }
-    
+
     private var content: some View {
-        HStack(spacing: 8) {
-            avatarImage
-                .accessibilityHidden(true)
-            
-            HStack(spacing: 4) {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(roomName)
+        HStack(spacing: 4) {
+            VStack(alignment: .leading, spacing: 0) {
+                Text(roomName)
+                    .lineLimit(1)
+                    .font(.compound.bodyLGSemibold)
+                    .foregroundStyle(.compound.textPrimary)
+                    .accessibilityIdentifier(A11yIdentifiers.roomScreen.name)
+
+                if let roomSubtitle {
+                    Text(roomSubtitle)
                         .lineLimit(1)
-                        .font(.compound.bodyLGSemibold)
-                        .accessibilityIdentifier(A11yIdentifiers.roomScreen.name)
-                    if let roomSubtitle {
-                        Text(roomSubtitle)
-                            .lineLimit(1)
-                            .font(.compound.bodyXS)
-                            .foregroundStyle(.compound.textSecondary)
-                    }
-                }
-                
-                if let dmRecipientVerificationState {
-                    VerificationBadge(verificationState: dmRecipientVerificationState)
+                        .font(.compound.bodyXS)
+                        .foregroundStyle(.compound.textSecondary)
                 }
             }
+
+            if !isDirectOneToOneRoom, memberCount > 0 {
+                Text("\(memberCount)")
+                    .lineLimit(1)
+                    .font(.compound.bodyMD)
+                    .foregroundStyle(.compound.textSecondary)
+            }
+
+            if let dmRecipientVerificationState {
+                VerificationBadge(verificationState: dmRecipientVerificationState)
+            }
         }
-    }
-    
-    private var avatarImage: some View {
-        RoomAvatarImage(avatar: roomAvatar,
-                        avatarSize: .room(on: .timeline),
-                        mediaProvider: mediaProvider)
-            .accessibilityIdentifier(A11yIdentifiers.roomScreen.avatar)
     }
 }
 
@@ -77,26 +76,22 @@ extension RoomHeaderView {
 
 struct RoomHeaderView_Previews: PreviewProvider, TestablePreview {
     static var previews: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            makeHeader(avatarURL: nil, verificationState: .notVerified)
-            makeHeader(avatarURL: .mockMXCAvatar, verificationState: .notVerified)
-            makeHeader(avatarURL: .mockMXCAvatar, verificationState: .verified)
-            makeHeader(avatarURL: .mockMXCAvatar, verificationState: .verificationViolation)
-            makeHeader(avatarURL: .mockMXCAvatar,
-                       roomSubtitle: "Subtitle",
-                       verificationState: .verified)
+        VStack(alignment: .center, spacing: 8) {
+            makeHeader(memberCount: 5, verificationState: .notVerified)
+            makeHeader(memberCount: 100, verificationState: .notVerified)
+            makeHeader(memberCount: 50, verificationState: .verified)
+            makeHeader(memberCount: 25, verificationState: .verificationViolation)
         }
         .previewLayout(.sizeThatFits)
     }
-    
-    static func makeHeader(avatarURL: URL?,
-                           roomSubtitle: String? = nil,
+
+    static func makeHeader(memberCount: Int,
                            verificationState: UserIdentityVerificationState) -> some View {
         RoomHeaderView(roomName: "Some Room name",
-                       roomSubtitle: roomSubtitle,
                        roomAvatar: .room(id: "1",
                                          name: "Some Room Name",
-                                         avatarURL: avatarURL),
+                                         avatarURL: nil),
+                       memberCount: memberCount,
                        dmRecipientVerificationState: verificationState,
                        mediaProvider: MediaProviderMock(configuration: .init()))
             .padding()

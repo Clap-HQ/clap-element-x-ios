@@ -85,6 +85,13 @@ struct HomeScreenRoomCell: View {
                     .foregroundColor(.compound.textPrimary)
                     .lineLimit(1)
                 
+                if !room.isDirectOneToOneRoom, room.memberCount > 0 {
+                    Text("\(room.memberCount)")
+                        .font(.compound.bodyMD)
+                        .foregroundColor(.compound.textSecondary)
+                        .lineLimit(1)
+                }
+                
                 switch room.lastMessageState {
                 case .sending:
                     CompoundIcon(\.time, size: .xSmall, relativeTo: .compound.bodyLGSemibold)
@@ -99,7 +106,7 @@ struct HomeScreenRoomCell: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            
+
             if let timestamp = room.timestamp {
                 Text(timestamp)
                     .font(room.isHighlighted ? .compound.bodySMSemibold : .compound.bodySM)

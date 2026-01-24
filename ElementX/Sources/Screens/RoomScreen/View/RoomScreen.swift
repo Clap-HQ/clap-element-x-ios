@@ -158,6 +158,8 @@ struct RoomScreen: View {
         ToolbarItem(placement: .principal) {
             RoomHeaderView(roomName: context.viewState.roomTitle,
                            roomAvatar: context.viewState.roomAvatar,
+                           memberCount: context.viewState.memberCount,
+                           isDirectOneToOneRoom: context.viewState.isDirectOneToOneRoom,
                            dmRecipientVerificationState: context.viewState.dmRecipientVerificationState,
                            mediaProvider: context.mediaProvider)
                 // Using a button stops it from getting truncated in the navigation bar

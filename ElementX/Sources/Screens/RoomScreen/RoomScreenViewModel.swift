@@ -69,6 +69,8 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
 
         let viewState = RoomScreenViewState(roomTitle: roomProxy.infoPublisher.value.displayName ?? roomProxy.id,
                                             roomAvatar: roomProxy.infoPublisher.value.avatar,
+                                            memberCount: roomProxy.infoPublisher.value.activeMembersCount,
+                                            isDirectOneToOneRoom: roomProxy.isDirectOneToOneRoom,
                                             hasOngoingCall: roomProxy.infoPublisher.value.hasRoomCall,
                                             hasSuccessor: roomProxy.infoPublisher.value.successor != nil)
         super.init(initialViewState: appHooks.roomScreenHook.update(viewState),
@@ -319,6 +321,7 @@ class RoomScreenViewModel: RoomScreenViewModelType, RoomScreenViewModelProtocol 
     private func updateRoomInfo(_ roomInfo: RoomInfoProxyProtocol) {
         state.roomTitle = roomInfo.displayName ?? roomProxy.id
         state.roomAvatar = roomInfo.avatar
+        state.memberCount = roomInfo.activeMembersCount
         state.hasOngoingCall = roomInfo.hasRoomCall
         state.hasSuccessor = roomInfo.successor != nil
         
