@@ -63,6 +63,7 @@ final class AppSettings {
         case knockingEnabled
         case threadsEnabled
         case developerOptionsEnabled
+        case developerModeEnabled
         case linkPreviewsEnabled
         case spaceSettingsEnabled
         case focusEventOnNotificationTap
@@ -412,7 +413,7 @@ final class AppSettings {
     @UserPreference(key: UserDefaultsKeys.focusEventOnNotificationTap, defaultValue: false, storageType: .userDefaults(store))
     var focusEventOnNotificationTap
     
-    @UserPreference(key: UserDefaultsKeys.spaceSettingsEnabled, defaultValue: false, storageType: .userDefaults(store))
+    @UserPreference(key: UserDefaultsKeys.spaceSettingsEnabled, defaultValue: true, storageType: .userDefaults(store))
     var spaceSettingsEnabled
         
     @UserPreference(key: UserDefaultsKeys.linkPreviewsEnabled, defaultValue: false, storageType: .userDefaults(store))
@@ -420,6 +421,10 @@ final class AppSettings {
     
     @UserPreference(key: UserDefaultsKeys.developerOptionsEnabled, defaultValue: isDevelopmentBuild, storageType: .userDefaults(store))
     var developerOptionsEnabled
+
+    /// Whether developer mode is enabled. When enabled, experimental feature flags can be toggled.
+    @UserPreference(key: UserDefaultsKeys.developerModeEnabled, defaultValue: isDevelopmentBuild, storageType: .userDefaults(store))
+    var developerModeEnabled
 }
 
 extension AppSettings: CommonSettingsProtocol { }

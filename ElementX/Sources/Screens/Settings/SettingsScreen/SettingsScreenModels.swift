@@ -23,6 +23,7 @@ enum SettingsScreenViewModelAction: Equatable {
     case advancedSettings
     case labs
     case developerOptions
+    case developerMode
     case logout
     case deactivateAccount
 }
@@ -41,15 +42,16 @@ struct SettingsScreenViewState: BindableState {
     var userAvatarURL: URL?
     var userDisplayName: String?
     var showDeveloperOptions: Bool
-    
+    var showDeveloperMode: Bool
+
     var securitySectionMode = SettingsScreenSecuritySectionMode.none
     var showSecuritySectionBadge = false
-    
+
     var showBlockedUsers = false
     let showAnalyticsSettings: Bool
-    
+
     let isBugReportServiceEnabled: Bool
-    
+
     var bindings = SettingsScreenViewStateBindings()
 }
 
@@ -70,6 +72,7 @@ enum SettingsScreenViewAction {
     case notifications
     case enableDeveloperOptions
     case developerOptions
+    case developerMode
     case advancedSettings
     case labs
     case logout

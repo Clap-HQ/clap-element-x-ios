@@ -12,7 +12,10 @@ import SwiftUI
 
 struct SettingsScreen: View {
     let context: SettingsScreenViewModel.Context
-    
+
+    @AppStorage(ClapDeveloperModeSettings.StorageKeys.showAdvancedOptions, store: ClapDeveloperModeSettings.store)
+    private var showAdvancedOptions = false
+
     private var shouldHideManageAccountSection: Bool {
         context.viewState.accountProfileURL == nil &&
             context.viewState.accountSessionsListURL == nil &&
@@ -32,7 +35,11 @@ struct SettingsScreen: View {
             generalSection
             
             signOutSection
-            
+
+            if context.viewState.showDeveloperMode {
+                developerModeSection
+            }
+
             if context.viewState.showDeveloperOptions {
                 developerOptionsSection
             }
@@ -144,21 +151,23 @@ struct SettingsScreen: View {
                         context.send(viewAction: .advancedSettings)
                     })
                     .accessibilityIdentifier(A11yIdentifiers.settingsScreen.advancedSettings)
-            
-            ListRow(label: .default(title: L10n.screenAdvancedSettingsLabs,
-                                    icon: \.labs),
-                    kind: .navigationLink {
-                        context.send(viewAction: .labs)
-                    })
-            
+
+            if showAdvancedOptions {
+                ListRow(label: .default(title: L10n.screenAdvancedSettingsLabs,
+                                        icon: \.labs),
+                        kind: .navigationLink {
+                            context.send(viewAction: .labs)
+                        })
+            }
+
             ListRow(label: .default(title: L10n.commonAbout,
                                     icon: \.info),
                     kind: .navigationLink {
                         context.send(viewAction: .about)
                     })
                     .accessibilityIdentifier(A11yIdentifiers.settingsScreen.about)
-            
-            if context.viewState.isBugReportServiceEnabled {
+
+            if context.viewState.isBugReportServiceEnabled, showAdvancedOptions {
                 ListRow(label: .default(title: L10n.commonReportAProblem,
                                         icon: \.chatProblem),
                         kind: .navigationLink {
@@ -166,7 +175,7 @@ struct SettingsScreen: View {
                         })
                         .accessibilityIdentifier(A11yIdentifiers.settingsScreen.reportBug)
             }
-            
+
             if context.viewState.showAnalyticsSettings {
                 ListRow(label: .default(title: L10n.commonAnalytics,
                                         icon: \.chart),
@@ -187,7 +196,7 @@ struct SettingsScreen: View {
                         context.send(viewAction: .logout)
                     })
                     .accessibilityIdentifier(A11yIdentifiers.settingsScreen.logout)
-            
+
             if context.viewState.showAccountDeactivation {
                 ListRow(label: .action(title: L10n.actionDeactivateAccount,
                                        icon: \.warning,
@@ -197,12 +206,26 @@ struct SettingsScreen: View {
                         })
             }
         } footer: {
-            if !context.viewState.showDeveloperOptions {
+            if !context.viewState.showDeveloperMode, !context.viewState.showDeveloperOptions {
                 versionSection
             }
         }
     }
     
+    private var developerModeSection: some View {
+        Section {
+            ListRow(label: .default(title: "Clap Developer Mode",
+                                    icon: \.admin),
+                    kind: .navigationLink {
+                        context.send(viewAction: .developerMode)
+                    })
+        } footer: {
+            if !context.viewState.showDeveloperOptions {
+                versionSection
+            }
+        }
+    }
+
     private var developerOptionsSection: some View {
         Section {
             ListRow(label: .default(title: L10n.commonDeveloperOptions,

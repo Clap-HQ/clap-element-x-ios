@@ -11,22 +11,27 @@ import SwiftUI
 
 struct AdvancedSettingsScreen: View {
     @Bindable var context: AdvancedSettingsScreenViewModel.Context
-    
+
+    @AppStorage(ClapDeveloperModeSettings.StorageKeys.showAdvancedOptions, store: ClapDeveloperModeSettings.store)
+    private var showAdvancedOptions = false
+
     var body: some View {
         Form {
             Section {
                 ListRow(label: .plain(title: L10n.commonAppearance),
                         kind: .picker(selection: $context.appAppearance,
                                       items: AppAppearance.allCases.map { (title: $0.name, tag: $0) }))
-                
-                ListRow(label: .plain(title: L10n.actionViewSource,
-                                      description: L10n.screenAdvancedSettingsViewSourceDescription),
-                        kind: .toggle($context.viewSourceEnabled))
-                
+
+                if showAdvancedOptions {
+                    ListRow(label: .plain(title: L10n.actionViewSource,
+                                          description: L10n.screenAdvancedSettingsViewSourceDescription),
+                            kind: .toggle($context.viewSourceEnabled))
+                }
+
                 ListRow(label: .plain(title: L10n.screenAdvancedSettingsSharePresence,
                                       description: L10n.screenAdvancedSettingsSharePresenceDescription),
                         kind: .toggle($context.sharePresence))
-                
+
                 ListRow(label: .plain(title: L10n.screenAdvancedSettingsMediaCompressionTitle,
                                       description: L10n.screenAdvancedSettingsMediaCompressionDescription),
                         kind: .toggle($context.optimizeMediaUploads))
@@ -34,9 +39,11 @@ struct AdvancedSettingsScreen: View {
                         context.send(viewAction: .optimizeMediaUploadsChanged)
                     }
             }
-            
-            moderationAndSafetySection
-            timelineMediaSection
+
+            if showAdvancedOptions {
+                moderationAndSafetySection
+                timelineMediaSection
+            }
         }
         .compoundList()
         .navigationTitle(L10n.commonAdvancedSettings)

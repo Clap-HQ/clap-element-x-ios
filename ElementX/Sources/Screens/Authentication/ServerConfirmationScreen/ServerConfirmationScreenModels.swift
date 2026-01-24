@@ -31,7 +31,9 @@ struct ServerConfirmationScreenViewState: BindableState {
     let authenticationFlow: AuthenticationFlow
     /// The presentation anchor used for OIDC authentication.
     var window: UIWindow?
-    
+    /// Whether to show the custom homeserver option. When disabled, the change server button is hidden.
+    var showCustomHomeserver: Bool
+
     var bindings = ServerConfirmationScreenBindings()
     
     /// The screen's title.
