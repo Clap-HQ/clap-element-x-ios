@@ -15,12 +15,17 @@ final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIG
     var allowsTextSelection = false
     private var pillViews = NSHashTable<UIView>.weakObjects()
 
+    /// Ensures any UIDragInteraction instances are removed when the view is added to a window to prevent text from being draggable.
+    /// 
+    /// This is invoked as part of the view lifecycle when the view moves to a window and removes drag interactions that would otherwise allow text movement.
     override func didMoveToWindow() {
         super.didMoveToWindow()
         // Remove all drag interactions to prevent text movement
         interactions.compactMap { $0 as? UIDragInteraction }.forEach { removeInteraction($0) }
     }
 
+    /// Adds a gesture recognizer to the view. When running on iOS (not an iOS app on Mac), assigns `self` as the recognizer's delegate before adding it.
+    /// - Parameter gestureRecognizer: The gesture recognizer to add to the view.
     override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
         // We don't need to change the behaviour on MacOS
         if !ProcessInfo.processInfo.isiOSAppOnMac {
@@ -29,7 +34,13 @@ final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIG
         super.addGestureRecognizer(gestureRecognizer)
     }
 
-    // This prevents the magnifying glass from showing up (unless text selection is allowed)
+    /// Controls whether two gesture recognizers may be recognized simultaneously.
+    /// 
+    /// When `allowsTextSelection` is `true`, simultaneous recognition is permitted to enable long-press text selection. If `allowsTextSelection` is `false` and `otherGestureRecognizer` is a `UILongPressGestureRecognizer`, simultaneous recognition is disallowed to avoid conflicts; otherwise simultaneous recognition is permitted.
+    /// - Parameters:
+    ///   - gestureRecognizer: The primary gesture recognizer requesting simultaneous recognition.
+    ///   - otherGestureRecognizer: The other gesture recognizer to evaluate for simultaneous recognition.
+    /// - Returns: `true` if both gestures can be recognized at the same time, `false` otherwise.
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         // Allow long press for text selection when enabled
         if allowsTextSelection {
@@ -57,6 +68,9 @@ final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIG
         pillViews.add(pillView)
     }
 
+    /// Removes all registered pill attachment views from the view hierarchy and clears the internal registry.
+    /// 
+    /// Each tracked pill view has its alpha set to 0.0 before being removed from its superview to ensure it is visually hidden.
     func flushPills() {
         for view in pillViews.allObjects {
             view.alpha = 0.0
@@ -65,6 +79,7 @@ final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIG
         pillViews.removeAllObjects()
     }
 
+    /// Copies the currently selected content to the system pasteboard as plain text when text selection is allowed; otherwise defers to the superclass copy behavior.
     override func copy(_ sender: Any?) {
         guard allowsTextSelection,
               let selectedRange = selectedTextRange,
@@ -80,7 +95,13 @@ final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIG
         UIPasteboard.general.string = convertToPlainText(selectedAttributedText)
     }
 
-    /// Converts attributed string with pill attachments and links to plain text
+    /// Convert an attributed string containing pill attachments and links into a plain-text representation suitable for copying.
+    /// 
+    /// - For pill attachments, replaces the attachment with the result of `pillDisplayText(for:)`.
+    /// - For links, if the visible display text does not match the URL, replaces the range with `"[display](url)"`; otherwise leaves the display text as-is.
+    /// - Preserves other text untouched.
+    /// - Parameter attributedString: The source attributed string to convert.
+    /// - Returns: A plain `String` with attachments and link ranges replaced as described above.
     private func convertToPlainText(_ attributedString: NSAttributedString) -> String {
         var replacements: [(range: NSRange, text: String)] = []
         let fullRange = NSRange(location: 0, length: attributedString.length)
@@ -107,7 +128,11 @@ final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIG
         return result.string
     }
 
-    /// Checks if display text is essentially the same as the URL (ignoring scheme and trailing slashes)
+    /// Checks whether the provided display text corresponds to the given URL after normalizing common URL schemes and trimming leading/trailing slashes.
+    /// - Parameters:
+    ///   - displayText: The visible text shown for a link (may be a shortened or formatted form of the URL).
+    ///   - urlString: The URL string to compare against.
+    /// - Returns: `true` if `displayText` is exactly equal to `urlString` or equal to `urlString` after removing an `http://`/`https://` scheme and any surrounding `/` characters, `false` otherwise.
     private func isDisplayTextMatchingURL(_ displayText: String, urlString: String) -> Bool {
         let normalizedDisplay = displayText.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         let normalizedURL = urlString
@@ -118,7 +143,11 @@ final class MessageTextView: UITextView, PillAttachmentViewProviderDelegate, UIG
         return displayText == urlString || normalizedDisplay == normalizedURL
     }
 
-    /// Gets display text for a pill based on its data
+    /// Maps a pill attachment's data to the string that should be shown or copied for that pill.
+    /// 
+    /// For a user pill, returns the room member's display name when available via `timelineContext.viewState.members`, otherwise the user's ID. For an @allUsers pill returns `"room"`. For room alias or room ID pills returns the alias or ID respectively. For an event-targeted pill returns the contained room alias or room ID.
+    /// - Parameter pillData: The pill attachment data to derive display text from.
+    /// - Returns: The text to display for the given pill.
     private func pillDisplayText(for pillData: PillTextAttachmentData) -> String {
         switch pillData.type {
         case .user(let userID):
@@ -157,6 +186,9 @@ struct MessageText: UIViewRepresentable {
 
     var allowsTextSelection = false
 
+    /// Creates and configures a `MessageTextView` for use in SwiftUI.
+    /// - Parameter context: The `UIViewRepresentable` context provided when creating the view.
+    /// - Returns: A configured `MessageTextView` prepared to render attributed message content, handle links and pill attachments, and respect the view's selection policy.
     func makeUIView(context: Context) -> MessageTextView {
         // Need to use TextKit 1 for mentions
         let textView = MessageTextView(usingTextLayoutManager: false)
@@ -205,6 +237,12 @@ struct MessageText: UIViewRepresentable {
         context.coordinator.openURLAction = openURLAction
     }
 
+    /// Compute the fitting size for `uiView` given a proposed size and cache the result keyed by width.
+    /// - Parameters:
+    ///   - proposal: The proposed size used to determine the target width; if `nil` for width, an expanded width is used.
+    ///   - uiView: The `MessageTextView` whose size is being measured.
+    ///   - context: The view context (unused for calculation).
+    /// - Returns: The computed `CGSize` that best fits the view for the given proposal; width and height are rounded up to avoid clipping.
     func sizeThatFits(_ proposal: ProposedViewSize, uiView: MessageTextView, context: Context) -> CGSize? {
         let proposalWidth = proposal.width ?? UIView.layoutFittingExpandedSize.width
 
@@ -230,6 +268,8 @@ struct MessageText: UIViewRepresentable {
         return size
     }
 
+    /// Creates the coordinator used as the UITextView delegate and action handler for this representable.
+    /// - Returns: A `Coordinator` initialized with the view's `openURLAction` and current `allowsTextSelection` setting.
     func makeCoordinator() -> Coordinator {
         Coordinator(openURLAction: openURLAction, allowsTextSelection: allowsTextSelection)
     }
@@ -243,6 +283,9 @@ struct MessageText: UIViewRepresentable {
             self.allowsTextSelection = allowsTextSelection
         }
 
+        /// Clears the current selection in the provided text view when text selection is disabled on iOS devices.
+        /// If text selection is enabled or the app is running as an iOS app on Mac, the selection is left unchanged.
+        /// - Parameter textView: The `UITextView` whose selection will be cleared.
         func textViewDidChangeSelection(_ textView: UITextView) {
             guard !allowsTextSelection, !ProcessInfo.processInfo.isiOSAppOnMac else {
                 return
@@ -250,6 +293,12 @@ struct MessageText: UIViewRepresentable {
             textView.selectedTextRange = nil
         }
 
+        /// Provide the primary action to perform for a given text item, substituting link taps with an action that opens the URL using the view's `openURLAction`.
+        /// - Parameters:
+        ///   - textView: The text view containing the item.
+        ///   - textItem: The text item for which the primary action is requested; may contain a `.link` content with a URL.
+        ///   - defaultAction: The default action to use when no custom action is required.
+        /// - Returns: The `UIAction` to execute for the text item. For `.link` content, an action that calls `openURLAction` with the URL; otherwise the provided `defaultAction`.
         func textView(_ textView: UITextView, primaryActionFor textItem: UITextItem, defaultAction: UIAction) -> UIAction? {
             if case .link(let url) = textItem.content {
                 return .init(title: defaultAction.title,

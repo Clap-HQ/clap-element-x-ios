@@ -161,6 +161,8 @@ struct TextRoomTimelineView: View, TextBasedRoomTimelineViewProtocol {
         }
     }
     
+    /// Concurrently fetches metadata for up to `maxLinkPreviewsToRender` links from the timeline item and stores successful results in `linkMetadata`.
+    /// - Note: If link previews are disabled in the current view state the method returns immediately. Successful metadata updates are applied on the main actor.
     private func fetchLinkPreviews() async {
         guard context?.viewState.linkPreviewsEnabled ?? false else {
             return

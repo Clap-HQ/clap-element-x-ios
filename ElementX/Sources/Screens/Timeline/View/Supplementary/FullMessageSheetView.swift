@@ -46,6 +46,10 @@ struct FullMessageSheetView: View {
         .presentationDetents([.large])
     }
 
+    /// Adjusts an attributed message for sheet display by applying default body typography and specialized styling for blockquotes and code blocks.
+    /// - Parameters:
+    ///   - original: The source attributed string to adjust.
+    /// - Returns: An attributed string with default body font and primary text color applied; blockquotes indented and styled with secondary text color and subheadline font; code blocks tinted with code block background and text colors.
     private func adjustedAttributedString(_ original: AttributedString) -> AttributedString {
         var adjusted = original
 
