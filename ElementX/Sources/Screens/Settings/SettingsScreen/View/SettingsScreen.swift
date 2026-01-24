@@ -13,7 +13,7 @@ import SwiftUI
 struct SettingsScreen: View {
     let context: SettingsScreenViewModel.Context
 
-    @AppStorage("showAdvancedOptions", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
+    @AppStorage(ClapDeveloperModeSettings.StorageKeys.showAdvancedOptions, store: ClapDeveloperModeSettings.store)
     private var showAdvancedOptions = false
 
     private var shouldHideManageAccountSection: Bool {

@@ -11,7 +11,7 @@ import SwiftUI
 struct ClapDeveloperModeScreen: View {
     @Bindable var context: ClapDeveloperModeScreenViewModel.Context
 
-    @AppStorage("spaceSettingsEnabled", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
+    @AppStorage(ClapDeveloperModeSettings.StorageKeys.spaceSettingsEnabled, store: ClapDeveloperModeSettings.store)
     private var spaceSettingsEnabled = true
 
     var body: some View {
@@ -70,7 +70,7 @@ struct ClapDeveloperModeScreen: View {
 // MARK: - Previews
 
 struct ClapDeveloperModeScreen_Previews: PreviewProvider {
-    static let viewModel = ClapDeveloperModeScreenViewModel(clapDeveloperModeSettings: ServiceLocator.shared.clapDeveloperModeSettings)
+    static let viewModel = ClapDeveloperModeScreenViewModel(clapDeveloperModeSettings: ClapDeveloperModeSettings())
 
     static var previews: some View {
         NavigationStack {

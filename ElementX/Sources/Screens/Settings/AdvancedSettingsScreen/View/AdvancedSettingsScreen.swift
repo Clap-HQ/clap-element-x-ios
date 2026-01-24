@@ -12,7 +12,7 @@ import SwiftUI
 struct AdvancedSettingsScreen: View {
     @Bindable var context: AdvancedSettingsScreenViewModel.Context
 
-    @AppStorage("showAdvancedOptions", store: UserDefaults(suiteName: InfoPlistReader.main.appGroupIdentifier))
+    @AppStorage(ClapDeveloperModeSettings.StorageKeys.showAdvancedOptions, store: ClapDeveloperModeSettings.store)
     private var showAdvancedOptions = false
 
     var body: some View {

@@ -9,8 +9,17 @@ import Combine
 import Foundation
 
 /// Settings for Developer Mode feature flags.
-/// These flags control experimental features that are hidden from regular users.
+/// These flags control options that are hidden from regular users.
 final class ClapDeveloperModeSettings {
+    /// UserDefaults keys for @AppStorage usage.
+    enum StorageKeys {
+        static let showCustomHomeserver = "showCustomHomeserver"
+        static let showQRCodeLogin = "showQRCodeLogin"
+        static let groupSpaceRooms = "groupSpaceRooms"
+        static let showAdvancedOptions = "showAdvancedOptions"
+        static let spaceSettingsEnabled = "spaceSettingsEnabled"
+    }
+
     private enum Keys: String {
         case showCustomHomeserver
         case showQRCodeLogin
@@ -19,7 +28,12 @@ final class ClapDeveloperModeSettings {
     }
 
     private static var suiteName: String = InfoPlistReader.main.appGroupIdentifier
-    private static var store: UserDefaults! = UserDefaults(suiteName: suiteName)
+    static var store: UserDefaults = {
+        guard let store = UserDefaults(suiteName: suiteName) else {
+            fatalError("Failed to load shared UserDefaults for app group \(suiteName)")
+        }
+        return store
+    }()
 
     /// Whether to show the custom homeserver option in the authentication flow.
     @UserPreference(key: Keys.showCustomHomeserver, defaultValue: false, storageType: .userDefaults(store))
