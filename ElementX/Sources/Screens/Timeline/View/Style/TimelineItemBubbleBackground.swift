@@ -11,7 +11,7 @@ import SwiftUI
 
 extension View {
     /// - Parameters:
-    ///   - isOutgoing: rounds the corners according to the side it shows on, defaults to true
+    ///   - isOutgoing: indicates if this is an outgoing message, defaults to true
     ///   - insets: defaults to what we use for file timeline items, text uses custom values
     ///   - color: self explanatory, defaults to subtle secondary
     func bubbleBackground(isOutgoing: Bool = true,

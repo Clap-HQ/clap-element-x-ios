@@ -197,13 +197,6 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     @ViewBuilder
     var contentWithReply: some View {
         TimelineBubbleLayout(spacing: 8) {
-            // 스레드 데코레이터 제거
-//            if !context.viewState.timelineKind.isThread, timelineItem.properties.isThreaded {
-//                ThreadDecorator()
-//                    .padding(.leading, 4)
-//                    .layoutPriority(TimelineBubbleLayout.Priority.regularText)
-//            }
-//
             if let replyDetails = timelineItem.properties.replyDetails {
                 TimelineReplyView(placement: .timeline, timelineItemReplyDetails: replyDetails, isOutgoing: timelineItem.isOutgoing)
                     .fixedSize(horizontal: false, vertical: true)
