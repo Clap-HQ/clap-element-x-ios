@@ -1127,8 +1127,25 @@ class AppCoordinator: AppCoordinatorProtocol, AuthenticationFlowCoordinatorDeleg
     private func applicationWillResignActive() {
         MXLog.info("Application will resign active")
 
-        scheduleDelayedSyncStop()
+        stopSyncWithBackgroundTask()
         scheduleBackgroundAppRefresh()
+    }
+    
+    /// Background task로 시간을 확보하고 즉시 sync 중단 (0xdead10cc 방지)
+    private func stopSyncWithBackgroundTask() {
+        guard backgroundTask == nil else { return }
+
+        // 1. background task로 시간 확보
+        backgroundTask = appMediator.beginBackgroundTask { [weak self] in
+            MXLog.warning("Background task expired before sync could stop")
+            self?.endActiveBackgroundTask()
+        }
+
+        // 2. 즉시 sync 중단
+        stopSync(isBackgroundTask: true) { [weak self] in
+            MXLog.info("Sync stopped, ending background task")
+            self?.endActiveBackgroundTask()
+        }
     }
     
     private func scheduleDelayedSyncStop() {
