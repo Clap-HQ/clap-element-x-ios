@@ -121,10 +121,13 @@ struct HomeScreenViewState: BindableState {
             return placeholderRooms.map { .room($0) }
         }
 
-        // When searching, show only rooms (no spaces)
+        // When searching, show all rooms including space children (no spaces)
         if bindings.isSearchFieldFocused {
             return rooms.map { .room($0) }
         }
+
+        // Rooms to display (excluding space children which are shown under space cells)
+        let displayableRooms = rooms.filter { !$0.isSpaceChild }
 
         // When both Spaces and Unreads filters are active, show only unread spaces
         if bindings.filtersState.isSpacesFilterActive && bindings.filtersState.isUnreadsFilterActive {
@@ -154,7 +157,7 @@ struct HomeScreenViewState: BindableState {
             let unreadSpaceItems = spaces
                 .filter { $0.badges.isDotShown || $0.badges.isMentionShown }
                 .map { HomeScreenListItem.space($0) }
-            let roomItems = rooms.map { HomeScreenListItem.room($0) }
+            let roomItems = displayableRooms.map { HomeScreenListItem.room($0) }
             let allItems = unreadSpaceItems + roomItems
 
             return allItems.sorted { lhs, rhs in
@@ -166,12 +169,12 @@ struct HomeScreenViewState: BindableState {
 
         // When other filters are active (people, rooms, etc.), show only filtered rooms
         if bindings.filtersState.isFiltering {
-            return rooms.map { .room($0) }
+            return displayableRooms.map { .room($0) }
         }
 
         // When All filter is active (default), combine spaces and rooms sorted by last message date
         let spaceItems = spaces.map { HomeScreenListItem.space($0) }
-        let roomItems = rooms.map { HomeScreenListItem.room($0) }
+        let roomItems = displayableRooms.map { HomeScreenListItem.room($0) }
         let allItems = spaceItems + roomItems
 
         return allItems.sorted { lhs, rhs in
@@ -186,7 +189,13 @@ struct HomeScreenViewState: BindableState {
             return placeholderRooms
         }
 
-        return rooms
+        // When searching, include all rooms (including space children)
+        if bindings.isSearchFieldFocused {
+            return rooms
+        }
+
+        // Otherwise, exclude space children (they're shown under space cells)
+        return rooms.filter { !$0.isSpaceChild }
     }
 
     var bindings: HomeScreenViewStateBindings
@@ -288,8 +297,11 @@ struct HomeScreenRoom: Identifiable, Equatable {
     let avatar: RoomAvatar
         
     let canonicalAlias: String?
-    
+
     let isTombstoned: Bool
+
+    /// Whether this room is a child of a joined space (used for filtering in UI when groupSpaceRooms is enabled)
+    let isSpaceChild: Bool
     
     var displayedLastMessage: AttributedString? {
         if isTombstoned {
@@ -317,14 +329,15 @@ struct HomeScreenRoom: Identifiable, Equatable {
                        lastMessageState: nil,
                        avatar: .room(id: "", name: "", avatarURL: nil),
                        canonicalAlias: nil,
-                       isTombstoned: false)
+                       isTombstoned: false,
+                       isSpaceChild: false)
     }
 }
 
 extension HomeScreenRoom {
-    init(summary: RoomSummary, hideUnreadMessagesBadge: Bool, seenInvites: Set<String> = []) {
+    init(summary: RoomSummary, hideUnreadMessagesBadge: Bool, seenInvites: Set<String> = [], isSpaceChild: Bool = false) {
         let roomID = summary.id
-        
+
         let hasUnreadMessages = hideUnreadMessagesBadge ? false : summary.hasUnreadMessages
         let isUnseenInvite = summary.joinRequestType?.isInvite == true && !seenInvites.contains(roomID)
 
@@ -333,13 +346,13 @@ extension HomeScreenRoom {
         let isMuteShown = summary.isMuted
         let isCallShown = summary.hasOngoingCall
         let isHighlighted = summary.isMarkedUnread || (!summary.isMuted && (summary.hasUnreadNotifications || summary.hasUnreadMentions)) || isUnseenInvite
-        
+
         let type: HomeScreenRoom.RoomType = switch summary.joinRequestType {
         case .invite(let inviter): .invite(inviterDetails: inviter.map(RoomInviterDetails.init))
         case .knock: .knock
         case .none: .room
         }
-        
+
         self.init(id: roomID,
                   roomID: summary.id,
                   type: type,
@@ -358,7 +371,8 @@ extension HomeScreenRoom {
                   lastMessageState: summary.homeScreenLastMessageState,
                   avatar: summary.avatar,
                   canonicalAlias: summary.canonicalAlias,
-                  isTombstoned: summary.isTombstoned)
+                  isTombstoned: summary.isTombstoned,
+                  isSpaceChild: isSpaceChild)
     }
 }
 

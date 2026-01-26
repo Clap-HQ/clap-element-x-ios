@@ -174,7 +174,9 @@ struct HomeScreenContent: View {
         let safeLastIndex = min(lastIndex, visibleRooms.count - 1)
         if safeFirstIndex <= safeLastIndex {
             let visibleRoomIDs = (safeFirstIndex...safeLastIndex).compactMap { visibleRooms[$0].roomID }
-            context.send(viewAction: .subscribeToVisibleRooms(visibleRoomIDs))
+            // Also subscribe to space child rooms so they receive SDK updates for unread badges
+            let spaceChildRoomIDs = context.viewState.rooms.filter { $0.isSpaceChild }.compactMap { $0.roomID }
+            context.send(viewAction: .subscribeToVisibleRooms(visibleRoomIDs + spaceChildRoomIDs))
         }
     }
 }
