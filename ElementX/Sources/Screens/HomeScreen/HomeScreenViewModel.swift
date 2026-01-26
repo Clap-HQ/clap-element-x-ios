@@ -651,14 +651,13 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         let seenInvites = appSettings.seenInvites
 
         for summary in roomSummaryProvider.roomListPublisher.value {
-            // Hide rooms that belong to any joined space
-            if spaceChildrenRoomIDs.contains(summary.id) {
-                continue
-            }
+            // Mark rooms that belong to any joined space (for filtering in UI)
+            let isSpaceChild = spaceChildrenRoomIDs.contains(summary.id)
 
             let room = HomeScreenRoom(summary: summary,
                                       hideUnreadMessagesBadge: appSettings.hideUnreadMessagesBadge,
-                                      seenInvites: seenInvites)
+                                      seenInvites: seenInvites,
+                                      isSpaceChild: isSpaceChild)
             rooms.append(room)
         }
 
