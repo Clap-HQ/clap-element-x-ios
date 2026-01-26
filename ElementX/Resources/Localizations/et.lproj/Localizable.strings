@@ -1475,9 +1475,9 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Tõuketeadete ajalugu";
 "troubleshoot_notifications_entry_point_title" = "Teavituste veaotsing";
 
-"screen_thread_list_title" = "Lõimed";
-"screen_thread_list_empty_title" = "Lõimesid veel pole";
-"screen_thread_list_empty_description" = "Alusta lõime, vastates suvalisele sõnumile";
-"screen_thread_activity_title" = "Lõimede tegevus";
-"screen_thread_activity_empty_title" = "Lugemata lõimesid pole";
+"screen_thread_list_title" = "Jutulõngad";
+"screen_thread_list_empty_title" = "Jutulõngasid veel pole";
+"screen_thread_list_empty_description" = "Alusta jutulõnga, vastates suvalisele sõnumile";
+"screen_thread_activity_title" = "Jutulõngade tegevus";
+"screen_thread_activity_empty_title" = "Lugemata jutulõngasid pole";
 "screen_thread_activity_empty_description" = "Oled kõigega kursis!";

@@ -1475,9 +1475,9 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Cronologia push";
 "troubleshoot_notifications_entry_point_title" = "Risoluzione di problemi delle notifiche";
 
-"screen_thread_list_title" = "Thread";
-"screen_thread_list_empty_title" = "Nessun thread ancora";
-"screen_thread_list_empty_description" = "Inizia un thread rispondendo a qualsiasi messaggio";
-"screen_thread_activity_title" = "Attività dei thread";
-"screen_thread_activity_empty_title" = "Nessun thread non letto";
+"screen_thread_list_title" = "Discussioni";
+"screen_thread_list_empty_title" = "Nessuna discussione ancora";
+"screen_thread_list_empty_description" = "Inizia una discussione rispondendo a qualsiasi messaggio";
+"screen_thread_activity_title" = "Attività delle discussioni";
+"screen_thread_activity_empty_title" = "Nessuna discussione non letta";
 "screen_thread_activity_empty_description" = "Sei in pari!";

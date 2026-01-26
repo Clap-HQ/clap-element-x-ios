@@ -1475,9 +1475,9 @@
 "troubleshoot_notifications_entry_point_push_history_title" = "Leküldéses értesítések előzmények";
 "troubleshoot_notifications_entry_point_title" = "Értesítések hibaelhárítása";
 
-"screen_thread_list_title" = "Szálak";
-"screen_thread_list_empty_title" = "Még nincsenek szálak";
-"screen_thread_list_empty_description" = "Indítson szálat bármely üzenetre válaszolva";
-"screen_thread_activity_title" = "Szál aktivitás";
-"screen_thread_activity_empty_title" = "Nincsenek olvasatlan szálak";
+"screen_thread_list_title" = "Üzenetszálak";
+"screen_thread_list_empty_title" = "Még nincsenek üzenetszálak";
+"screen_thread_list_empty_description" = "Indítson üzenetszálat bármely üzenetre válaszolva";
+"screen_thread_activity_title" = "Üzenetszál-aktivitás";
+"screen_thread_activity_empty_title" = "Nincsenek olvasatlan üzenetszálak";
 "screen_thread_activity_empty_description" = "Mindent elolvasott!";
