@@ -86,7 +86,7 @@ class RESTAPIClient {
             }
         }
 
-        MXLog.info("Executing \(request.method.rawValue) \(url.absoluteString)")
+        MXLog.debug("Executing \(request.method.rawValue) \(url.absoluteString)")
 
         do {
             let (data, response) = try await session.dataWithRetry(for: urlRequest)
