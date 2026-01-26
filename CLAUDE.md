@@ -40,9 +40,12 @@ ElementX/Sources/
 │   ├── Room/          # Room-related logic
 │   ├── Timeline/      # Timeline/message management
 │   ├── Keychain/      # Keychain access
-│   └── Analytics/     # PostHog analytics
-├── FlowCoordinators/  # Screen flow management
-├── Screens/           # UI screens (MVVM pattern)
+│   ├── Analytics/     # PostHog analytics
+│   ├── RESTAPI/       # Common REST API infrastructure (RESTAPIClient, RESTAPIError)
+│   ├── MatrixAPI/     # Matrix REST API service (/_matrix/...)
+│   └── ClapAPI/       # Clap-specific API service (/_clap/...)
+├── FlowCoordinators/  # Screen flow management (21 coordinators)
+├── Screens/           # UI screens (56 screens, MVVM pattern)
 ├── Other/             # Utilities, extensions, InfoPlistReader, etc.
 ├── Mocks/             # Test mock objects (Sourcery generated)
 └── Generated/         # SwiftGen, Sourcery auto-generated code
@@ -405,6 +408,69 @@ git merge v1.x.x
 - `ElementX/SupportingFiles/target.yml` (build settings)
 - `AppSettings.swift` (URL settings)
 - `InfoPlistReader.swift` (custom keys)
+
+## Clap-specific APIs
+
+### REST API Architecture
+
+Common infrastructure for REST API calls not covered by MatrixRustSDK:
+
+```
+Services/
+├── RESTAPI/                           # Common infrastructure
+│   ├── RESTAPIClient.swift            # Base class (auth, encoding, error handling)
+│   └── RESTAPIError.swift             # Unified error type
+├── MatrixAPI/                         # Matrix standard API (/_matrix/...)
+│   ├── MatrixAPIService.swift         # Entry point
+│   └── MatrixSpaceAPI.swift           # Inherits RESTAPIClient
+└── ClapAPI/                           # Clap custom API (/_clap/...)
+    ├── ClapAPIService.swift           # Entry point
+    └── ClapSpaceAPI.swift             # Inherits RESTAPIClient
+```
+
+### MatrixAPI Service
+
+REST API service for Matrix protocol endpoints not covered by MatrixRustSDK:
+
+- `MatrixSpaceAPI` - Space state management (m.space.child, m.space.parent, join rules)
+
+### ClapAPI Service
+
+REST API service for Clap-specific backend endpoints:
+
+- `ClapSpaceAPI` - Space member management
+  - `removeMemberFromAllChildRooms(spaceID:userID:)` - Kick member from space and all child rooms
+  - `joinAllChildRooms(spaceID:)` - Join all child rooms after accepting space invite
+
+```swift
+// Kick member from space
+let result = await clientProxy.clapAPI.spaces.removeMemberFromAllChildRooms(spaceID: spaceID, userID: userID)
+
+// Join all child rooms after space invite
+let result = await clientProxy.clapAPI.spaces.joinAllChildRooms(spaceID: spaceID)
+```
+
+**API Endpoints:**
+- `POST /_clap/client/v1/spaces/{spaceId}/remove` - Remove member from all child rooms
+- `POST /_clap/client/v1/spaces/{spaceId}/join-all` - Join all child rooms
+
+### Adding New API Endpoints
+
+1. Create request body struct (if needed) as `private struct` in the API file
+2. Add method to protocol and implementation:
+
+```swift
+// In ClapSpaceAPI.swift
+func newEndpoint(param: String) async -> Result<ResponseType, RESTAPIError> {
+    let request = RESTAPIRequest(
+        method: .post,
+        pathTemplate: "/_clap/client/v1/resource/%@/action",
+        pathParameters: [param],  // Auto percent-encoded
+        body: RequestBody(...)    // Optional
+    )
+    return await execute(request)
+}
+```
 
 ## Related Repositories
 
