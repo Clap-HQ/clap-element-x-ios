@@ -521,10 +521,9 @@ class ClientProxy: ClientProxyProtocol {
         let isRoomPrivate = visibility != .publicRoom
 
         // 1. Create the room using existing method
-        // Note: Encryption is handled by createRoom when isRoomPrivate is true
         let createResult = await createRoom(name: name,
                                             topic: topic,
-                                            isRoomPrivate: isRoomPrivate && isEncrypted,
+                                            isRoomPrivate: isRoomPrivate,
                                             isKnockingOnly: false,
                                             userIDs: [],
                                             avatarURL: avatarURL,
