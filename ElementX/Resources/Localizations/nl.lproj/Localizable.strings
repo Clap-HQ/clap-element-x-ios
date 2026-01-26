@@ -1487,13 +1487,13 @@
 "space_room_list_joined_section_title" = "Kamers waar je in zit";
 "space_room_list_unjoined_section_title" = "Kamers waar je aan kunt deelnemen";
 
-"screen_space_create_room" = "Ruimte aanmaken";
-"screen_space_remove_room" = "Verwijder van space";
+"screen_space_create_room" = "Kamer aanmaken";
+"screen_space_remove_room" = "Verwijder uit space";
 "screen_space_remove_room_alert_title" = "Kamer verwijderen";
 "screen_space_remove_room_alert_message" = "Weet je zeker dat je \"%@\" uit deze space wilt verwijderen?";
 "screen_space_remove_room_success" = "%@ verwijderd uit space";
 "screen_space_create_room_visibility_header" = "Kamerzichtbaarheid";
-"screen_space_create_room_visibility_space_members_title" = "Zichtbaar voor Space leden";
+"screen_space_create_room_visibility_space_members_title" = "Zichtbaar voor space-leden";
 "screen_space_create_room_visibility_space_members_description" = "Iedereen in %@ kan deze kamer vinden en lid worden. Alleen beheerders van deze kamer kunnen het aan een space toevoegen.";
 "screen_space_create_room_visibility_private_title" = "Privékamer (alleen op uitnodiging)";
 "screen_space_create_room_visibility_private_description" = "Alleen uitgenodigde personen kunnen deze kamer vinden en lid worden. Je kunt dit op elk moment wijzigen in de kamerinstellingen.";
