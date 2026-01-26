@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "이 메시지에 액세스할 수 없습니다";
 "troubleshoot_notifications_entry_point_push_history_title" = "푸시 기록";
 "troubleshoot_notifications_entry_point_title" = "문제 해결 알림";
+
+"screen_thread_list_title" = "스레드";
+"screen_thread_list_empty_title" = "아직 스레드가 없습니다";
+"screen_thread_list_empty_description" = "메시지에 답장하여 스레드를 시작하세요";
+"screen_thread_activity_title" = "스레드 활동";
+"screen_thread_activity_empty_title" = "읽지 않은 스레드가 없습니다";
+"screen_thread_activity_empty_description" = "모두 확인했습니다!";

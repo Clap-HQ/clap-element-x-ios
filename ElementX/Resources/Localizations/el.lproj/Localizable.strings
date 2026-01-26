@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Δεν έχεις πρόσβαση σε αυτό το μήνυμα";
 "troubleshoot_notifications_entry_point_push_history_title" = "Ιστορικό push";
 "troubleshoot_notifications_entry_point_title" = "Αντιμετώπιση προβλημάτων ειδοποιήσεων";
+
+"screen_thread_list_title" = "Νήματα";
+"screen_thread_list_empty_title" = "Δεν υπάρχουν νήματα ακόμα";
+"screen_thread_list_empty_description" = "Ξεκίνα ένα νήμα απαντώντας σε οποιοδήποτε μήνυμα";
+"screen_thread_activity_title" = "Δραστηριότητα Νημάτων";
+"screen_thread_activity_empty_title" = "Δεν υπάρχουν μη αναγνωσμένα νήματα";
+"screen_thread_activity_empty_description" = "Είσαι ενημερωμένος!";

@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "You don't have access to this message";
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Troubleshoot notifications";
+
+"screen_thread_list_title" = "Hariak";
+"screen_thread_list_empty_title" = "Oraindik ez dago haririk";
+"screen_thread_list_empty_description" = "Hasi hari bat edozein mezuri erantzunez";
+"screen_thread_activity_title" = "Harien jarduera";
+"screen_thread_activity_empty_title" = "Ez dago irakurri gabeko haririk";
+"screen_thread_activity_empty_description" = "Egunean zaude!";

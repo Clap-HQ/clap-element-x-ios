@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "You don't have access to this message";
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Troubleshoot notifications";
+
+"screen_thread_list_title" = "Gijos";
+"screen_thread_list_empty_title" = "Gijų dar nėra";
+"screen_thread_list_empty_description" = "Pradėkite giją atsakydami į bet kurią žinutę";
+"screen_thread_activity_title" = "Gijų veikla";
+"screen_thread_activity_empty_title" = "Nėra neskaitytų gijų";
+"screen_thread_activity_empty_description" = "Viską perskaitėte!";

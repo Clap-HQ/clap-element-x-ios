@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Does gennych chi ddim mynediad i'r neges hon";
 "troubleshoot_notifications_entry_point_push_history_title" = "Hanes gwthio";
 "troubleshoot_notifications_entry_point_title" = "Hysbysiadau datrys problemau";
+
+"screen_thread_list_title" = "Edafedd";
+"screen_thread_list_empty_title" = "Dim edafedd eto";
+"screen_thread_list_empty_description" = "Dechreuwch edefyn drwy ateb unrhyw neges";
+"screen_thread_activity_title" = "Gweithgaredd Edafedd";
+"screen_thread_activity_empty_title" = "Dim edafedd heb eu darllen";
+"screen_thread_activity_empty_description" = "Rydych chi wedi dal i fyny!";

@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Nemáte přístup k této zprávě";
 "troubleshoot_notifications_entry_point_push_history_title" = "Historie push oznámení";
 "troubleshoot_notifications_entry_point_title" = "Odstraňování problémů s upozorněními";
+
+"screen_thread_list_title" = "Vlákna";
+"screen_thread_list_empty_title" = "Zatím žádná vlákna";
+"screen_thread_list_empty_description" = "Začněte vlákno odpovědí na jakoukoli zprávu";
+"screen_thread_activity_title" = "Aktivita vláken";
+"screen_thread_activity_empty_title" = "Žádná nepřečtená vlákna";
+"screen_thread_activity_empty_description" = "Vše je přečteno!";

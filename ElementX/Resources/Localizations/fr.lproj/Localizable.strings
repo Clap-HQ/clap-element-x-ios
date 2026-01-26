@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Vous ne pouvez pas voir ce message";
 "troubleshoot_notifications_entry_point_push_history_title" = "Historique des Push";
 "troubleshoot_notifications_entry_point_title" = "Dépanner les notifications";
+
+"screen_thread_list_title" = "Fils de discussion";
+"screen_thread_list_empty_title" = "Pas encore de fils de discussion";
+"screen_thread_list_empty_description" = "Démarrez un fil de discussion en répondant à un message";
+"screen_thread_activity_title" = "Activité des fils";
+"screen_thread_activity_empty_title" = "Aucun fil non lu";
+"screen_thread_activity_empty_description" = "Vous êtes à jour !";

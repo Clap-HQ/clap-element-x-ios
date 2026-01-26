@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "无权访问此消息";
 "troubleshoot_notifications_entry_point_push_history_title" = "推送历史记录";
 "troubleshoot_notifications_entry_point_title" = "排查通知问题";
+
+"screen_thread_list_title" = "消息列";
+"screen_thread_list_empty_title" = "暂无消息列";
+"screen_thread_list_empty_description" = "回复任意消息以开始消息列";
+"screen_thread_activity_title" = "消息列活动";
+"screen_thread_activity_empty_title" = "没有未读消息列";
+"screen_thread_activity_empty_description" = "您已全部看完！";

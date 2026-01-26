@@ -3067,6 +3067,18 @@ internal enum L10n {
   internal static var screenStartChatJoinRoomByAddressRoomNotFound: String { return L10n.tr("Localizable", "screen_start_chat_join_room_by_address_room_not_found") }
   /// e.g. #room-name:matrix.org
   internal static var screenStartChatJoinRoomByAddressSupportingText: String { return L10n.tr("Localizable", "screen_start_chat_join_room_by_address_supporting_text") }
+  /// You're all caught up!
+  internal static var screenThreadActivityEmptyDescription: String { return L10n.tr("Localizable", "screen_thread_activity_empty_description") }
+  /// No unread threads
+  internal static var screenThreadActivityEmptyTitle: String { return L10n.tr("Localizable", "screen_thread_activity_empty_title") }
+  /// Thread Activity
+  internal static var screenThreadActivityTitle: String { return L10n.tr("Localizable", "screen_thread_activity_title") }
+  /// Start a thread by replying to any message
+  internal static var screenThreadListEmptyDescription: String { return L10n.tr("Localizable", "screen_thread_list_empty_description") }
+  /// No threads yet
+  internal static var screenThreadListEmptyTitle: String { return L10n.tr("Localizable", "screen_thread_list_empty_title") }
+  /// Threads
+  internal static var screenThreadListTitle: String { return L10n.tr("Localizable", "screen_thread_list_title") }
   /// Message not sent because %1$@’s verified identity was reset.
   internal static func screenTimelineItemMenuSendFailureChangedIdentity(_ p1: Any) -> String {
     return L10n.tr("Localizable", "screen_timeline_item_menu_send_failure_changed_identity", String(describing: p1))

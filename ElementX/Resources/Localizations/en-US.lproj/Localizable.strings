@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "You don't have access to this message";
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Troubleshoot notifications";
+
+"screen_thread_list_title" = "Threads";
+"screen_thread_list_empty_title" = "No threads yet";
+"screen_thread_list_empty_description" = "Start a thread by replying to any message";
+"screen_thread_activity_title" = "Thread Activity";
+"screen_thread_activity_empty_title" = "No unread threads";
+"screen_thread_activity_empty_description" = "You're all caught up!";

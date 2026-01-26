@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Du har ikke tilgang til denne meldingen";
 "troubleshoot_notifications_entry_point_push_history_title" = "Push-historikk";
 "troubleshoot_notifications_entry_point_title" = "Feilsøk varsler";
+
+"screen_thread_list_title" = "Tråder";
+"screen_thread_list_empty_title" = "Ingen tråder ennå";
+"screen_thread_list_empty_description" = "Start en tråd ved å svare på en melding";
+"screen_thread_activity_title" = "Trådaktivitet";
+"screen_thread_activity_empty_title" = "Ingen uleste tråder";
+"screen_thread_activity_empty_description" = "Du er oppdatert!";

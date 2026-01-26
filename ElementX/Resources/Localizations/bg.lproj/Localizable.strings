@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Нямате достъп до това съобщение";
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Отстраняване на неизправности с известията";
+
+"screen_thread_list_title" = "Нишки";
+"screen_thread_list_empty_title" = "Все още няма нишки";
+"screen_thread_list_empty_description" = "Започнете нишка, като отговорите на съобщение";
+"screen_thread_activity_title" = "Активност в нишките";
+"screen_thread_activity_empty_title" = "Няма непрочетени нишки";
+"screen_thread_activity_empty_description" = "Всичко е прочетено!";

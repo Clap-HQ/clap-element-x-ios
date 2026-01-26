@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Bu mesaja erişiminiz yok";
 "troubleshoot_notifications_entry_point_push_history_title" = "Push history";
 "troubleshoot_notifications_entry_point_title" = "Sorun Giderme Bildirimleri";
+
+"screen_thread_list_title" = "Konular";
+"screen_thread_list_empty_title" = "Henüz konu yok";
+"screen_thread_list_empty_description" = "Herhangi bir mesajı yanıtlayarak bir konu başlatın";
+"screen_thread_activity_title" = "Konu Etkinliği";
+"screen_thread_activity_empty_title" = "Okunmamış konu yok";
+"screen_thread_activity_empty_description" = "Her şeyi okudunuz!";

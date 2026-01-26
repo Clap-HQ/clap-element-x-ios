@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Du hast keinen Zugriff auf diese Nachricht.";
 "troubleshoot_notifications_entry_point_push_history_title" = "Verlauf pushen";
 "troubleshoot_notifications_entry_point_title" = "Fehlerbehebung für Benachrichtigungen";
+
+"screen_thread_list_title" = "Threads";
+"screen_thread_list_empty_title" = "Noch keine Threads";
+"screen_thread_list_empty_description" = "Starte einen Thread, indem du auf eine Nachricht antwortest";
+"screen_thread_activity_title" = "Thread-Aktivität";
+"screen_thread_activity_empty_title" = "Keine ungelesenen Threads";
+"screen_thread_activity_empty_description" = "Du bist auf dem neuesten Stand!";

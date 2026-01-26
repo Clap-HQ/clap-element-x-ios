@@ -1474,3 +1474,10 @@
 "timeline_decryption_failure_historical_event_user_not_joined" = "Nie masz uprawnień do tej wiadomości";
 "troubleshoot_notifications_entry_point_push_history_title" = "Historia powiadomień Push";
 "troubleshoot_notifications_entry_point_title" = "Rozwiązywanie problemów powiadomień";
+
+"screen_thread_list_title" = "Wątki";
+"screen_thread_list_empty_title" = "Brak wątków";
+"screen_thread_list_empty_description" = "Rozpocznij wątek, odpowiadając na dowolną wiadomość";
+"screen_thread_activity_title" = "Aktywność wątków";
+"screen_thread_activity_empty_title" = "Brak nieprzeczytanych wątków";
+"screen_thread_activity_empty_description" = "Wszystko przeczytane!";
