@@ -66,6 +66,18 @@ enum SessionVerificationState {
     case unverified
 }
 
+/// Room visibility options when creating a room in a space
+enum SpaceRoomVisibility: String, CaseIterable, Identifiable {
+    /// Visible to space members only (restricted join rule)
+    case spaceMembers
+    /// Private room (invite only)
+    case privateRoom
+    /// Public room (anyone can join)
+    case publicRoom
+
+    var id: String { rawValue }
+}
+
 // The `Decodable` conformance is just for the purpose of migration
 enum TimelineMediaVisibility: Decodable {
     case always
@@ -88,7 +100,7 @@ protocol ClientProxyProtocol: AnyObject {
     var deviceID: String? { get }
 
     var homeserver: String { get }
-    
+
     var canDeactivateAccount: Bool { get }
     
     var userIDServerName: String? { get }
@@ -127,7 +139,13 @@ protocol ClientProxyProtocol: AnyObject {
     var sessionVerificationController: SessionVerificationControllerProxyProtocol? { get }
     
     var spaceService: SpaceServiceProxyProtocol { get }
-    
+
+    /// Direct Matrix REST API calls (/_matrix/...) - used when SDK doesn't expose certain APIs
+    var matrixAPI: MatrixAPIServiceProtocol { get }
+
+    /// Clap-specific REST API calls (/_clap/...)
+    var clapAPI: ClapAPIServiceProtocol { get }
+
     var isReportRoomSupported: Bool { get async }
     
     var isLiveKitRTCSupported: Bool { get async }
@@ -159,7 +177,14 @@ protocol ClientProxyProtocol: AnyObject {
                     userIDs: [String],
                     avatarURL: URL?,
                     aliasLocalPart: String?) async -> Result<String, ClientProxyError>
-    
+
+    func createRoomInSpace(spaceID: String,
+                           name: String,
+                           topic: String?,
+                           visibility: SpaceRoomVisibility,
+                           isEncrypted: Bool,
+                           avatarURL: URL?) async -> Result<String, ClientProxyError>
+
     func joinRoom(_ roomID: String, via: [String]) async -> Result<Void, ClientProxyError>
     
     func joinRoomAlias(_ roomAlias: String) async -> Result<Void, ClientProxyError>
