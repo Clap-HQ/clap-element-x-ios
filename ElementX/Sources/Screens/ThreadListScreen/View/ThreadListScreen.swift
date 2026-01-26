@@ -81,7 +81,7 @@ struct ThreadListScreen: View {
     @ViewBuilder
     private var loadMoreView: some View {
         if context.viewState.isLoadingMore {
-            HStack {
+            HStack(spacing: 0) {
                 Spacer()
                 ProgressView()
                     .padding()

@@ -56,7 +56,7 @@ class ThreadListScreenViewModel: ThreadListScreenViewModelType, ThreadListScreen
 
     private func fetchThreads() {
         Task {
-            state.isLoading = true
+            await MainActor.run { state.isLoading = true }
 
             // Load members first to get display names and avatars
             await roomProxy.updateMembers()

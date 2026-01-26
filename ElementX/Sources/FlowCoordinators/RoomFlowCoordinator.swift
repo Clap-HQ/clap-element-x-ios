@@ -845,8 +845,11 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
         sheetNavigationStackCoordinator.setRootCoordinator(coordinator)
 
         navigationStackCoordinator.setSheetCoordinator(sheetNavigationStackCoordinator) { [weak self] in
-            self?.threadListScreenCoordinator = nil
-            self?.stateMachine.tryEvent(.dismissThreadList)
+            guard let self else { return }
+            self.threadListScreenCoordinator = nil
+            if case .threadList = self.stateMachine.state {
+                self.stateMachine.tryEvent(.dismissThreadList)
+            }
         }
     }
 
