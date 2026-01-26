@@ -11,6 +11,7 @@ import SwiftUI
 
 struct HomeScreenSpaceCell: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
+    @Environment(\.displayScale) var displayScale
 
     let space: HomeScreenSpace
     let isSelected: Bool
@@ -32,7 +33,7 @@ struct HomeScreenSpaceCell: View {
                     .overlay(alignment: .bottom) {
                         Rectangle()
                             .fill(Color.compound.borderDisabled)
-                            .frame(height: 1 / UIScreen.main.scale)
+                            .frame(height: 1 / displayScale)
                             .padding(.trailing, -horizontalInsets)
                     }
             }
