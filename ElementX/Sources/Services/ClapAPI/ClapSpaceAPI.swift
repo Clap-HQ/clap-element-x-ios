@@ -35,10 +35,8 @@ class ClapSpaceAPI: RESTAPIClient, ClapSpaceAPIProtocol {
 
 private struct RemoveMemberRequest: Encodable {
     let userID: String
-    let reason: String?
 
     enum CodingKeys: String, CodingKey {
         case userID = "user_id"
-        case reason
     }
 }

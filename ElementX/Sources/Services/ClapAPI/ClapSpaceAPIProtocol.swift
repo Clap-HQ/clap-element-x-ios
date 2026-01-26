@@ -23,7 +23,15 @@ struct ClapSpaceMemberRemovalResult: Decodable {
     /// Room IDs where the user was successfully removed
     let removed: [String]
     /// Rooms where removal failed with error details
-    let failed: [ClapSpaceMemberRemovalFailure]
+    let failed: [ClapSpaceRoomOperationFailure]
+}
+
+/// Result of joining all child rooms in a space
+struct ClapSpaceJoinAllResult: Decodable {
+    /// Room IDs where the user successfully joined
+    let joined: [String]
+    /// Rooms where join failed with error details
+    let failed: [ClapSpaceRoomOperationFailure]
 }
 
 // sourcery: AutoMockable
@@ -32,7 +40,6 @@ protocol ClapSpaceAPIProtocol {
     /// - Parameters:
     ///   - spaceID: The ID of the space
     ///   - userID: The Matrix ID of the user to remove
-    ///   - reason: Optional reason for removal
     /// - Returns: Result containing removed/failed room IDs or an error
     func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, RESTAPIError>
 
