@@ -63,13 +63,16 @@ class CreateRoomInSpaceScreenViewModel: CreateRoomInSpaceScreenViewModelType, Cr
 
     func updateAvatar(fileURL: URL) {
         showLoadingIndicator()
+        let indicatorController = userIndicatorController
         Task { [weak self] in
+            defer {
+                indicatorController.retractIndicatorWithId(Self.loadingIndicatorIdentifier)
+            }
             guard let self else { return }
             do {
                 guard case let .success(maxUploadSize) = await userSession.clientProxy.maxMediaUploadSize else {
                     MXLog.error("Failed to get max upload size")
                     userIndicatorController.alertInfo = AlertInfo(id: .init())
-                    hideLoadingIndicator()
                     return
                 }
                 let mediaInfo = try await mediaUploadingPreprocessor.processMedia(at: fileURL, maxUploadSize: maxUploadSize).get()
@@ -84,7 +87,6 @@ class CreateRoomInSpaceScreenViewModel: CreateRoomInSpaceScreenViewModelType, Cr
             } catch {
                 userIndicatorController.alertInfo = AlertInfo(id: .init())
             }
-            hideLoadingIndicator()
         }
     }
 
