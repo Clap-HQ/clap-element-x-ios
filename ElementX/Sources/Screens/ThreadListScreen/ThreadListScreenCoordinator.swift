@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ThreadListScreenCoordinatorParameters {
     let roomProxy: JoinedRoomProxyProtocol
-    let threadsService: ThreadsService
+    let threadsAPI: MatrixThreadsAPIProtocol
     let mediaProvider: MediaProviderProtocol
 }
 
@@ -28,7 +28,7 @@ final class ThreadListScreenCoordinator: CoordinatorProtocol {
     init(parameters: ThreadListScreenCoordinatorParameters) {
         self.parameters = parameters
         viewModel = ThreadListScreenViewModel(roomProxy: parameters.roomProxy,
-                                              threadsService: parameters.threadsService,
+                                              threadsAPI: parameters.threadsAPI,
                                               mediaProvider: parameters.mediaProvider)
     }
 

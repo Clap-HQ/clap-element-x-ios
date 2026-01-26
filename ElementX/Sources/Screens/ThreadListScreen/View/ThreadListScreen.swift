@@ -114,50 +114,50 @@ struct ThreadListScreen_Previews: PreviewProvider, TestablePreview {
 
     static func makeViewModel(threads: [ThreadListItem]) -> ThreadListScreenViewModel {
         let roomProxy = JoinedRoomProxyMock(.init(name: "General"))
-        let threadsService = ThreadsService(homeserverURL: "https://matrix.org") { "mock_token" }
+        let threadsAPI = MatrixThreadsAPIMock()
         let viewModel = ThreadListScreenViewModel(roomProxy: roomProxy,
-                                                  threadsService: threadsService,
+                                                  threadsAPI: threadsAPI,
                                                   mediaProvider: MediaProviderMock(configuration: .init()))
         viewModel.state.threads = threads
         viewModel.state.isLoading = false
         return viewModel
     }
-
-    static var mockThreads: [ThreadListItem] {
-        [
-            ThreadListItem(id: "thread1",
-                          rootEventID: "event1",
-                          rootSenderID: "@alice:example.com",
-                          rootSenderDisplayName: "Alice",
-                          rootContent: "Has anyone tried the new feature?",
-                          replyCount: 5,
-                          lastReplyTimestamp: Date(),
-                          hasUnread: true,
-                          lastReplySenderID: "@bob:example.com",
-                          lastReplySenderDisplayName: "Bob",
-                          lastReplyContent: "Yes, it works great!"),
-            ThreadListItem(id: "thread2",
-                          rootEventID: "event2",
-                          rootSenderID: "@bob:example.com",
-                          rootSenderDisplayName: "Bob",
-                          rootContent: "I found a bug in the login flow",
-                          replyCount: 12,
-                          lastReplyTimestamp: Date().addingTimeInterval(-3600),
-                          hasUnread: false,
-                          lastReplySenderID: "@charlie:example.com",
-                          lastReplySenderDisplayName: "Charlie",
-                          lastReplyContent: "Fixed in latest commit"),
-            ThreadListItem(id: "thread3",
-                          rootEventID: "event3",
-                          rootSenderID: "@charlie:example.com",
-                          rootSenderDisplayName: "Charlie",
-                          rootContent: "Meeting notes from yesterday",
-                          replyCount: 3,
-                          lastReplyTimestamp: Date().addingTimeInterval(-86400),
-                          hasUnread: false,
-                          lastReplySenderID: "@alice:example.com",
-                          lastReplySenderDisplayName: "Alice",
-                          lastReplyContent: "Thanks for sharing!")
-        ]
-    }
 }
+
+// MARK: - Preview Data
+
+private let mockThreads: [ThreadListItem] = [
+    ThreadListItem(id: "thread1",
+                   rootEventID: "event1",
+                   rootSenderID: "@alice:example.com",
+                   rootSenderDisplayName: "Alice",
+                   rootContent: "Has anyone tried the new feature?",
+                   replyCount: 5,
+                   lastReplyTimestamp: Date(),
+                   hasUnread: true,
+                   lastReplySenderID: "@bob:example.com",
+                   lastReplySenderDisplayName: "Bob",
+                   lastReplyContent: "Yes, it works great!"),
+    ThreadListItem(id: "thread2",
+                   rootEventID: "event2",
+                   rootSenderID: "@bob:example.com",
+                   rootSenderDisplayName: "Bob",
+                   rootContent: "I found a bug in the login flow",
+                   replyCount: 12,
+                   lastReplyTimestamp: Date().addingTimeInterval(-3600),
+                   hasUnread: false,
+                   lastReplySenderID: "@charlie:example.com",
+                   lastReplySenderDisplayName: "Charlie",
+                   lastReplyContent: "Fixed in latest commit"),
+    ThreadListItem(id: "thread3",
+                   rootEventID: "event3",
+                   rootSenderID: "@charlie:example.com",
+                   rootSenderDisplayName: "Charlie",
+                   rootContent: "Meeting notes from yesterday",
+                   replyCount: 3,
+                   lastReplyTimestamp: Date().addingTimeInterval(-86400),
+                   hasUnread: false,
+                   lastReplySenderID: "@alice:example.com",
+                   lastReplySenderDisplayName: "Alice",
+                   lastReplyContent: "Thanks for sharing!")
+]

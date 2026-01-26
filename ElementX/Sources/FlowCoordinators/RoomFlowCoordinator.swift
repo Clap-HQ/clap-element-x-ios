@@ -90,13 +90,6 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
     // periphery:ignore - retaining purpose
     private var threadListScreenCoordinator: ThreadListScreenCoordinator?
 
-    private lazy var threadsService: ThreadsService = {
-        let clientProxy = userSession.clientProxy
-        return ThreadsService(homeserverURL: clientProxy.homeserver) { [weak clientProxy] in
-            clientProxy?.accessToken
-        }
-    }()
-
     private let stateMachine: StateMachine<State, Event> = .init(state: .initial)
     
     private var cancellables = Set<AnyCancellable>()
@@ -830,7 +823,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
     private func presentThreadList(animated: Bool) {
         let sheetNavigationStackCoordinator = NavigationStackCoordinator()
         let coordinator = ThreadListScreenCoordinator(parameters: .init(roomProxy: roomProxy,
-                                                                        threadsService: threadsService,
+                                                                        threadsAPI: userSession.clientProxy.matrixAPI.threads,
                                                                         mediaProvider: userSession.mediaProvider))
 
         coordinator.actions

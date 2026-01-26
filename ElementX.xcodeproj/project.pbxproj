@@ -184,7 +184,6 @@
 		1C6B06DB15EC194AF35C05DB /* RoomPowerLevelsProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFFA5E881D281810AB428EA3 /* RoomPowerLevelsProxy.swift */; };
 		1C8BC70A18060677E295A846 /* ShareToMapsAppActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4481799F455B3DA243BDA2AC /* ShareToMapsAppActivity.swift */; };
 		1C9BB74711E5F24C77B7FED0 /* RoomMembersListScreenCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AEA0B743847CFA5B3C38EE4 /* RoomMembersListScreenCoordinator.swift */; };
-		1D3B715C62729762ECE43E15 /* ThreadsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340CF51CD9DB0A9DDA9A869F /* ThreadsService.swift */; };
 		1D5DC685CED904386C89B7DA /* NSRegularExpresion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95BAC0F6C9644336E9567EE6 /* NSRegularExpresion.swift */; };
 		1D623953F970D11F6F38499C /* AppLockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851B95BB98649B8E773D6790 /* AppLockService.swift */; };
 		1D69E31913DF66426985909B /* EmojiPickerScreenViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11151E78D6BB2B04A8FBD389 /* EmojiPickerScreenViewModelProtocol.swift */; };
@@ -1843,7 +1842,6 @@
 		3339B1DDB1341E833D2555BC /* AVMetadataMachineReadableCodeObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVMetadataMachineReadableCodeObject.swift; sourceTree = "<group>"; };
 		33AE897D86784CCA5E4E9227 /* ElementCallService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementCallService.swift; sourceTree = "<group>"; };
 		33E49C5C6F802B4D94CA78D1 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/Localizable.strings; sourceTree = "<group>"; };
-		340CF51CD9DB0A9DDA9A869F /* ThreadsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadsService.swift; sourceTree = "<group>"; };
 		342BEBC3C5FC3F9943C41C4C /* TemplateScreenViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateScreenViewModelProtocol.swift; sourceTree = "<group>"; };
 		345172AD4377E83A44BD864F /* MessageComposerTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageComposerTextField.swift; sourceTree = "<group>"; };
 		347D708104CCEF771428C9A3 /* PollFormScreenViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollFormScreenViewModelTests.swift; sourceTree = "<group>"; };
@@ -3079,14 +3077,6 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		01CB4CF2A9F355A518B46C1F /* Threads */ = {
-			isa = PBXGroup;
-			children = (
-				340CF51CD9DB0A9DDA9A869F /* ThreadsService.swift */,
-			);
-			path = Threads;
-			sourceTree = "<group>";
-		};
 		0210F4932B59277E2EEEF7BC /* RoomNotificationSettingsScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -3177,7 +3167,6 @@
 				5329E48968EB951235E83DAE /* SessionVerification */,
 				AAAB1791344F28CDC62E764D /* Spaces */,
 				AA94873C78BBB969CE65EE52 /* StateMachine */,
-				01CB4CF2A9F355A518B46C1F /* Threads */,
 				FCDF06BDB123505F0334B4F9 /* Timeline */,
 				E4E42F93A69AE52E6FAE9412 /* Users */,
 				CBBF6127C313A5412E438BC6 /* UserSession */,
@@ -8663,7 +8652,6 @@
 				A46B93EA564F539CEC252ECC /* ThreadTimelineScreenModels.swift in Sources */,
 				738288EAEE235CAC0893AB9E /* ThreadTimelineScreenViewModel.swift in Sources */,
 				87E8C31FCF9276F15CB0B408 /* ThreadTimelineScreenViewModelProtocol.swift in Sources */,
-				1D3B715C62729762ECE43E15 /* ThreadsService.swift in Sources */,
 				2AED12987603157C32C2114D /* TimelineBubbleLayout.swift in Sources */,
 				C0FCEA4715A3B4BEDFF045A1 /* TimelineBubbleTextStyle+Environment.swift in Sources */,
 				2BFA4C6D5B3D327B02C66AB0 /* TimelineController.swift in Sources */,
