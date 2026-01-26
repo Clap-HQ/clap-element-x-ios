@@ -1488,13 +1488,13 @@
 "space_room_list_unjoined_section_title" = "Huoneet, joihin voit liittyä";
 
 "screen_space_create_room" = "Luo huone";
-"screen_space_remove_room" = "Poista avaruudesta";
+"screen_space_remove_room" = "Poista tilasta";
 "screen_space_remove_room_alert_title" = "Poista huone";
-"screen_space_remove_room_alert_message" = "Haluatko varmasti poistaa \"%@\" tästä avaruudesta?";
-"screen_space_remove_room_success" = "%@ poistettu avaruudesta";
+"screen_space_remove_room_alert_message" = "Haluatko varmasti poistaa \"%@\" tästä tilasta?";
+"screen_space_remove_room_success" = "%@ poistettu tilasta";
 "screen_space_create_room_visibility_header" = "Huoneen näkyvyys";
-"screen_space_create_room_visibility_space_members_title" = "Näkyvissä avaruuden jäsenille";
-"screen_space_create_room_visibility_space_members_description" = "Kuka tahansa ryhmässä %@ voi löytää tämän huoneen ja liittyä siihen. Vain tämän huoneen ylläpitäjät voivat lisätä sen avaruuteen.";
+"screen_space_create_room_visibility_space_members_title" = "Näkyvissä tilan jäsenille";
+"screen_space_create_room_visibility_space_members_description" = "Kuka tahansa ryhmässä %@ voi löytää tämän huoneen ja liittyä siihen. Vain tämän huoneen ylläpitäjät voivat lisätä sen tilaan.";
 "screen_space_create_room_visibility_private_title" = "Yksityinen huone (vain kutsulla)";
 "screen_space_create_room_visibility_private_description" = "Vain kutsutut henkilöt voivat löytää tämän huoneen ja liittyä siihen. Voit muuttaa tätä milloin tahansa huoneen asetuksissa.";
 "screen_space_create_room_visibility_public_title" = "Julkinen huone";

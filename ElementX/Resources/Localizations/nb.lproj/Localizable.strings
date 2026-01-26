@@ -1499,5 +1499,5 @@
 "screen_space_create_room_visibility_private_description" = "Bare inviterte personer kan finne og bli med i dette rommet. Du kan endre dette når som helst i rominnstillingene.";
 "screen_space_create_room_visibility_public_title" = "Offentlig rom";
 "screen_space_create_room_visibility_public_description" = "Alle kan finne og bli med i dette rommet. Du kan endre dette når som helst i rominnstillingene.";
-"screen_space_create_room_encryption_title" = "Aktiver start-til-mål-kryptering";
+"screen_space_create_room_encryption_title" = "Aktiver ende-til-ende-kryptering";
 "screen_space_create_room_encryption_description" = "Du kan ikke deaktivere dette senere. Broer og de fleste bot'er fungerer ikke ennå.";

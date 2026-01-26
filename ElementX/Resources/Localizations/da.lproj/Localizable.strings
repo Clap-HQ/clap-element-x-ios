@@ -1488,7 +1488,7 @@
 "space_room_list_unjoined_section_title" = "Rum du kan deltage i";
 
 "screen_space_create_room" = "Opret rum";
-"screen_space_remove_room" = "Spær fra gruppe";
+"screen_space_remove_room" = "Fjern fra gruppe";
 "screen_space_remove_room_alert_title" = "Fjern rum";
 "screen_space_remove_room_alert_message" = "Er du sikker på, at du vil fjerne \"%@\" fra denne gruppe?";
 "screen_space_remove_room_success" = "%@ fjernet fra gruppe";

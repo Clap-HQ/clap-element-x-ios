@@ -1490,14 +1490,14 @@
 "screen_space_create_room" = "Szoba létrehozása";
 "screen_space_remove_room" = "Eltávolítás a térről";
 "screen_space_remove_room_alert_title" = "Szoba eltávolítása";
-"screen_space_remove_room_alert_message" = "Biztosan el szeretnéd távolítani a(z) \"%@\" szobát erről a térről?";
+"screen_space_remove_room_alert_message" = "Biztosan el szeretné távolítani a(z) \"%@\" szobát erről a térről?";
 "screen_space_remove_room_success" = "%@ eltávolítva a térről";
 "screen_space_create_room_visibility_header" = "Szoba láthatósága";
 "screen_space_create_room_visibility_space_members_title" = "Tér tagsága számára látható";
 "screen_space_create_room_visibility_space_members_description" = "Bárki a(z) %@ térben megtalálhatja és csatlakozhat ehhez a szobához. Csak ennek a szobának a rendszergazdái adhatják hozzá egy térhez.";
 "screen_space_create_room_visibility_private_title" = "Privát szoba (csak meghívóval)";
-"screen_space_create_room_visibility_private_description" = "Csak meghívott személyek találhatják meg és csatlakozhatnak ehhez a szobához. Ezt bármikor megváltoztathatod a szoba beállításaiban.";
+"screen_space_create_room_visibility_private_description" = "Csak meghívott személyek találhatják meg és csatlakozhatnak ehhez a szobához. Ezt bármikor megváltoztathatja a szoba beállításaiban.";
 "screen_space_create_room_visibility_public_title" = "Nyilvános szoba";
-"screen_space_create_room_visibility_public_description" = "Bárki megtalálhatja és csatlakozhat ehhez a szobához. Ezt bármikor megváltoztathatod a szoba beállításaiban.";
+"screen_space_create_room_visibility_public_description" = "Bárki megtalálhatja és csatlakozhat ehhez a szobához. Ezt bármikor megváltoztathatja a szoba beállításaiban.";
 "screen_space_create_room_encryption_title" = "Végpontok közti titkosítás engedélyezése";
 "screen_space_create_room_encryption_description" = "Ezt később nem lehet kikapcsolni. A hidak és a legtöbb bot egyelőre nem fog működni.";
