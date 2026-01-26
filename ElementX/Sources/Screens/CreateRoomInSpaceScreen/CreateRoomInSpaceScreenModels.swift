@@ -32,7 +32,7 @@ struct CreateRoomInSpaceScreenViewState: BindableState {
     var isCreating = false
 
     var canCreateRoom: Bool {
-        !bindings.roomName.isEmpty && !isCreating
+        !bindings.roomName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isCreating
     }
 
     /// Whether encryption toggle should be shown (only for non-public rooms)
