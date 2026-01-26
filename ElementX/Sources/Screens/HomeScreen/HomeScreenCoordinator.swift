@@ -119,4 +119,8 @@ final class HomeScreenCoordinator: CoordinatorProtocol {
     func toPresentable() -> AnyView {
         AnyView(HomeScreen(context: viewModel.context))
     }
+
+    func refreshSpaceChildren(for spaceID: String) async {
+        await viewModel.refreshSpaceChildren(for: spaceID)
+    }
 }

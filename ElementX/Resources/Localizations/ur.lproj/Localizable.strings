@@ -1486,3 +1486,18 @@
 "screen_thread_activity_empty_description" = "آپ نے سب پڑھ لیا!";
 "space_room_list_joined_section_title" = "آپ جن کمروں میں ہیں";
 "space_room_list_unjoined_section_title" = "کمرے جن میں آپ شامل ہو سکتے ہیں";
+
+"screen_space_create_room" = "کمرہ بنائیں";
+"screen_space_remove_room" = "اسپیس سے ہٹائیں";
+"screen_space_remove_room_alert_title" = "کمرہ ہٹائیں";
+"screen_space_remove_room_alert_message" = "کیا آپ واقعی \"%@\" کو اس اسپیس سے ہٹانا چاہتے ہیں؟";
+"screen_space_remove_room_success" = "%@ اسپیس سے ہٹا دیا گیا";
+"screen_space_create_room_visibility_header" = "کمرے کی مرئیت";
+"screen_space_create_room_visibility_space_members_title" = "اسپیس کے اراکین کو نظر آتا ہے";
+"screen_space_create_room_visibility_space_members_description" = "%@ میں کوئی بھی اس کمرے کو تلاش کر کے شامل ہو سکتا ہے۔ صرف اس کمرے کے منتظمین اسے اسپیس میں شامل کر سکتے ہیں۔";
+"screen_space_create_room_visibility_private_title" = "نجی کمرہ (صرف دعوت نامے سے)";
+"screen_space_create_room_visibility_private_description" = "صرف مدعو افراد اس کمرے کو تلاش کر کے شامل ہو سکتے ہیں۔ آپ اسے کمرے کی ترتیبات میں کسی بھی وقت تبدیل کر سکتے ہیں۔";
+"screen_space_create_room_visibility_public_title" = "عوامی کمرہ";
+"screen_space_create_room_visibility_public_description" = "کوئی بھی اس کمرے کو تلاش کر کے شامل ہو سکتا ہے۔ آپ اسے کمرے کی ترتیبات میں کسی بھی وقت تبدیل کر سکتے ہیں۔";
+"screen_space_create_room_encryption_title" = "اینڈ ٹو اینڈ انکرپشن فعال کریں";
+"screen_space_create_room_encryption_description" = "آپ اسے بعد میں غیر فعال نہیں کر سکتے۔ پل اور زیادہ تر بوٹس ابھی تک کام نہیں کریں گے۔";

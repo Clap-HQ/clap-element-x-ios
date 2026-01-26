@@ -26,6 +26,16 @@ struct SpaceRoomListScreen: View {
         .sheet(item: $context.leaveSpaceViewModel) { leaveSpaceViewModel in
             LeaveSpaceView(context: leaveSpaceViewModel.context)
         }
+        .alert(item: $context.removeRoomConfirmation) { confirmation in
+            Alert(
+                title: Text(L10n.screenSpaceRemoveRoomAlertTitle),
+                message: Text(L10n.screenSpaceRemoveRoomAlertMessage(confirmation.roomName)),
+                primaryButton: .destructive(Text(L10n.actionRemove)) {
+                    context.send(viewAction: .removeRoomFromSpace(roomID: confirmation.roomID, roomName: confirmation.roomName))
+                },
+                secondaryButton: .cancel()
+            )
+        }
     }
 
     @ViewBuilder
@@ -116,6 +126,14 @@ struct SpaceRoomListScreen: View {
         } label: {
             Label(L10n.actionLeaveRoom, icon: \.leave)
         }
+
+        if context.viewState.canManageSpaceChildren {
+            Button(role: .destructive) {
+                context.send(viewAction: .confirmRemoveRoomFromSpace(roomID: room.id, roomName: room.name))
+            } label: {
+                Label(L10n.screenSpaceRemoveRoom, icon: \.close)
+            }
+        }
     }
 
     @ToolbarContentBuilder
@@ -146,6 +164,11 @@ struct SpaceRoomListScreen: View {
                         if context.viewState.canInviteUsers {
                             Button { context.send(viewAction: .inviteUsers) } label: {
                                 Label(L10n.actionInvite, icon: \.userAdd)
+                            }
+                        }
+                        if context.viewState.canManageSpaceChildren {
+                            Button { context.send(viewAction: .createRoom) } label: {
+                                Label(L10n.screenSpaceCreateRoom, icon: \.plus)
                             }
                         }
                         if context.viewState.isSpaceManagementEnabled,

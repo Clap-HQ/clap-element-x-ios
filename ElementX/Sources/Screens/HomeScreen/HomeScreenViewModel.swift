@@ -339,26 +339,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
         // Add tracking for new spaces
         let newSpaceIDs = currentSpaceIDs.subtracting(existingSpaceIDs)
         for spaceID in newSpaceIDs {
-            switch await spaceService.spaceRoomList(spaceID: spaceID) {
-            case .success(let spaceRoomListProxy):
-                // Paginate to load all children
-                await spaceRoomListProxy.paginate()
-
-                await MainActor.run {
-                    spaceRoomListProxies[spaceID] = spaceRoomListProxy
-
-                    // Subscribe to space's child rooms
-                    let cancellable = spaceRoomListProxy.spaceRoomsPublisher
-                        .receive(on: DispatchQueue.main)
-                        .sink { [weak self] _ in
-                            self?.rebuildSpaceChildrenRoomIDs()
-                        }
-                    spaceChildrenCancellables[spaceID] = cancellable
-                }
-
-            case .failure(let error):
-                MXLog.error("Failed to get space room list for tracking children: \(error)")
-            }
+            await setupSpaceRoomListTracking(for: spaceID)
         }
 
         // Rebuild after any changes or on initial load
@@ -395,6 +376,45 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
 
         rebuildSpacesWithAggregatedInfo()
         updateRooms()
+    }
+
+    /// Refreshes the space children tracking for a specific space
+    /// Call this after creating or removing a room in a space to update grouping
+    func refreshSpaceChildren(for spaceID: String) async {
+        guard developerModeSettings.groupSpaceRooms else { return }
+
+        if await setupSpaceRoomListTracking(for: spaceID) {
+            await MainActor.run {
+                rebuildSpaceChildrenRoomIDs()
+            }
+            MXLog.info("Refreshed space children tracking for \(spaceID)")
+        }
+    }
+
+    /// Sets up tracking for a space's child rooms
+    /// - Returns: true if setup succeeded, false otherwise
+    @discardableResult
+    private func setupSpaceRoomListTracking(for spaceID: String) async -> Bool {
+        switch await spaceService.spaceRoomList(spaceID: spaceID) {
+        case .success(let spaceRoomListProxy):
+            await spaceRoomListProxy.paginate()
+
+            await MainActor.run {
+                spaceRoomListProxies[spaceID] = spaceRoomListProxy
+
+                let cancellable = spaceRoomListProxy.spaceRoomsPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] _ in
+                        self?.rebuildSpaceChildrenRoomIDs()
+                    }
+                spaceChildrenCancellables[spaceID] = cancellable
+            }
+            return true
+
+        case .failure(let error):
+            MXLog.error("Failed to setup space room list tracking for \(spaceID): \(error)")
+            return false
+        }
     }
 
     /// Rebuilds spaces with aggregated badge and last message date info from child rooms

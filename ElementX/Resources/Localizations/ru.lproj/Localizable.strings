@@ -1486,3 +1486,18 @@
 "screen_thread_activity_empty_description" = "Вы всё прочитали!";
 "space_room_list_joined_section_title" = "Комнаты, в которых вы состоите";
 "space_room_list_unjoined_section_title" = "Комнаты, в которые вы можете вступить";
+
+"screen_space_create_room" = "Создать комнату";
+"screen_space_remove_room" = "Исключить из пространства";
+"screen_space_remove_room_alert_title" = "Удалить комнату";
+"screen_space_remove_room_alert_message" = "Вы уверены, что хотите удалить \"%@\" из этого пространства?";
+"screen_space_remove_room_success" = "%@ удалена из пространства";
+"screen_space_create_room_visibility_header" = "Видимость комнаты";
+"screen_space_create_room_visibility_space_members_title" = "Видимая для участников пространства";
+"screen_space_create_room_visibility_space_members_description" = "Любой участник %@ может найти и присоединиться к этой комнате. Только администраторы этой комнаты могут добавить её в пространство.";
+"screen_space_create_room_visibility_private_title" = "Приватная комната (только по приглашению)";
+"screen_space_create_room_visibility_private_description" = "Только приглашённые могут найти и присоединиться к этой комнате. Вы можете изменить это в любое время в настройках комнаты.";
+"screen_space_create_room_visibility_public_title" = "Публичная комната";
+"screen_space_create_room_visibility_public_description" = "Любой может найти и присоединиться к этой комнате. Вы можете изменить это в любое время в настройках комнаты.";
+"screen_space_create_room_encryption_title" = "Включить сквозное шифрование";
+"screen_space_create_room_encryption_description" = "Вы не сможете отключить это позже. Мосты и большинство ботов пока не будут работать.";

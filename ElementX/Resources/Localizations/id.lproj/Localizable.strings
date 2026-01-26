@@ -1486,3 +1486,18 @@
 "screen_thread_activity_empty_description" = "Anda sudah membaca semuanya!";
 "space_room_list_joined_section_title" = "Ruangan yang Anda ikuti";
 "space_room_list_unjoined_section_title" = "Ruangan yang dapat Anda ikuti";
+
+"screen_space_create_room" = "Buat ruangan";
+"screen_space_remove_room" = "Keluarkan dari space";
+"screen_space_remove_room_alert_title" = "Hapus ruangan";
+"screen_space_remove_room_alert_message" = "Apakah Anda yakin ingin menghapus \"%@\" dari space ini?";
+"screen_space_remove_room_success" = "%@ dihapus dari space";
+"screen_space_create_room_visibility_header" = "Visibilitas ruangan";
+"screen_space_create_room_visibility_space_members_title" = "Dapat dilihat oleh anggota space";
+"screen_space_create_room_visibility_space_members_description" = "Siapa pun di %@ dapat menemukan dan bergabung ke ruangan ini. Hanya admin ruangan ini yang dapat menambahkannya ke space.";
+"screen_space_create_room_visibility_private_title" = "Ruangan privat (undangan saja)";
+"screen_space_create_room_visibility_private_description" = "Hanya orang yang diundang yang dapat menemukan dan bergabung ke ruangan ini. Anda dapat mengubah ini kapan saja di pengaturan ruangan.";
+"screen_space_create_room_visibility_public_title" = "Ruangan publik";
+"screen_space_create_room_visibility_public_description" = "Siapa pun dapat menemukan dan bergabung ke ruangan ini. Anda dapat mengubah ini kapan saja di pengaturan ruangan.";
+"screen_space_create_room_encryption_title" = "Aktifkan enkripsi ujung ke ujung";
+"screen_space_create_room_encryption_description" = "Anda tidak dapat menonaktifkannya nanti. Jembatan & kebanyakan bot belum dapat digunakan.";

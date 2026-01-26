@@ -1486,3 +1486,18 @@
 "screen_thread_activity_empty_description" = "Du er oppdatert!";
 "space_room_list_joined_section_title" = "Rom du er med i";
 "space_room_list_unjoined_section_title" = "Rom du kan bli med i";
+
+"screen_space_create_room" = "Opprett rom";
+"screen_space_remove_room" = "Fjern fra området";
+"screen_space_remove_room_alert_title" = "Fjern rom";
+"screen_space_remove_room_alert_message" = "Er du sikker på at du vil fjerne \"%@\" fra dette området?";
+"screen_space_remove_room_success" = "%@ fjernet fra området";
+"screen_space_create_room_visibility_header" = "Romsynlighet";
+"screen_space_create_room_visibility_space_members_title" = "Synlig for områdets medlemmer";
+"screen_space_create_room_visibility_space_members_description" = "Alle i %@ kan finne og bli med i dette rommet. Kun administratorer av dette rommet kan legge det til i et område.";
+"screen_space_create_room_visibility_private_title" = "Privat rom (kun for inviterte)";
+"screen_space_create_room_visibility_private_description" = "Bare inviterte personer kan finne og bli med i dette rommet. Du kan endre dette når som helst i rominnstillingene.";
+"screen_space_create_room_visibility_public_title" = "Offentlig rom";
+"screen_space_create_room_visibility_public_description" = "Alle kan finne og bli med i dette rommet. Du kan endre dette når som helst i rominnstillingene.";
+"screen_space_create_room_encryption_title" = "Aktiver ende-til-ende-kryptering";
+"screen_space_create_room_encryption_description" = "Du kan ikke deaktivere dette senere. Broer og de fleste bot'er fungerer ikke ennå.";

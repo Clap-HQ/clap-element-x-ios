@@ -11,9 +11,13 @@ import Combine
 @MainActor
 protocol HomeScreenViewModelProtocol {
     var actions: AnyPublisher<HomeScreenViewModelAction, Never> { get }
-    
+
     var context: HomeScreenViewModelType.Context { get }
-    
+
     // periphery: ignore - used in release mode
     func presentCrashedLastRunAlert()
+
+    /// Refreshes the space children tracking for a specific space
+    /// Call this after creating or removing a room in a space
+    func refreshSpaceChildren(for spaceID: String) async
 }
