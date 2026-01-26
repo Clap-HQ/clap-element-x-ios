@@ -31,7 +31,7 @@ struct SpaceRoomListScreen: View {
                 title: Text(L10n.screenSpaceRemoveRoomAlertTitle),
                 message: Text(L10n.screenSpaceRemoveRoomAlertMessage(confirmation.roomName)),
                 primaryButton: .destructive(Text(L10n.actionRemove)) {
-                    context.send(viewAction: .removeRoomFromSpace(roomID: confirmation.id, roomName: confirmation.roomName))
+                    context.send(viewAction: .removeRoomFromSpace(roomID: confirmation.roomID, roomName: confirmation.roomName))
                 },
                 secondaryButton: .cancel()
             )

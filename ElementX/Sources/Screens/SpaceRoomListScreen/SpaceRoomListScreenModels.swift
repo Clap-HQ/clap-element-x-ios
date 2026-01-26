@@ -84,7 +84,8 @@ struct SpaceRoomListScreenViewStateBindings {
 
 /// Confirmation data for removing a room from space
 struct RemoveRoomConfirmation: Identifiable {
-    let id: String
+    var id: String { roomID }
+    let roomID: String
     let roomName: String
 }
 

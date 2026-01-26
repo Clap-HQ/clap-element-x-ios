@@ -85,7 +85,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
         case .leaveRoom(let roomID):
             Task { await leaveRoom(roomID: roomID) }
         case .confirmRemoveRoomFromSpace(let roomID, let roomName):
-            state.bindings.removeRoomConfirmation = RemoveRoomConfirmation(id: roomID, roomName: roomName)
+            state.bindings.removeRoomConfirmation = RemoveRoomConfirmation(roomID: roomID, roomName: roomName)
         case .removeRoomFromSpace(let roomID, let roomName):
             state.bindings.removeRoomConfirmation = nil
             Task { await removeRoomFromSpace(roomID: roomID, roomName: roomName) }
