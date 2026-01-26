@@ -148,11 +148,6 @@ struct SpaceRoomListScreen: View {
                                 Label(L10n.actionInvite, icon: \.userAdd)
                             }
                         }
-                        if context.viewState.canManageSpaceChildren {
-                            Button { context.send(viewAction: .createRoom) } label: {
-                                Label(L10n.screenSpaceCreateRoom, icon: \.plus)
-                            }
-                        }
                         if context.viewState.isSpaceManagementEnabled,
                            context.viewState.roomProxy != nil {
                             Button { context.send(viewAction: .spaceSettings) } label: {

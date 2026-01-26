@@ -94,22 +94,22 @@ enum RoomListFilter: Int, CaseIterable, Identifiable {
 struct RoomListFiltersState {
     private(set) var activeFilters: OrderedSet<RoomListFilter>
     private let appSettings: AppSettings
-    private let developerModeSettings: DeveloperModeSettings
+    private let clapDeveloperModeSettings: ClapDeveloperModeSettings
 
     init(activeFilters: OrderedSet<RoomListFilter>? = nil,
          appSettings: AppSettings,
-         developerModeSettings: DeveloperModeSettings = ServiceLocator.shared.developerModeSettings) {
+         clapDeveloperModeSettings: ClapDeveloperModeSettings = ServiceLocator.shared.clapDeveloperModeSettings) {
         // Default to empty (no filters active)
         self.activeFilters = activeFilters ?? []
         self.appSettings = appSettings
-        self.developerModeSettings = developerModeSettings
+        self.clapDeveloperModeSettings = clapDeveloperModeSettings
     }
 
     var availableFilters: [RoomListFilter] {
         var availableFilters = OrderedSet(RoomListFilter.allCases)
 
         // Hide spaces filter when groupSpaceRooms is disabled
-        if !developerModeSettings.groupSpaceRooms {
+        if !clapDeveloperModeSettings.groupSpaceRooms {
             availableFilters.remove(.spaces)
         }
 
