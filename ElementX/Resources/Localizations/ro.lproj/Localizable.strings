@@ -142,6 +142,7 @@
 "action_share" = "Partajați";
 "action_share_link" = "Partajați linkul";
 "action_show" = "Afișare";
+"action_sign_in" = "Autentificare";
 "action_sign_in_again" = "Autentificați-vă din nou";
 "action_signout" = "Deconectați-vă";
 "action_signout_anyway" = "Deconectați-vă oricum";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Creați un cont";
 "screen_onboarding_welcome_message" = "Bine ați venit la cel mai rapid %1$@ din toate timpurile. Supraalimentat pentru viteză și simplitate.";
 "screen_onboarding_welcome_subtitle" = "Bun venit în %1$@. Supraalimentat, pentru viteză și simplitate.";
-"screen_onboarding_welcome_title" = "Fii în Elementul tău";
+"screen_onboarding_welcome_title" = "Bine ați venit la Clap";
 "screen_polls_history_empty_ongoing" = "Nu s-au putut găsi sondaje în curs de desfășurare.";
 "screen_polls_history_empty_past" = "Nu s-au putut găsi sondaje anterioare.";
 "screen_polls_history_filter_ongoing" = "În desfășurare";

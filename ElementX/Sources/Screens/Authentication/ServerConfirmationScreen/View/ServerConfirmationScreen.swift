@@ -14,7 +14,7 @@ struct ServerConfirmationScreen: View {
     
     private var backgroundColor: Color {
         switch context.viewState.mode {
-        case .confirmation: .compound.bgCanvasDefault
+        case .confirmation: .compound.bgCanvasClap
         case .picker: .compound.bgSubtleSecondaryLevel0
         }
     }
@@ -62,12 +62,12 @@ struct ServerConfirmationScreen: View {
                 .foregroundColor(.compound.textPrimary)
                 .fixedSize(horizontal: false, vertical: true)
             
-            if let message = context.viewState.message {
-                Text(message)
-                    .font(.compound.bodyMD)
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.compound.textSecondary)
-            }
+//            if let message = context.viewState.message {
+//                Text(message)
+//                    .font(.compound.bodyMD)
+//                    .multilineTextAlignment(.center)
+//                    .foregroundColor(.compound.textSecondary)
+//            }
         }
         .padding(.horizontal, 16)
     }

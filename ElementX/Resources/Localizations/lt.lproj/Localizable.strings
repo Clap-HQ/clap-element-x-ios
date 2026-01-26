@@ -142,6 +142,7 @@
 "action_share" = "Dalintis";
 "action_share_link" = "Bendrinti nuorodą";
 "action_show" = "Show";
+"action_sign_in" = "Prisijungti";
 "action_sign_in_again" = "Prisijungti vėl";
 "action_signout" = "Atsijungti";
 "action_signout_anyway" = "Atsijungti vis tiek";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Kurti paskyrą";
 "screen_onboarding_welcome_message" = "Sveiki atvykę į sparčiausią „%1$@“ kada nors. Pagerintas spartai ir paprastumui.";
 "screen_onboarding_welcome_subtitle" = "Sveiki atvykę į „%1$@“. Pagerintas spartai ir paprastumui.";
-"screen_onboarding_welcome_title" = "Būkite savo elemente";
+"screen_onboarding_welcome_title" = "Sveiki atvykę į Clap";
 "screen_polls_history_empty_ongoing" = "Can't find any ongoing polls.";
 "screen_polls_history_empty_past" = "Can't find any past polls.";
 "screen_polls_history_filter_ongoing" = "Ongoing";

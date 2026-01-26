@@ -142,6 +142,7 @@
 "action_share" = "Dele";
 "action_share_link" = "Dele lenke";
 "action_show" = "Vis";
+"action_sign_in" = "Logg inn";
 "action_sign_in_again" = "Logg på igjen";
 "action_signout" = "Logg ut";
 "action_signout_anyway" = "Logg ut likevel";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Opprett konto";
 "screen_onboarding_welcome_message" = "Velkommen til den raskeste %1$@ noensinne. Superladet for hastighet og enkelhet.";
 "screen_onboarding_welcome_subtitle" = "Velkommen til %1$@. Supercharged, for hastighet og enkelhet.";
-"screen_onboarding_welcome_title" = "Vær i ditt rette element";
+"screen_onboarding_welcome_title" = "Velkommen til Clap";
 "screen_polls_history_empty_ongoing" = "Finner ingen pågående avstemninger.";
 "screen_polls_history_empty_past" = "Kan ikke finne noen tidligere avstemninger.";
 "screen_polls_history_filter_ongoing" = "Pågående";

@@ -142,6 +142,7 @@
 "action_share" = "Споделяне";
 "action_share_link" = "Споделяне на връзката";
 "action_show" = "Показване";
+"action_sign_in" = "Влизане";
 "action_sign_in_again" = "Влизане отново";
 "action_signout" = "Изход";
 "action_signout_anyway" = "Излизане въпреки това";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Създаване на акаунт";
 "screen_onboarding_welcome_message" = "Добре дошли в най-бързия %1$@ досега. Супер зареден за скорост и простота.";
 "screen_onboarding_welcome_subtitle" = "Добре дошли в %1$@. Супер зареден за скорост и простота.";
-"screen_onboarding_welcome_title" = "Бъдете в стихията си";
+"screen_onboarding_welcome_title" = "Добре дошли в Clap";
 "screen_polls_history_empty_ongoing" = "Не се намират текущи анкети.";
 "screen_polls_history_empty_past" = "Не се намират приключили анкети.";
 "screen_polls_history_filter_ongoing" = "Текущи";

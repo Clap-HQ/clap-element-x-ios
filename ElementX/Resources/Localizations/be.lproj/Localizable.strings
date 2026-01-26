@@ -142,6 +142,7 @@
 "action_share" = "Падзяліцца";
 "action_share_link" = "Абагуліць спасылку";
 "action_show" = "Паказаць";
+"action_sign_in" = "Увайсці";
 "action_sign_in_again" = "Увайдзіце яшчэ раз";
 "action_signout" = "Выйсці";
 "action_signout_anyway" = "Усё роўна выйсці";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Стварыць уліковы запіс";
 "screen_onboarding_welcome_message" = "Сардэчна запрашаем у самы хуткі %1$@. Перавага ў хуткасці і прастаце.";
 "screen_onboarding_welcome_subtitle" = "Сардэчна запрашаем у %1$@. Зараджаны, для хуткасці і прастаты.";
-"screen_onboarding_welcome_title" = "Будзьце ў сваім element";
+"screen_onboarding_welcome_title" = "Сардэчна запрашаем у Clap";
 "screen_polls_history_empty_ongoing" = "Немагчыма знайсці бягучыя апытанні.";
 "screen_polls_history_empty_past" = "Немагчыма знайсці мінулыя апытанні.";
 "screen_polls_history_filter_ongoing" = "Бягучыя";

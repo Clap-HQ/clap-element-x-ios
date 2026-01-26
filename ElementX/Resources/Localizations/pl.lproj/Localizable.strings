@@ -142,6 +142,7 @@
 "action_share" = "Udostępnij";
 "action_share_link" = "Udostępnij link";
 "action_show" = "Pokaż";
+"action_sign_in" = "Zaloguj się";
 "action_sign_in_again" = "Zaloguj się ponownie";
 "action_signout" = "Wyloguj";
 "action_signout_anyway" = "Wyloguj mimo to";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Utwórz konto";
 "screen_onboarding_welcome_message" = "Witamy w %1$@. Szybszy i prostszy niż kiedykolwiek.";
 "screen_onboarding_welcome_subtitle" = "Witamy w %1$@. Doładowany, dla szybkości i prostoty.";
-"screen_onboarding_welcome_title" = "Be in your element";
+"screen_onboarding_welcome_title" = "Witamy w Clap";
 "screen_polls_history_empty_ongoing" = "Nie znaleziono ankiet w trakcie.";
 "screen_polls_history_empty_past" = "Nie znaleziono ankiet.";
 "screen_polls_history_filter_ongoing" = "W trakcie";

@@ -142,6 +142,7 @@
 "action_share" = "هم‌رسانی";
 "action_share_link" = "هم‌رسانی پیوند";
 "action_show" = "نمایش";
+"action_sign_in" = "ورود";
 "action_sign_in_again" = "ورود دوباره";
 "action_signout" = "خروج";
 "action_signout_anyway" = "خروج به هر صورت";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "ایجاد حساب";
 "screen_onboarding_welcome_message" = "به سریع‌ترین %1$@ خوش آمدید. بازطرّاحی شده برای سرعت و سادگی.";
 "screen_onboarding_welcome_subtitle" = "به %1$@ خوش آمدید. بازطرّاحی شده برای سرعت و سادگی.";
-"screen_onboarding_welcome_title" = "در المنتتان باشید";
+"screen_onboarding_welcome_title" = "به Clap خوش آمدید";
 "screen_polls_history_empty_ongoing" = "نتوانست هیچ نظرسنجی در جریانی بیابد.";
 "screen_polls_history_empty_past" = "نتوانست هیچ نظرسنجی گذشته‌ای بیابد.";
 "screen_polls_history_filter_ongoing" = "در جریان";

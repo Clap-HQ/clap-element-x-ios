@@ -21,7 +21,7 @@ struct RoomScreenFooterView: View {
         case .verificationViolation:
             .compound.borderCriticalSubtle
         case .none:
-            Color.compound.bgRoomScreen
+            Color.compound.bgCanvasClap
         }
     }
     
@@ -41,7 +41,7 @@ struct RoomScreenFooterView: View {
             detailsView(details)
                 .highlight(gradient: gradient,
                            borderColor: borderColor,
-                           backgroundColor: .compound.bgRoomScreen)
+                           backgroundColor: .compound.bgCanvasClap)
                 .padding(.top, 8)
                 .fixedSize(horizontal: false, vertical: true)
         }

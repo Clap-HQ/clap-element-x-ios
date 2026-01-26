@@ -142,6 +142,7 @@
 "action_share" = "Teilen";
 "action_share_link" = "Link teilen";
 "action_show" = "Zeige";
+"action_sign_in" = "Anmelden";
 "action_sign_in_again" = "Erneut anmelden";
 "action_signout" = "Abmelden";
 "action_signout_anyway" = "Trotzdem abmelden";
@@ -938,7 +939,7 @@
 "screen_onboarding_sign_up" = "Konto erstellen";
 "screen_onboarding_welcome_message" = "Willkommen beim schnellsten %1$@ aller Zeiten. Optimiert für Geschwindigkeit und Einfachheit.";
 "screen_onboarding_welcome_subtitle" = "Willkommen zu %1$@. Aufgeladen, für Geschwindigkeit und Einfachheit.";
-"screen_onboarding_welcome_title" = "Sei in Deinem Element";
+"screen_onboarding_welcome_title" = "Willkommen bei Clap";
 "screen_polls_history_empty_ongoing" = "Keine laufenden Umfragen vorhanden.";
 "screen_polls_history_empty_past" = "Keine beendeten Umfragen vorhanden.";
 "screen_polls_history_filter_ongoing" = "Laufend";

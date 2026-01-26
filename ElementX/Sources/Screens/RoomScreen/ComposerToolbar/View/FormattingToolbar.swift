@@ -55,7 +55,7 @@ private extension FormatItem {
         case .reversed:
             return .compound.bgAccentSelected
         case .enabled, .disabled:
-            return .compound.bgRoomScreen
+            return .compound.bgCanvasClap
         }
     }
 }
