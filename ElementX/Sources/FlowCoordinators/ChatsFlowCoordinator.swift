@@ -644,7 +644,14 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
     }
 
     private func dismissSpaceRoomListFlow(animated: Bool) {
-        // Clear all cancellables first to prevent duplicate actions
+        // Dismiss create-room sheet first if it's open (before clearing cancellables)
+        if createRoomInSpaceCoordinator != nil {
+            navigationSplitCoordinator.setSheetCoordinator(nil, animated: false)
+            createRoomInSpaceCoordinator = nil
+            createRoomInSpaceNavigationStackCoordinator = nil
+        }
+
+        // Clear all cancellables to prevent duplicate actions
         spaceRoomListCancellables.removeAll()
 
         navigationSplitCoordinator.setDetailCoordinator(nil, animated: animated)
@@ -655,7 +662,6 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
         spaceRoomListMembersFlowCoordinator = nil
         spaceRoomListMemberDetailsCoordinator = nil
         spaceRoomListSpaceSettingsFlowCoordinator = nil
-        createRoomInSpaceCoordinator = nil
     }
 
     private func presentSpaceMembers(roomProxy: JoinedRoomProxyProtocol, animated: Bool) {
