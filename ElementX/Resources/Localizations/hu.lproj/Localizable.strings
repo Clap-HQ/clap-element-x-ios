@@ -1144,7 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Új beszélgetés vagy szoba létrehozása";
 "screen_roomlist_empty_message" = "Kezdje azzal, hogy üzenetet küld valakinek.";
 "screen_roomlist_empty_title" = "Még nincsenek csevegések.";
-"screen_roomlist_filter_all" = "Mind";
+"screen_roomlist_filter_all" = "Összes";
 "screen_roomlist_filter_favourites" = "Kedvencek";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "A csevegési beállításokban csevegéseket adhat hozzá a kedvencekhez.\nEgyelőre törölheti a szűrőket a többi csevegés megtekintéséhez.";
 "screen_roomlist_filter_favourites_empty_state_title" = "Még nincsenek kedvenc csevegései";
@@ -1484,5 +1484,5 @@
 "screen_thread_activity_title" = "Üzenetszál-aktivitás";
 "screen_thread_activity_empty_title" = "Nincsenek olvasatlan üzenetszálak";
 "screen_thread_activity_empty_description" = "Mindent elolvasott!";
-"space_room_list_joined_section_title" = "Szobák, amelyekben benne vagy";
-"space_room_list_unjoined_section_title" = "Szobák, amelyekhez csatlakozhatsz";
+"space_room_list_joined_section_title" = "Szobák, amelyeknek tagja";
+"space_room_list_unjoined_section_title" = "Szobák, amelyekhez csatlakozhat";

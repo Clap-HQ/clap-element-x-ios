@@ -1156,8 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Henüz hiç DM'niz yok";
 "screen_roomlist_filter_rooms" = "Odalar";
 "screen_roomlist_filter_rooms_empty_state_title" = "Henüz herhangi bir odada değilsiniz";
-"screen_roomlist_filter_spaces" = "Uzaylar";
-"screen_roomlist_filter_spaces_empty_state_title" = "Henüz herhangi bir uzayda değilsiniz";
+"screen_roomlist_filter_spaces" = "Spaces";
+"screen_roomlist_filter_spaces_empty_state_title" = "Henüz herhangi bir Space'de değilsiniz";
 "screen_roomlist_filter_unreads" = "Okunmamış";
 "screen_roomlist_filter_unreads_empty_state_title" = "Tebrikler!\nOkunmamış mesajınız yok!";
 "screen_roomlist_main_space_title" = "Sohbetler";

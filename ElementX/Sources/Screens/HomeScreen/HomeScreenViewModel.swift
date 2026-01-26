@@ -29,6 +29,8 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
     /// Holds space room list subscriptions for tracking child rooms
     private var spaceRoomListProxies: [String: SpaceRoomListProxyProtocol] = [:]
     private var spaceChildrenCancellables: [String: AnyCancellable] = [:]
+    /// Holds the leave space confirmation cancellable for proper lifecycle management
+    private var leaveSpaceCancellable: AnyCancellable?
     /// Whether space children tracking has completed initial load
     private var isSpaceChildrenLoaded = false
 
@@ -484,7 +486,10 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
                                                       leaveHandle: leaveHandle,
                                                       userIndicatorController: userIndicatorController,
                                                       mediaProvider: mediaProvider)
-        leaveSpaceViewModel.actions.sink { [weak self] (action: LeaveSpaceViewModelAction) in
+
+        // Cancel any existing subscription for proper lifecycle management
+        leaveSpaceCancellable?.cancel()
+        leaveSpaceCancellable = leaveSpaceViewModel.actions.sink { [weak self] (action: LeaveSpaceViewModelAction) in
             guard let self else { return }
             switch action {
             case .didCancel:
@@ -497,7 +502,6 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
                 actionsSubject.send(.spaceLeft(spaceID: spaceID))
             }
         }
-        .store(in: &cancellables)
 
         state.bindings.leaveSpaceViewModel = leaveSpaceViewModel
     }

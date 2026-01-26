@@ -1156,8 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Oraindik ez duzu Mezu Pribaturik";
 "screen_roomlist_filter_rooms" = "Gelak";
 "screen_roomlist_filter_rooms_empty_state_title" = "Oraindik ez zaude inolako gelatan";
-"screen_roomlist_filter_spaces" = "Espazioak";
-"screen_roomlist_filter_spaces_empty_state_title" = "Oraindik ez zaude inongo espazioan";
+"screen_roomlist_filter_spaces" = "Guneak";
+"screen_roomlist_filter_spaces_empty_state_title" = "Oraindik ez zaude inongo gunean";
 "screen_roomlist_filter_unreads" = "Irakurri gabeak";
 "screen_roomlist_filter_unreads_empty_state_title" = "Bejondeizula!\nEz duzu irakurri gabeko mezurik!";
 "screen_roomlist_main_space_title" = "Txatak";

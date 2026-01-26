@@ -1156,8 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Du har ingen DM-er ennå";
 "screen_roomlist_filter_rooms" = "Rom";
 "screen_roomlist_filter_rooms_empty_state_title" = "Du er ikke i noe rom ennå";
-"screen_roomlist_filter_spaces" = "Rom";
-"screen_roomlist_filter_spaces_empty_state_title" = "Du er ikke i noe rom ennå";
+"screen_roomlist_filter_spaces" = "Områder";
+"screen_roomlist_filter_spaces_empty_state_title" = "Du er ikke i noen områder ennå";
 "screen_roomlist_filter_unreads" = "Uleste";
 "screen_roomlist_filter_unreads_empty_state_title" = "Gratulerer!\nDu har ingen uleste meldinger!";
 "screen_roomlist_main_space_title" = "Chatter";

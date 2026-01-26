@@ -15,7 +15,7 @@ final class RoomListFiltersStateTests: XCTestCase {
     
     var state: RoomListFiltersState!
     // When groupSpaceRooms is disabled (default), spaces filter is hidden
-    var allCasesWithoutLowPriorityAndSpaces = RoomListFilter.allCases.filter { $0 != .lowPriority && $0 != .spaces }
+    let allCasesWithoutLowPriorityAndSpaces = RoomListFilter.allCases.filter { $0 != .lowPriority && $0 != .spaces }
     
     override func setUp() {
         AppSettings.resetAllSettings()

@@ -25,6 +25,9 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
         actionsSubject.eraseToAnyPublisher()
     }
 
+    /// Holds the leave space confirmation cancellable for proper lifecycle management
+    private var leaveSpaceCancellable: AnyCancellable?
+
     init(spaceRoomListProxy: SpaceRoomListProxyProtocol,
          spaceServiceProxy: SpaceServiceProxyProtocol,
          userSession: UserSessionProtocol,
@@ -131,7 +134,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
 
     private func updateRoomList(with spaceRooms: [SpaceRoomProxyProtocol], roomSummaries: [RoomSummary]) {
         // Build a lookup dictionary for quick access
-        let summaryByID = Dictionary(uniqueKeysWithValues: roomSummaries.map { ($0.id, $0) })
+        let summaryByID = Dictionary(roomSummaries.map { ($0.id, $0) }, uniquingKeysWith: { latest, _ in latest })
 
         var joinedItems: [SpaceRoomListItem] = []
         var unjoinedItems: [SpaceRoomListItem] = []
@@ -306,7 +309,10 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                                                       leaveHandle: leaveHandle,
                                                       userIndicatorController: userIndicatorController,
                                                       mediaProvider: mediaProvider)
-        leaveSpaceViewModel.actions.sink { [weak self] action in
+
+        // Cancel any existing subscription for proper lifecycle management
+        leaveSpaceCancellable?.cancel()
+        leaveSpaceCancellable = leaveSpaceViewModel.actions.sink { [weak self] action in
             guard let self else { return }
             switch action {
             case .didCancel:
@@ -319,7 +325,6 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                 actionsSubject.send(.leftSpace)
             }
         }
-        .store(in: &cancellables)
 
         state.bindings.leaveSpaceViewModel = leaveSpaceViewModel
     }

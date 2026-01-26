@@ -92,7 +92,7 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
             .filter { !$0.isEmpty }
             .sink { [weak self] roomIDs in
                 guard let self else { return }
-                Task { [weak self, roomListService] in
+                Task { [roomListService] in
                     do {
                         try await roomListService.subscribeToRooms(roomIds: Array(roomIDs))
                     } catch {

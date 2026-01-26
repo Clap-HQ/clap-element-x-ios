@@ -1156,8 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Sul pole veel otsevestlusi";
 "screen_roomlist_filter_rooms" = "Jututoad";
 "screen_roomlist_filter_rooms_empty_state_title" = "Sa veel ei osale mitte üheski jututoas";
-"screen_roomlist_filter_spaces" = "Kogukonnakeskused";
-"screen_roomlist_filter_spaces_empty_state_title" = "Sa veel ei osale mitte üheski kogukonnakeskuses";
+"screen_roomlist_filter_spaces" = "Kogukonnad";
+"screen_roomlist_filter_spaces_empty_state_title" = "Sa veel ei osale mitte üheski kogukonnas";
 "screen_roomlist_filter_unreads" = "Lugemata";
 "screen_roomlist_filter_unreads_empty_state_title" = "Õnnitleme!\nSul pole ühtegi lugemata sõnumit!";
 "screen_roomlist_main_space_title" = "Vestlused";

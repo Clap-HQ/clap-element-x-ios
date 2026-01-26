@@ -1156,8 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Du har ingen DM'er endnu";
 "screen_roomlist_filter_rooms" = "Rum";
 "screen_roomlist_filter_rooms_empty_state_title" = "Du er ikke i noget rum endnu";
-"screen_roomlist_filter_spaces" = "Rum";
-"screen_roomlist_filter_spaces_empty_state_title" = "Du er ikke i noget rum endnu";
+"screen_roomlist_filter_spaces" = "Grupper";
+"screen_roomlist_filter_spaces_empty_state_title" = "Du er ikke i nogen gruppe endnu";
 "screen_roomlist_filter_unreads" = "Ulæste";
 "screen_roomlist_filter_unreads_empty_state_title" = "Tillykke!\nDu har ingen ulæste beskeder!";
 "screen_roomlist_main_space_title" = "Samtaler";

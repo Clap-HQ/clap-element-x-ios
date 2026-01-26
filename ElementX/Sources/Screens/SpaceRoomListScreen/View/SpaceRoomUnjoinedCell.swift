@@ -13,6 +13,7 @@ import SwiftUI
 /// This shows the room info with a Join button, similar to SpaceRoomCell.
 struct SpaceRoomUnjoinedCell: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
+    @Environment(\.displayScale) var displayScale
 
     let spaceRoomProxy: SpaceRoomProxyProtocol
     var isJoining = false
@@ -39,7 +40,7 @@ struct SpaceRoomUnjoinedCell: View {
                 .overlay(alignment: .bottom) {
                     Rectangle()
                         .fill(Color.compound.borderDisabled)
-                        .frame(height: 1 / UIScreen.main.scale)
+                        .frame(height: 1 / displayScale)
                         .padding(.trailing, -horizontalInsets)
                 }
         }
@@ -89,6 +90,7 @@ struct SpaceRoomUnjoinedCell: View {
         Button(L10n.actionJoin) { onJoin() }
             .font(.compound.bodyLG)
             .foregroundStyle(.compound.textActionAccent)
+            .disabled(isJoining)
             .opacity(isJoining ? 0 : 1)
             .overlay {
                 if isJoining {
