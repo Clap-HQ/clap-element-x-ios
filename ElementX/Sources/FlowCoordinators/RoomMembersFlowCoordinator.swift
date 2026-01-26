@@ -20,6 +20,8 @@ enum RoomMembersFlowCoordinatorEntryPoint: Hashable {
     case roomMember(userID: String)
     /// To be used in the context of room details, space details etc.
     case roomMembersList
+    /// To be used when directly navigating to invite users screen
+    case inviteUsers
 }
 
 final class RoomMembersFlowCoordinator: FlowCoordinatorProtocol {
@@ -33,7 +35,7 @@ final class RoomMembersFlowCoordinator: FlowCoordinatorProtocol {
         /// In case the details won't load because the user has left the room we load the profile
         case userProfile(userID: String, previousState: State)
         /// The invite users screen
-        case inviteUsersScreen
+        case inviteUsersScreen(previousState: State)
         /// A room flow has been started
         case roomFlow(roomID: String, previousState: State)
     }
@@ -93,6 +95,8 @@ final class RoomMembersFlowCoordinator: FlowCoordinatorProtocol {
             stateMachine.tryEvent(.presentRoomMemberDetails(userID: userID), userInfo: animated)
         case .roomMembersList:
             stateMachine.tryEvent(.presentRoomMembersList, userInfo: animated)
+        case .inviteUsers:
+            stateMachine.tryEvent(.presentInviteUsersScreen, userInfo: animated)
         }
     }
     
@@ -146,10 +150,11 @@ final class RoomMembersFlowCoordinator: FlowCoordinatorProtocol {
             case (.roomMemberDetails(_, let previousState), .dismissedRoomMemberDetails):
                 return previousState
                 
-            case (.roomMembersList, .presentInviteUsersScreen):
-                return .inviteUsersScreen
-            case (.inviteUsersScreen, .dismissedInviteUsersScreen):
-                return .roomMembersList
+            case (.initial, .presentInviteUsersScreen),
+                 (.roomMembersList, .presentInviteUsersScreen):
+                return .inviteUsersScreen(previousState: fromState)
+            case (.inviteUsersScreen(let previousState), .dismissedInviteUsersScreen):
+                return previousState
                 
             case (.roomMemberDetails(_, let previousState), .presentUserProfile(let userID)):
                 return .userProfile(userID: userID, previousState: previousState)
@@ -178,9 +183,11 @@ final class RoomMembersFlowCoordinator: FlowCoordinatorProtocol {
             case (.roomMemberDetails, .dismissedRoomMemberDetails, .roomMembersList):
                 break
                 
+            case (.initial, .presentInviteUsersScreen, .inviteUsersScreen):
+                presentInviteUsersScreenDirectly()
             case (.roomMembersList, .presentInviteUsersScreen, .inviteUsersScreen):
                 presentInviteUsersScreen()
-            case (.inviteUsersScreen, .dismissedInviteUsersScreen, .roomMembersList):
+            case (.inviteUsersScreen, .dismissedInviteUsersScreen, _):
                 break
                 
             case (.roomMemberDetails, .presentUserProfile, .userProfile(let userID, _)):
@@ -262,22 +269,51 @@ final class RoomMembersFlowCoordinator: FlowCoordinatorProtocol {
                                                                       userDiscoveryService: UserDiscoveryService(clientProxy: flowParameters.userSession.clientProxy),
                                                                       userIndicatorController: flowParameters.userIndicatorController,
                                                                       appSettings: flowParameters.appSettings)
-        
+
         let coordinator = InviteUsersScreenCoordinator(parameters: inviteParameters)
         stackCoordinator.setRootCoordinator(coordinator)
-        
+
         coordinator.actions.sink { [weak self] action in
             guard let self else { return }
-            
+
             switch action {
             case .dismiss:
                 navigationStackCoordinator.setSheetCoordinator(nil)
             }
         }
         .store(in: &cancellables)
-        
+
         navigationStackCoordinator.setSheetCoordinator(stackCoordinator) { [weak self] in
             self?.stateMachine.tryEvent(.dismissedInviteUsersScreen)
+        }
+    }
+
+    /// Present invite users screen directly as the root screen (when entering from inviteUsers entry point)
+    private func presentInviteUsersScreenDirectly() {
+        let stackCoordinator = NavigationStackCoordinator()
+        let inviteParameters = InviteUsersScreenCoordinatorParameters(userSession: flowParameters.userSession,
+                                                                      roomProxy: roomProxy,
+                                                                      isSkippable: false,
+                                                                      userDiscoveryService: UserDiscoveryService(clientProxy: flowParameters.userSession.clientProxy),
+                                                                      userIndicatorController: flowParameters.userIndicatorController,
+                                                                      appSettings: flowParameters.appSettings)
+
+        let coordinator = InviteUsersScreenCoordinator(parameters: inviteParameters)
+        stackCoordinator.setRootCoordinator(coordinator)
+
+        coordinator.actions.sink { [weak self] action in
+            guard let self else { return }
+
+            switch action {
+            case .dismiss:
+                navigationStackCoordinator.setSheetCoordinator(nil)
+            }
+        }
+        .store(in: &cancellables)
+
+        navigationStackCoordinator.setSheetCoordinator(stackCoordinator) { [weak self] in
+            self?.stateMachine.tryEvent(.dismissedInviteUsersScreen)
+            self?.actionsSubject.send(.finished)
         }
     }
     

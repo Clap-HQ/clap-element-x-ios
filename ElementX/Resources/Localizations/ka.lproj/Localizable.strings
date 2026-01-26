@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "ახალი საუბრისა ან ოთახის შექმნა";
 "screen_roomlist_empty_message" = "დაიწყეთ ვინმესთვის შეტყობინების გაგზავნით.";
 "screen_roomlist_empty_title" = "არც ერთი ჩატი ჯერ არაა.";
+"screen_roomlist_filter_all" = "ყველა";
 "screen_roomlist_filter_favourites" = "რჩეულები";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "თქვენ შეგიძლიათ ოთახის რჩეულებში დამატება ოთახების პარამეტრებში.\nახლა კი შეგიძლიათ ფილტრების მოხსნა სხვა ოთახების გამოსაჩენად";
 "screen_roomlist_filter_favourites_empty_state_title" = "თქვენ ჯერ არ გაქვთ რჩეული ჩატები";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "თქვენ ჯერ არ გაქვთ პირადი შეტყობინებები";
 "screen_roomlist_filter_rooms" = "ოთახები";
 "screen_roomlist_filter_rooms_empty_state_title" = "თქვენ ჯერ არც ერთ ოთახში არ ხართ";
+"screen_roomlist_filter_spaces" = "სივრცეები";
+"screen_roomlist_filter_spaces_empty_state_title" = "თქვენ ჯერ არც ერთ სივრცეში არ ხართ";
 "screen_roomlist_filter_unreads" = "წაუკითხავი";
 "screen_roomlist_filter_unreads_empty_state_title" = "გილოცავთ!\nთქვენ არ გაქვთ წაუკითხავი შეტყობინებები!";
 "screen_roomlist_main_space_title" = "ჩატები";
@@ -1481,3 +1484,5 @@
 "screen_thread_activity_title" = "თემების აქტივობა";
 "screen_thread_activity_empty_title" = "წაუკითხავი თემები არ არის";
 "screen_thread_activity_empty_description" = "ყველაფერი წაკითხული გაქვთ!";
+"space_room_list_joined_section_title" = "ოთახები, რომლებშიც ხართ";
+"space_room_list_unjoined_section_title" = "ოთახები, რომლებსაც შეგიძლიათ შეუერთდეთ";

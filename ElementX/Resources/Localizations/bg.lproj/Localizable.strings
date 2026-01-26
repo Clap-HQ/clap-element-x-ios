@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Създаване на нов разговор или стая";
 "screen_roomlist_empty_message" = "Започнете, като изпратите съобщение на някого.";
 "screen_roomlist_empty_title" = "Все още няма чатове.";
+"screen_roomlist_filter_all" = "Всички";
 "screen_roomlist_filter_favourites" = "Любими";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Можете да добавите чат към фаворизираните си в настройките на чата.\nЗасега можете да премахнете избора на филтрите, за да видите другите си чатове.";
 "screen_roomlist_filter_favourites_empty_state_title" = "Все още нямате фаворизирани чатове";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Все още нямате директни съобщения";
 "screen_roomlist_filter_rooms" = "Стаи";
 "screen_roomlist_filter_rooms_empty_state_title" = "Все още не сте в никоя стая";
+"screen_roomlist_filter_spaces" = "Пространства";
+"screen_roomlist_filter_spaces_empty_state_title" = "Все още не сте в никое пространство";
 "screen_roomlist_filter_unreads" = "Непрочетени";
 "screen_roomlist_filter_unreads_empty_state_title" = "Поздравления!\nНямате непрочетени съобщения!";
 "screen_roomlist_main_space_title" = "Всички чатове";
@@ -1481,3 +1484,5 @@
 "screen_thread_activity_title" = "Активност в нишките";
 "screen_thread_activity_empty_title" = "Няма непрочетени нишки";
 "screen_thread_activity_empty_description" = "Всичко е прочетено!";
+"space_room_list_joined_section_title" = "Стаи, в които сте";
+"space_room_list_unjoined_section_title" = "Стаи, към които можете да се присъедините";

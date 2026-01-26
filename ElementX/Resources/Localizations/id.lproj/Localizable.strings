@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Buat percakapan atau ruangan baru";
 "screen_roomlist_empty_message" = "Mulailah dengan mengirim pesan kepada seseorang.";
 "screen_roomlist_empty_title" = "Belum ada obrolan.";
+"screen_roomlist_filter_all" = "Semua";
 "screen_roomlist_filter_favourites" = "Favorit";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Anda dapat menambahkan percakapan ke favorit Anda dalam pengaturan percakapan.\nUntuk sementara, Anda dapat membatalkan pilihan saringan untuk melihat percakapan Anda yang lain";
 "screen_roomlist_filter_favourites_empty_state_title" = "Anda belum memiliki percakapan favorit";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Anda belum memiliki percakapan langsung";
 "screen_roomlist_filter_rooms" = "Ruangan";
 "screen_roomlist_filter_rooms_empty_state_title" = "Anda belum berada dalam ruangan";
+"screen_roomlist_filter_spaces" = "Ruang";
+"screen_roomlist_filter_spaces_empty_state_title" = "Anda belum berada dalam ruang manapun";
 "screen_roomlist_filter_unreads" = "Belum dibaca";
 "screen_roomlist_filter_unreads_empty_state_title" = "Selamat!\nAnda tidak memiliki pesan yang belum dibaca!";
 "screen_roomlist_main_space_title" = "Semua Obrolan";
@@ -1481,3 +1484,5 @@
 "screen_thread_activity_title" = "Aktivitas Utas";
 "screen_thread_activity_empty_title" = "Tidak ada utas yang belum dibaca";
 "screen_thread_activity_empty_description" = "Anda sudah membaca semuanya!";
+"space_room_list_joined_section_title" = "Ruangan yang Anda ikuti";
+"space_room_list_unjoined_section_title" = "Ruangan yang dapat Anda ikuti";

@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Create a new conversation or room";
 "screen_roomlist_empty_message" = "Get started by messaging someone.";
 "screen_roomlist_empty_title" = "No chats yet.";
+"screen_roomlist_filter_all" = "All";
 "screen_roomlist_filter_favourites" = "Favourites";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "You can add a chat to your favourites in the chat settings.\nFor now, you can deselect filters in order to see your other chats";
 "screen_roomlist_filter_favourites_empty_state_title" = "You don’t have favourite chats yet";
@@ -1154,7 +1155,9 @@
 "screen_roomlist_filter_mixed_empty_state_title" = "You don’t have chats for this selection";
 "screen_roomlist_filter_people_empty_state_title" = "You don’t have any DMs yet";
 "screen_roomlist_filter_rooms" = "Rooms";
-"screen_roomlist_filter_rooms_empty_state_title" = "You’re not in any room yet";
+"screen_roomlist_filter_rooms_empty_state_title" = "You're not in any room yet";
+"screen_roomlist_filter_spaces" = "Spaces";
+"screen_roomlist_filter_spaces_empty_state_title" = "You're not in any space yet";
 "screen_roomlist_filter_unreads" = "Unreads";
 "screen_roomlist_filter_unreads_empty_state_title" = "Congrats!\nYou don’t have any unread messages!";
 "screen_roomlist_main_space_title" = "Chats";
@@ -1481,3 +1484,5 @@
 "screen_thread_activity_title" = "Thread Activity";
 "screen_thread_activity_empty_title" = "No unread threads";
 "screen_thread_activity_empty_description" = "You're all caught up!";
+"space_room_list_joined_section_title" = "Rooms you're in";
+"space_room_list_unjoined_section_title" = "Rooms you can join";

@@ -23,6 +23,7 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
     private let serialDispatchQueue: DispatchQueue
     
     private let visibleItemRangePublisher = CurrentValueSubject<Range<Int>, Never>(0..<0)
+    private let roomIDsToSubscribePublisher = CurrentValueSubject<Set<String>, Never>([])
     
     // periphery:ignore - retaining purpose
     private var roomList: RoomListProtocol?
@@ -76,10 +77,30 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
             .receive(on: serialDispatchQueue)
             .sink { [weak self] in self?.updateRoomsWithDiffs($0) }
             .store(in: &cancellables)
-        
+
         setupVisibleRangeObservers()
-        
+        setupRoomSubscriptionObserver()
+
         setupNotificationSettingsSubscription()
+    }
+
+    private func setupRoomSubscriptionObserver() {
+        roomIDsToSubscribePublisher
+            .removeDuplicates()
+            // Use shorter throttle for faster unread badge updates
+            .throttle(for: 0.1, scheduler: DispatchQueue.main, latest: true)
+            .filter { !$0.isEmpty }
+            .sink { [weak self] roomIDs in
+                guard let self else { return }
+                Task { [roomListService] in
+                    do {
+                        try await roomListService.subscribeToRooms(roomIds: Array(roomIDs))
+                    } catch {
+                        MXLog.error("Failed subscribing to rooms with error: \(error)")
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func setRoomList(_ roomList: RoomList) {
@@ -117,7 +138,15 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
     func updateVisibleRange(_ range: Range<Int>) {
         visibleItemRangePublisher.send(range)
     }
-    
+
+    func subscribeToRooms(_ roomIDs: [String]) {
+        guard !roomIDs.isEmpty else { return }
+        // Merge new room IDs with existing ones to batch subscriptions
+        var current = roomIDsToSubscribePublisher.value
+        current.formUnion(roomIDs)
+        roomIDsToSubscribePublisher.send(current)
+    }
+
     func setFilter(_ filter: RoomSummaryProviderFilter) {
         let baseFilter: [RoomListEntriesDynamicFilterKind] = [.any(filters: [.all(filters: [.nonSpace, .nonLeft]),
                                                                              .all(filters: [.space, .invite])]),
@@ -134,12 +163,12 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
             }
             _ = listUpdatesSubscriptionResult?.controller().setFilter(kind: .all(filters: filters))
         case let .all(filters):
-            var rustFilters = filters.map(\.rustFilter) + baseFilter
-            
+            var rustFilters = filters.compactMap(\.rustFilter) + baseFilter
+
             if !filters.contains(.lowPriority), appSettings.lowPriorityFilterEnabled {
                 rustFilters.append(.nonLowPriority)
             }
-            
+
             _ = listUpdatesSubscriptionResult?.controller().setFilter(kind: .all(filters: rustFilters))
         }
     }

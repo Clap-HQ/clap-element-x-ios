@@ -12,8 +12,10 @@ struct RoomListFiltersEmptyStateView: View {
     let state: RoomListFiltersState
     
     private var emptyStateTitle: String {
-        if state.activeFilters.count == 1 {
-            switch state.activeFilters[0] {
+        if state.activeFilters.count == 1, let filter = state.activeFilters.first {
+            switch filter {
+            case .spaces:
+                return L10n.screenRoomlistFilterSpacesEmptyStateTitle
             case .unreads:
                 return L10n.screenRoomlistFilterUnreadsEmptyStateTitle
             case .people:

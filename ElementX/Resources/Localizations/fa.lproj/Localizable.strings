@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "ایجاد اتاق یا گفت‌وگویی جدید";
 "screen_roomlist_empty_message" = "آغاز با پیام دادن به کسی.";
 "screen_roomlist_empty_title" = "هنوز گپی وجود ندارد.";
+"screen_roomlist_filter_all" = "همه";
 "screen_roomlist_filter_favourites" = "علاقه‌مندی‌ها";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "You can add a chat to your favourites in the chat settings.\nFor now, you can deselect filters in order to see your other chats";
 "screen_roomlist_filter_favourites_empty_state_title" = "هنوز هیچ گپ مورد علاقه‌ای ندارید";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "هنوز هیچ پیام مستقیمی ندارید";
 "screen_roomlist_filter_rooms" = "اتاق‌ها";
 "screen_roomlist_filter_rooms_empty_state_title" = "هنوز در هیچ اتاقی نیستید";
+"screen_roomlist_filter_spaces" = "فضاها";
+"screen_roomlist_filter_spaces_empty_state_title" = "هنوز در هیچ فضایی نیستید";
 "screen_roomlist_filter_unreads" = "نخوانده‌ها";
 "screen_roomlist_filter_unreads_empty_state_title" = "تبریک!\nهیچ پیام نخوانده‌ای ندارید!";
 "screen_roomlist_main_space_title" = "گپ‌ها";
@@ -1481,3 +1484,6 @@
 "screen_thread_activity_title" = "فعالیت رشته‌ها";
 "screen_thread_activity_empty_title" = "رشته خوانده نشده‌ای وجود ندارد";
 "screen_thread_activity_empty_description" = "همه چیز را خوانده‌اید!";
+"space_room_list_joined_section_title" = "اتاق‌هایی که عضو هستید";
+"space_room_list_unjoined_section_title" = "اتاق‌هایی که می‌توانید بپیوندید";
+

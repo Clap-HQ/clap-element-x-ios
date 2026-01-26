@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Δημιουργία νέας συνομιλίας ή αίθουσας";
 "screen_roomlist_empty_message" = "Ξεκίνησε στέλνοντας μηνύματα σε κάποιον.";
 "screen_roomlist_empty_title" = "Δεν υπάρχουν συνομιλίες ακόμα.";
+"screen_roomlist_filter_all" = "Όλα";
 "screen_roomlist_filter_favourites" = "Αγαπημένα";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Μπορείς να προσθέσεις μια συνομιλία στα αγαπημένα σου στις ρυθμίσεις συνομιλίας.\nΠρος το παρόν, μπορείς να καταργήσεις την επιλογή φίλτρων για να δεις τις άλλες συνομιλίες σου";
 "screen_roomlist_filter_favourites_empty_state_title" = "Δεν έχεις ακόμα αγαπημένες συνομιλίες";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Δεν έχεις ακόμα ΠΜ";
 "screen_roomlist_filter_rooms" = "Αίθουσες";
 "screen_roomlist_filter_rooms_empty_state_title" = "Δεν είστε ακόμα σε κάποια αίθουσα";
+"screen_roomlist_filter_spaces" = "Χώροι";
+"screen_roomlist_filter_spaces_empty_state_title" = "Δεν είστε ακόμα σε κάποιον χώρο";
 "screen_roomlist_filter_unreads" = "Μη αναγνωσμένα";
 "screen_roomlist_filter_unreads_empty_state_title" = "Συγχαρητήρια!\nΔεν έχεις μη αναγνωσμένα μηνύματα!";
 "screen_roomlist_main_space_title" = "Συνομιλίες";
@@ -1481,3 +1484,5 @@
 "screen_thread_activity_title" = "Δραστηριότητα Νημάτων";
 "screen_thread_activity_empty_title" = "Δεν υπάρχουν μη αναγνωσμένα νήματα";
 "screen_thread_activity_empty_description" = "Είσαι ενημερωμένος!";
+"space_room_list_joined_section_title" = "Δωμάτια στα οποία συμμετέχετε";
+"space_room_list_unjoined_section_title" = "Δωμάτια στα οποία μπορείτε να συμμετάσχετε";

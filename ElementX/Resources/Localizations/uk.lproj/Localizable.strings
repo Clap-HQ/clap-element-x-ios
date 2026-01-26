@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Створити нову розмову або кімнату";
 "screen_roomlist_empty_message" = "Почніть з обміну повідомленнями з кимось.";
 "screen_roomlist_empty_title" = "Ще немає бесід.";
+"screen_roomlist_filter_all" = "Усі";
 "screen_roomlist_filter_favourites" = "Обране";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Ви можете додати бесіду до обраних у налаштуваннях бесіди.\nНаразі ви можете зняти фільтри, щоб побачити інші ваші бесіди";
 "screen_roomlist_filter_favourites_empty_state_title" = "Ви ще не маєте обраних бесід";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Ви ще не маєте жодної особистої бесіди";
 "screen_roomlist_filter_rooms" = "Кімнати";
 "screen_roomlist_filter_rooms_empty_state_title" = "Ви ще не учасник жодної кімнати";
+"screen_roomlist_filter_spaces" = "Простори";
+"screen_roomlist_filter_spaces_empty_state_title" = "Ви ще не учасник жодного простору";
 "screen_roomlist_filter_unreads" = "Непрочитані";
 "screen_roomlist_filter_unreads_empty_state_title" = "Вітаємо!\nУ вас немає непрочитаних повідомлень!";
 "screen_roomlist_main_space_title" = "Бесіди";
@@ -1481,3 +1484,5 @@
 "screen_thread_activity_title" = "Активність гілок";
 "screen_thread_activity_empty_title" = "Немає непрочитаних гілок";
 "screen_thread_activity_empty_description" = "Ви все прочитали!";
+"space_room_list_joined_section_title" = "Кімнати, в яких ви перебуваєте";
+"space_room_list_unjoined_section_title" = "Кімнати, до яких ви можете приєднатися";

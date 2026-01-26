@@ -989,7 +989,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
         }
         .store(in: &cancellables)
         
-        if isRoot {
+        if isRoot, !isChildFlow {
             navigationStackCoordinator.setRootCoordinator(coordinator, animated: animated) { [weak self] in
                 guard let self else { return }
                 if stateMachine.state != .room { // The root has been replaced by a room
@@ -999,8 +999,13 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
         } else {
             navigationStackCoordinator.push(coordinator, animated: animated) { [weak self] in
                 guard let self else { return }
-                if case .roomDetails = stateMachine.state {
-                    stateMachine.tryEvent(.dismissRoomDetails)
+                if case .roomDetails(let isRoot) = stateMachine.state {
+                    if isRoot, isChildFlow {
+                        // For child flows starting at room details, dismiss the entire flow
+                        stateMachine.tryEvent(.dismissFlow)
+                    } else {
+                        stateMachine.tryEvent(.dismissRoomDetails)
+                    }
                 }
             }
         }

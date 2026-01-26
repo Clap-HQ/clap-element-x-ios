@@ -25,7 +25,9 @@ enum HomeScreenCoordinatorAction {
     case presentReportRoom(roomIdentifier: String)
     case presentDeclineAndBlock(userID: String, roomID: String)
     case presentSpace(SpaceRoomListProxyProtocol)
+    case presentSpaceRoomList(SpaceRoomListProxyProtocol)
     case roomLeft(roomIdentifier: String)
+    case spaceLeft(spaceID: String)
     case transferOwnership(roomIdentifier: String)
     case presentSettingsScreen
     case presentFeedbackScreen
@@ -73,8 +75,12 @@ final class HomeScreenCoordinator: CoordinatorProtocol {
                     actionsSubject.send(.presentDeclineAndBlock(userID: userID, roomID: roomID))
                 case .presentSpace(let spaceRoomListProxy):
                     actionsSubject.send(.presentSpace(spaceRoomListProxy))
+                case .presentSpaceRoomList(let spaceRoomListProxy):
+                    actionsSubject.send(.presentSpaceRoomList(spaceRoomListProxy))
                 case .roomLeft(roomIdentifier: let roomIdentifier):
                     actionsSubject.send(.roomLeft(roomIdentifier: roomIdentifier))
+                case .spaceLeft(let spaceID):
+                    actionsSubject.send(.spaceLeft(spaceID: spaceID))
                 case .presentFeedbackScreen:
                     actionsSubject.send(.presentFeedbackScreen)
                 case .presentSettingsScreen:

@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Crea una nuova conversazione o stanza";
 "screen_roomlist_empty_message" = "Inizia inviando un messaggio a qualcuno.";
 "screen_roomlist_empty_title" = "Ancora nessuna conversazione.";
+"screen_roomlist_filter_all" = "Tutto";
 "screen_roomlist_filter_favourites" = "Preferiti";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "Puoi aggiungere una conversazione ai tuoi preferiti nelle impostazioni della stessa.\nPer il momento, puoi deselezionare i filtri per vedere le altre conversazioni.";
 "screen_roomlist_filter_favourites_empty_state_title" = "Non hai ancora conversazioni preferite";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Non hai ancora nessuna conversazione diretta";
 "screen_roomlist_filter_rooms" = "Stanze";
 "screen_roomlist_filter_rooms_empty_state_title" = "Non sei ancora in nessuna stanza";
+"screen_roomlist_filter_spaces" = "Spazi";
+"screen_roomlist_filter_spaces_empty_state_title" = "Non sei ancora in nessuno spazio";
 "screen_roomlist_filter_unreads" = "Non letti";
 "screen_roomlist_filter_unreads_empty_state_title" = "Congratulazioni!\nNon hai messaggi non letti!";
 "screen_roomlist_main_space_title" = "Tutte le conversazioni";
@@ -1481,3 +1484,5 @@
 "screen_thread_activity_title" = "Attività delle discussioni";
 "screen_thread_activity_empty_title" = "Nessuna discussione non letta";
 "screen_thread_activity_empty_description" = "Sei in pari!";
+"space_room_list_joined_section_title" = "Stanze a cui partecipi";
+"space_room_list_unjoined_section_title" = "Stanze a cui puoi unirti";

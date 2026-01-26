@@ -16,20 +16,24 @@ enum RoomListFilter: Int, CaseIterable, Identifiable {
     var id: Int {
         rawValue
     }
-    
+
     case unreads
     case people
+    case spaces
     case rooms
     case favourites
     case invites
     case lowPriority
-    
-    static var availableFilters: [RoomListFilter] {
-        RoomListFilter.allCases
+
+    /// Whether this is the spaces filter (which hides all other filters when active)
+    var isSpacesFilter: Bool {
+        self == .spaces
     }
-    
+
     var localizedName: String {
         switch self {
+        case .spaces:
+            return L10n.screenRoomlistFilterSpaces
         case .people:
             return L10n.screenRoomlistFilterPeople
         case .rooms:
@@ -44,26 +48,32 @@ enum RoomListFilter: Int, CaseIterable, Identifiable {
             return L10n.screenRoomlistFilterLowPriority
         }
     }
-    
+
     var incompatibleFilters: [RoomListFilter] {
         switch self {
+        case .spaces:
+            // Spaces can be combined with unreads, but not with other filters
+            return [.people, .rooms, .favourites, .invites, .lowPriority]
         case .people:
-            return [.rooms, .invites]
+            return [.spaces, .rooms, .invites]
         case .rooms:
-            return [.people, .invites]
+            return [.spaces, .people, .invites]
         case .unreads:
             return [.invites]
         case .favourites:
-            return [.invites, .lowPriority]
+            return [.spaces, .invites, .lowPriority]
         case .invites:
-            return [.rooms, .people, .unreads, .favourites, .lowPriority]
+            return [.spaces, .rooms, .people, .unreads, .favourites, .lowPriority]
         case .lowPriority:
-            return [.favourites, .invites]
+            return [.spaces, .favourites, .invites]
         }
     }
-    
-    var rustFilter: RoomListEntriesDynamicFilterKind {
+
+    var rustFilter: RoomListEntriesDynamicFilterKind? {
         switch self {
+        case .spaces:
+            // Spaces filter will be handled specially in HomeScreenViewModel
+            return nil
         case .people:
             return .all(filters: [.category(expect: .people), .joined])
         case .rooms:
@@ -84,50 +94,71 @@ enum RoomListFilter: Int, CaseIterable, Identifiable {
 struct RoomListFiltersState {
     private(set) var activeFilters: OrderedSet<RoomListFilter>
     private let appSettings: AppSettings
-    
-    init(activeFilters: OrderedSet<RoomListFilter> = [], appSettings: AppSettings) {
-        self.activeFilters = .init(activeFilters)
+    private let clapDeveloperModeSettings: ClapDeveloperModeSettings
+
+    init(activeFilters: OrderedSet<RoomListFilter>? = nil,
+         appSettings: AppSettings,
+         clapDeveloperModeSettings: ClapDeveloperModeSettings = ServiceLocator.shared.clapDeveloperModeSettings) {
+        // Default to empty (no filters active)
+        self.activeFilters = activeFilters ?? []
         self.appSettings = appSettings
+        self.clapDeveloperModeSettings = clapDeveloperModeSettings
     }
-    
+
     var availableFilters: [RoomListFilter] {
-        var availableFilters = OrderedSet(RoomListFilter.availableFilters)
-        
+        var availableFilters = OrderedSet(RoomListFilter.allCases)
+
+        // Hide spaces filter when groupSpaceRooms is disabled
+        if !clapDeveloperModeSettings.groupSpaceRooms {
+            availableFilters.remove(.spaces)
+        }
+
         if !appSettings.lowPriorityFilterEnabled {
             availableFilters.remove(.lowPriority)
         }
-        
+
         for filter in activeFilters {
             availableFilters.remove(filter)
             filter.incompatibleFilters.forEach { availableFilters.remove($0) }
         }
-        
+
         return availableFilters.elements
     }
-    
+
+    /// Whether any filter is active
     var isFiltering: Bool {
         !activeFilters.isEmpty
     }
-    
+
+    /// Whether the spaces filter is active
+    var isSpacesFilterActive: Bool {
+        activeFilters.contains(.spaces)
+    }
+
+    /// Whether the unreads filter is active
+    var isUnreadsFilterActive: Bool {
+        activeFilters.contains(.unreads)
+    }
+
     mutating func activateFilter(_ filter: RoomListFilter) {
         filter.incompatibleFilters.forEach { incompatibleFilter in
             if activeFilters.contains(incompatibleFilter) {
                 fatalError("[RoomListFiltersState] adding mutually exclusive filters is not allowed")
             }
         }
-        
+
         // We always want the most recently enabled filter to be at the bottom of the others.
         activeFilters.append(filter)
     }
-    
+
     mutating func deactivateFilter(_ filter: RoomListFilter) {
         activeFilters.remove(filter)
     }
-    
+
     mutating func clearFilters() {
         activeFilters.removeAll()
     }
-    
+
     func isFilterActive(_ filter: RoomListFilter) -> Bool {
         activeFilters.contains(filter)
     }

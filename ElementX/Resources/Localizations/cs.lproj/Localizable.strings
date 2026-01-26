@@ -1144,6 +1144,7 @@
 "screen_roomlist_a11y_create_message" = "Vytvořte novou konverzaci nebo místnost";
 "screen_roomlist_empty_message" = "Začněte tím, že někomu pošnete zprávu.";
 "screen_roomlist_empty_title" = "Zatím žádné konverzace.";
+"screen_roomlist_filter_all" = "Vše";
 "screen_roomlist_filter_favourites" = "Oblíbené";
 "screen_roomlist_filter_favourites_empty_state_subtitle" = "V nastavení chatu můžete přidat chat k oblíbeným.\nProzatím můžete zrušit výběr filtrů, abyste viděli své další chaty";
 "screen_roomlist_filter_favourites_empty_state_title" = "Zatím nemáte oblíbené chaty";
@@ -1155,6 +1156,8 @@
 "screen_roomlist_filter_people_empty_state_title" = "Zatím nemáte žádné přímé zprávy";
 "screen_roomlist_filter_rooms" = "Místnosti";
 "screen_roomlist_filter_rooms_empty_state_title" = "Ještě nejste v žádné místnosti";
+"screen_roomlist_filter_spaces" = "Prostory";
+"screen_roomlist_filter_spaces_empty_state_title" = "Zatím nejste v žádném prostoru";
 "screen_roomlist_filter_unreads" = "Nepřečtené";
 "screen_roomlist_filter_unreads_empty_state_title" = "Gratulujeme!\nNemáte žádné nepřečtené zprávy!";
 "screen_roomlist_main_space_title" = "Všechny chaty";
@@ -1481,3 +1484,5 @@
 "screen_thread_activity_title" = "Aktivita vláken";
 "screen_thread_activity_empty_title" = "Žádná nepřečtená vlákna";
 "screen_thread_activity_empty_description" = "Vše je přečteno!";
+"space_room_list_joined_section_title" = "Místnosti, ve kterých jste";
+"space_room_list_unjoined_section_title" = "Místnosti, ke kterým se můžete připojit";
