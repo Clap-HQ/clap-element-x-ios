@@ -143,24 +143,30 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
             if spaceRoom.state == .joined {
                 // Get room summary for joined rooms to show last message
                 if let summary = summaryByID[spaceRoom.id] {
-                    let joinedInfo = JoinedRoomInfo(summary: summary)
-                    joinedItems.append(.joined(joinedInfo))
+                    let room = HomeScreenRoom(summary: summary, hideUnreadMessagesBadge: false, isSpaceChild: true)
+                    joinedItems.append(.joined(room))
                 } else {
                     // Fallback if summary not available
-                    let joinedInfo = JoinedRoomInfo(
+                    let room = HomeScreenRoom(
                         id: spaceRoom.id,
+                        roomID: spaceRoom.id,
+                        type: .room,
+                        badges: .init(isDotShown: false, isMentionShown: false, isMuteShown: false, isCallShown: false),
                         name: spaceRoom.name,
-                        avatar: spaceRoom.avatar,
                         memberCount: spaceRoom.joinedMembersCount,
-                        lastMessage: nil,
+                        isDirect: spaceRoom.isDirect ?? false,
+                        isHighlighted: false,
+                        isFavourite: false,
                         timestamp: nil,
                         lastMessageDate: nil,
-                        isDirect: spaceRoom.isDirect ?? false,
-                        badges: .init(isDotShown: false, isMentionShown: false, isMuteShown: false, isCallShown: false),
-                        isHighlighted: false,
-                        isFavourite: false
+                        lastMessage: nil,
+                        lastMessageState: nil,
+                        avatar: spaceRoom.avatar,
+                        canonicalAlias: nil,
+                        isTombstoned: false,
+                        isSpaceChild: true
                     )
-                    joinedItems.append(.joined(joinedInfo))
+                    joinedItems.append(.joined(room))
                 }
             } else {
                 unjoinedItems.append(.unjoined(spaceRoom))
@@ -169,9 +175,9 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
 
         // Sort joined rooms by last message date (most recent first)
         let sortedJoinedItems = joinedItems.sorted { lhs, rhs in
-            guard case .joined(let lhsInfo) = lhs, case .joined(let rhsInfo) = rhs else { return false }
-            let lhsDate = lhsInfo.lastMessageDate ?? .distantPast
-            let rhsDate = rhsInfo.lastMessageDate ?? .distantPast
+            guard case .joined(let lhsRoom) = lhs, case .joined(let rhsRoom) = rhs else { return false }
+            let lhsDate = lhsRoom.lastMessageDate ?? .distantPast
+            let rhsDate = rhsRoom.lastMessageDate ?? .distantPast
             return lhsDate > rhsDate
         }
 
@@ -180,7 +186,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
 
         // Subscribe to joined room IDs to ensure their last messages are loaded
         let joinedRoomIDs = joinedItems.compactMap { item -> String? in
-            if case .joined(let info) = item { return info.id }
+            if case .joined(let room) = item { return room.id }
             return nil
         }
         clientProxy.roomSummaryProvider.subscribeToRooms(joinedRoomIDs)

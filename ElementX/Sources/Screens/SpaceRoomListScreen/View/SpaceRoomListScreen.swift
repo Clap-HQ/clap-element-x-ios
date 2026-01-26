@@ -35,14 +35,14 @@ struct SpaceRoomListScreen: View {
             sectionHeader(title: L10n.spaceRoomListJoinedSectionTitle)
 
             ForEach(context.viewState.joinedRooms) { item in
-                if case .joined(let info) = item {
-                    SpaceRoomJoinedCell(info: info,
+                if case .joined(let room) = item {
+                    SpaceRoomJoinedCell(room: room,
                                         isSelected: false,
                                         mediaProvider: context.mediaProvider) {
                         context.send(viewAction: .selectRoom(item))
                     }
                     .contextMenu {
-                        joinedRoomContextMenu(for: info)
+                        joinedRoomContextMenu(for: room)
                     }
                 }
             }
@@ -76,43 +76,43 @@ struct SpaceRoomListScreen: View {
     }
 
     @ViewBuilder
-    private func joinedRoomContextMenu(for info: JoinedRoomInfo) -> some View {
-        if info.badges.isDotShown {
+    private func joinedRoomContextMenu(for room: HomeScreenRoom) -> some View {
+        if room.badges.isDotShown {
             Button {
-                context.send(viewAction: .markAsRead(roomID: info.id))
+                context.send(viewAction: .markAsRead(roomID: room.id))
             } label: {
                 Label(L10n.screenRoomlistMarkAsRead, icon: \.markAsRead)
             }
         } else {
             Button {
-                context.send(viewAction: .markAsUnread(roomID: info.id))
+                context.send(viewAction: .markAsUnread(roomID: room.id))
             } label: {
                 Label(L10n.screenRoomlistMarkAsUnread, icon: \.markAsUnread)
             }
         }
 
-        if info.isFavourite {
+        if room.isFavourite {
             Button {
-                context.send(viewAction: .markAsFavourite(roomID: info.id, isFavourite: false))
+                context.send(viewAction: .markAsFavourite(roomID: room.id, isFavourite: false))
             } label: {
                 Label(L10n.commonFavourited, icon: \.favouriteSolid)
             }
         } else {
             Button {
-                context.send(viewAction: .markAsFavourite(roomID: info.id, isFavourite: true))
+                context.send(viewAction: .markAsFavourite(roomID: room.id, isFavourite: true))
             } label: {
                 Label(L10n.commonFavourite, icon: \.favourite)
             }
         }
 
         Button {
-            context.send(viewAction: .showRoomDetails(roomID: info.id))
+            context.send(viewAction: .showRoomDetails(roomID: room.id))
         } label: {
             Label(L10n.commonSettings, icon: \.settings)
         }
 
         Button(role: .destructive) {
-            context.send(viewAction: .leaveRoom(roomID: info.id))
+            context.send(viewAction: .leaveRoom(roomID: room.id))
         } label: {
             Label(L10n.actionLeaveRoom, icon: \.leave)
         }

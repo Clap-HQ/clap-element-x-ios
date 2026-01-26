@@ -14,7 +14,7 @@ import SwiftUI
 struct SpaceRoomJoinedCell: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
 
-    let info: JoinedRoomInfo
+    let room: HomeScreenRoom
     let isSelected: Bool
     let mediaProvider: MediaProviderProtocol?
     let action: () -> Void
@@ -40,13 +40,13 @@ struct SpaceRoomJoinedCell: View {
             .accessibilityElement(children: .combine)
         }
         .buttonStyle(HomeScreenRoomCellButtonStyle(isSelected: isSelected))
-        .accessibilityIdentifier(A11yIdentifiers.homeScreen.roomName(info.name))
+        .accessibilityIdentifier(A11yIdentifiers.homeScreen.roomName(room.name))
     }
 
     @ViewBuilder @MainActor
     private var avatar: some View {
         if dynamicTypeSize < .accessibility3 {
-            RoomAvatarImage(avatar: info.avatar,
+            RoomAvatarImage(avatar: room.avatar,
                             avatarSize: .room(on: .chats),
                             mediaProvider: mediaProvider)
                 .dynamicTypeSize(dynamicTypeSize < .accessibility1 ? dynamicTypeSize : .accessibility1)
@@ -65,19 +65,19 @@ struct SpaceRoomJoinedCell: View {
     private var header: some View {
         HStack(alignment: .top, spacing: 16) {
             HStack(spacing: 4) {
-                Text(info.name)
+                Text(room.name)
                     .font(.compound.bodyLGSemibold)
                     .foregroundColor(.compound.textPrimary)
                     .lineLimit(1)
 
-                if !info.isDirect, info.memberCount > 0 {
-                    Text("\(info.memberCount)")
+                if !room.isDirect, room.memberCount > 0 {
+                    Text("\(room.memberCount)")
                         .font(.compound.bodyMD)
                         .foregroundColor(.compound.textSecondary)
                         .lineLimit(1)
                 }
 
-                if info.isFavourite {
+                if room.isFavourite {
                     CompoundIcon(\.favouriteSolid, size: .xSmall, relativeTo: .compound.bodyLGSemibold)
                         .foregroundColor(.compound.iconSecondary)
                         .accessibilityLabel(L10n.commonFavourited)
@@ -85,10 +85,10 @@ struct SpaceRoomJoinedCell: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            if let timestamp = info.timestamp {
+            if let timestamp = room.timestamp {
                 Text(timestamp)
-                    .font(info.isHighlighted ? .compound.bodySMSemibold : .compound.bodySM)
-                    .foregroundColor(info.isHighlighted ? .compound.textActionAccent : .compound.textSecondary)
+                    .font(room.isHighlighted ? .compound.bodySMSemibold : .compound.bodySM)
+                    .foregroundColor(room.isHighlighted ? .compound.textActionAccent : .compound.textSecondary)
             }
         }
     }
@@ -103,7 +103,7 @@ struct SpaceRoomJoinedCell: View {
                     .foregroundColor(.compound.textSecondary)
                     .hidden()
 
-                if let lastMessage = info.lastMessage {
+                if let lastMessage = room.lastMessage {
                     Text(lastMessage)
                         .font(.compound.bodyMD)
                         .foregroundColor(.compound.textSecondary)
@@ -115,28 +115,28 @@ struct SpaceRoomJoinedCell: View {
             Spacer()
 
             HStack(spacing: 8) {
-                if info.badges.isCallShown {
+                if room.badges.isCallShown {
                     CompoundIcon(\.videoCallSolid, size: .xSmall, relativeTo: .compound.bodySM)
                         .accessibilityLabel(L10n.a11yNotificationsOngoingCall)
                 }
 
-                if info.badges.isMuteShown {
+                if room.badges.isMuteShown {
                     CompoundIcon(\.notificationsOffSolid, size: .custom(15), relativeTo: .compound.bodyMD)
                         .accessibilityLabel(L10n.a11yNotificationsMuted)
                 }
 
-                if info.badges.isMentionShown {
+                if room.badges.isMentionShown {
                     CompoundIcon(\.mention, size: .custom(15), relativeTo: .compound.bodyMD)
                         .accessibilityLabel(L10n.a11yNotificationsNewMentions)
                 }
 
-                if info.badges.isDotShown {
+                if room.badges.isDotShown {
                     Circle()
                         .frame(width: 12, height: 12)
                         .accessibilityLabel(L10n.a11yNotificationsNewMessages)
                 }
             }
-            .foregroundColor(info.isHighlighted ? .compound.iconAccentTertiary : .compound.iconQuaternary)
+            .foregroundColor(room.isHighlighted ? .compound.iconAccentTertiary : .compound.iconQuaternary)
         }
     }
 }
@@ -149,36 +149,48 @@ struct SpaceRoomJoinedCell_Previews: PreviewProvider, TestablePreview {
     static var previews: some View {
         VStack(spacing: 0) {
             SpaceRoomJoinedCell(
-                info: JoinedRoomInfo(
+                room: HomeScreenRoom(
                     id: "!room1:matrix.org",
+                    roomID: "!room1:matrix.org",
+                    type: .room,
+                    badges: .init(isDotShown: true, isMentionShown: false, isMuteShown: false, isCallShown: false),
                     name: "General",
-                    avatar: .room(id: "!room1:matrix.org", name: "General", avatarURL: nil),
                     memberCount: 25,
-                    lastMessage: AttributedString("Hello everyone! How are you doing today?"),
+                    isDirect: false,
+                    isHighlighted: true,
+                    isFavourite: false,
                     timestamp: "2:30 PM",
                     lastMessageDate: nil,
-                    isDirect: false,
-                    badges: .init(isDotShown: true, isMentionShown: false, isMuteShown: false, isCallShown: false),
-                    isHighlighted: true,
-                    isFavourite: false
+                    lastMessage: AttributedString("Hello everyone! How are you doing today?"),
+                    lastMessageState: nil,
+                    avatar: .room(id: "!room1:matrix.org", name: "General", avatarURL: nil),
+                    canonicalAlias: nil,
+                    isTombstoned: false,
+                    isSpaceChild: true
                 ),
                 isSelected: false,
                 mediaProvider: mediaProvider
             ) { }
 
             SpaceRoomJoinedCell(
-                info: JoinedRoomInfo(
+                room: HomeScreenRoom(
                     id: "!room2:matrix.org",
+                    roomID: "!room2:matrix.org",
+                    type: .room,
+                    badges: .init(isDotShown: false, isMentionShown: false, isMuteShown: true, isCallShown: false),
                     name: "Random",
-                    avatar: .room(id: "!room2:matrix.org", name: "Random", avatarURL: nil),
                     memberCount: 15,
-                    lastMessage: AttributedString("Just sharing some random thoughts here."),
+                    isDirect: false,
+                    isHighlighted: false,
+                    isFavourite: true,
                     timestamp: "Yesterday",
                     lastMessageDate: nil,
-                    isDirect: false,
-                    badges: .init(isDotShown: false, isMentionShown: false, isMuteShown: true, isCallShown: false),
-                    isHighlighted: false,
-                    isFavourite: true
+                    lastMessage: AttributedString("Just sharing some random thoughts here."),
+                    lastMessageState: nil,
+                    avatar: .room(id: "!room2:matrix.org", name: "Random", avatarURL: nil),
+                    canonicalAlias: nil,
+                    isTombstoned: false,
+                    isSpaceChild: true
                 ),
                 isSelected: false,
                 mediaProvider: mediaProvider

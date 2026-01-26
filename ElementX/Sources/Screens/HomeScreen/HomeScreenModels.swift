@@ -117,71 +117,58 @@ struct HomeScreenViewState: BindableState {
 
     /// Combined list of rooms and spaces for display, sorted by last message date
     var visibleItems: [HomeScreenListItem] {
-        if roomListMode == .skeletons {
+        switch (roomListMode, bindings.isSearchFieldFocused) {
+        case (.skeletons, _):
             return placeholderRooms.map { .room($0) }
-        }
-
-        // When searching, show all rooms including space children (no spaces)
-        if bindings.isSearchFieldFocused {
+        case (_, true):
+            // When searching, show all rooms including space children (no spaces)
             return rooms.map { .room($0) }
+        default:
+            return filteredVisibleItems
         }
+    }
 
-        // Rooms to display (excluding space children which are shown under space cells)
+    /// Returns items based on the current filter state
+    private var filteredVisibleItems: [HomeScreenListItem] {
         let displayableRooms = rooms.filter { !$0.isSpaceChild }
+        let filtersState = bindings.filtersState
 
-        // When both Spaces and Unreads filters are active, show only unread spaces
-        if bindings.filtersState.isSpacesFilterActive && bindings.filtersState.isUnreadsFilterActive {
-            return spaces
-                .filter { $0.badges.isDotShown || $0.badges.isMentionShown }
-                .map { HomeScreenListItem.space($0) }
-                .sorted { lhs, rhs in
-                    let lhsDate = lhs.lastMessageDate ?? .distantPast
-                    let rhsDate = rhs.lastMessageDate ?? .distantPast
-                    return lhsDate > rhsDate
-                }
+        // Spaces + Unreads: show only unread spaces
+        if filtersState.isSpacesFilterActive && filtersState.isUnreadsFilterActive {
+            return unreadSpaces.sortedByLastMessageDate()
         }
 
-        // When only Spaces filter is active, show all spaces sorted by last message date
-        if bindings.filtersState.isSpacesFilterActive {
-            return spaces
-                .map { HomeScreenListItem.space($0) }
-                .sorted { lhs, rhs in
-                    let lhsDate = lhs.lastMessageDate ?? .distantPast
-                    let rhsDate = rhs.lastMessageDate ?? .distantPast
-                    return lhsDate > rhsDate
-                }
+        // Spaces only: show all spaces
+        if filtersState.isSpacesFilterActive {
+            return allSpaceItems.sortedByLastMessageDate()
         }
 
-        // When Unreads filter is active (without Spaces), show unread rooms AND unread spaces
-        if bindings.filtersState.isUnreadsFilterActive {
-            let unreadSpaceItems = spaces
-                .filter { $0.badges.isDotShown || $0.badges.isMentionShown }
-                .map { HomeScreenListItem.space($0) }
-            let roomItems = displayableRooms.map { HomeScreenListItem.room($0) }
-            let allItems = unreadSpaceItems + roomItems
-
-            return allItems.sorted { lhs, rhs in
-                let lhsDate = lhs.lastMessageDate ?? .distantPast
-                let rhsDate = rhs.lastMessageDate ?? .distantPast
-                return lhsDate > rhsDate
-            }
+        // Unreads only: show unread rooms AND unread spaces
+        if filtersState.isUnreadsFilterActive {
+            let items = unreadSpaces + displayableRooms.map { HomeScreenListItem.room($0) }
+            return items.sortedByLastMessageDate()
         }
 
-        // When other filters are active (people, rooms, etc.), show only filtered rooms
-        if bindings.filtersState.isFiltering {
+        // Other filters (people, rooms, favourites, etc.): show only filtered rooms
+        if filtersState.isFiltering {
             return displayableRooms.map { .room($0) }
         }
 
-        // When All filter is active (default), combine spaces and rooms sorted by last message date
-        let spaceItems = spaces.map { HomeScreenListItem.space($0) }
-        let roomItems = displayableRooms.map { HomeScreenListItem.room($0) }
-        let allItems = spaceItems + roomItems
+        // Default: combine spaces and rooms
+        let items = allSpaceItems + displayableRooms.map { HomeScreenListItem.room($0) }
+        return items.sortedByLastMessageDate()
+    }
 
-        return allItems.sorted { lhs, rhs in
-            let lhsDate = lhs.lastMessageDate ?? .distantPast
-            let rhsDate = rhs.lastMessageDate ?? .distantPast
-            return lhsDate > rhsDate
-        }
+    /// All spaces as list items
+    private var allSpaceItems: [HomeScreenListItem] {
+        spaces.map { HomeScreenListItem.space($0) }
+    }
+
+    /// Only spaces with unread content
+    private var unreadSpaces: [HomeScreenListItem] {
+        spaces
+            .filter { $0.badges.isDotShown || $0.badges.isMentionShown }
+            .map { HomeScreenListItem.space($0) }
     }
 
     var visibleRooms: [HomeScreenRoom] {
@@ -491,6 +478,19 @@ enum HomeScreenListItem: Identifiable, Equatable {
         switch self {
         case .room(let room): room.lastMessageDate
         case .space(let space): space.lastMessageDate
+        }
+    }
+}
+
+// MARK: - Sorting Extension
+
+extension Array where Element == HomeScreenListItem {
+    /// Sorts items by last message date in descending order (most recent first)
+    func sortedByLastMessageDate() -> [HomeScreenListItem] {
+        sorted { lhs, rhs in
+            let lhsDate = lhs.lastMessageDate ?? .distantPast
+            let rhsDate = rhs.lastMessageDate ?? .distantPast
+            return lhsDate > rhsDate
         }
     }
 }
