@@ -207,13 +207,13 @@ struct SpaceDetailScreen_Previews: PreviewProvider, TestablePreview {
     }
 
     static func makeViewModel() -> SpaceDetailScreenViewModel {
-        let spaceRoomProxy = SpaceRoomProxyMock(.init(id: "!space:matrix.org",
-                                                      name: "Engineering Team",
-                                                      isSpace: true,
-                                                      childrenCount: 10,
-                                                      joinedMembersCount: 50,
-                                                      topic: "Engineering team discussions"))
-        let spaceRoomListProxy = SpaceRoomListProxyMock(.init(spaceRoomProxy: spaceRoomProxy,
+        let spaceRoomProxy = SpaceServiceRoomMock(.init(id: "!space:matrix.org",
+                                                       name: "Engineering Team",
+                                                       isSpace: true,
+                                                       childrenCount: 10,
+                                                       joinedMembersCount: 50,
+                                                       topic: "Engineering team discussions"))
+        let spaceRoomListProxy = SpaceRoomListProxyMock(.init(spaceServiceRoom: spaceRoomProxy,
                                                               initialSpaceRooms: .mockSpaceList))
 
         let clientProxy = ClientProxyMock(.init())

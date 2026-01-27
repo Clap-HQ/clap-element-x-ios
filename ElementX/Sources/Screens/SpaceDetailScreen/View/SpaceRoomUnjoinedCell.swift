@@ -15,7 +15,7 @@ struct SpaceRoomUnjoinedCell: View {
     @Environment(\.dynamicTypeSize) var dynamicTypeSize
     @Environment(\.displayScale) var displayScale
 
-    let spaceRoomProxy: SpaceRoomProxyProtocol
+    let spaceRoomProxy: SpaceServiceRoomProtocol
     var isJoining = false
     let mediaProvider: MediaProviderProtocol?
     let onJoin: () -> Void
@@ -108,7 +108,7 @@ struct SpaceRoomUnjoinedCell_Previews: PreviewProvider, TestablePreview {
     static var previews: some View {
         VStack(spacing: 0) {
             SpaceRoomUnjoinedCell(
-                spaceRoomProxy: SpaceRoomProxyMock(.init(id: "!room1:matrix.org",
+                spaceRoomProxy: SpaceServiceRoomMock(.init(id: "!room1:matrix.org",
                                                          name: "Design Room",
                                                          isSpace: false,
                                                          joinedMembersCount: 30,
@@ -117,7 +117,7 @@ struct SpaceRoomUnjoinedCell_Previews: PreviewProvider, TestablePreview {
             ) { }
 
             SpaceRoomUnjoinedCell(
-                spaceRoomProxy: SpaceRoomProxyMock(.init(id: "!room2:matrix.org",
+                spaceRoomProxy: SpaceServiceRoomMock(.init(id: "!room2:matrix.org",
                                                          name: "Marketing",
                                                          isSpace: false,
                                                          joinedMembersCount: 15,

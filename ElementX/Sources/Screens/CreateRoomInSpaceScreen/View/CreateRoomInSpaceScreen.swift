@@ -29,7 +29,7 @@ struct CreateRoomInSpaceScreen: View {
             }
             .compoundList()
             .scrollDismissesKeyboard(.immediately)
-            .navigationTitle(L10n.screenCreateRoomTitle)
+            .navigationTitle(L10n.screenSpaceCreateRoom)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbar }
             .alert(item: $context.alertInfo)
@@ -42,11 +42,11 @@ struct CreateRoomInSpaceScreen: View {
                 roomAvatarButton
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(L10n.screenCreateRoomRoomNameLabel.uppercased())
+                    Text(L10n.screenRoomDetailsRoomNameLabel.uppercased())
                         .padding(.leading, ListRowPadding.horizontal)
                         .compoundListSectionHeader()
 
-                    TextField(L10n.screenCreateRoomRoomNameLabel,
+                    TextField(L10n.screenRoomDetailsRoomNameLabel,
                               text: $context.roomName,
                               prompt: Text(L10n.commonRoomNamePlaceholder).foregroundColor(.compound.textSecondary),
                               axis: .horizontal)

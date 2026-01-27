@@ -23,7 +23,7 @@ enum SpaceDetailScreenViewModelAction {
 
 enum SpaceDetailScreenViewAction {
     case selectRoom(SpaceChildRoomItem)
-    case joinRoom(SpaceRoomProxyProtocol)
+    case joinRoom(SpaceServiceRoomProtocol)
     case showRoomDetails(roomID: String)
     case markAsRead(roomID: String)
     case markAsUnread(roomID: String)
@@ -96,7 +96,7 @@ enum SpaceChildRoomItem: Identifiable, Equatable {
     /// Uses HomeScreenRoom for consistency with the main room list
     case joined(HomeScreenRoom)
     /// An unjoined room with join button
-    case unjoined(SpaceRoomProxyProtocol)
+    case unjoined(SpaceServiceRoomProtocol)
 
     var id: String {
         switch self {

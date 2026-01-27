@@ -410,13 +410,13 @@ struct HomeScreenSpace: Identifiable, Equatable {
     let isHighlighted: Bool
 
     /// The visibility of the space (public, private, restricted)
-    let visibility: SpaceRoomProxyVisibility?
+    let visibility: SpaceServiceRoomVisibility?
 
     var avatar: RoomAvatar {
         .space(id: id, name: name, avatarURL: avatarURL)
     }
 
-    init(spaceProxy: SpaceRoomProxyProtocol,
+    init(spaceProxy: SpaceServiceRoomProtocol,
          lastMessageDate: Date? = nil,
          timestamp: String? = nil,
          lastMessage: AttributedString? = nil,
@@ -444,7 +444,7 @@ struct HomeScreenSpace: Identifiable, Equatable {
          lastMessageRoomName: String? = nil,
          badges: Badges = .init(isDotShown: false, isMentionShown: false, isMuteShown: false),
          isHighlighted: Bool = false,
-         visibility: SpaceRoomProxyVisibility? = nil) {
+         visibility: SpaceServiceRoomVisibility? = nil) {
         self.id = id
         self.name = name
         self.avatarURL = avatarURL
