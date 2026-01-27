@@ -1501,3 +1501,7 @@
 "screen_space_create_room_visibility_public_description" = "Har kim bu xonani topishi va qo'shilishi mumkin. Buni istalgan vaqtda xona sozlamalarida o'zgartirishingiz mumkin.";
 "screen_space_create_room_encryption_title" = "Uchi-uchiga shifrlashni yoqish";
 "screen_space_create_room_encryption_description" = "Buni keyinroq o'chirib bo'lmaydi. Ko'priklar va aksariyat botlar hali ishlamaydi.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Barcha xonalardan ham olib tashlash";
+"screen_join_all_rooms_confirmation_title" = "Barcha xonalarga qo'shilasizmi?";
+"screen_join_all_rooms_confirmation_subtitle" = "%@dagi barcha xonalarga qo'shilmoqchimisiz?";
+"screen_join_all_rooms_confirmation_action" = "Hammaga qo'shilish";

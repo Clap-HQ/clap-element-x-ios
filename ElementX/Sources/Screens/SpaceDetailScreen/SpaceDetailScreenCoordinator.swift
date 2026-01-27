@@ -9,7 +9,7 @@
 import Combine
 import SwiftUI
 
-struct SpaceRoomListScreenCoordinatorParameters {
+struct SpaceDetailScreenCoordinatorParameters {
     let spaceRoomListProxy: SpaceRoomListProxyProtocol
     let spaceServiceProxy: SpaceServiceProxyProtocol
     let userSession: UserSessionProtocol
@@ -17,7 +17,7 @@ struct SpaceRoomListScreenCoordinatorParameters {
     let userIndicatorController: UserIndicatorControllerProtocol
 }
 
-enum SpaceRoomListScreenCoordinatorAction {
+enum SpaceDetailScreenCoordinatorAction {
     case selectRoom(roomID: String)
     case showRoomDetails(roomID: String)
     case dismiss
@@ -29,23 +29,26 @@ enum SpaceRoomListScreenCoordinatorAction {
     case leftSpace
 }
 
-final class SpaceRoomListScreenCoordinator: CoordinatorProtocol {
-    private let parameters: SpaceRoomListScreenCoordinatorParameters
-    private var viewModel: SpaceRoomListScreenViewModelProtocol
+final class SpaceDetailScreenCoordinator: CoordinatorProtocol {
+    private let parameters: SpaceDetailScreenCoordinatorParameters
+    private let shouldShowJoinAllRoomsConfirmation: Bool
+    private var viewModel: SpaceDetailScreenViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
 
-    private let actionsSubject: PassthroughSubject<SpaceRoomListScreenCoordinatorAction, Never> = .init()
-    var actionsPublisher: AnyPublisher<SpaceRoomListScreenCoordinatorAction, Never> {
+    private let actionsSubject: PassthroughSubject<SpaceDetailScreenCoordinatorAction, Never> = .init()
+    var actionsPublisher: AnyPublisher<SpaceDetailScreenCoordinatorAction, Never> {
         actionsSubject.eraseToAnyPublisher()
     }
 
-    init(parameters: SpaceRoomListScreenCoordinatorParameters) {
+    init(parameters: SpaceDetailScreenCoordinatorParameters, shouldShowJoinAllRoomsConfirmation: Bool = false) {
         self.parameters = parameters
-        viewModel = SpaceRoomListScreenViewModel(spaceRoomListProxy: parameters.spaceRoomListProxy,
-                                                 spaceServiceProxy: parameters.spaceServiceProxy,
-                                                 userSession: parameters.userSession,
-                                                 appSettings: parameters.appSettings,
-                                                 userIndicatorController: parameters.userIndicatorController)
+        self.shouldShowJoinAllRoomsConfirmation = shouldShowJoinAllRoomsConfirmation
+        viewModel = SpaceDetailScreenViewModel(spaceRoomListProxy: parameters.spaceRoomListProxy,
+                                               spaceServiceProxy: parameters.spaceServiceProxy,
+                                               userSession: parameters.userSession,
+                                               appSettings: parameters.appSettings,
+                                               userIndicatorController: parameters.userIndicatorController,
+                                               shouldShowJoinAllRoomsConfirmation: shouldShowJoinAllRoomsConfirmation)
     }
 
     func start() {
@@ -77,10 +80,10 @@ final class SpaceRoomListScreenCoordinator: CoordinatorProtocol {
     }
 
     func toPresentable() -> AnyView {
-        AnyView(SpaceRoomListScreen(context: viewModel.context))
+        AnyView(SpaceDetailScreen(context: viewModel.context))
     }
 
-    func refreshSpaceRoomList() async {
-        await viewModel.refreshSpaceRoomList()
+    func refreshSpaceChildren() async {
+        await viewModel.refreshSpaceChildren()
     }
 }

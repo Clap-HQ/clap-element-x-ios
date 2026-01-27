@@ -1501,3 +1501,7 @@
 "screen_space_create_room_visibility_public_description" = "Tout le monde peut trouver et rejoindre ce salon. Vous pouvez modifier cela à tout moment dans les paramètres du salon.";
 "screen_space_create_room_encryption_title" = "Activer le chiffrement de bout en bout";
 "screen_space_create_room_encryption_description" = "Vous ne pourrez pas le désactiver plus tard. Les passerelles et la plupart des bots ne fonctionneront pas pour le moment.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Également supprimer de tous les salons";
+"screen_join_all_rooms_confirmation_title" = "Rejoindre tous les salons ?";
+"screen_join_all_rooms_confirmation_subtitle" = "Voulez-vous rejoindre tous les salons de %@ ?";
+"screen_join_all_rooms_confirmation_action" = "Rejoindre tous";

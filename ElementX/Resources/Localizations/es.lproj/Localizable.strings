@@ -1501,3 +1501,7 @@
 "screen_space_create_room_visibility_public_description" = "Cualquiera puede encontrar y unirse a esta sala. Puedes cambiar esto en cualquier momento desde la configuración de la sala.";
 "screen_space_create_room_encryption_title" = "Activar el cifrado de extremo a extremo";
 "screen_space_create_room_encryption_description" = "No podrás desactivarlo más adelante. Los puentes y la mayoría de bots todavía no funcionarán.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "También eliminar de todas las salas";
+"screen_join_all_rooms_confirmation_title" = "¿Unirse a todas las salas?";
+"screen_join_all_rooms_confirmation_subtitle" = "¿Quieres unirte a todas las salas en %@?";
+"screen_join_all_rooms_confirmation_action" = "Unirse a todas";

@@ -46,6 +46,7 @@ struct ManageRoomMemberSheetViewState: BindableState {
 
 struct ManageRoomMemberSheetViewStateBindings {
     var alertInfo: AlertInfo<ManageRoomMemberSheetViewAlertType>?
+    var kickMemberConfirmation: KickMemberConfirmationViewModel?
 }
 
 enum ManageRoomMemberSheetViewAlertType {

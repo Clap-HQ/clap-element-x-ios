@@ -1501,3 +1501,7 @@
 "screen_space_create_room_visibility_public_description" = "کوئی بھی اس کمرے کو تلاش کر کے شامل ہو سکتا ہے۔ آپ اسے کمرے کی ترتیبات میں کسی بھی وقت تبدیل کر سکتے ہیں۔";
 "screen_space_create_room_encryption_title" = "اینڈ ٹو اینڈ انکرپشن فعال کریں";
 "screen_space_create_room_encryption_description" = "آپ اسے بعد میں غیر فعال نہیں کر سکتے۔ پل اور زیادہ تر بوٹس ابھی تک کام نہیں کریں گے۔";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "تمام کمروں سے بھی ہٹائیں";
+"screen_join_all_rooms_confirmation_title" = "تمام کمروں میں شامل ہوں؟";
+"screen_join_all_rooms_confirmation_subtitle" = "کیا آپ %@ میں تمام کمروں میں شامل ہونا چاہتے ہیں؟";
+"screen_join_all_rooms_confirmation_action" = "سب میں شامل ہوں";

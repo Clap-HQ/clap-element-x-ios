@@ -414,7 +414,9 @@ class SpaceFlowCoordinator: FlowCoordinatorProtocol {
                     actionsSubject.send(.presentCallScreen(roomProxy: roomProxy))
                 case .verifyUser(let userID):
                     actionsSubject.send(.verifyUser(userID: userID))
-                case .continueWithSpaceFlow(let spaceRoomListProxy):
+                case .continueWithSpaceFlow(let spaceRoomListProxy),
+                     .continueWithSpaceDetailFlow(let spaceRoomListProxy):
+                    // In SpaceFlowCoordinator context, both cases navigate to SpaceScreen as a child flow
                     stateMachine.tryEvent(.startChildFlow, userInfo: SpaceFlowCoordinatorEntryPoint.space(spaceRoomListProxy))
                 case .finished:
                     stateMachine.tryEvent(.stopRoomFlow)

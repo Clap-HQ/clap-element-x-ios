@@ -1501,3 +1501,7 @@
 "screen_space_create_room_visibility_public_description" = "Każdy może znaleźć i dołączyć do tego pokoju. Możesz to zmienić w dowolnym momencie w ustawieniach pokoju.";
 "screen_space_create_room_encryption_title" = "Włącz szyfrowanie end-to-end";
 "screen_space_create_room_encryption_description" = "Nie będzie można tego później wyłączyć. Mostki i większość botów jeszcze nie działa.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Usuń również ze wszystkich pokoi";
+"screen_join_all_rooms_confirmation_title" = "Dołączyć do wszystkich pokojów?";
+"screen_join_all_rooms_confirmation_subtitle" = "Czy chcesz dołączyć do wszystkich pokojów w %@?";
+"screen_join_all_rooms_confirmation_action" = "Dołącz do wszystkich";

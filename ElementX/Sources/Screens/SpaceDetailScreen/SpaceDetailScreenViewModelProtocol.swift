@@ -9,9 +9,9 @@
 import Combine
 
 @MainActor
-protocol SpaceRoomListScreenViewModelProtocol {
-    var actionsPublisher: AnyPublisher<SpaceRoomListScreenViewModelAction, Never> { get }
-    var context: SpaceRoomListScreenViewModel.Context { get }
+protocol SpaceDetailScreenViewModelProtocol {
+    var actionsPublisher: AnyPublisher<SpaceDetailScreenViewModelAction, Never> { get }
+    var context: SpaceDetailScreenViewModel.Context { get }
 
-    func refreshSpaceRoomList() async
+    func refreshSpaceChildren() async
 }

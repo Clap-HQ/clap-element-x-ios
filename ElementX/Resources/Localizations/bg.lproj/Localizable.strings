@@ -1501,3 +1501,7 @@
 "screen_space_create_room_visibility_public_description" = "Всеки може да намери и да се присъедини към тази стая. Можете да промените това по всяко време от настройките на стаята.";
 "screen_space_create_room_encryption_title" = "Активиране на криптиране от край до край";
 "screen_space_create_room_encryption_description" = "Не можете да деактивирате това по-късно. Мостовете и повечето ботове все още няма да работят.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Също премахни от всички стаи";
+"screen_join_all_rooms_confirmation_title" = "Присъединяване към всички стаи?";
+"screen_join_all_rooms_confirmation_subtitle" = "Искате ли да се присъедините към всички стаи в %@?";
+"screen_join_all_rooms_confirmation_action" = "Присъединяване към всички";

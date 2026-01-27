@@ -1501,3 +1501,7 @@
 "screen_space_create_room_visibility_public_description" = "Будь-хто може знайти та приєднатися до цієї кімнати. Ви можете змінити це в будь-який час у налаштуваннях кімнати.";
 "screen_space_create_room_encryption_title" = "Увімкнути наскрізне шифрування";
 "screen_space_create_room_encryption_description" = "Ви не зможете вимкнути це пізніше. Мости й більшість ботів поки не працюватимуть.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "Також вилучити з усіх кімнат";
+"screen_join_all_rooms_confirmation_title" = "Приєднатися до всіх кімнат?";
+"screen_join_all_rooms_confirmation_subtitle" = "Бажаєте приєднатися до всіх кімнат у %@?";
+"screen_join_all_rooms_confirmation_action" = "Приєднатися до всіх";

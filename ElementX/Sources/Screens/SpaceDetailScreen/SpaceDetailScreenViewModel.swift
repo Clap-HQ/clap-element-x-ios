@@ -10,9 +10,9 @@ import Combine
 import MatrixRustSDK
 import SwiftUI
 
-typealias SpaceRoomListScreenViewModelType = StateStoreViewModelV2<SpaceRoomListScreenViewState, SpaceRoomListScreenViewAction>
+typealias SpaceDetailScreenViewModelType = StateStoreViewModelV2<SpaceDetailScreenViewState, SpaceDetailScreenViewAction>
 
-class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomListScreenViewModelProtocol {
+class SpaceDetailScreenViewModel: SpaceDetailScreenViewModelType, SpaceDetailScreenViewModelProtocol {
     private var spaceRoomListProxy: SpaceRoomListProxyProtocol
     private let spaceServiceProxy: SpaceServiceProxyProtocol
     private let clientProxy: ClientProxyProtocol
@@ -20,10 +20,10 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
     private let userIndicatorController: UserIndicatorControllerProtocol
     private let appSettings: AppSettings
 
-    private var spaceRoomListCancellables = Set<AnyCancellable>()
+    private var spaceChildrenCancellables = Set<AnyCancellable>()
 
-    private let actionsSubject: PassthroughSubject<SpaceRoomListScreenViewModelAction, Never> = .init()
-    var actionsPublisher: AnyPublisher<SpaceRoomListScreenViewModelAction, Never> {
+    private let actionsSubject: PassthroughSubject<SpaceDetailScreenViewModelAction, Never> = .init()
+    var actionsPublisher: AnyPublisher<SpaceDetailScreenViewModelAction, Never> {
         actionsSubject.eraseToAnyPublisher()
     }
 
@@ -34,7 +34,8 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
          spaceServiceProxy: SpaceServiceProxyProtocol,
          userSession: UserSessionProtocol,
          appSettings: AppSettings,
-         userIndicatorController: UserIndicatorControllerProtocol) {
+         userIndicatorController: UserIndicatorControllerProtocol,
+         shouldShowJoinAllRoomsConfirmation: Bool = false) {
         self.spaceRoomListProxy = spaceRoomListProxy
         self.spaceServiceProxy = spaceServiceProxy
         self.clientProxy = userSession.clientProxy
@@ -44,7 +45,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
 
         let spaceProxy = spaceRoomListProxy.spaceRoomProxyPublisher.value
 
-        super.init(initialViewState: SpaceRoomListScreenViewState(
+        super.init(initialViewState: SpaceDetailScreenViewState(
             spaceID: spaceRoomListProxy.id,
             spaceName: spaceProxy.name,
             spaceAvatarURL: spaceProxy.avatarURL,
@@ -59,11 +60,46 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
 
         setupSubscriptions()
         setupSpaceRoomProxy()
+
+        if shouldShowJoinAllRoomsConfirmation {
+            showJoinAllRoomsConfirmation()
+        }
+    }
+
+    private var joinAllRoomsConfirmationCancellable: AnyCancellable?
+
+    private func showJoinAllRoomsConfirmation() {
+        let viewModel = JoinAllRoomsConfirmationViewModel(spaceID: state.spaceID, spaceName: state.spaceName)
+        joinAllRoomsConfirmationCancellable = viewModel.actions
+            .sink { [weak self] action in
+                guard let self else { return }
+                state.bindings.joinAllRoomsConfirmation = nil
+                switch action {
+                case .confirm:
+                    Task { [weak self] in
+                        guard let self else { return }
+                        showLoadingIndicator()
+                        let result = await clientProxy.clapAPI.spaces.joinAllChildRooms(spaceID: state.spaceID)
+                        hideLoadingIndicator()
+
+                        switch result {
+                        case .success(let response):
+                            MXLog.info("Joined \(response.joined.count) rooms, \(response.failed.count) failed")
+                        case .failure(let error):
+                            MXLog.error("Failed to join all rooms: \(error)")
+                            showFailureIndicator()
+                        }
+                    }
+                case .cancel:
+                    break
+                }
+            }
+        state.bindings.joinAllRoomsConfirmation = viewModel
     }
 
     // MARK: - Public
 
-    override func process(viewAction: SpaceRoomListScreenViewAction) {
+    override func process(viewAction: SpaceDetailScreenViewAction) {
         switch viewAction {
         case .selectRoom(let item):
             switch item {
@@ -108,12 +144,12 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
     // MARK: - Private
 
     private func setupSubscriptions() {
-        setupSpaceRoomListSubscriptions()
+        setupSpaceChildrenSubscriptions()
     }
 
-    private func setupSpaceRoomListSubscriptions() {
+    private func setupSpaceChildrenSubscriptions() {
         // Clear previous subscriptions when replacing proxy
-        spaceRoomListCancellables.removeAll()
+        spaceChildrenCancellables.removeAll()
 
         spaceRoomListProxy.spaceRoomProxyPublisher
             .receive(on: DispatchQueue.main)
@@ -124,7 +160,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                 state.spaceMemberCount = spaceProxy.joinedMembersCount
                 state.spaceTopic = spaceProxy.topic
             }
-            .store(in: &spaceRoomListCancellables)
+            .store(in: &spaceChildrenCancellables)
 
         // Combine space rooms and room summaries to update room list atomically
         // This prevents flickering caused by multiple separate updates
@@ -135,7 +171,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                 guard let self else { return }
                 updateRoomList(with: spaceRooms, roomSummaries: roomSummaries)
             }
-            .store(in: &spaceRoomListCancellables)
+            .store(in: &spaceChildrenCancellables)
 
         spaceRoomListProxy.paginationStatePublisher
             .receive(on: DispatchQueue.main)
@@ -145,15 +181,15 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                     Task { await self.spaceRoomListProxy.paginate() }
                 }
             }
-            .store(in: &spaceRoomListCancellables)
+            .store(in: &spaceChildrenCancellables)
     }
 
     private func updateRoomList(with spaceRooms: [SpaceRoomProxyProtocol], roomSummaries: [RoomSummary]) {
         // Build a lookup dictionary for quick access
-        let summaryByID = Dictionary(roomSummaries.map { ($0.id, $0) }, uniquingKeysWith: { latest, _ in latest })
+        let summaryByID = Dictionary(roomSummaries.map { ($0.id, $0) }) { latest, _ in latest }
 
-        var joinedItems: [SpaceRoomListItem] = []
-        var unjoinedItems: [SpaceRoomListItem] = []
+        var joinedItems: [SpaceChildRoomItem] = []
+        var unjoinedItems: [SpaceChildRoomItem] = []
 
         for spaceRoom in spaceRooms {
             // Skip spaces - only show rooms
@@ -286,8 +322,8 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
                                                                                childRoomID: roomID)
         switch result {
         case .success:
-            // Refresh the space room list to reflect the removal
-            await refreshSpaceRoomList()
+            // Refresh the space children to reflect the removal
+            await refreshSpaceChildren()
             // Notify coordinator to refresh home screen as well
             actionsSubject.send(.removedRoomFromSpace(spaceID: spaceID))
             userIndicatorController.submitIndicator(UserIndicator(id: "\(Self.self)-RemovedFromSpace",
@@ -300,7 +336,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
         }
     }
 
-    func refreshSpaceRoomList() async {
+    func refreshSpaceChildren() async {
         // Give SDK time to process the state event change
         try? await Task.sleep(for: .milliseconds(500))
 
@@ -317,16 +353,16 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
             // Replace the proxy and re-subscribe
             await MainActor.run {
                 spaceRoomListProxy = newSpaceRoomList
-                setupSpaceRoomListSubscriptions()
+                setupSpaceChildrenSubscriptions()
 
                 // Immediately update the room list with fresh data
                 let spaceRooms = newSpaceRoomList.spaceRoomsPublisher.value
                 let roomSummaries = clientProxy.roomSummaryProvider.roomListPublisher.value
                 updateRoomList(with: spaceRooms, roomSummaries: roomSummaries)
-                MXLog.info("Refreshed space room list for \(state.spaceID) with \(spaceRooms.count) rooms")
+                MXLog.info("Refreshed space children for \(state.spaceID) with \(spaceRooms.count) rooms")
             }
         case .failure(let error):
-            MXLog.error("Failed to refresh space room list: \(error)")
+            MXLog.error("Failed to refresh space children: \(error)")
         }
     }
 
@@ -407,7 +443,7 @@ class SpaceRoomListScreenViewModel: SpaceRoomListScreenViewModelType, SpaceRoomL
 
     // MARK: Loading indicator
 
-    private static let loadingIndicatorIdentifier = "\(SpaceRoomListScreenViewModel.self)-Loading"
+    private static let loadingIndicatorIdentifier = "\(SpaceDetailScreenViewModel.self)-Loading"
 
     private func showLoadingIndicator() {
         userIndicatorController.submitIndicator(UserIndicator(id: Self.loadingIndicatorIdentifier,

@@ -1501,3 +1501,7 @@
 "screen_space_create_room_visibility_public_description" = "Oricine poate găsi și se poate alătura acestei camere. Puteți schimba asta oricând din setările camerei.";
 "screen_space_create_room_encryption_title" = "Activează criptarea de la un capăt la altul";
 "screen_space_create_room_encryption_description" = "Nu puteți dezactiva asta mai târziu. Podurile și majoritatea boților nu vor funcționa încă.";
+"screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "De asemenea, eliminați din toate camerele"; 
+"screen_join_all_rooms_confirmation_title" = "Te alături tuturor camerelor?";
+"screen_join_all_rooms_confirmation_subtitle" = "Vrei să te alături tuturor camerelor din %@?";
+"screen_join_all_rooms_confirmation_action" = "Alătură-te tuturor";
