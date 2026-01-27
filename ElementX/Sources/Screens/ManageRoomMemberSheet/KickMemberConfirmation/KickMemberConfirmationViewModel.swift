@@ -11,7 +11,7 @@ import SwiftUI
 typealias KickMemberConfirmationViewModelType = StateStoreViewModelV2<KickMemberConfirmationViewState, KickMemberConfirmationViewAction>
 
 class KickMemberConfirmationViewModel: KickMemberConfirmationViewModelType {
-    let actionsSubject = PassthroughSubject<KickMemberConfirmationViewModelAction, Never>()
+    private let actionsSubject = PassthroughSubject<KickMemberConfirmationViewModelAction, Never>()
     var actions: AnyPublisher<KickMemberConfirmationViewModelAction, Never> { actionsSubject.eraseToAnyPublisher() }
 
     init(memberID: String, memberName: String?) {

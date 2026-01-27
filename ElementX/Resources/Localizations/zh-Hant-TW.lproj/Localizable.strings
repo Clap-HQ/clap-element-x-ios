@@ -1502,6 +1502,6 @@
 "screen_space_create_room_encryption_title" = "啟用端對端加密";
 "screen_space_create_room_encryption_description" = "您無法在稍後停用此功能。橋接與大多數的聊天機器人也會無法運作。";
 "screen_bottom_sheet_manage_room_member_remove_from_all_rooms" = "同時從所有聊天室移除";
-"screen_join_all_rooms_confirmation_title" = "加入所有房間？";
-"screen_join_all_rooms_confirmation_subtitle" = "您想加入 %@ 中的所有房間嗎？";
+"screen_join_all_rooms_confirmation_title" = "加入所有聊天室？";
+"screen_join_all_rooms_confirmation_subtitle" = "您想加入 %@ 中的所有聊天室嗎？";
 "screen_join_all_rooms_confirmation_action" = "全部加入";

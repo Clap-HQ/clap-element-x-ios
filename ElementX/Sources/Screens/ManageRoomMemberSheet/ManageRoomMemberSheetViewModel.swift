@@ -138,7 +138,9 @@ class ManageRoomMemberSheetViewModel: ManageRoomMemberSheetViewModelType, Manage
                 switch action {
                 case .confirm(let removeFromAllRooms):
                     state.bindings.kickMemberConfirmation = nil
-                    Task { await self.kickMember(id: memberID, name: memberName, reason: nil, removeFromAllChildRooms: removeFromAllRooms) }
+                    Task { [weak self] in
+                        await self?.kickMember(id: memberID, name: memberName, reason: nil, removeFromAllChildRooms: removeFromAllRooms)
+                    }
                 case .cancel:
                     state.bindings.kickMemberConfirmation = nil
                 }

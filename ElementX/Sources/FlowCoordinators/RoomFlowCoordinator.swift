@@ -923,7 +923,7 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
     }
     
     private func dismissFlow(animated: Bool,
-                              spaceAction: RoomFlowCoordinatorAction? = nil) {
+                             spaceAction: RoomFlowCoordinatorAction? = nil) {
         childRoomFlowCoordinator?.clearRoute(animated: animated)
 
         // Check if we're continuing with a space flow

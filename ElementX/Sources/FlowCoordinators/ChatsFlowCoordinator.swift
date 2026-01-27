@@ -591,7 +591,7 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
     private func dismissSpaceFlow(animated: Bool) {
         // Based on dismissRoomFlow, past me was very insistent that this must happen after the flow has tidied the stack 😅.
         navigationSplitCoordinator.setDetailCoordinator(nil, animated: animated)
-        roomFlowCoordinator = nil
+        spaceFlowCoordinator = nil
     }
 
     // MARK: Space Detail Flow

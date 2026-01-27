@@ -76,17 +76,18 @@ class SpaceDetailScreenViewModel: SpaceDetailScreenViewModelType, SpaceDetailScr
                 state.bindings.joinAllRoomsConfirmation = nil
                 switch action {
                 case .confirm:
-                    Task {
-                        self.showLoadingIndicator()
-                        let result = await self.clientProxy.clapAPI.spaces.joinAllChildRooms(spaceID: self.state.spaceID)
-                        self.hideLoadingIndicator()
+                    Task { [weak self] in
+                        guard let self else { return }
+                        showLoadingIndicator()
+                        let result = await clientProxy.clapAPI.spaces.joinAllChildRooms(spaceID: state.spaceID)
+                        hideLoadingIndicator()
 
                         switch result {
                         case .success(let response):
                             MXLog.info("Joined \(response.joined.count) rooms, \(response.failed.count) failed")
                         case .failure(let error):
                             MXLog.error("Failed to join all rooms: \(error)")
-                            self.showFailureIndicator()
+                            showFailureIndicator()
                         }
                     }
                 case .cancel:
@@ -185,7 +186,7 @@ class SpaceDetailScreenViewModel: SpaceDetailScreenViewModelType, SpaceDetailScr
 
     private func updateRoomList(with spaceRooms: [SpaceRoomProxyProtocol], roomSummaries: [RoomSummary]) {
         // Build a lookup dictionary for quick access
-        let summaryByID = Dictionary(roomSummaries.map { ($0.id, $0) }, uniquingKeysWith: { latest, _ in latest })
+        let summaryByID = Dictionary(roomSummaries.map { ($0.id, $0) }) { latest, _ in latest }
 
         var joinedItems: [SpaceChildRoomItem] = []
         var unjoinedItems: [SpaceChildRoomItem] = []
