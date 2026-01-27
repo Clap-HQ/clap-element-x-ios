@@ -9,8 +9,6 @@ import Compound
 import SwiftUI
 
 struct KickMemberConfirmationView: View {
-    @Environment(\.dismiss) private var dismiss
-
     let context: KickMemberConfirmationViewModel.Context
 
     @State private var scrollViewHeight: CGFloat = .zero
@@ -82,8 +80,10 @@ struct KickMemberConfirmationView: View {
             }
             .buttonStyle(.compound(.primary))
 
-            Button(L10n.actionCancel, action: dismiss.callAsFunction)
-                .buttonStyle(.compound(.tertiary))
+            Button(L10n.actionCancel) {
+                context.send(viewAction: .cancel)
+            }
+            .buttonStyle(.compound(.tertiary))
         }
         .padding(.horizontal, 16)
         .padding(.top, 16)
