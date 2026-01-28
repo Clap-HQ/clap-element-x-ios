@@ -18,7 +18,9 @@
 		<string>applinks:clap.ac</string>
 		<string>webcredentials:clap.ac</string>
 		<string>applinks:dev.clap.ac</string>
+		<string>applinks:dev.clap.ac?mode=developer</string>
 		<string>webcredentials:dev.clap.ac</string>
+		<string>webcredentials:dev.clap.ac?mode=developer</string>
 	</array>
 	<key>com.apple.developer.usernotifications.communication</key>
 	<true/>
