@@ -152,7 +152,9 @@ targets:
         - applinks:clap.ac
         - webcredentials:clap.ac
         - applinks:dev.clap.ac
+        - applinks:dev.clap.ac?mode=developer
         - webcredentials:dev.clap.ac
+        - webcredentials:dev.clap.ac?mode=developer
         com.apple.developer.usernotifications.communication: true
         com.apple.security.app-sandbox: true
         com.apple.security.application-groups:
