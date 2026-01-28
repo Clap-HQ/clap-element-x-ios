@@ -95,8 +95,26 @@ import SwiftUI
     }
     
     /// The currently selected tab's tag.
-    var selectedTab: Tag?
-    
+    var selectedTab: Tag? {
+        didSet {
+            if selectedTab != oldValue {
+                selectedTabDidChange?(selectedTab)
+            }
+        }
+    }
+
+    /// Callback invoked when the selected tab changes.
+    var selectedTabDidChange: ((Tag?) -> Void)?
+
+    /// Action invoked when the bottom accessory button is tapped.
+    var bottomAccessoryAction: (() -> Void)?
+
+    /// Tag value for the search tab (iOS 26+). Must be set for the search tab to work properly.
+    var searchTag: Tag?
+
+    /// Internal delegate for intercepting search tab selection (iOS 26+)
+    fileprivate var searchTabBarDelegate: SearchTabBarDelegate?
+
     // MARK: Sheets
     
     fileprivate var sheetModule: NavigationModule? {
@@ -286,12 +304,101 @@ import SwiftUI
 
 private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    
+
     @Bindable var navigationTabCoordinator: NavigationTabCoordinator<Tag>
-    
+
     @State private var standardAppearance = UITabBarAppearance()
-    
+
     var body: some View {
+        tabViewContent
+            .backportTabBarMinimizeBehaviorOnScrollDown()
+            .introspect(.tabView, on: .supportedVersions, customize: configureAppearance)
+            .sheet(item: $navigationTabCoordinator.sheetModule) { module in
+                module.coordinator?.toPresentable()
+                    .id(module.id)
+            }
+            .fullScreenCover(item: $navigationTabCoordinator.fullScreenCoverModule) { module in
+                module.coordinator?.toPresentable()
+                    .id(module.id)
+            }
+            .accessibilityHidden(navigationTabCoordinator.overlayModule?.coordinator != nil && navigationTabCoordinator.overlayPresentationMode == .fullScreen)
+            .overlay {
+                Group {
+                    if let coordinator = navigationTabCoordinator.overlayModule?.coordinator {
+                        coordinator.toPresentable()
+                            .opacity(navigationTabCoordinator.overlayPresentationMode == .minimized ? 0 : 1)
+                            .transition(.opacity)
+                    }
+                }
+                .animation(.elementDefault, value: navigationTabCoordinator.overlayPresentationMode)
+                .animation(.elementDefault, value: navigationTabCoordinator.overlayModule)
+            }
+    }
+
+    @ViewBuilder
+    private var tabViewContent: some View {
+        if #available(iOS 26.0, *) {
+            iOS26TabView()
+        } else {
+            legacyTabView
+        }
+    }
+
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func iOS26TabView() -> some View {
+        TabView(selection: $navigationTabCoordinator.selectedTab) {
+            ForEach(navigationTabCoordinator.tabModules) { module in
+                Tab(value: module.details.tag) {
+                    module.coordinator?.toPresentable()
+                        .id(module.id)
+                        .toolbar(module.details.barVisibility(in: horizontalSizeClass), for: .tabBar)
+                } label: {
+                    Label {
+                        Text(module.details.title)
+                    } icon: {
+                        CompoundIcon(module.details.tag == navigationTabCoordinator.selectedTab ? module.details.selectedIcon : module.details.icon)
+                    }
+                }
+                .badge(module.details.badgeCount)
+            }
+
+            if let searchTag = navigationTabCoordinator.searchTag {
+                Tab(value: searchTag, role: .search) {
+                    Color.clear
+                } label: {
+                    Label("Agent", systemImage: "sparkles")
+                }
+            }
+        }
+        .introspect(.tabView, on: .supportedVersions) { tabBarController in
+            configureSearchTabInterception(tabBarController)
+        }
+    }
+
+    private func configureSearchTabInterception(_ tabBarController: UITabBarController) {
+        guard #available(iOS 26.0, *) else { return }
+
+        // Create delegate if needed
+        if navigationTabCoordinator.searchTabBarDelegate == nil {
+            let delegate = SearchTabBarDelegate()
+            delegate.searchTabIndex = navigationTabCoordinator.tabModules.count // Search tab is after all regular tabs
+            delegate.onSearchTapped = { [weak navigationTabCoordinator] in
+                navigationTabCoordinator?.bottomAccessoryAction?()
+            }
+            delegate.onTabSelected = { [weak navigationTabCoordinator] index in
+                guard let navigationTabCoordinator,
+                      index < navigationTabCoordinator.tabModules.count else { return }
+                navigationTabCoordinator.selectedTab = navigationTabCoordinator.tabModules[index].details.tag
+            }
+            navigationTabCoordinator.searchTabBarDelegate = delegate
+        }
+
+        // Set delegate to intercept tab selection
+        tabBarController.delegate = navigationTabCoordinator.searchTabBarDelegate
+    }
+
+    private var legacyTabView: some View {
         TabView(selection: $navigationTabCoordinator.selectedTab) {
             ForEach(navigationTabCoordinator.tabModules) { module in
                 module.coordinator?.toPresentable()
@@ -307,31 +414,47 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
                     .badge(module.details.badgeCount)
                     .toolbar(module.details.barVisibility(in: horizontalSizeClass), for: .tabBar)
             }
+
+            legacyBotTab
         }
-        .backportTabBarMinimizeBehaviorOnScrollDown()
-        .introspect(.tabView, on: .supportedVersions, customize: configureAppearance)
-        .sheet(item: $navigationTabCoordinator.sheetModule) { module in
-            module.coordinator?.toPresentable()
-                .id(module.id)
-        }
-        .fullScreenCover(item: $navigationTabCoordinator.fullScreenCoverModule) { module in
-            module.coordinator?.toPresentable()
-                .id(module.id)
-        }
-        .accessibilityHidden(navigationTabCoordinator.overlayModule?.coordinator != nil && navigationTabCoordinator.overlayPresentationMode == .fullScreen)
-        .overlay {
-            Group {
-                if let coordinator = navigationTabCoordinator.overlayModule?.coordinator {
-                    coordinator.toPresentable()
-                        .opacity(navigationTabCoordinator.overlayPresentationMode == .minimized ? 0 : 1)
-                        .transition(.opacity)
-                }
-            }
-            .animation(.elementDefault, value: navigationTabCoordinator.overlayPresentationMode)
-            .animation(.elementDefault, value: navigationTabCoordinator.overlayModule)
+        .introspect(.tabView, on: .supportedVersions) { tabBarController in
+            configureLegacySearchTabInterception(tabBarController)
         }
     }
-    
+
+    @ViewBuilder
+    private var legacyBotTab: some View {
+        if let searchTag = navigationTabCoordinator.searchTag {
+            Color.clear
+                .tabItem {
+                    Label("Agent", systemImage: "sparkles")
+                }
+                .tag(searchTag)
+        }
+    }
+
+    private func configureLegacySearchTabInterception(_ tabBarController: UITabBarController) {
+        guard navigationTabCoordinator.searchTag != nil else { return }
+
+        // Create delegate if needed
+        if navigationTabCoordinator.searchTabBarDelegate == nil {
+            let delegate = SearchTabBarDelegate()
+            delegate.searchTabIndex = navigationTabCoordinator.tabModules.count
+            delegate.onSearchTapped = { [weak navigationTabCoordinator] in
+                navigationTabCoordinator?.bottomAccessoryAction?()
+            }
+            delegate.onTabSelected = { [weak navigationTabCoordinator] index in
+                guard let navigationTabCoordinator,
+                      index < navigationTabCoordinator.tabModules.count else { return }
+                navigationTabCoordinator.selectedTab = navigationTabCoordinator.tabModules[index].details.tag
+            }
+            navigationTabCoordinator.searchTabBarDelegate = delegate
+        }
+
+        // Set delegate to intercept tab selection
+        tabBarController.delegate = navigationTabCoordinator.searchTabBarDelegate
+    }
+
     private func configureAppearance(_ tabBarController: UITabBarController) {
         standardAppearance.configureWithDefaultBackground()
         standardAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = .compound.iconAccentPrimary // iPhone Portrait
@@ -340,3 +463,36 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
         tabBarController.tabBar.standardAppearance = standardAppearance
     }
 }
+
+// MARK: - Search Tab Bar Delegate
+
+/// Delegate that intercepts search tab selection and triggers an action instead of switching tabs
+private class SearchTabBarDelegate: NSObject, UITabBarControllerDelegate {
+    var searchTabIndex: Int = 0
+    var onSearchTapped: (() -> Void)?
+    var onTabSelected: ((Int) -> Void)?
+
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        // Get the index of the view controller being selected
+        guard let index = tabBarController.viewControllers?.firstIndex(of: viewController) else {
+            return true
+        }
+
+        // If it's the search tab, trigger action and prevent selection
+        if index == searchTabIndex {
+            onSearchTapped?()
+            return false
+        }
+
+        return true
+    }
+
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        // Sync the selected tab back to SwiftUI state
+        guard let index = tabBarController.viewControllers?.firstIndex(of: viewController) else {
+            return
+        }
+        onTabSelected?(index)
+    }
+}
+

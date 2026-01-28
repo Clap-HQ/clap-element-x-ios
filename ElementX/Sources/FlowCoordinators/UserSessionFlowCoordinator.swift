@@ -20,7 +20,7 @@ enum UserSessionFlowCoordinatorAction {
 }
 
 class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
-    enum HomeTab: Hashable { case chats, spaces }
+    enum HomeTab: Hashable { case chats, spaces, search }
     
     private let navigationRootCoordinator: NavigationRootCoordinator
     private let navigationTabCoordinator: NavigationTabCoordinator<HomeTab>
@@ -38,7 +38,9 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
     
     // periphery:ignore - retaining purpose
     private var settingsFlowCoordinator: SettingsFlowCoordinator?
-    
+    private var clapBotRoomFlowCoordinator: RoomFlowCoordinator?
+    private var clapBotNavigationStackCoordinator: NavigationStackCoordinator?
+
     enum State: StateType {
         /// The state machine hasn't started.
         case initial
@@ -89,7 +91,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                                                                     flowParameters: flowParameters)
         spacesTabDetails = .init(tag: HomeTab.spaces, title: L10n.screenHomeTabSpaces, icon: \.space, selectedIcon: \.spaceSolid)
         spacesTabDetails.navigationSplitCoordinator = spacesSplitCoordinator
-        
+
         onboardingStackCoordinator = NavigationStackCoordinator()
         onboardingFlowCoordinator = OnboardingFlowCoordinator(isNewLogin: isNewLogin,
                                                               appLockService: appLockService,
@@ -100,11 +102,13 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
             .init(coordinator: chatsSplitCoordinator, details: chatsTabDetails),
             .init(coordinator: spacesSplitCoordinator, details: spacesTabDetails)
         ])
-        
+        navigationTabCoordinator.searchTag = .search
+
         stateMachine = flowParameters.stateMachineFactory.makeUserSessionFlowStateMachine(state: .initial)
         configureStateMachine()
-        
+
         setupObservers()
+        setupClapBotTabHandler()
     }
     
     func start(animated: Bool) {
@@ -296,8 +300,83 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
             .store(in: &cancellables)
     }
     
+    // MARK: - ClapBot
+
+    private func setupClapBotTabHandler() {
+        // Search button triggers ClapBot DM without changing tab
+        navigationTabCoordinator.bottomAccessoryAction = { [weak self] in
+            guard let self else { return }
+            Task { @MainActor in
+                await self.openClapBotDM()
+            }
+        }
+    }
+
+    private func openClapBotDM() async {
+        let clapBotUserID = "@clap-bot-rs:\(InfoPlistReader.main.clapHomeserver)"
+        MXLog.info("Opening ClapBot DM with user: \(clapBotUserID)")
+
+        // Find an unencrypted ClapBot DM room
+        let allRooms = userSession.clientProxy.staticRoomSummaryProvider.roomListPublisher.value
+        if let unencryptedRoom = allRooms.first(where: { summary in
+            summary.isDirect &&
+            summary.heroes.contains { $0.userID == clapBotUserID } &&
+            summary.room.encryptionState() != .encrypted
+        }) {
+            MXLog.info("Found unencrypted ClapBot DM room: \(unencryptedRoom.id)")
+            presentClapBotRoom(roomID: unencryptedRoom.id)
+            return
+        }
+
+        // No unencrypted ClapBot DM room found
+        MXLog.warning("No unencrypted ClapBot DM room found")
+        flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: "ClapBot 채팅방을 찾을 수 없습니다.")
+    }
+
+    private func presentClapBotRoom(roomID: String) {
+        let navigationStackCoordinator = NavigationStackCoordinator()
+        let coordinator = RoomFlowCoordinator(roomID: roomID,
+                                              isChildFlow: false,
+                                              navigationStackCoordinator: navigationStackCoordinator,
+                                              flowParameters: flowParameters)
+
+        coordinator.actions.sink { [weak self] action in
+            guard let self else { return }
+
+            switch action {
+            case .presentCallScreen(let roomProxy):
+                dismissClapBotRoom()
+                chatsFlowCoordinator.handleAppRoute(.call(roomID: roomProxy.id), animated: true)
+            case .verifyUser(let userID):
+                dismissClapBotRoom()
+                chatsFlowCoordinator.handleAppRoute(.userProfile(userID: userID), animated: true)
+            case .continueWithSpaceFlow, .continueWithSpaceDetailFlow:
+                // ClapBot is always a DM room, not a space
+                dismissClapBotRoom()
+            case .finished:
+                dismissClapBotRoom()
+            }
+        }
+        .store(in: &cancellables)
+
+        clapBotNavigationStackCoordinator = navigationStackCoordinator
+        clapBotRoomFlowCoordinator = coordinator
+        coordinator.handleAppRoute(.room(roomID: roomID, via: []), animated: false)
+
+        // Present as fullscreen cover
+        navigationTabCoordinator.setFullScreenCoverCoordinator(navigationStackCoordinator, animated: true) { [weak self] in
+            self?.dismissClapBotRoom()
+        }
+    }
+
+    private func dismissClapBotRoom() {
+        navigationTabCoordinator.setFullScreenCoverCoordinator(nil)
+        clapBotRoomFlowCoordinator = nil
+        clapBotNavigationStackCoordinator = nil
+    }
+
     // MARK: - Onboarding
-    
+
     private func attemptStartingOnboarding() {
         MXLog.info("Attempting to start onboarding")
         
@@ -551,3 +630,4 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         navigationTabCoordinator.setSheetCoordinator(coordinator, animated: true)
     }
 }
+
