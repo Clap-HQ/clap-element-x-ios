@@ -52,8 +52,8 @@ class TimelineItemProvider: TimelineItemProviderProtocol {
         self.kind = kind
         
         paginationStatePublisher
-            .sink { [weak self] in
-                self?.paginationStateSubject.send($0)
+            .sink { [weak self] state in
+                self?.paginationStateSubject.send(state)
             }
             .store(in: &cancellables)
         

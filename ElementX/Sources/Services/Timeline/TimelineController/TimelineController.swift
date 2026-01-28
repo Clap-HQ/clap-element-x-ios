@@ -405,13 +405,13 @@ class TimelineController: TimelineControllerProtocol {
                 (activeTimelineItemProvider.itemProxies, activeTimelineItemProvider.paginationState)
             })
             
-            for await (items, paginationState) in timelineUpdates.values {
-                await self?.updateTimelineItems(itemProxies: items, paginationState: paginationState)
+            for await (items, _) in timelineUpdates.values {
+                await self?.updateTimelineItems(itemProxies: items)
             }
         }.asCancellable()
     }
     
-    private func updateTimelineItems(itemProxies: [TimelineItemProxy], paginationState: PaginationState) async {
+    private func updateTimelineItems(itemProxies: [TimelineItemProxy]) async {
         let isNewTimeline = isSwitchingTimelines
         isSwitchingTimelines = false
         
@@ -461,25 +461,29 @@ class TimelineController: TimelineControllerProtocol {
         // Clap: Remove orphaned separators and read markers that have no following content
         newTimelineItems = removeOrphanedVirtualItems(from: newTimelineItems)
 
+        // Always use the latest pagination state from the provider to avoid race conditions
+        // where stale state from combineLatest overwrites the current state
+        let currentPaginationState = activeTimelineItemProvider.paginationState
+
         // Check if we need to add anything to the top of the timeline.
-        switch paginationState.backward {
+        switch currentPaginationState.backward {
         case .paginating:
             newTimelineItems.insert(PaginationIndicatorRoomTimelineItem(position: .start), at: 0)
         case .idle, .timelineEndReached:
             break
         }
-        
-        switch paginationState.forward {
+
+        switch currentPaginationState.forward {
         case .paginating:
             newTimelineItems.insert(PaginationIndicatorRoomTimelineItem(position: .end), at: newTimelineItems.count)
         case .idle, .timelineEndReached:
             break
         }
-        
+
         timelineItems = newTimelineItems
-        
+
         callbacks.send(.updatedTimelineItems(timelineItems: newTimelineItems, isSwitchingTimelines: isNewTimeline))
-        self.paginationState = paginationState
+        self.paginationState = currentPaginationState
     }
     
     private nonisolated func buildTimelineItem(for itemProxy: TimelineItemProxy,
