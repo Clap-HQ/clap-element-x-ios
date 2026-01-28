@@ -777,13 +777,15 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                                      avatarURLString: String?,
                                                      previousAvatarURLString: String?,
                                                      isOutgoing: Bool) -> RoomTimelineItemProtocol? {
-        guard let text = stateEventStringBuilder.buildProfileChangeString(displayName: displayName,
-                                                                          previousDisplayName: previousDisplayName,
-                                                                          avatarURLString: avatarURLString,
-                                                                          previousAvatarURLString: previousAvatarURLString,
-                                                                          member: eventItemProxy.sender.id,
-                                                                          memberIsYou: isOutgoing) else { return nil }
-        return buildStateTimelineItem(for: eventItemProxy, text: text, isOutgoing: isOutgoing)
+        // guard let text = stateEventStringBuilder.buildProfileChangeString(displayName: displayName,
+        //                                                                   previousDisplayName: previousDisplayName,
+        //                                                                   avatarURLString: avatarURLString,
+        //                                                                   previousAvatarURLString: previousAvatarURLString,
+        //                                                                   member: eventItemProxy.sender.id,
+        //                                                                   memberIsYou: isOutgoing) else { return nil }
+        // return buildStateTimelineItem(for: eventItemProxy, text: text, isOutgoing: isOutgoing)
+        // Clap: Hide profile change messages (avatar, display name changes)
+        nil
     }
     
     private func buildStateTimelineItem(for eventItemProxy: EventTimelineItemProxy, text: String, isOutgoing: Bool) -> RoomTimelineItemProtocol {

@@ -457,7 +457,10 @@ class TimelineController: TimelineControllerProtocol {
             
             return newTimelineItems
         }.value
-        
+
+        // Clap: Remove orphaned separators and read markers that have no following content
+        newTimelineItems = removeOrphanedVirtualItems(from: newTimelineItems)
+
         // Check if we need to add anything to the top of the timeline.
         switch paginationState.backward {
         case .paginating:
@@ -603,6 +606,35 @@ class TimelineController: TimelineControllerProtocol {
         } catch {
             MXLog.error("Failed donating send message intent with error: \(error)")
         }
+    }
+
+    // MARK: - Clap: Remove orphaned virtual items
+
+    /// Removes date separators and read markers that have no following actual content.
+    /// This prevents showing "Today" or "NEW" markers when only hidden events (like profile changes) exist.
+    private func removeOrphanedVirtualItems(from items: [RoomTimelineItemProtocol]) -> [RoomTimelineItemProtocol] {
+        var result = [RoomTimelineItemProtocol]()
+        var pendingVirtualItems = [RoomTimelineItemProtocol]()
+
+        for item in items {
+            if item is SeparatorRoomTimelineItem {
+                // New separator: discard previous pending separators (empty date section)
+                pendingVirtualItems.removeAll { $0 is SeparatorRoomTimelineItem }
+                pendingVirtualItems.append(item)
+            } else if item is ReadMarkerRoomTimelineItem {
+                pendingVirtualItems.append(item)
+            } else if item is PaginationIndicatorRoomTimelineItem {
+                result.append(item)
+            } else {
+                // Actual content: flush pending items then add content
+                result.append(contentsOf: pendingVirtualItems)
+                pendingVirtualItems.removeAll()
+                result.append(item)
+            }
+        }
+        // Loop end: discard remaining pending items (no following content)
+
+        return result
     }
 }
 
