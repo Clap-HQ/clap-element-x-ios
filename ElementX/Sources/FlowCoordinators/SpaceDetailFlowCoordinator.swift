@@ -103,7 +103,28 @@ class SpaceDetailFlowCoordinator: FlowCoordinatorProtocol {
     }
 
     func handleAppRoute(_ appRoute: AppRoute, animated: Bool) {
-        // Currently no routes to handle
+        switch appRoute {
+        case .childRoom(let roomID, let via):
+            if let roomFlowCoordinator {
+                roomFlowCoordinator.handleAppRoute(appRoute, animated: animated)
+            } else {
+                presentRoom(roomID: roomID, animated: animated, initialRoute: .room(roomID: roomID, via: via))
+            }
+        case .childEvent(let eventID, let roomID, let via):
+            if let roomFlowCoordinator {
+                roomFlowCoordinator.handleAppRoute(appRoute, animated: animated)
+            } else {
+                presentRoom(roomID: roomID, animated: animated, initialRoute: .event(eventID: eventID, roomID: roomID, via: via))
+            }
+        case .roomMemberDetails(let userID):
+            if let roomFlowCoordinator {
+                roomFlowCoordinator.handleAppRoute(appRoute, animated: animated)
+            } else {
+                presentUserProfile(userID: userID, animated: animated)
+            }
+        default:
+            break
+        }
     }
 
     func clearRoute(animated: Bool) {
@@ -219,7 +240,7 @@ class SpaceDetailFlowCoordinator: FlowCoordinatorProtocol {
 
     // MARK: - Room Flow
 
-    private func presentRoom(roomID: String, animated: Bool) {
+    private func presentRoom(roomID: String, animated: Bool, initialRoute: AppRoute? = nil) {
         guard roomFlowCoordinator == nil else {
             MXLog.warning("Room flow coordinator already exists, ignoring duplicate presentation request")
             return
@@ -248,7 +269,8 @@ class SpaceDetailFlowCoordinator: FlowCoordinatorProtocol {
             .store(in: &cancellables)
 
         roomFlowCoordinator = coordinator
-        coordinator.handleAppRoute(.room(roomID: roomID, via: []), animated: animated)
+        let route = initialRoute ?? .room(roomID: roomID, via: [])
+        coordinator.handleAppRoute(route, animated: animated)
     }
 
     private func presentRoomDetails(roomID: String, animated: Bool) {
@@ -443,5 +465,32 @@ class SpaceDetailFlowCoordinator: FlowCoordinatorProtocol {
             }
         }
         navStackCoordinator.setSheetCoordinator(mediaPickerCoordinator)
+    }
+
+    // MARK: - User Profile
+
+    private func presentUserProfile(userID: String, animated: Bool) {
+        let parameters = UserProfileScreenCoordinatorParameters(userID: userID,
+                                                                isPresentedModally: false,
+                                                                userSession: userSession,
+                                                                userIndicatorController: flowParameters.userIndicatorController,
+                                                                analytics: flowParameters.analytics)
+        let coordinator = UserProfileScreenCoordinator(parameters: parameters)
+        coordinator.actionsPublisher.sink { [weak self] action in
+            guard let self else { return }
+
+            switch action {
+            case .openDirectChat(let roomID):
+                navigationStackCoordinator.pop(animated: animated)
+                presentRoom(roomID: roomID, animated: animated)
+            case .startCall(let roomProxy):
+                actionsSubject.send(.presentCallScreen(roomProxy: roomProxy))
+            case .dismiss:
+                navigationStackCoordinator.pop(animated: animated)
+            }
+        }
+        .store(in: &cancellables)
+
+        navigationStackCoordinator.push(coordinator, animated: animated)
     }
 }

@@ -115,6 +115,8 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
         case .childRoom(let roomID, let via):
             if let roomFlowCoordinator {
                 roomFlowCoordinator.handleAppRoute(appRoute, animated: animated)
+            } else if let spaceDetailFlowCoordinator {
+                spaceDetailFlowCoordinator.handleAppRoute(appRoute, animated: animated)
             } else {
                 stateMachine.processEvent(.selectRoom(roomID: roomID, via: via, entryPoint: .room), userInfo: .init(animated: animated))
             }
@@ -132,8 +134,14 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
             }
         case .roomList:
             roomFlowCoordinator?.clearRoute(animated: animated)
-        case .roomMemberDetails:
-            roomFlowCoordinator?.handleAppRoute(appRoute, animated: animated)
+        case .roomMemberDetails(let userID):
+            if let roomFlowCoordinator {
+                roomFlowCoordinator.handleAppRoute(appRoute, animated: animated)
+            } else if let spaceDetailFlowCoordinator {
+                spaceDetailFlowCoordinator.handleAppRoute(appRoute, animated: animated)
+            } else {
+                stateMachine.processEvent(.showUserProfileScreen(userID: userID), userInfo: .init(animated: animated))
+            }
         case .thread(let roomID, let threadRootEventID, let focusEventID):
             stateMachine.processEvent(.selectRoom(roomID: roomID,
                                                   via: [],
@@ -148,8 +156,14 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
             case .failure: showFailureIndicator()
             }
             
-        case .childEvent:
-            roomFlowCoordinator?.handleAppRoute(appRoute, animated: animated)
+        case .childEvent(let eventID, let roomID, let via):
+            if let roomFlowCoordinator {
+                roomFlowCoordinator.handleAppRoute(appRoute, animated: animated)
+            } else if let spaceDetailFlowCoordinator {
+                spaceDetailFlowCoordinator.handleAppRoute(appRoute, animated: animated)
+            } else {
+                stateMachine.processEvent(.selectRoom(roomID: roomID, via: via, entryPoint: .eventID(eventID)), userInfo: .init(animated: animated))
+            }
         case .childEventOnRoomAlias(let eventID, let alias):
             switch await userSession.clientProxy.resolveRoomAlias(alias) {
             case .success(let resolved): await asyncHandleAppRoute(.childEvent(eventID: eventID, roomID: resolved.roomId, via: resolved.servers), animated: animated)
