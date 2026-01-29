@@ -86,7 +86,6 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
 
     private func setupRoomSubscriptionObserver() {
         roomIDsToSubscribePublisher
-            .removeDuplicates()
             // Use shorter throttle for faster unread badge updates
             .throttle(for: 0.1, scheduler: DispatchQueue.main, latest: true)
             .filter { !$0.isEmpty }
@@ -188,41 +187,6 @@ class RoomSummaryProvider: RoomSummaryProviderProtocol {
                     listUpdatesSubscriptionResult?.controller().addOnePage()
                 } else if range.lowerBound == 0 {
                     listUpdatesSubscriptionResult?.controller().resetToOnePage()
-                }
-            }
-            .store(in: &cancellables)
-        
-        visibleItemRangePublisher
-            .throttle(for: 0.5, scheduler: DispatchQueue.main, latest: true)
-            .filter { [weak self] range in
-                guard let self else { return false }
-                return !range.isEmpty && shouldUpdateVisibleRange
-            }
-            .compactMap { [weak self] (range: Range) -> [String]? in
-                guard let self else { return nil }
-                
-                // The scroll view content size based visible range calculations might create large ranges
-                // This is just a safety check to not overload the backend
-                var range = range
-                if range.upperBound - range.lowerBound > SlidingSyncConstants.maximumVisibleRangeSize {
-                    let upperBound = range.lowerBound + SlidingSyncConstants.maximumVisibleRangeSize
-                    range = range.lowerBound..<upperBound
-                }
-                
-                return range
-                    .filter { $0 < self.rooms.count }
-                    .map { self.rooms[$0].id }
-            }
-            .removeDuplicates()
-            .sink { [weak self] roomIDs in
-                guard let self else { return }
-                
-                Task { [weak self] in
-                    do {
-                        try await self?.roomListService.subscribeToRooms(roomIds: roomIDs)
-                    } catch {
-                        MXLog.error("Failed subscribing to rooms with error: \(error)")
-                    }
                 }
             }
             .store(in: &cancellables)
