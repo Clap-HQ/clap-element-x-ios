@@ -101,7 +101,11 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
             return buildLocationTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, locationMessageContent, isOutgoing)
         case .gallery(let galleryMessageContent):
             return buildGalleryTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, galleryMessageContent, isOutgoing)
-        case .other:
+        case .other(let msgtype, let body):
+            // Check for ClapBot DivKit messages
+            if msgtype == "ac.clap.divkit" {
+                return buildDivKitTimelineItem(for: eventItemProxy, messageLikeContent, fallbackText: body, isOutgoing: isOutgoing)
+            }
             return nil
         }
     }
@@ -338,7 +342,11 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                           _ info: MatrixRustSDK.ImageInfo,
                                           _ mediaSource: MediaSource,
                                           _ isOutgoing: Bool) -> RoomTimelineItemProtocol {
-        let imageInfo = ImageInfoProxy(source: mediaSource, width: info.width, height: info.height, mimeType: info.mimetype, fileSize: info.size.map(UInt.init))
+        let imageInfo = ImageInfoProxy(source: mediaSource,
+                                       width: info.width,
+                                       height: info.height,
+                                       mimeType: info.mimetype,
+                                       fileSize: info.size.flatMap { UInt(exactly: $0) })
         
         return StickerRoomTimelineItem(id: eventItemProxy.id,
                                        body: body,
@@ -511,7 +519,7 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                             duration: messageContent.audio?.duration ?? 0,
                                             waveform: waveform,
                                             source: MediaSourceProxy(source: messageContent.source, mimeType: messageContent.info?.mimetype),
-                                            fileSize: messageContent.info?.size.map(UInt.init),
+                                            fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) },
                                             contentType: UTType(mimeType: messageContent.info?.mimetype, fallbackFilename: messageContent.filename))
     }
     
@@ -523,13 +531,13 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                            width: messageContent.info?.thumbnailInfo?.width,
                                            height: messageContent.info?.thumbnailInfo?.height,
                                            mimeType: messageContent.info?.thumbnailInfo?.mimetype,
-                                           fileSize: messageContent.info?.size.map(UInt.init))
+                                            fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) })
         
         let imageInfo = ImageInfoProxy(source: messageContent.source,
                                        width: messageContent.info?.width,
                                        height: messageContent.info?.height,
                                        mimeType: messageContent.info?.mimetype,
-                                       fileSize: messageContent.info?.size.map(UInt.init))
+                                        fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) })
         
         return .init(filename: messageContent.filename,
                      caption: messageContent.caption,
@@ -549,14 +557,14 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                            width: messageContent.info?.thumbnailInfo?.width,
                                            height: messageContent.info?.thumbnailInfo?.height,
                                            mimeType: messageContent.info?.thumbnailInfo?.mimetype,
-                                           fileSize: messageContent.info?.size.map(UInt.init))
+                      fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) })
         
         let videoInfo = VideoInfoProxy(source: messageContent.source,
                                        duration: messageContent.info?.duration ?? 0,
                                        width: messageContent.info?.width,
                                        height: messageContent.info?.height,
                                        mimeType: messageContent.info?.mimetype,
-                                       fileSize: messageContent.info?.size.map(UInt.init))
+                      fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) })
         
         return .init(filename: messageContent.filename,
                      caption: messageContent.caption,
@@ -585,7 +593,7 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                      formattedCaption: formattedCaption,
                      formattedCaptionHTMLString: htmlCaption,
                      source: MediaSourceProxy(source: messageContent.source, mimeType: messageContent.info?.mimetype),
-                     fileSize: messageContent.info?.size.map(UInt.init),
+                                            fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) },
                      thumbnailSource: thumbnailSource,
                      contentType: UTType(mimeType: messageContent.info?.mimetype, fallbackFilename: messageContent.filename))
     }
@@ -742,6 +750,68 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                          isEditable: eventItemProxy.isEditable,
                                          canBeRepliedTo: eventItemProxy.canBeRepliedTo,
                                          sender: eventItemProxy.sender)
+    }
+    
+    // MARK: - DivKit (ClapBot Server-Driven UI)
+    
+    private func buildDivKitTimelineItem(for eventItemProxy: EventTimelineItemProxy,
+                                         _ messageLikeContent: MsgLikeContent,
+                                         fallbackText: String,
+                                         isOutgoing: Bool) -> RoomTimelineItemProtocol? {
+        guard let originalJSON = eventItemProxy.debugInfo.originalJSON,
+              let jsonData = originalJSON.data(using: .utf8),
+              let eventDict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+              let content = eventDict["content"] as? [String: Any],
+              let divKitDict = content["ac.clap.divkit"] as? [String: Any] else {
+            MXLog.warning("DivKit: Failed to extract ac.clap.divkit content from originalJSON")
+            return buildUnsupportedTimelineItem(eventItemProxy, "ac.clap.divkit", "Missing DivKit content", isOutgoing)
+        }
+        
+        guard let version = divKitDict["version"] as? String,
+              let messageTypeString = divKitDict["message_type"] as? String,
+              let cardDict = divKitDict["card"] as? [String: Any] else {
+            MXLog.warning("DivKit: Failed to parse DivKit content fields")
+            return buildUnsupportedTimelineItem(eventItemProxy, "ac.clap.divkit", "Invalid DivKit content", isOutgoing)
+        }
+        
+        // DivKit expects { "card": { "log_id": ..., "states": [...] } } envelope
+        let divKitEnvelope: [String: Any] = ["card": cardDict]
+        guard let cardData = try? JSONSerialization.data(withJSONObject: divKitEnvelope) else {
+            MXLog.warning("DivKit: Failed to serialize DivKit envelope")
+            return buildUnsupportedTimelineItem(eventItemProxy, "ac.clap.divkit", "Failed to wrap DivKit card", isOutgoing)
+        }
+        
+        let requestID = divKitDict["request_id"] as? String
+        let cardLogID = cardDict["log_id"] as? String
+        let messageType = DivKitMessageType(rawValue: messageTypeString) ?? .unknown
+        
+        let divKitContent = DivKitRoomTimelineItemContent(
+            cardData: cardData,
+            fallbackText: fallbackText,
+            messageType: messageType,
+            requestID: requestID,
+            version: version,
+            cardLogID: cardLogID
+        )
+        
+        return DivKitRoomTimelineItem(
+            id: eventItemProxy.id,
+            timestamp: eventItemProxy.timestamp,
+            isOutgoing: isOutgoing,
+            isEditable: false,
+            canBeRepliedTo: false,
+            sender: eventItemProxy.sender,
+            content: divKitContent,
+            properties: .init(
+                replyDetails: buildTimelineItemReplyDetails(messageLikeContent.inReplyTo),
+                isThreaded: messageLikeContent.threadRoot != nil,
+                threadSummary: buildTimelineItemThreadSummary(messageLikeContent.threadSummary),
+                reactions: buildAggregatedReactions(messageLikeContent.reactions),
+                deliveryStatus: eventItemProxy.deliveryStatus,
+                orderedReadReceipts: buildOrderedReadReceipts(eventItemProxy.readReceipts),
+                encryptionAuthenticity: buildEncryptionAuthenticity(eventItemProxy.shieldState)
+            )
+        )
     }
     
     // MARK: - State Events
