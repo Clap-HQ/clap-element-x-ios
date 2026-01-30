@@ -1,0 +1,101 @@
+//
+// Copyright 2025 Clap Inc.
+//
+// SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
+// Please see LICENSE files in the repository root for full details.
+//
+
+import DivKit
+import Foundation
+
+@MainActor
+final class DivKitComponentsProvider {
+    static let shared = DivKitComponentsProvider()
+
+    let components: DivKitComponents
+    private let actionRouter: DivKitActionRouter
+    private let errorReporter: DivKitErrorReporter
+    private var registeredCardIDs: Set<String> = []
+
+    private init() {
+        let router = DivKitActionRouter()
+        let reporter = DivKitErrorReporter()
+        self.actionRouter = router
+        self.errorReporter = reporter
+        self.components = DivKitComponents(reporter: reporter, urlHandler: router)
+    }
+
+    func setActionHandler(for cardID: String, handler: @escaping (URL) -> Void) {
+        registeredCardIDs.insert(cardID)
+        actionRouter.handlers[cardID] = handler
+    }
+
+    func removeActionHandler(for cardID: String) {
+        actionRouter.handlers.removeValue(forKey: cardID)
+        removeCardIDIfFullyCleanedUp(cardID)
+    }
+
+    func setErrorHandler(for cardID: String, handler: @escaping () -> Void) {
+        errorReporter.handlers[cardID] = handler
+    }
+
+    func removeErrorHandler(for cardID: String) {
+        errorReporter.handlers.removeValue(forKey: cardID)
+        removeCardIDIfFullyCleanedUp(cardID)
+    }
+
+    private func removeCardIDIfFullyCleanedUp(_ cardID: String) {
+        if actionRouter.handlers[cardID] == nil, errorReporter.handlers[cardID] == nil {
+            registeredCardIDs.remove(cardID)
+        }
+    }
+
+    func resetAllCardState() {
+        for cardID in registeredCardIDs {
+            components.reset(cardId: DivCardID(rawValue: cardID))
+        }
+        actionRouter.handlers.removeAll()
+        errorReporter.handlers.removeAll()
+        registeredCardIDs.removeAll()
+    }
+}
+
+// MARK: - Action Router
+
+// Note: div-action:// URLs (internal DivKit state changes like expand/collapse)
+// are handled by DivKit's DivActionHandler internally and never reach this handler.
+// The clap:// scheme check in handleDivKitAction provides additional safety.
+private final class DivKitActionRouter: DivUrlHandler {
+    var handlers: [String: (URL) -> Void] = [:]
+
+    func handle(_ url: URL, info: DivActionInfo, sender: AnyObject?) {
+        let cardID = info.cardId.rawValue
+        if let handler = handlers[cardID] {
+            handler(url)
+        } else {
+            MXLog.warning("DivKit: No action handler registered for card '\(cardID)', URL: \(url)")
+        }
+    }
+}
+
+// MARK: - Error Reporter
+
+private final class DivKitErrorReporter: DivReporter {
+    var handlers: [String: () -> Void] = [:]
+
+    func reportError(cardId: DivCardID, error: DivError) {
+        let cardIDString = cardId.rawValue
+        MXLog.warning("DivKit: Error for card '\(cardIDString)': \(error.message) (kind: \(error.kind), level: \(error.level))")
+
+        // Only trigger fallback for fatal errors (deserialization/block modeling), not warnings or expression errors
+        guard error.level == .error,
+              error.kind == .deserialization || error.kind == .blockModeling else {
+            return
+        }
+
+        if let handler = handlers[cardIDString] {
+            handler()
+            handlers.removeValue(forKey: cardIDString)
+        }
+    }
+}
