@@ -97,6 +97,9 @@ packages:
     url: https://github.com/element-hq/matrix-rich-text-editor-swift
     exactVersion: 2.41.0
     # path: ../matrix-rich-text-editor/platforms/ios/lib/WysiwygComposer
+  DivKit:
+    url: https://github.com/divkit/divkit-ios
+    minorVersion: 32.0.0
   
   # External dependencies
   Algorithms:

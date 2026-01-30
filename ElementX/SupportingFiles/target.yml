@@ -295,6 +295,7 @@ targets:
     - package: SwiftSoup
     - package: DSWaveformImage
       product: DSWaveformImageViews
+    - package: DivKit
 
     sources:
     - path: ../Sources
