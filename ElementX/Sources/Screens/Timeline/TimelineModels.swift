@@ -68,6 +68,7 @@ enum TimelineViewAction {
     case handlePasteOrDrop(providers: [NSItemProvider])
     case handlePollAction(TimelineViewPollAction)
     case handleAudioPlayerAction(TimelineAudioPlayerAction)
+    case handleDivKitAction(message: String, itemID: TimelineItemIdentifier)
     
     /// Focus the timeline onto the specified event ID (switching to a detached timeline if needed).
     case focusOnEventID(String)
@@ -120,6 +121,8 @@ struct TimelineViewState: BindableState {
     // The `pinnedEventIDs` are used only to determine if an item is already pinned or not.
     // It's updated from the room info, so it's faster than using the timeline
     var pinnedEventIDs: Set<String> = []
+    
+    var actedDivKitItemIDs: Set<TimelineItemIdentifier> = []
     
     /// A closure providing the associated audio player state for an item in the timeline.
     var audioPlayerStateProvider: (@MainActor (_ itemId: TimelineItemIdentifier) -> AudioPlayerState?)?

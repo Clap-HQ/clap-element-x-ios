@@ -197,6 +197,9 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
             handlePollAction(pollAction)
         case .handleAudioPlayerAction(let audioPlayerAction):
             handleAudioPlayerAction(audioPlayerAction)
+        case .handleDivKitAction(let message, let itemID):
+            state.actedDivKitItemIDs.insert(itemID)
+            Task { await sendDivKitActionMessage(message) }
         case .focusOnEventID(let eventID):
             Task { await focusOnEvent(eventID: eventID) }
         case .focusLive:
@@ -696,6 +699,17 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
         }
         
         actionsSubject.send(.displayRoom(roomID: resolvedAlias.roomId, via: resolvedAlias.servers))
+    }
+
+    private func sendDivKitActionMessage(_ message: String) async {
+        guard !message.isEmpty else {
+            return
+        }
+        await timelineController.sendMessage(message,
+                                             html: nil,
+                                             inReplyToEventID: nil,
+                                             intentionalMentions: .empty)
+        scrollToBottom()
     }
     
     private func sendCurrentMessage(_ message: String, html: String?, mode: ComposerMode, intentionalMentions: IntentionalMentions) async {
