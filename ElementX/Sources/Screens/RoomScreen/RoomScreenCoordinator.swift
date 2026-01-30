@@ -223,6 +223,7 @@ final class RoomScreenCoordinator: CoordinatorProtocol {
     func stop() {
         composerViewModel.stop()
         roomViewModel.stop()
+        DivKitComponentsProvider.shared.resetAllCardState()
     }
     
     func toPresentable() -> AnyView {
