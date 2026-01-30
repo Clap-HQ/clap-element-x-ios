@@ -18,6 +18,7 @@ enum EventBasedMessageTimelineItemContentType: Hashable {
     case video(VideoRoomTimelineItemContent)
     case location(LocationRoomTimelineItemContent)
     case voice(AudioRoomTimelineItemContent)
+    case divKit(DivKitRoomTimelineItemContent)
 }
 
 protocol EventBasedMessageTimelineItemProtocol: EventBasedTimelineItemProtocol {
@@ -29,7 +30,7 @@ extension EventBasedMessageTimelineItemProtocol {
         switch contentType {
         case .audio, .file, .image, .video:
             true
-        case .emote, .notice, .text, .location, .voice:
+        case .emote, .notice, .text, .location, .voice, .divKit:
             false
         }
     }
@@ -44,7 +45,7 @@ extension EventBasedMessageTimelineItemProtocol {
             content.caption
         case .video(let content):
             content.caption
-        case .emote, .notice, .text, .location, .voice:
+        case .emote, .notice, .text, .location, .voice, .divKit:
             nil
         }
     }
