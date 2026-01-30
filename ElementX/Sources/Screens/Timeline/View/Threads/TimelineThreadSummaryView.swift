@@ -82,6 +82,12 @@ struct TimelineThreadSummaryView: View {
                                plainBody: L10n.commonSharedLocation,
                                formattedBody: nil,
                                numberOfReplies: numberOfReplies)
+                case .divKit(let content):
+                    ThreadView(senderID: senderID,
+                               sender: sender,
+                               plainBody: content.fallbackText,
+                               formattedBody: nil,
+                               numberOfReplies: numberOfReplies)
                 }
             case .poll(let question):
                 ThreadView(senderID: senderID,

@@ -77,6 +77,12 @@ struct TimelineReplyView: View {
                                   formattedBody: nil,
                                   icon: .init(kind: .icon(\.locationPin), cornerRadii: iconCornerRadii),
                                   isOutgoing: isOutgoing)
+                    case .divKit(let content):
+                        ReplyView(sender: sender,
+                                  plainBody: content.fallbackText,
+                                  formattedBody: nil,
+                                  icon: .init(kind: .systemIcon("rectangle.stack"), cornerRadii: iconCornerRadii),
+                                  isOutgoing: isOutgoing)
                     }
                 case .poll(let question):
                     ReplyView(sender: sender,
