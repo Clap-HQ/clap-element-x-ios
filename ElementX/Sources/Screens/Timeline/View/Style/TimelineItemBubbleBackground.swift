@@ -16,10 +16,12 @@ extension View {
     ///   - color: self explanatory, defaults to subtle secondary
     func bubbleBackground(isOutgoing: Bool = true,
                           insets: EdgeInsets = .init(top: 10, leading: 12, bottom: 10, trailing: 12),
-                          color: Color? = .compound.bgSubtleSecondary) -> some View {
+                          color: Color? = .compound.bgSubtleSecondary,
+                          cornerRadius: CGFloat = 20) -> some View {
         modifier(TimelineItemBubbleBackgroundModifier(isOutgoing: isOutgoing,
                                                       insets: insets,
-                                                      color: color))
+                                                      color: color,
+                                                      cornerRadius: cornerRadius))
     }
 }
 
@@ -29,12 +31,13 @@ private struct TimelineItemBubbleBackgroundModifier: ViewModifier {
     let isOutgoing: Bool
     let insets: EdgeInsets
     var color: Color?
+    var cornerRadius: CGFloat
 
     func body(content: Content) -> some View {
         content
             .padding(insets)
             .background(color)
-            .cornerRadius(20, corners: roundedCorners)
+            .cornerRadius(cornerRadius, corners: roundedCorners)
     }
     
     private var roundedCorners: UIRectCorner {
