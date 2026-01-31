@@ -109,11 +109,11 @@ import SwiftUI
     /// Action invoked when the bottom accessory button is tapped.
     var bottomAccessoryAction: (() -> Void)?
 
-    /// Tag value for the search tab (iOS 26+). Must be set for the search tab to work properly.
-    var searchTag: Tag?
+    /// Tag value for the agent tab. Must be set for the agent tab to work properly.
+    var agentTag: Tag?
 
-    /// Internal delegate for intercepting search tab selection (iOS 26+)
-    fileprivate var searchTabBarDelegate: SearchTabBarDelegate?
+    /// Internal delegate for intercepting agent tab selection
+    fileprivate var agentTabBarDelegate: AgentTabBarDelegate?
 
     // MARK: Sheets
     
@@ -363,27 +363,30 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
                 .badge(module.details.badgeCount)
             }
 
-            if let searchTag = navigationTabCoordinator.searchTag {
-                Tab(value: searchTag, role: .search) {
+            if let agentTag = navigationTabCoordinator.agentTag {
+                Tab(value: agentTag, role: .search) {
                     Color.clear
                 } label: {
-                    Label("Agent", systemImage: "sparkles")
+                    Label {
+                        Text("Agent")
+                    } icon: {
+                        Image(asset: Asset.Images.agentIcon)
+                    }
                 }
             }
         }
         .introspect(.tabView, on: .supportedVersions) { tabBarController in
-            configureSearchTabInterception(tabBarController)
+            configureAgentTabInterception(tabBarController)
         }
     }
 
-    private func configureSearchTabInterception(_ tabBarController: UITabBarController) {
+    private func configureAgentTabInterception(_ tabBarController: UITabBarController) {
         guard #available(iOS 26.0, *) else { return }
 
-        // Create delegate if needed
-        if navigationTabCoordinator.searchTabBarDelegate == nil {
-            let delegate = SearchTabBarDelegate()
-            delegate.searchTabIndex = navigationTabCoordinator.tabModules.count // Search tab is after all regular tabs
-            delegate.onSearchTapped = { [weak navigationTabCoordinator] in
+        if navigationTabCoordinator.agentTabBarDelegate == nil {
+            let delegate = AgentTabBarDelegate()
+            delegate.agentTabIndex = navigationTabCoordinator.tabModules.count
+            delegate.onAgentTapped = { [weak navigationTabCoordinator] in
                 navigationTabCoordinator?.bottomAccessoryAction?()
             }
             delegate.onTabSelected = { [weak navigationTabCoordinator] index in
@@ -391,11 +394,10 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
                       index < navigationTabCoordinator.tabModules.count else { return }
                 navigationTabCoordinator.selectedTab = navigationTabCoordinator.tabModules[index].details.tag
             }
-            navigationTabCoordinator.searchTabBarDelegate = delegate
+            navigationTabCoordinator.agentTabBarDelegate = delegate
         }
 
-        // Set delegate to intercept tab selection
-        tabBarController.delegate = navigationTabCoordinator.searchTabBarDelegate
+        tabBarController.delegate = navigationTabCoordinator.agentTabBarDelegate
     }
 
     private var legacyTabView: some View {
@@ -418,29 +420,32 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
             legacyBotTab
         }
         .introspect(.tabView, on: .supportedVersions) { tabBarController in
-            configureLegacySearchTabInterception(tabBarController)
+            configureLegacyAgentTabInterception(tabBarController)
         }
     }
 
     @ViewBuilder
     private var legacyBotTab: some View {
-        if let searchTag = navigationTabCoordinator.searchTag {
+        if let agentTag = navigationTabCoordinator.agentTag {
             Color.clear
                 .tabItem {
-                    Label("Agent", systemImage: "sparkles")
+                    Label {
+                        Text("Agent")
+                    } icon: {
+                        Image(asset: Asset.Images.agentIcon)
+                    }
                 }
-                .tag(searchTag)
+                .tag(agentTag)
         }
     }
 
-    private func configureLegacySearchTabInterception(_ tabBarController: UITabBarController) {
-        guard navigationTabCoordinator.searchTag != nil else { return }
+    private func configureLegacyAgentTabInterception(_ tabBarController: UITabBarController) {
+        guard navigationTabCoordinator.agentTag != nil else { return }
 
-        // Create delegate if needed
-        if navigationTabCoordinator.searchTabBarDelegate == nil {
-            let delegate = SearchTabBarDelegate()
-            delegate.searchTabIndex = navigationTabCoordinator.tabModules.count
-            delegate.onSearchTapped = { [weak navigationTabCoordinator] in
+        if navigationTabCoordinator.agentTabBarDelegate == nil {
+            let delegate = AgentTabBarDelegate()
+            delegate.agentTabIndex = navigationTabCoordinator.tabModules.count
+            delegate.onAgentTapped = { [weak navigationTabCoordinator] in
                 navigationTabCoordinator?.bottomAccessoryAction?()
             }
             delegate.onTabSelected = { [weak navigationTabCoordinator] index in
@@ -448,11 +453,10 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
                       index < navigationTabCoordinator.tabModules.count else { return }
                 navigationTabCoordinator.selectedTab = navigationTabCoordinator.tabModules[index].details.tag
             }
-            navigationTabCoordinator.searchTabBarDelegate = delegate
+            navigationTabCoordinator.agentTabBarDelegate = delegate
         }
 
-        // Set delegate to intercept tab selection
-        tabBarController.delegate = navigationTabCoordinator.searchTabBarDelegate
+        tabBarController.delegate = navigationTabCoordinator.agentTabBarDelegate
     }
 
     private func configureAppearance(_ tabBarController: UITabBarController) {
@@ -464,23 +468,20 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
     }
 }
 
-// MARK: - Search Tab Bar Delegate
+// MARK: - Agent Tab Bar Delegate
 
-/// Delegate that intercepts search tab selection and triggers an action instead of switching tabs
-private class SearchTabBarDelegate: NSObject, UITabBarControllerDelegate {
-    var searchTabIndex: Int = 0
-    var onSearchTapped: (() -> Void)?
+private class AgentTabBarDelegate: NSObject, UITabBarControllerDelegate {
+    var agentTabIndex: Int = 0
+    var onAgentTapped: (() -> Void)?
     var onTabSelected: ((Int) -> Void)?
 
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        // Get the index of the view controller being selected
         guard let index = tabBarController.viewControllers?.firstIndex(of: viewController) else {
             return true
         }
 
-        // If it's the search tab, trigger action and prevent selection
-        if index == searchTabIndex {
-            onSearchTapped?()
+        if index == agentTabIndex {
+            onAgentTapped?()
             return false
         }
 
@@ -488,7 +489,6 @@ private class SearchTabBarDelegate: NSObject, UITabBarControllerDelegate {
     }
 
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        // Sync the selected tab back to SwiftUI state
         guard let index = tabBarController.viewControllers?.firstIndex(of: viewController) else {
             return
         }
