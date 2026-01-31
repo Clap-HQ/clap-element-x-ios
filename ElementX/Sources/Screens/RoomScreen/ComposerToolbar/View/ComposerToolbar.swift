@@ -105,11 +105,13 @@ struct ComposerToolbar: View {
             if !context.composerFormattingEnabled {
                 // 통합된 입력창 스타일
                 HStack(alignment: .bottom, spacing: 0) {
-                    RoomAttachmentPicker(context: context)
-                        .frame(width: 34, height: 34)
-                        .padding(.leading, 5)
-                        .padding(.trailing, 10)
-                        .padding(.bottom, 5)
+                    if !context.viewState.availableAttachments.isEmpty {
+                        RoomAttachmentPicker(context: context)
+                            .frame(width: 34, height: 34)
+                            .padding(.leading, 5)
+                            .padding(.trailing, 10)
+                            .padding(.bottom, 5)
+                    }
 
                     messageComposer
                         .frame(minHeight: 44)
@@ -125,7 +127,7 @@ struct ComposerToolbar: View {
                             .padding(.leading, 10)
                             .padding(.trailing, 5)
                             .padding(.bottom, 5)
-                    } else {
+                    } else if context.viewState.showVoiceMessageButton {
                         voiceMessageRecordingButton(mode: context.viewState.isVoiceMessageModeActivated ? .recording : .idle)
                             .padding(.leading, 10)
                             .padding(.trailing, 5)
