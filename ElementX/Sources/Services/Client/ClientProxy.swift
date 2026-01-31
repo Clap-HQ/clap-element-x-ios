@@ -63,6 +63,15 @@ class ClientProxy: ClientProxyProtocol {
     let matrixAPI: MatrixAPIServiceProtocol
 
     let clapAPI: ClapAPIServiceProtocol
+    
+    private static let clapBotUserID = "@clap-bot-rs:\(InfoPlistReader.main.clapHomeserver)"
+    private let clapBotRoomIDSubject = CurrentValueSubject<String?, Never>(nil)
+    
+    var clapBotRoomID: String? { clapBotRoomIDSubject.value }
+    
+    var clapBotRoomIDPublisher: CurrentValuePublisher<String?, Never> {
+        clapBotRoomIDSubject.asCurrentValuePublisher()
+    }
 
     private static var roomCreationPowerLevelOverrides: PowerLevels {
         .init(usersDefault: nil,
@@ -220,6 +229,21 @@ class ClientProxy: ClientProxyProtocol {
                 if reachability == .reachable {
                     self?.startSync()
                 }
+            }
+            .store(in: &cancellables)
+        
+        staticRoomSummaryProvider.roomListPublisher
+            .map { [weak self] summaries -> String? in
+                guard let self else { return nil }
+                return summaries.first(where: { summary in
+                    summary.isDirect &&
+                    summary.heroes.contains { $0.userID == Self.clapBotUserID } &&
+                    summary.room.encryptionState() != .encrypted
+                })?.id
+            }
+            .removeDuplicates()
+            .sink { [weak self] roomID in
+                self?.clapBotRoomIDSubject.send(roomID)
             }
             .store(in: &cancellables)
 

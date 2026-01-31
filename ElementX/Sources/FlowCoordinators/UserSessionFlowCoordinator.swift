@@ -311,26 +311,20 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
     }
 
     private func openClapBotDM() async {
-        let clapBotUserID = "@clap-bot-rs:\(InfoPlistReader.main.clapHomeserver)"
-        MXLog.info("Opening ClapBot DM with user: \(clapBotUserID)")
-
         let provider = userSession.clientProxy.staticRoomSummaryProvider
         if !provider.statePublisher.value.isLoaded {
             _ = await provider.statePublisher.values.first { $0.isLoaded }
         }
         
-        let allRooms = provider.roomListPublisher.value
-        if let unencryptedRoom = allRooms.first(where: { summary in
-            summary.isDirect &&
-            summary.heroes.contains { $0.userID == clapBotUserID } &&
-            summary.room.encryptionState() != .encrypted
-        }) {
-            MXLog.info("Found unencrypted ClapBot DM room: \(unencryptedRoom.id)")
-            presentAgentFlow(roomID: unencryptedRoom.id)
+        try? await Task.sleep(for: .milliseconds(50))
+        
+        if let roomID = userSession.clientProxy.clapBotRoomID {
+            MXLog.info("Found ClapBot DM room: \(roomID)")
+            presentAgentFlow(roomID: roomID)
             return
         }
 
-        MXLog.warning("No unencrypted ClapBot DM room found")
+        MXLog.warning("No ClapBot DM room found")
         flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapBotNotFound)
     }
 

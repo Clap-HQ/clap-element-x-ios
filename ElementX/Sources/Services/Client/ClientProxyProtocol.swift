@@ -183,6 +183,12 @@ protocol ClientProxyProtocol: AnyObject {
 
     /// Clap-specific REST API calls (/_clap/...)
     var clapAPI: ClapAPIServiceProtocol { get }
+    
+    /// Room ID of the unencrypted ClapBot DM (used by Agent screen)
+    var clapBotRoomID: String? { get }
+    
+    /// Publisher for clapBotRoomID changes
+    var clapBotRoomIDPublisher: CurrentValuePublisher<String?, Never> { get }
 
     var isReportRoomSupported: Bool { get async }
     
