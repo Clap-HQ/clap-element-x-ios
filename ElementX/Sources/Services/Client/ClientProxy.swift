@@ -66,8 +66,10 @@ class ClientProxy: ClientProxyProtocol {
     
     private static let clapBotUserID = "@clap-bot-rs:\(InfoPlistReader.main.clapHomeserver)"
     private let clapBotRoomIDSubject = CurrentValueSubject<String?, Never>(nil)
+    private let clapBotInviteRoomIDSubject = CurrentValueSubject<String?, Never>(nil)
     
     var clapBotRoomID: String? { clapBotRoomIDSubject.value }
+    var clapBotInviteRoomID: String? { clapBotInviteRoomIDSubject.value }
     
     var clapBotRoomIDPublisher: CurrentValuePublisher<String?, Never> {
         clapBotRoomIDSubject.asCurrentValuePublisher()
@@ -233,17 +235,29 @@ class ClientProxy: ClientProxyProtocol {
             .store(in: &cancellables)
         
         staticRoomSummaryProvider.roomListPublisher
-            .map { [weak self] summaries -> String? in
-                guard let self else { return nil }
-                return summaries.first(where: { summary in
-                    summary.isDirect &&
-                    summary.heroes.contains { $0.userID == Self.clapBotUserID } &&
-                    summary.room.encryptionState() != .encrypted
-                })?.id
+            .map { summaries -> (joined: String?, invited: String?) in
+                let clapBotRooms = summaries.filter { summary in
+                    guard summary.isDirect, summary.room.encryptionState() != .encrypted else { return false }
+                    
+                    if summary.heroes.contains(where: { $0.userID == Self.clapBotUserID }) {
+                        return true
+                    }
+                    
+                    if case .invite(let inviter) = summary.joinRequestType,
+                       inviter?.userID == Self.clapBotUserID {
+                        return true
+                    }
+                    
+                    return false
+                }
+                let joinedRoomID = clapBotRooms.first { $0.joinRequestType == nil }?.id
+                let invitedRoomID = clapBotRooms.first { $0.joinRequestType != nil }?.id
+                return (joinedRoomID, invitedRoomID)
             }
-            .removeDuplicates()
-            .sink { [weak self] roomID in
-                self?.clapBotRoomIDSubject.send(roomID)
+            .removeDuplicates { $0 == $1 }
+            .sink { [weak self] result in
+                self?.clapBotRoomIDSubject.send(result.joined)
+                self?.clapBotInviteRoomIDSubject.send(result.invited)
             }
             .store(in: &cancellables)
 

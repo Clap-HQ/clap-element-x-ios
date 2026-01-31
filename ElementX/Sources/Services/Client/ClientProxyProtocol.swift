@@ -187,6 +187,9 @@ protocol ClientProxyProtocol: AnyObject {
     /// Room ID of the unencrypted ClapBot DM (used by Agent screen)
     var clapBotRoomID: String? { get }
     
+    /// Room ID of the pending ClapBot DM invite
+    var clapBotInviteRoomID: String? { get }
+    
     /// Publisher for clapBotRoomID changes
     var clapBotRoomIDPublisher: CurrentValuePublisher<String?, Never> { get }
 

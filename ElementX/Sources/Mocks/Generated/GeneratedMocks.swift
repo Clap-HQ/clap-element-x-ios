@@ -2313,6 +2313,11 @@ class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
         set(value) { underlyingClapBotRoomID = value }
     }
     var underlyingClapBotRoomID: String?
+    var clapBotInviteRoomID: String? {
+        get { return underlyingClapBotInviteRoomID }
+        set(value) { underlyingClapBotInviteRoomID = value }
+    }
+    var underlyingClapBotInviteRoomID: String?
     var clapBotRoomIDPublisher: CurrentValuePublisher<String?, Never> {
         get { return underlyingClapBotRoomIDPublisher }
         set(value) { underlyingClapBotRoomIDPublisher = value }

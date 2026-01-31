@@ -20,6 +20,8 @@ enum UserSessionFlowCoordinatorAction {
 }
 
 class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
+    private static let loadingIndicatorIdentifier = "\(UserSessionFlowCoordinator.self)-Loading"
+    
     enum HomeTab: Hashable { case chats, spaces, search }
     
     private let navigationRootCoordinator: NavigationRootCoordinator
@@ -323,6 +325,33 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
             presentAgentFlow(roomID: roomID)
             return
         }
+        
+        if let inviteRoomID = userSession.clientProxy.clapBotInviteRoomID {
+            MXLog.info("Found ClapBot DM invite, accepting: \(inviteRoomID)")
+            showLoadingIndicator()
+            defer { hideLoadingIndicator() }
+            
+            let result = await userSession.clientProxy.joinRoom(inviteRoomID, via: [])
+            switch result {
+            case .success:
+                await withTaskGroup(of: Void.self) { [weak self] group in
+                    guard let self else { return }
+                    group.addTask {
+                        _ = await self.userSession.clientProxy.clapBotRoomIDPublisher.values.first { $0 == inviteRoomID }
+                    }
+                    group.addTask {
+                        try? await Task.sleep(for: .seconds(5))
+                    }
+                    await group.next()
+                    group.cancelAll()
+                }
+                presentAgentFlow(roomID: inviteRoomID)
+            case .failure(let error):
+                MXLog.error("Failed to accept ClapBot DM invite: \(error)")
+                flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapBotNotFound)
+            }
+            return
+        }
 
         MXLog.warning("No ClapBot DM room found")
         flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapBotNotFound)
@@ -610,6 +639,18 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
             .store(in: &cancellables)
         
         navigationTabCoordinator.setSheetCoordinator(coordinator, animated: true)
+    }
+    
+    private func showLoadingIndicator(delay: Duration? = nil) {
+        flowParameters.userIndicatorController.submitIndicator(UserIndicator(id: Self.loadingIndicatorIdentifier,
+                                                                             type: .modal,
+                                                                             title: L10n.commonLoading,
+                                                                             persistent: true),
+                                                               delay: delay)
+    }
+    
+    private func hideLoadingIndicator() {
+        flowParameters.userIndicatorController.retractIndicatorWithId(Self.loadingIndicatorIdentifier)
     }
 }
 
