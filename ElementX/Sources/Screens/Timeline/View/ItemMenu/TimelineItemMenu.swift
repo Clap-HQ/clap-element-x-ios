@@ -332,16 +332,17 @@ struct TimelineItemMenu_Previews: PreviewProvider, TestablePreview {
                             deliveryStatus: TimelineItemDeliveryStatus? = nil) -> (EventBasedTimelineItemProtocol, TimelineItemMenuActions)! {
         guard var item = makeItem(itemType: itemType) else { return nil }
         let provider = TimelineItemMenuActionProvider(timelineItem: item,
-                                                      canCurrentUserSendMessage: true,
-                                                      canCurrentUserRedactSelf: true,
-                                                      canCurrentUserRedactOthers: false,
-                                                      canCurrentUserPin: true,
-                                                      pinnedEventIDs: [],
-                                                      isDM: true,
-                                                      isViewSourceEnabled: true,
-                                                      areThreadsEnabled: true,
-                                                      timelineKind: .live,
-                                                      emojiProvider: EmojiProvider(appSettings: ServiceLocator.shared.settings))
+                                                       canCurrentUserSendMessage: true,
+                                                       canCurrentUserRedactSelf: true,
+                                                       canCurrentUserRedactOthers: false,
+                                                       canCurrentUserPin: true,
+                                                       pinnedEventIDs: [],
+                                                       isDM: true,
+                                                       isViewSourceEnabled: true,
+                                                       areThreadsEnabled: true,
+                                                       timelineKind: .live,
+                                                       isMenuMinimal: false,
+                                                       emojiProvider: EmojiProvider(appSettings: ServiceLocator.shared.settings))
         guard let actions = provider.makeActions() else { return nil }
         
         if var textItem = item as? TextRoomTimelineItem {

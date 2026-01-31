@@ -13,6 +13,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     @EnvironmentObject private var context: TimelineViewModel.Context
     @Environment(\.timelineGroupStyle) private var timelineGroupStyle
     @Environment(\.focussedEventID) private var focussedEventID
+    @Environment(\.isTimelineMenuMinimal) private var isTimelineMenuMinimal
     
     let timelineItem: EventBasedTimelineItemProtocol
     let adjustedDeliveryStatus: TimelineItemDeliveryStatus?
@@ -135,7 +136,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
             .swipeRightAction {
                 SwipeToReplyView(timelineItem: timelineItem)
             } shouldStartAction: {
-                timelineItem.canBeRepliedTo
+                !isTimelineMenuMinimal && timelineItem.canBeRepliedTo
             } action: {
                 context.send(viewAction: .handleTimelineItemMenuAction(itemID: timelineItem.id,
                                                                        action: .reply(isThread: timelineItem.properties.isThreaded)))
@@ -151,6 +152,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                                                               isViewSourceEnabled: context.viewState.isViewSourceEnabled,
                                                               areThreadsEnabled: context.viewState.areThreadsEnabled,
                                                               timelineKind: context.viewState.timelineKind,
+                                                              isMenuMinimal: isTimelineMenuMinimal,
                                                               emojiProvider: context.viewState.emojiProvider)
                 TimelineItemMacContextMenu(item: timelineItem, actionProvider: provider) { action in
                     context.send(viewAction: .handleTimelineItemMenuAction(itemID: timelineItem.id, action: action))

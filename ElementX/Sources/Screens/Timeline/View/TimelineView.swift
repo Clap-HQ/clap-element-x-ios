@@ -10,8 +10,31 @@ import SwiftUI
 import Translation
 import WysiwygComposer
 
+// MARK: - Environment
+
+private struct TimelineBackgroundColorKey: EnvironmentKey {
+    static let defaultValue: UIColor = .compound.bgCanvasClap
+}
+
+private struct TimelineMinimalMenuKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    var timelineBackgroundColor: UIColor {
+        get { self[TimelineBackgroundColorKey.self] }
+        set { self[TimelineBackgroundColorKey.self] = newValue }
+    }
+    
+    var isTimelineMenuMinimal: Bool {
+        get { self[TimelineMinimalMenuKey.self] }
+        set { self[TimelineMinimalMenuKey.self] = newValue }
+    }
+}
+
 struct TimelineView: View {
     @ObservedObject var timelineContext: TimelineViewModel.Context
+    @Environment(\.isTimelineMenuMinimal) private var isTimelineMenuMinimal
     @State private var dragOver = false
     
     var body: some View {
@@ -38,6 +61,7 @@ struct TimelineView: View {
                                                              isViewSourceEnabled: timelineContext.viewState.isViewSourceEnabled,
                                                              areThreadsEnabled: timelineContext.viewState.areThreadsEnabled,
                                                              timelineKind: timelineContext.viewState.timelineKind,
+                                                             isMenuMinimal: isTimelineMenuMinimal,
                                                              emojiProvider: timelineContext.viewState.emojiProvider)
                     .makeActions()
                 if let actions {
@@ -79,11 +103,13 @@ struct TimelineView: View {
 /// A table view wrapper that displays the timeline of a room.
 struct TimelineViewRepresentable: UIViewControllerRepresentable {
     @EnvironmentObject private var viewModelContext: TimelineViewModel.Context
+    @Environment(\.timelineBackgroundColor) private var backgroundColor
 
     func makeUIViewController(context: Context) -> TimelineTableViewController {
         let tableViewController = TimelineTableViewController(coordinator: context.coordinator,
                                                               isScrolledToBottom: $viewModelContext.isScrolledToBottom,
-                                                              scrollToBottomPublisher: viewModelContext.viewState.timelineState.scrollToBottomPublisher)
+                                                              scrollToBottomPublisher: viewModelContext.viewState.timelineState.scrollToBottomPublisher,
+                                                              backgroundColor: backgroundColor)
         return tableViewController
     }
     
