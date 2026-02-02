@@ -25,10 +25,10 @@ struct DivKitRoomTimelineView: View {
 
     private var resolvedCardData: Data {
         guard let palette = timelineItem.content.palette else {
-            return injectPaletteVariables([], into: timelineItem.content.cardData)
+            return timelineItem.content.cardData
         }
         let colors = colorScheme == .dark ? palette.dark : palette.light
-        return injectPaletteVariables(colors, into: timelineItem.content.cardData)
+        return resolvePaletteExpressions(colors, in: timelineItem.content.cardData)
     }
 
     var body: some View {
@@ -64,21 +64,12 @@ struct DivKitRoomTimelineView: View {
         }
     }
 
-    private func injectPaletteVariables(_ colors: [DivKitPaletteColor], into cardData: Data) -> Data {
-        guard var envelope = try? JSONSerialization.jsonObject(with: cardData) as? [String: Any],
-              var card = envelope["card"] as? [String: Any] else {
-            return cardData
+    private func resolvePaletteExpressions(_ colors: [DivKitPaletteColor], in cardData: Data) -> Data {
+        guard var jsonString = String(data: cardData, encoding: .utf8) else { return cardData }
+        for color in colors {
+            jsonString = jsonString.replacingOccurrences(of: "@{\(color.name)}", with: color.color)
         }
-
-        var variables = card["variables"] as? [[String: Any]] ?? []
-        let existingNames = Set(variables.compactMap { $0["name"] as? String })
-        for color in colors where !existingNames.contains(color.name) {
-            variables.append(["name": color.name, "type": "color", "value": color.color])
-        }
-        card["variables"] = variables
-        envelope["card"] = card
-
-        return (try? JSONSerialization.data(withJSONObject: envelope)) ?? cardData
+        return Data(jsonString.utf8)
     }
 
     private func handleDivKitAction(url: URL) {
@@ -462,17 +453,7 @@ struct DivKitViewRepresentable: UIViewRepresentable {
             coordinator.onHeightChanged(height)
         }
         coordinator.currentCardData = cardData
-
-        let divCardID = DivCardID(rawValue: cardID)
-        Task { @MainActor in
-            provider.components.reset(cardId: divCardID)
-            let source = DivViewSource(
-                kind: .data(cardData),
-                cardId: divCardID
-            )
-            await divView.setSource(source)
-            container.invalidateIntrinsicContentSize()
-        }
+        applySource(cardData, cardID: cardID, divView: divView, container: container, coordinator: coordinator)
 
         return container
     }
@@ -487,16 +468,21 @@ struct DivKitViewRepresentable: UIViewRepresentable {
 
         if coordinator.currentCardData != cardData {
             coordinator.currentCardData = cardData
-            let divCardID = DivCardID(rawValue: cardID)
-            Task { @MainActor in
-                DivKitComponentsProvider.shared.components.reset(cardId: divCardID)
-                let source = DivViewSource(
-                    kind: .data(cardData),
-                    cardId: divCardID
-                )
-                await container.divView.setSource(source)
-                container.invalidateIntrinsicContentSize()
-            }
+            applySource(cardData, cardID: cardID, divView: container.divView, container: container, coordinator: coordinator)
+        }
+    }
+
+    private func applySource(_ data: Data, cardID: String, divView: DivView, container: DivViewContainer, coordinator: Coordinator) {
+        coordinator.renderGeneration &+= 1
+        let generation = coordinator.renderGeneration
+        let divCardID = DivCardID(rawValue: cardID)
+
+        Task { @MainActor in
+            guard coordinator.renderGeneration == generation else { return }
+            let source = DivViewSource(kind: .data(data), cardId: divCardID)
+            await divView.setSource(source)
+            guard coordinator.renderGeneration == generation else { return }
+            container.invalidateIntrinsicContentSize()
         }
     }
 
@@ -506,18 +492,13 @@ struct DivKitViewRepresentable: UIViewRepresentable {
         let onFailure: () -> Void
         let onHeightChanged: (CGFloat) -> Void
         var currentCardData: Data?
+        var renderGeneration: UInt = 0
 
         init(cardID: String, onAction: @escaping (URL) -> Void, onFailure: @escaping () -> Void, onHeightChanged: @escaping (CGFloat) -> Void) {
             self.cardID = cardID
             self.onAction = onAction
             self.onFailure = onFailure
             self.onHeightChanged = onHeightChanged
-        }
-
-        deinit {
-            // Handler cleanup is managed by provider's setActionHandler (overwrites on re-register)
-            // and resetAllCardState(). Async cleanup in deinit causes race conditions where
-            // a newly registered handler for the same cardID gets removed.
         }
     }
 }
