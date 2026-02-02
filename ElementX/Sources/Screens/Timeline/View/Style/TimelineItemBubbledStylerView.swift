@@ -166,8 +166,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
             .timelineBubbleStyle(isOutgoing: timelineItem.isOutgoing)
             .bubbleBackground(isOutgoing: timelineItem.isOutgoing,
                               insets: timelineItem.bubbleInsets,
-                              color: timelineItem.bubbleBackgroundColor,
-                              cornerRadius: timelineItem.bubbleCornerRadius)
+                              color: timelineItem.bubbleBackgroundColor)
     }
 
     @ViewBuilder
@@ -275,15 +274,6 @@ private extension EventBasedTimelineItemProtocol {
                 properties.isThreaded ? defaultInsets : .zero
         default:
             return defaultInsets
-        }
-    }
-    
-    var bubbleCornerRadius: CGFloat {
-        switch self {
-        case is DivKitRoomTimelineItem:
-            return .zero
-        default:
-            return 20
         }
     }
 

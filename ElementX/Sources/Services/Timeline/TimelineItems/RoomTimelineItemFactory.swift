@@ -80,6 +80,10 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                           _ isOutgoing: Bool) -> RoomTimelineItemProtocol? {
         switch messageContent.msgType {
         case .text(content: let textMessageContent):
+            if hasDivKitContent(eventItemProxy) {
+                return buildDivKitTimelineItem(for: eventItemProxy, messageLikeContent, fallbackText: textMessageContent.body, isOutgoing: isOutgoing)
+                    ?? buildTextTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, textMessageContent, isOutgoing)
+            }
             return buildTextTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, textMessageContent, isOutgoing)
         case .image(content: let imageMessageContent):
             return buildImageTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, imageMessageContent, isOutgoing)
@@ -757,10 +761,11 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
         guard let originalJSON = eventItemProxy.debugInfo.originalJSON,
               let jsonData = originalJSON.data(using: .utf8),
               let eventDict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
-              let content = eventDict["content"] as? [String: Any] else {
+              let content = eventDict["content"] as? [String: Any],
+              let botDict = content["ac.clap.bot"] as? [String: Any] else {
             return false
         }
-        return content["ac.clap.divkit"] is [String: Any]
+        return botDict["card"] is [String: Any]
     }
     
     private func buildDivKitTimelineItem(for eventItemProxy: EventTimelineItemProxy,
@@ -771,36 +776,29 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
               let jsonData = originalJSON.data(using: .utf8),
               let eventDict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
               let content = eventDict["content"] as? [String: Any],
-              let divKitDict = content["ac.clap.divkit"] as? [String: Any] else {
-            MXLog.warning("DivKit: Failed to extract ac.clap.divkit content from originalJSON")
-            return buildUnsupportedTimelineItem(eventItemProxy, "ac.clap.divkit", "Missing DivKit content", isOutgoing)
+              let botDict = content["ac.clap.bot"] as? [String: Any] else {
+            MXLog.warning("DivKit: Failed to extract ac.clap.bot content from originalJSON")
+            return nil
         }
         
-        let botDict = content["ac.clap.bot"] as? [String: Any]
-        
-        guard let cardDict = divKitDict["card"] as? [String: Any] else {
-            MXLog.warning("DivKit: Failed to parse DivKit card field")
-            return buildUnsupportedTimelineItem(eventItemProxy, "ac.clap.divkit", "Invalid DivKit content", isOutgoing)
+        guard let cardDict = botDict["card"] as? [String: Any] else {
+            MXLog.warning("DivKit: Failed to parse card field in ac.clap.bot")
+            return nil
         }
         
-        let version = divKitDict["version"] as? String
-            ?? botDict?["version"] as? String
-            ?? "1.0"
-        let messageTypeString = divKitDict["message_type"] as? String
-            ?? botDict?["message_type"] as? String
-            ?? "unknown"
-        let requestID = divKitDict["request_id"] as? String
-            ?? botDict?["request_id"] as? String
+        let version = botDict["version"] as? String ?? "1.0"
+        let messageTypeString = botDict["message_type"] as? String ?? "unknown"
+        let requestID = botDict["request_id"] as? String
         
         let divKitEnvelope: [String: Any] = ["card": cardDict]
         guard let cardData = try? JSONSerialization.data(withJSONObject: divKitEnvelope) else {
             MXLog.warning("DivKit: Failed to serialize DivKit envelope")
-            return buildUnsupportedTimelineItem(eventItemProxy, "ac.clap.divkit", "Failed to wrap DivKit card", isOutgoing)
+            return nil
         }
         
         let cardLogID = cardDict["log_id"] as? String
         let messageType = DivKitMessageType(rawValue: messageTypeString) ?? .unknown
-        let palette = parseDivKitPalette(from: divKitDict)
+        let palette = parseDivKitPalette(from: botDict)
         
         let divKitContent = DivKitRoomTimelineItemContent(
             cardData: cardData,

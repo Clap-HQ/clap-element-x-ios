@@ -16,6 +16,8 @@ final class DivKitComponentsProvider {
     private let actionRouter: DivKitActionRouter
     private let errorReporter: DivKitErrorReporter
     private var registeredCardIDs: Set<String> = []
+    private var cachedDivViews: [String: DivView] = [:]
+    private var cachedHeights: [String: CGFloat] = [:]
 
     private init() {
         let router = DivKitActionRouter()
@@ -50,6 +52,26 @@ final class DivKitComponentsProvider {
         }
     }
 
+    func cachedDivView(for cardID: String) -> DivView? {
+        cachedDivViews[cardID]
+    }
+
+    func cacheDivView(_ divView: DivView, for cardID: String) {
+        cachedDivViews[cardID] = divView
+    }
+
+    func removeCachedDivView(for cardID: String) {
+        cachedDivViews.removeValue(forKey: cardID)
+    }
+
+    func cachedHeight(for cardID: String) -> CGFloat? {
+        cachedHeights[cardID]
+    }
+
+    func cacheHeight(_ height: CGFloat, for cardID: String) {
+        cachedHeights[cardID] = height
+    }
+
     func resetAllCardState() {
         for cardID in registeredCardIDs {
             components.reset(cardId: DivCardID(rawValue: cardID))
@@ -57,6 +79,8 @@ final class DivKitComponentsProvider {
         actionRouter.handlers.removeAll()
         errorReporter.handlers.removeAll()
         registeredCardIDs.removeAll()
+        cachedDivViews.removeAll()
+        cachedHeights.removeAll()
     }
 }
 

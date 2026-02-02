@@ -108,8 +108,13 @@ extension ClientProxyMock {
         spaceService = SpaceServiceProxyMock(configuration.spaceServiceConfiguration)
         linkNewDeviceServiceReturnValue = LinkNewDeviceServiceMock(.init())
         
-        matrixAPI = MatrixAPIServiceMock()
-        clapAPI = ClapAPIServiceMock()
+        let matrixAPIMock = MatrixAPIServiceMock()
+        matrixAPIMock.underlyingSpaces = MatrixSpaceAPIMock()
+        matrixAPIMock.underlyingThreads = MatrixThreadsAPIMock()
+        matrixAPI = matrixAPIMock
+        let clapAPIMock = ClapAPIServiceMock()
+        clapAPIMock.underlyingSpaces = ClapSpaceAPIMock()
+        clapAPI = clapAPIMock
         createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLReturnValue = .failure(.sdkError(ClientProxyMockError.generic))
 
         roomForIdentifierClosure = { [weak self] identifier in

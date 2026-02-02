@@ -23,10 +23,9 @@ struct DivKitRoomTimelineView: View {
 
     private var resolvedCardData: Data {
         guard let palette = timelineItem.content.palette else {
-            return timelineItem.content.cardData
+            return injectPaletteVariables([], into: timelineItem.content.cardData)
         }
         let colors = colorScheme == .dark ? palette.dark : palette.light
-        guard !colors.isEmpty else { return timelineItem.content.cardData }
         return injectPaletteVariables(colors, into: timelineItem.content.cardData)
     }
 
@@ -44,13 +43,17 @@ struct DivKitRoomTimelineView: View {
                 .font(.compound.bodyMD)
                 .foregroundColor(.compound.textPrimary)
         } else {
+            let cardID = timelineItem.id.uniqueID.value
             DivKitViewRepresentable(
                 cardData: resolvedCardData,
-                cardID: timelineItem.id.uniqueID.value,
+                cardID: cardID,
                 onAction: handleDivKitAction,
-                onFailure: { showFallback = true }
+                onFailure: { showFallback = true },
+                onHeightChanged: { height in
+                    DivKitComponentsProvider.shared.cacheHeight(height, for: cardID)
+                }
             )
-            .fixedSize(horizontal: false, vertical: true)
+            .modifier(CachedHeightModifier(cardID: cardID))
         }
     }
 
@@ -110,6 +113,20 @@ struct DivKitRoomTimelineView: View {
     }
 }
 
+// MARK: - Cached Height Modifier
+
+private struct CachedHeightModifier: ViewModifier {
+    let cardID: String
+
+    func body(content: Content) -> some View {
+        if let cachedHeight = DivKitComponentsProvider.shared.cachedHeight(for: cardID) {
+            content.frame(height: cachedHeight)
+        } else {
+            content.fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
 // MARK: - Previews
 
 struct DivKitRoomTimelineView_Previews: PreviewProvider, TestablePreview {
@@ -121,21 +138,21 @@ struct DivKitRoomTimelineView_Previews: PreviewProvider, TestablePreview {
                 DivKitRoomTimelineView(timelineItem: makeDivKitItem(
                     json: thinkingJSON, messageType: .thinking, fallbackText: "계획을 세우는 중..."
                 ))
-                DivKitRoomTimelineView(timelineItem: makeDivKitItem(
-                    json: planApprovalJSON, messageType: .planApproval, fallbackText: "실행 계획을 승인해주세요."
-                ))
-                DivKitRoomTimelineView(timelineItem: makeDivKitItem(
-                    json: toolApprovalJSON, messageType: .toolApproval, fallbackText: "도구 실행을 승인해주세요."
-                ))
-                DivKitRoomTimelineView(timelineItem: makeDivKitItem(
-                    json: selectionJSON, messageType: .selection, fallbackText: "어떤 채널을 확인할까요?"
-                ))
-                DivKitRoomTimelineView(timelineItem: makeDivKitItem(
-                    json: finalResultJSON, messageType: .finalResult, fallbackText: "작업 완료"
-                ))
-                DivKitRoomTimelineView(timelineItem: makeDivKitItem(
-                    json: errorJSON, messageType: .error, fallbackText: "오류가 발생했습니다."
-                ))
+//                DivKitRoomTimelineView(timelineItem: makeDivKitItem(
+//                    json: planApprovalJSON, messageType: .planApproval, fallbackText: "실행 계획을 승인해주세요."
+//                ))
+//                DivKitRoomTimelineView(timelineItem: makeDivKitItem(
+//                    json: toolApprovalJSON, messageType: .toolApproval, fallbackText: "도구 실행을 승인해주세요."
+//                ))
+//                DivKitRoomTimelineView(timelineItem: makeDivKitItem(
+//                    json: selectionJSON, messageType: .selection, fallbackText: "어떤 채널을 확인할까요?"
+//                ))
+//                DivKitRoomTimelineView(timelineItem: makeDivKitItem(
+//                    json: finalResultJSON, messageType: .finalResult, fallbackText: "작업 완료"
+//                ))
+//                DivKitRoomTimelineView(timelineItem: makeDivKitItem(
+//                    json: errorJSON, messageType: .error, fallbackText: "오류가 발생했습니다."
+//                ))
             }
         }
         .environmentObject(viewModel.context)
@@ -172,7 +189,239 @@ struct DivKitRoomTimelineView_Previews: PreviewProvider, TestablePreview {
 
     // swiftlint:disable line_length
     static let thinkingJSON = """
-    {"log_id":"thinking","states":[{"state_id":0,"div":{"type":"container","orientation":"horizontal","paddings":{"left":16,"top":12,"right":16,"bottom":12},"background":[{"type":"solid","color":"#F7FAFC"}],"border":{"corner_radius":12},"items":[{"type":"text","text":"🤔","font_size":16,"width":{"type":"fixed","value":28}},{"type":"text","text":"계획을 세우는 중...","font_size":14,"text_color":"#718096"}]}}]}
+              {
+                "log_id": "plan_approval_805f6c4c-fadf-4a3c-8f88-e867365803ab",
+                "states": [
+                  {
+                    "div": {
+                      "background": [
+                        {
+                          "color": "@{clap.bg.primary}",
+                          "type": "solid"
+                        }
+                      ],
+                      "items": [
+                        {
+                          "font_size": 18,
+                          "font_weight": "bold",
+                          "paddings": {
+                            "bottom": 8
+                          },
+                          "text": "Plan",
+                          "text_color": "@{clap.text.primary}",
+                          "type": "text"
+                        },
+                        {
+                          "item_builder": {
+                            "data": "@{steps}",
+                            "data_element_name": "step",
+                            "prototypes": [
+                              {
+                                "div": {
+                                  "font_size": 14,
+                                  "paddings": {
+                                    "bottom": 4,
+                                    "top": 4
+                                  },
+                                  "text": "@{step}",
+                                  "text_color": "@{clap.text.primary}",
+                                  "type": "text"
+                                }
+                              }
+                            ]
+                          },
+                          "type": "container"
+                        },
+                        {
+                          "items": [
+                            {
+                              "actions": [
+                                {
+                                  "log_id": "approve",
+                                  "url": "clap://approve?plan_id=@{plan_id}"
+                                }
+                              ],
+                              "font_size": 14,
+                              "font_weight": "bold",
+                              "height": {
+                                "type": "match_parent"
+                              },
+                              "paddings": {
+                                "right": 24
+                              },
+                              "text": "Approve",
+                              "text_color": "@{clap.accent.primary}",
+                              "type": "text"
+                            },
+                            {
+                              "actions": [
+                                {
+                                  "log_id": "reject",
+                                  "url": "clap://reject?plan_id=@{plan_id}"
+                                }
+                              ],
+                              "font_size": 14,
+                              "font_weight": "bold",
+                              "text": "Reject",
+                              "text_color": "@{clap.accent.error}",
+                              "type": "text"
+                            }
+                          ],
+                          "orientation": "horizontal",
+                          "paddings": {
+                            "top": 12
+                          },
+                          "type": "container"
+                        }
+                      ],
+                      "orientation": "vertical",
+                      "paddings": {
+                        "bottom": 16,
+                        "left": 16,
+                        "right": 16,
+                        "top": 16
+                      },
+                      "type": "container"
+                    },
+                    "state_id": 0
+                  }
+                ],
+                "variables": [
+                  {
+                    "name": "steps",
+                    "type": "array",
+                    "value": [
+                      "send_message: 사용자의 인사에 응답해 대화를 시작한다"
+                    ]
+                  },
+                  {
+                    "name": "plan_id",
+                    "type": "string",
+                    "value": "805f6c4c-fadf-4a3c-8f88-e867365803ab"
+                  }
+                ]
+              },
+              "data": {
+                "plan": {
+                  "steps": [
+                    {
+                      "icon": "📤",
+                      "purpose": "사용자의 인사에 응답해 대화를 시작한다",
+                      "step_number": 1,
+                      "tool": "send_message"
+                    }
+                  ],
+                  "summary": "현재 방에서 사용자의 인사에 간단히 응답해 대화를 시작한다"
+                },
+                "task_summary": "안녕",
+                "timeout_seconds": 120
+              },
+              "message_type": "plan_approval",
+              "palette": {
+                "dark": [
+                  {
+                    "color": "#E57373",
+                    "name": "clap.accent.error"
+                  },
+                  {
+                    "color": "#64B5F6",
+                    "name": "clap.accent.primary"
+                  },
+                  {
+                    "color": "#81C784",
+                    "name": "clap.accent.success"
+                  },
+                  {
+                    "color": "#FFB74D",
+                    "name": "clap.accent.warning"
+                  },
+                  {
+                    "color": "#1A1A1A",
+                    "name": "clap.bg.primary"
+                  },
+                  {
+                    "color": "#2D2D2D",
+                    "name": "clap.bg.secondary"
+                  },
+                  {
+                    "color": "#333333",
+                    "name": "clap.bg.surface"
+                  },
+                  {
+                    "color": "#444444",
+                    "name": "clap.border.default"
+                  },
+                  {
+                    "color": "#64B5F6",
+                    "name": "clap.border.focus"
+                  },
+                  {
+                    "color": "#1A1A1A",
+                    "name": "clap.text.inverse"
+                  },
+                  {
+                    "color": "#FFFFFF",
+                    "name": "clap.text.primary"
+                  },
+                  {
+                    "color": "#B0B0B0",
+                    "name": "clap.text.secondary"
+                  }
+                ],
+                "light": [
+                  {
+                    "color": "#F44336",
+                    "name": "clap.accent.error"
+                  },
+                  {
+                    "color": "#4A90D9",
+                    "name": "clap.accent.primary"
+                  },
+                  {
+                    "color": "#4CAF50",
+                    "name": "clap.accent.success"
+                  },
+                  {
+                    "color": "#FF9800",
+                    "name": "clap.accent.warning"
+                  },
+                  {
+                    "color": "#FFFFFF",
+                    "name": "clap.bg.primary"
+                  },
+                  {
+                    "color": "#F5F5F5",
+                    "name": "clap.bg.secondary"
+                  },
+                  {
+                    "color": "#FAFAFA",
+                    "name": "clap.bg.surface"
+                  },
+                  {
+                    "color": "#E0E0E0",
+                    "name": "clap.border.default"
+                  },
+                  {
+                    "color": "#4A90D9",
+                    "name": "clap.border.focus"
+                  },
+                  {
+                    "color": "#FFFFFF",
+                    "name": "clap.text.inverse"
+                  },
+                  {
+                    "color": "#1A1A1A",
+                    "name": "clap.text.primary"
+                  },
+                  {
+                    "color": "#666666",
+                    "name": "clap.text.secondary"
+                  }
+                ]
+              },
+              "request_id": "805f6c4c-fadf-4a3c-8f88-e867365803ab",
+              "version": "1.0"
+            }
     """
 
     static let planApprovalJSON = """
@@ -203,12 +452,13 @@ struct DivKitViewRepresentable: UIViewRepresentable {
     let cardID: String
     let onAction: (URL) -> Void
     let onFailure: () -> Void
+    let onHeightChanged: (CGFloat) -> Void
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(cardID: cardID, onAction: onAction, onFailure: onFailure)
+        Coordinator(cardID: cardID, onAction: onAction, onFailure: onFailure, onHeightChanged: onHeightChanged)
     }
 
-    func makeUIView(context: Context) -> DivView {
+    func makeUIView(context: Context) -> DivViewContainer {
         let provider = DivKitComponentsProvider.shared
 
         provider.setActionHandler(for: cardID) { [weak coordinator = context.coordinator] url in
@@ -219,21 +469,34 @@ struct DivKitViewRepresentable: UIViewRepresentable {
             coordinator?.onFailure()
         }
 
-        let divView = DivView(divKitComponents: provider.components)
-        context.coordinator.currentCardData = cardData
-
-        Task { @MainActor in
-            let source = DivViewSource(
-                kind: .data(cardData),
-                cardId: DivCardID(rawValue: cardID)
-            )
-            await divView.setSource(source)
+        let divView: DivView
+        if let cached = provider.cachedDivView(for: cardID) {
+            divView = cached
+        } else {
+            divView = DivView(divKitComponents: provider.components)
+            provider.cacheDivView(divView, for: cardID)
         }
 
-        return divView
+        let container = DivViewContainer(divView: divView) { [weak coordinator = context.coordinator] height in
+            coordinator?.onHeightChanged(height)
+        }
+        context.coordinator.currentCardData = cardData
+
+        if provider.cachedHeight(for: cardID) == nil {
+            Task { @MainActor in
+                let source = DivViewSource(
+                    kind: .data(cardData),
+                    cardId: DivCardID(rawValue: cardID)
+                )
+                await divView.setSource(source)
+                container.invalidateIntrinsicContentSize()
+            }
+        }
+
+        return container
     }
 
-    func updateUIView(_ divView: DivView, context: Context) {
+    func updateUIView(_ container: DivViewContainer, context: Context) {
         context.coordinator.onAction = onAction
 
         if context.coordinator.currentCardData != cardData {
@@ -243,7 +506,8 @@ struct DivKitViewRepresentable: UIViewRepresentable {
                     kind: .data(cardData),
                     cardId: DivCardID(rawValue: cardID)
                 )
-                await divView.setSource(source)
+                await container.divView.setSource(source)
+                container.invalidateIntrinsicContentSize()
             }
         }
     }
@@ -252,12 +516,14 @@ struct DivKitViewRepresentable: UIViewRepresentable {
         let cardID: String
         var onAction: (URL) -> Void
         let onFailure: () -> Void
+        let onHeightChanged: (CGFloat) -> Void
         var currentCardData: Data?
 
-        init(cardID: String, onAction: @escaping (URL) -> Void, onFailure: @escaping () -> Void) {
+        init(cardID: String, onAction: @escaping (URL) -> Void, onFailure: @escaping () -> Void, onHeightChanged: @escaping (CGFloat) -> Void) {
             self.cardID = cardID
             self.onAction = onAction
             self.onFailure = onFailure
+            self.onHeightChanged = onHeightChanged
         }
 
         deinit {
@@ -267,5 +533,37 @@ struct DivKitViewRepresentable: UIViewRepresentable {
                 DivKitComponentsProvider.shared.removeErrorHandler(for: cardID)
             }
         }
+    }
+}
+
+final class DivViewContainer: UIView {
+    let divView: DivView
+    private let onHeightChanged: (CGFloat) -> Void
+    private var lastReportedHeight: CGFloat = 0
+
+    init(divView: DivView, onHeightChanged: @escaping (CGFloat) -> Void) {
+        self.divView = divView
+        self.onHeightChanged = onHeightChanged
+        super.init(frame: .zero)
+        addSubview(divView)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        divView.frame = bounds
+        divView.onVisibleBoundsChanged(to: bounds)
+
+        let height = divView.intrinsicContentSize.height
+        if height > 0, height != lastReportedHeight {
+            lastReportedHeight = height
+            onHeightChanged(height)
+        }
+    }
+
+    override var intrinsicContentSize: CGSize {
+        divView.intrinsicContentSize
     }
 }

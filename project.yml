@@ -99,7 +99,7 @@ packages:
     # path: ../matrix-rich-text-editor/platforms/ios/lib/WysiwygComposer
   DivKit:
     url: https://github.com/divkit/divkit-ios
-    minorVersion: 32.0.0
+    minorVersion: 32.35.0
   
   # External dependencies
   Algorithms:
