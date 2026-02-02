@@ -482,15 +482,15 @@ struct DivKitViewRepresentable: UIViewRepresentable {
         }
         context.coordinator.currentCardData = cardData
 
-        if provider.cachedHeight(for: cardID) == nil {
-            Task { @MainActor in
-                let source = DivViewSource(
-                    kind: .data(cardData),
-                    cardId: DivCardID(rawValue: cardID)
-                )
-                await divView.setSource(source)
-                container.invalidateIntrinsicContentSize()
-            }
+        let divCardID = DivCardID(rawValue: cardID)
+        Task { @MainActor in
+            provider.components.reset(cardId: divCardID)
+            let source = DivViewSource(
+                kind: .data(cardData),
+                cardId: divCardID
+            )
+            await divView.setSource(source)
+            container.invalidateIntrinsicContentSize()
         }
 
         return container
@@ -501,10 +501,12 @@ struct DivKitViewRepresentable: UIViewRepresentable {
 
         if context.coordinator.currentCardData != cardData {
             context.coordinator.currentCardData = cardData
+            let divCardID = DivCardID(rawValue: cardID)
             Task { @MainActor in
+                DivKitComponentsProvider.shared.components.reset(cardId: divCardID)
                 let source = DivViewSource(
                     kind: .data(cardData),
-                    cardId: DivCardID(rawValue: cardID)
+                    cardId: divCardID
                 )
                 await container.divView.setSource(source)
                 container.invalidateIntrinsicContentSize()
