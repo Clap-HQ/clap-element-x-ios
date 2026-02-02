@@ -16,9 +16,11 @@ struct DivKitRoomTimelineView: View {
     let timelineItem: DivKitRoomTimelineItem
 
     @State private var showFallback = false
+    @State private var cardHeight: CGFloat?
 
-    private var alreadyActed: Bool {
-        context?.viewState.actedDivKitItemIDs.contains(timelineItem.id) == true
+    private var isActionable: Bool {
+        guard let context else { return false }
+        return !context.viewState.actedDivKitItemIDs.contains(timelineItem.id)
     }
 
     private var resolvedCardData: Data {
@@ -44,16 +46,21 @@ struct DivKitRoomTimelineView: View {
                 .foregroundColor(.compound.textPrimary)
         } else {
             let cardID = timelineItem.id.uniqueID.value
-            DivKitViewRepresentable(
+            let representable = DivKitViewRepresentable(
                 cardData: resolvedCardData,
                 cardID: cardID,
                 onAction: handleDivKitAction,
                 onFailure: { showFallback = true },
                 onHeightChanged: { height in
                     DivKitComponentsProvider.shared.cacheHeight(height, for: cardID)
+                    cardHeight = height
                 }
             )
-            .modifier(CachedHeightModifier(cardID: cardID))
+            if let height = cardHeight ?? DivKitComponentsProvider.shared.cachedHeight(for: cardID) {
+                representable.frame(height: height)
+            } else {
+                representable.fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 
@@ -75,55 +82,28 @@ struct DivKitRoomTimelineView: View {
     }
 
     private func handleDivKitAction(url: URL) {
-        guard !alreadyActed else { return }
-
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               components.scheme == "clap",
-              components.host == "action" else {
+              let host = components.host else {
+            MXLog.info("DivKit action: ignored non-clap URL \(url)")
             return
         }
 
-        guard let queryItems = components.queryItems else { return }
-
-        let actionType = queryItems.first(where: { $0.name == "type" })?.value
-        let requestID = queryItems.first(where: { $0.name == "request_id" })?.value
-        let value = queryItems.first(where: { $0.name == "value" })?.value
-
-        let messageToSend: String
-        switch actionType {
-        case "approve":
-            messageToSend = "approve"
-        case "reject":
-            messageToSend = "reject"
-        case "skip":
-            messageToSend = "skip"
-        case "select":
-            guard let value, !value.isEmpty else {
-                MXLog.warning("DivKit: select action missing value (requestID: \(requestID ?? "nil"))")
-                return
-            }
-            messageToSend = value
-        default:
-            MXLog.warning("DivKit: Unknown action type: \(actionType ?? "nil")")
-            return
-        }
-
-        MXLog.info("DivKit: Sending action '\(messageToSend)' (url: \(url), requestID: \(requestID ?? "nil"))")
-        context?.send(viewAction: .handleDivKitAction(message: messageToSend, itemID: timelineItem.id))
-    }
-}
-
-// MARK: - Cached Height Modifier
-
-private struct CachedHeightModifier: ViewModifier {
-    let cardID: String
-
-    func body(content: Content) -> some View {
-        if let cachedHeight = DivKitComponentsProvider.shared.cachedHeight(for: cardID) {
-            content.frame(height: cachedHeight)
+        let message: String
+        if host == "action", let type = components.queryItems?.first(where: { $0.name == "type" })?.value {
+            message = type
         } else {
-            content.fixedSize(horizontal: false, vertical: true)
+            message = host
         }
+
+        guard isActionable else {
+            let isLast = context?.viewState.timelineState.uniqueIDs.last == timelineItem.id.uniqueID
+            MXLog.info("DivKit action: ignored '\(message)' (isLastItem=\(isLast), alreadyActed=\(context?.viewState.actedDivKitItemIDs.contains(timelineItem.id) == true))")
+            return
+        }
+
+        MXLog.info("DivKit action: sending '\(message)' (url: \(url))")
+        context?.send(viewAction: .handleDivKitAction(message: message, itemID: timelineItem.id))
     }
 }
 
@@ -460,13 +440,14 @@ struct DivKitViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> DivViewContainer {
         let provider = DivKitComponentsProvider.shared
+        let coordinator = context.coordinator
 
-        provider.setActionHandler(for: cardID) { [weak coordinator = context.coordinator] url in
-            coordinator?.onAction(url)
+        provider.setActionHandler(for: cardID) { url in
+            coordinator.onAction(url)
         }
 
-        provider.setErrorHandler(for: cardID) { [weak coordinator = context.coordinator] in
-            coordinator?.onFailure()
+        provider.setErrorHandler(for: cardID) {
+            coordinator.onFailure()
         }
 
         let divView: DivView
@@ -477,10 +458,10 @@ struct DivKitViewRepresentable: UIViewRepresentable {
             provider.cacheDivView(divView, for: cardID)
         }
 
-        let container = DivViewContainer(divView: divView) { [weak coordinator = context.coordinator] height in
-            coordinator?.onHeightChanged(height)
+        let container = DivViewContainer(divView: divView) { height in
+            coordinator.onHeightChanged(height)
         }
-        context.coordinator.currentCardData = cardData
+        coordinator.currentCardData = cardData
 
         let divCardID = DivCardID(rawValue: cardID)
         Task { @MainActor in
@@ -497,10 +478,15 @@ struct DivKitViewRepresentable: UIViewRepresentable {
     }
 
     func updateUIView(_ container: DivViewContainer, context: Context) {
-        context.coordinator.onAction = onAction
+        let coordinator = context.coordinator
+        coordinator.onAction = onAction
 
-        if context.coordinator.currentCardData != cardData {
-            context.coordinator.currentCardData = cardData
+        DivKitComponentsProvider.shared.setActionHandler(for: cardID) { url in
+            coordinator.onAction(url)
+        }
+
+        if coordinator.currentCardData != cardData {
+            coordinator.currentCardData = cardData
             let divCardID = DivCardID(rawValue: cardID)
             Task { @MainActor in
                 DivKitComponentsProvider.shared.components.reset(cardId: divCardID)
@@ -529,11 +515,9 @@ struct DivKitViewRepresentable: UIViewRepresentable {
         }
 
         deinit {
-            let cardID = self.cardID
-            DispatchQueue.main.async {
-                DivKitComponentsProvider.shared.removeActionHandler(for: cardID)
-                DivKitComponentsProvider.shared.removeErrorHandler(for: cardID)
-            }
+            // Handler cleanup is managed by provider's setActionHandler (overwrites on re-register)
+            // and resetAllCardState(). Async cleanup in deinit causes race conditions where
+            // a newly registered handler for the same cardID gets removed.
         }
     }
 }
