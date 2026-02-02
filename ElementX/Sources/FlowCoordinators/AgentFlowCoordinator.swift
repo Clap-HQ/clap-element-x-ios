@@ -90,7 +90,6 @@ class AgentFlowCoordinator {
             .store(in: &cancellables)
             
             navigationStackCoordinator.setRootCoordinator(coordinator, animated: false)
-            coordinator.start()
             agentScreenCoordinator = coordinator
         }
     }
