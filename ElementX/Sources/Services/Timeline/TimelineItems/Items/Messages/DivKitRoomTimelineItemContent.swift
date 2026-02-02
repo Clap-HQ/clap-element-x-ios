@@ -7,6 +7,16 @@
 
 import Foundation
 
+struct DivKitPaletteColor: Hashable {
+    let name: String
+    let color: String
+}
+
+struct DivKitPalette: Hashable {
+    let light: [DivKitPaletteColor]
+    let dark: [DivKitPaletteColor]
+}
+
 struct DivKitRoomTimelineItemContent: Hashable {
     let cardData: Data
     let fallbackText: String
@@ -14,6 +24,7 @@ struct DivKitRoomTimelineItemContent: Hashable {
     let requestID: String?
     let version: String
     let cardLogID: String?
+    let palette: DivKitPalette?
 }
 
 enum DivKitMessageType: String, Hashable {

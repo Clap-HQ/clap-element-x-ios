@@ -12,12 +12,22 @@ import SwiftUI
 
 struct DivKitRoomTimelineView: View {
     @Environment(\.timelineContext) private var context
+    @Environment(\.colorScheme) private var colorScheme
     let timelineItem: DivKitRoomTimelineItem
 
     @State private var showFallback = false
 
     private var alreadyActed: Bool {
         context?.viewState.actedDivKitItemIDs.contains(timelineItem.id) == true
+    }
+
+    private var resolvedCardData: Data {
+        guard let palette = timelineItem.content.palette else {
+            return timelineItem.content.cardData
+        }
+        let colors = colorScheme == .dark ? palette.dark : palette.light
+        guard !colors.isEmpty else { return timelineItem.content.cardData }
+        return injectPaletteVariables(colors, into: timelineItem.content.cardData)
     }
 
     var body: some View {
@@ -35,13 +45,30 @@ struct DivKitRoomTimelineView: View {
                 .foregroundColor(.compound.textPrimary)
         } else {
             DivKitViewRepresentable(
-                cardData: timelineItem.content.cardData,
+                cardData: resolvedCardData,
                 cardID: timelineItem.id.uniqueID.value,
                 onAction: handleDivKitAction,
                 onFailure: { showFallback = true }
             )
             .fixedSize(horizontal: false, vertical: true)
         }
+    }
+
+    private func injectPaletteVariables(_ colors: [DivKitPaletteColor], into cardData: Data) -> Data {
+        guard var envelope = try? JSONSerialization.jsonObject(with: cardData) as? [String: Any],
+              var card = envelope["card"] as? [String: Any] else {
+            return cardData
+        }
+
+        var variables = card["variables"] as? [[String: Any]] ?? []
+        let existingNames = Set(variables.compactMap { $0["name"] as? String })
+        for color in colors where !existingNames.contains(color.name) {
+            variables.append(["name": color.name, "type": "color", "value": color.color])
+        }
+        card["variables"] = variables
+        envelope["card"] = card
+
+        return (try? JSONSerialization.data(withJSONObject: envelope)) ?? cardData
     }
 
     private func handleDivKitAction(url: URL) {
@@ -137,7 +164,8 @@ struct DivKitRoomTimelineView_Previews: PreviewProvider, TestablePreview {
                 messageType: messageType,
                 requestID: nil,
                 version: "1.0",
-                cardLogID: cardDict["log_id"] as? String
+                cardLogID: cardDict["log_id"] as? String,
+                palette: nil
             )
         )
     }
@@ -192,6 +220,7 @@ struct DivKitViewRepresentable: UIViewRepresentable {
         }
 
         let divView = DivView(divKitComponents: provider.components)
+        context.coordinator.currentCardData = cardData
 
         Task { @MainActor in
             let source = DivViewSource(
@@ -206,12 +235,24 @@ struct DivKitViewRepresentable: UIViewRepresentable {
 
     func updateUIView(_ divView: DivView, context: Context) {
         context.coordinator.onAction = onAction
+
+        if context.coordinator.currentCardData != cardData {
+            context.coordinator.currentCardData = cardData
+            Task { @MainActor in
+                let source = DivViewSource(
+                    kind: .data(cardData),
+                    cardId: DivCardID(rawValue: cardID)
+                )
+                await divView.setSource(source)
+            }
+        }
     }
 
     final class Coordinator {
         let cardID: String
         var onAction: (URL) -> Void
         let onFailure: () -> Void
+        var currentCardData: Data?
 
         init(cardID: String, onAction: @escaping (URL) -> Void, onFailure: @escaping () -> Void) {
             self.cardID = cardID

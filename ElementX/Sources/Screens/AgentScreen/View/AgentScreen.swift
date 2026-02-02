@@ -23,9 +23,9 @@ struct AgentScreen: View {
         
     var body: some View {
         TimelineView(timelineContext: timelineContext)
-            .environment(\.timelineBackgroundColor, .compound.bgCanvasDefault)
+            .environment(\.timelineBackgroundColor, .compound.bgCanvasClap)
             .environment(\.isTimelineMenuMinimal, true)
-            .background(.compound.bgCanvasDefault)
+            .background(.compound.bgCanvasClap)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .toolbar { toolbar }
@@ -39,7 +39,7 @@ struct AgentScreen: View {
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 composer
                     .padding(.top, 8)
-                    .background(Color.compound.bgCanvasDefault.ignoresSafeArea())
+                    .background(Color.compound.bgCanvasClap.ignoresSafeArea())
                     .environmentObject(timelineContext)
                     .environment(\.timelineContext, timelineContext)
                     .environment(\.shouldAutomaticallyLoadImages, !timelineContext.viewState.hideTimelineMedia)

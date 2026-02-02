@@ -101,9 +101,8 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
             return buildLocationTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, locationMessageContent, isOutgoing)
         case .gallery(let galleryMessageContent):
             return buildGalleryTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, galleryMessageContent, isOutgoing)
-        case .other(let msgtype, let body):
-            // Check for ClapBot DivKit messages
-            if msgtype == "ac.clap.divkit" {
+        case .other(_, let body):
+            if hasDivKitContent(eventItemProxy) {
                 return buildDivKitTimelineItem(for: eventItemProxy, messageLikeContent, fallbackText: body, isOutgoing: isOutgoing)
             }
             return nil
@@ -754,6 +753,16 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
     
     // MARK: - DivKit (ClapBot Server-Driven UI)
     
+    private func hasDivKitContent(_ eventItemProxy: EventTimelineItemProxy) -> Bool {
+        guard let originalJSON = eventItemProxy.debugInfo.originalJSON,
+              let jsonData = originalJSON.data(using: .utf8),
+              let eventDict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+              let content = eventDict["content"] as? [String: Any] else {
+            return false
+        }
+        return content["ac.clap.divkit"] is [String: Any]
+    }
+    
     private func buildDivKitTimelineItem(for eventItemProxy: EventTimelineItemProxy,
                                          _ messageLikeContent: MsgLikeContent,
                                          fallbackText: String,
@@ -767,23 +776,31 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
             return buildUnsupportedTimelineItem(eventItemProxy, "ac.clap.divkit", "Missing DivKit content", isOutgoing)
         }
         
-        guard let version = divKitDict["version"] as? String,
-              let messageTypeString = divKitDict["message_type"] as? String,
-              let cardDict = divKitDict["card"] as? [String: Any] else {
-            MXLog.warning("DivKit: Failed to parse DivKit content fields")
+        let botDict = content["ac.clap.bot"] as? [String: Any]
+        
+        guard let cardDict = divKitDict["card"] as? [String: Any] else {
+            MXLog.warning("DivKit: Failed to parse DivKit card field")
             return buildUnsupportedTimelineItem(eventItemProxy, "ac.clap.divkit", "Invalid DivKit content", isOutgoing)
         }
         
-        // DivKit expects { "card": { "log_id": ..., "states": [...] } } envelope
+        let version = divKitDict["version"] as? String
+            ?? botDict?["version"] as? String
+            ?? "1.0"
+        let messageTypeString = divKitDict["message_type"] as? String
+            ?? botDict?["message_type"] as? String
+            ?? "unknown"
+        let requestID = divKitDict["request_id"] as? String
+            ?? botDict?["request_id"] as? String
+        
         let divKitEnvelope: [String: Any] = ["card": cardDict]
         guard let cardData = try? JSONSerialization.data(withJSONObject: divKitEnvelope) else {
             MXLog.warning("DivKit: Failed to serialize DivKit envelope")
             return buildUnsupportedTimelineItem(eventItemProxy, "ac.clap.divkit", "Failed to wrap DivKit card", isOutgoing)
         }
         
-        let requestID = divKitDict["request_id"] as? String
         let cardLogID = cardDict["log_id"] as? String
         let messageType = DivKitMessageType(rawValue: messageTypeString) ?? .unknown
+        let palette = parseDivKitPalette(from: divKitDict)
         
         let divKitContent = DivKitRoomTimelineItemContent(
             cardData: cardData,
@@ -791,7 +808,8 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
             messageType: messageType,
             requestID: requestID,
             version: version,
-            cardLogID: cardLogID
+            cardLogID: cardLogID,
+            palette: palette
         )
         
         return DivKitRoomTimelineItem(
@@ -812,6 +830,26 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                 encryptionAuthenticity: buildEncryptionAuthenticity(eventItemProxy.shieldState)
             )
         )
+    }
+    
+    private func parseDivKitPalette(from divKitDict: [String: Any]) -> DivKitPalette? {
+        guard let paletteDict = divKitDict["palette"] as? [String: Any] else {
+            return nil
+        }
+        
+        func parseColors(_ array: [[String: Any]]) -> [DivKitPaletteColor] {
+            array.compactMap { entry in
+                guard let name = entry["name"] as? String,
+                      let color = entry["color"] as? String else { return nil }
+                return DivKitPaletteColor(name: name, color: color)
+            }
+        }
+        
+        let light = (paletteDict["light"] as? [[String: Any]]).map(parseColors) ?? []
+        let dark = (paletteDict["dark"] as? [[String: Any]]).map(parseColors) ?? []
+        
+        guard !light.isEmpty || !dark.isEmpty else { return nil }
+        return DivKitPalette(light: light, dark: dark)
     }
     
     // MARK: - State Events
