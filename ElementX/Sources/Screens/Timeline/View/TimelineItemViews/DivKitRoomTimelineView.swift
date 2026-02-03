@@ -444,13 +444,7 @@ struct DivKitViewRepresentable: UIViewRepresentable {
             coordinator.onFailure()
         }
 
-        let divView: DivView
-        if let cached = provider.cachedDivView(for: cardID) {
-            divView = cached
-        } else {
-            divView = DivView(divKitComponents: provider.components)
-            provider.cacheDivView(divView, for: cardID)
-        }
+        let divView = DivView(divKitComponents: provider.components)
 
         let container = DivViewContainer(divView: divView) { height in
             coordinator.onHeightChanged(height)
@@ -485,7 +479,7 @@ struct DivKitViewRepresentable: UIViewRepresentable {
             let source = DivViewSource(kind: .data(data), cardId: divCardID)
             await divView.setSource(source)
             guard coordinator.renderGeneration == generation else { return }
-            container.invalidateIntrinsicContentSize()
+            container.sourceDidLoad()
         }
     }
 
@@ -510,6 +504,8 @@ final class DivViewContainer: UIView {
     let divView: DivView
     private let onHeightChanged: (CGFloat) -> Void
     private var lastReportedHeight: CGFloat = 0
+    private var lastVisibleBounds: CGRect = .zero
+    private var isSourceLoaded = false
 
     init(divView: DivView, onHeightChanged: @escaping (CGFloat) -> Void) {
         self.divView = divView
@@ -520,6 +516,15 @@ final class DivViewContainer: UIView {
 
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
+    
+    func sourceDidLoad() {
+        isSourceLoaded = true
+        if bounds != .zero {
+            lastVisibleBounds = bounds
+            divView.onVisibleBoundsChanged(to: bounds)
+            invalidateIntrinsicContentSize()
+        }
+    }
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -527,7 +532,11 @@ final class DivViewContainer: UIView {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         divView.frame = bounds
-        divView.onVisibleBoundsChanged(to: bounds)
+        
+        if isSourceLoaded, bounds != lastVisibleBounds {
+            lastVisibleBounds = bounds
+            divView.onVisibleBoundsChanged(to: bounds)
+        }
         CATransaction.commit()
 
         let height = divView.intrinsicContentSize.height
