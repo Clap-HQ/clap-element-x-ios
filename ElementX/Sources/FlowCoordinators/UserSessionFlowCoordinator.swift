@@ -208,6 +208,8 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                     presentSessionVerificationScreen(flow: flow)
                 case .showCallScreen(let roomProxy):
                     presentCallScreen(roomProxy: roomProxy)
+                case .showAgentScreen(let roomID):
+                    presentAgentScreen(roomID: roomID)
                 case .hideCallScreenOverlay:
                     hideCallScreenOverlay()
                 case .logout:
@@ -322,7 +324,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         
         if let roomID = userSession.clientProxy.clapAIRoomID {
             MXLog.info("Found Clap AI DM room: \(roomID)")
-            presentAgentFlow(roomID: roomID)
+            presentAgentScreen(roomID: roomID)
             return
         }
         
@@ -345,7 +347,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                     await group.next()
                     group.cancelAll()
                 }
-                presentAgentFlow(roomID: inviteRoomID)
+                presentAgentScreen(roomID: inviteRoomID)
             case .failure(let error):
                 MXLog.error("Failed to accept Clap AI DM invite: \(error)")
                 flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapAiNotFound)
@@ -357,7 +359,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapAiNotFound)
     }
 
-    private func presentAgentFlow(roomID: String) {
+    private func presentAgentScreen(roomID: String) {
         guard agentFlowCoordinator == nil else { return }
         
         let coordinator = AgentFlowCoordinator(userSession: userSession,
