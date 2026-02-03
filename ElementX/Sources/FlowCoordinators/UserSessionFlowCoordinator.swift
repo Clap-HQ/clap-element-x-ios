@@ -139,6 +139,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
              .roomDetails, .roomMemberDetails, .userProfile,
              .event, .eventOnRoomAlias, .childEvent, .childEventOnRoomAlias,
              .share, .transferOwnership, .thread:
+            dismissAgentScreen() // Dismiss if presented (e.g., navigating via push notification)
             clearPresentedSheets(animated: animated) // Make sure the presented route is visible.
             chatsFlowCoordinator.handleAppRoute(appRoute, animated: animated)
             if navigationTabCoordinator.selectedTab != .chats {
@@ -391,7 +392,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
             guard let self else { return }
             switch action {
             case .dismiss:
-                dismissAgentFlow()
+                dismissAgentScreen()
             }
         }
         .store(in: &cancellables)
@@ -400,11 +401,11 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         agentFlowCoordinator = coordinator
         
         navigationTabCoordinator.setFullScreenCoverCoordinator(coordinator.navigationStack, animated: true) { [weak self] in
-            self?.dismissAgentFlow()
+            self?.dismissAgentScreen()
         }
     }
 
-    private func dismissAgentFlow() {
+    private func dismissAgentScreen() {
         agentFlowCoordinator?.stop()
         navigationTabCoordinator.setFullScreenCoverCoordinator(nil)
         agentFlowCoordinator = nil
