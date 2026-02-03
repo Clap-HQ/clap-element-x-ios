@@ -96,6 +96,7 @@ class AgentFlowCoordinator {
     }
     
     func stop() {
+        cancellables.removeAll()
         agentScreenCoordinator?.stop()
         agentScreenCoordinator = nil
         roomProxy = nil

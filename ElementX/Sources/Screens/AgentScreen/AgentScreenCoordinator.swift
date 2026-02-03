@@ -117,6 +117,15 @@ final class AgentScreenCoordinator: CoordinatorProtocol {
                 case .displayMessageForwarding(let forwardingItem):
                     actionsSubject.send(.presentMessageForwarding(forwardingItem: forwardingItem))
                     
+                // Intentionally unhandled actions for Agent screen (1:1 DM with Clap AI):
+                // - displayEmojiPicker: No emoji reactions on AI messages
+                // - displayReportContent: Cannot report Clap AI
+                // - displayLocationPicker/displayLocation: Location sharing disabled
+                // - displayPollForm: No poll creation
+                // - displaySenderDetails: Single sender (Clap AI)
+                // - displayThread/viewInRoomTimeline/displayRoom: No navigation to other contexts
+                // - displayResolveSendFailure: Handled internally by timeline
+                // - hasScrolled/displayMediaDetails: No UI coordination needed
                 default:
                     break
                 }
