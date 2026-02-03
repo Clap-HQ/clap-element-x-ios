@@ -385,21 +385,7 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
 
     private func configureAgentTabInterception(_ tabBarController: UITabBarController) {
         guard #available(iOS 26.0, *) else { return }
-
-        if navigationTabCoordinator.agentTabBarDelegate == nil {
-            let delegate = AgentTabBarDelegate()
-            delegate.agentTabIndex = navigationTabCoordinator.tabModules.count
-            delegate.onAgentTapped = { [weak navigationTabCoordinator] in
-                navigationTabCoordinator?.bottomAccessoryAction?()
-            }
-            delegate.onTabSelected = { [weak navigationTabCoordinator] index in
-                guard let navigationTabCoordinator,
-                      index < navigationTabCoordinator.tabModules.count else { return }
-                navigationTabCoordinator.selectedTab = navigationTabCoordinator.tabModules[index].details.tag
-            }
-            navigationTabCoordinator.agentTabBarDelegate = delegate
-        }
-
+        setupAgentTabBarDelegate()
         tabBarController.delegate = navigationTabCoordinator.agentTabBarDelegate
         updateAgentBadge(in: tabBarController.tabBar)
     }
@@ -446,26 +432,33 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
 
     private func configureLegacyAgentTabInterception(_ tabBarController: UITabBarController) {
         guard navigationTabCoordinator.agentTag != nil else { return }
-
-        if navigationTabCoordinator.agentTabBarDelegate == nil {
-            let delegate = AgentTabBarDelegate()
-            delegate.agentTabIndex = navigationTabCoordinator.tabModules.count
-            delegate.onAgentTapped = { [weak navigationTabCoordinator] in
-                navigationTabCoordinator?.bottomAccessoryAction?()
-            }
-            delegate.onTabSelected = { [weak navigationTabCoordinator] index in
-                guard let navigationTabCoordinator,
-                      index < navigationTabCoordinator.tabModules.count else { return }
-                navigationTabCoordinator.selectedTab = navigationTabCoordinator.tabModules[index].details.tag
-            }
-            navigationTabCoordinator.agentTabBarDelegate = delegate
-        }
-
+        setupAgentTabBarDelegate()
         tabBarController.delegate = navigationTabCoordinator.agentTabBarDelegate
         updateAgentBadge(in: tabBarController.tabBar)
     }
     
-    // WARNING: Uses private UIKit APIs (`_UITabBarAuxiliaryView`, `UITabBarButton`) which may break on iOS updates.
+    private func setupAgentTabBarDelegate() {
+        guard navigationTabCoordinator.agentTabBarDelegate == nil else { return }
+        
+        let delegate = AgentTabBarDelegate()
+        delegate.agentTabIndex = navigationTabCoordinator.tabModules.count
+        delegate.onAgentTapped = { [weak navigationTabCoordinator] in
+            navigationTabCoordinator?.bottomAccessoryAction?()
+        }
+        delegate.onTabSelected = { [weak navigationTabCoordinator] index in
+            guard let navigationTabCoordinator,
+                  index < navigationTabCoordinator.tabModules.count else { return }
+            navigationTabCoordinator.selectedTab = navigationTabCoordinator.tabModules[index].details.tag
+        }
+        navigationTabCoordinator.agentTabBarDelegate = delegate
+    }
+    
+    // MARK: - Agent Badge (Private API)
+    // Uses private UIKit APIs to locate tab bar buttons for custom badge placement.
+    // - iOS 26+: `_UITabBarAuxiliaryView` for the search role tab (circular button)
+    // - iOS 18 and below: `UITabBarButton` for standard tab items
+    // Standard UITabBarItem.badgeValue only supports text badges, not custom dot indicators.
+    // If this breaks on future iOS versions, the badge will simply not appear (graceful degradation).
     private func updateAgentBadge(in tabBar: UITabBar) {
         tabBar.layoutIfNeeded()
         tabBar.viewWithTag(AgentBadge.viewTag)?.removeFromSuperview()
