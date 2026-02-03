@@ -76,6 +76,8 @@ final class AppSettings {
         // Doug's tweaks 🔧
         case hideUnreadMessagesBadge
         case hideQuietNotificationAlerts
+        
+        case actedDivKitEventIDs
     }
     
     private static var suiteName: String = InfoPlistReader.main.appGroupIdentifier
@@ -181,6 +183,10 @@ final class AppSettings {
     /// The Set of room identifiers that the user has acknowledged have visible history.
     @UserPreference(key: UserDefaultsKeys.acknowledgedHistoryVisibleRooms, defaultValue: [], storageType: .userDefaults(store))
     var acknowledgedHistoryVisibleRooms: Set<String>
+    
+    /// DivKit event IDs that have been acted upon, keyed by room ID. Persists across app restarts.
+    @UserPreference(key: UserDefaultsKeys.actedDivKitEventIDs, defaultValue: [:], storageType: .userDefaults(store))
+    var actedDivKitEventIDs: [String: [String]]
     
     /// The initial set of account providers shown to the user in the authentication flow.
     ///

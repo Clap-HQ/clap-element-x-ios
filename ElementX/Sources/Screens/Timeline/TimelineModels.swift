@@ -122,7 +122,7 @@ struct TimelineViewState: BindableState {
     // It's updated from the room info, so it's faster than using the timeline
     var pinnedEventIDs: Set<String> = []
     
-    var actedDivKitItemIDs: Set<TimelineItemIdentifier> = []
+    var actedDivKitEventIDs: Set<String> = []
     
     /// A closure providing the associated audio player state for an item in the timeline.
     var audioPlayerStateProvider: (@MainActor (_ itemId: TimelineItemIdentifier) -> AudioPlayerState?)?

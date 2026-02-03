@@ -19,8 +19,8 @@ struct DivKitRoomTimelineView: View {
     @State private var cardHeight: CGFloat?
 
     private var isActionable: Bool {
-        guard let context else { return false }
-        return !context.viewState.actedDivKitItemIDs.contains(timelineItem.id)
+        guard let context, let eventID = timelineItem.id.eventID else { return false }
+        return !context.viewState.actedDivKitEventIDs.contains(eventID)
     }
 
     private var resolvedCardData: Data {
@@ -92,7 +92,8 @@ struct DivKitRoomTimelineView: View {
 
         guard isActionable else {
             let isLast = context?.viewState.timelineState.uniqueIDs.last == timelineItem.id.uniqueID
-            MXLog.info("DivKit action: ignored '\(message)' (isLastItem=\(isLast), alreadyActed=\(context?.viewState.actedDivKitItemIDs.contains(timelineItem.id) == true))")
+            let alreadyActed = timelineItem.id.eventID.map { context?.viewState.actedDivKitEventIDs.contains($0) == true } ?? false
+            MXLog.info("DivKit action: ignored '\(message)' (isLastItem=\(isLast), alreadyActed=\(alreadyActed))")
             return
         }
 
