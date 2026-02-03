@@ -338,6 +338,8 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
             _ = await provider.statePublisher.values.first { $0.isLoaded }
         }
         
+        // Allow time for clapAIRoomID/clapAIInviteRoomID to be populated after room list loads.
+        // The staticRoomSummaryProvider.statePublisher emits before ClientProxy finishes scanning for Clap AI rooms.
         try? await Task.sleep(for: .milliseconds(50))
         
         if let roomID = userSession.clientProxy.clapAIRoomID {
