@@ -756,6 +756,9 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
     }
     
     // MARK: - DivKit (Clap AI Server-Driven UI)
+    // MatrixRustSDK doesn't expose custom event content fields (like `ac.clap.ai`) through its public API.
+    // We must parse `debugInfo.originalJSON` to access DivKit card data.
+    // This is a known limitation - if SDK adds proper custom content API, migrate to that.
     
     private func hasDivKitContent(_ eventItemProxy: EventTimelineItemProxy) -> Bool {
         guard let originalJSON = eventItemProxy.debugInfo.originalJSON,
