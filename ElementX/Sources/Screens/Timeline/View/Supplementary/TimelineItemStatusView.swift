@@ -13,6 +13,7 @@ struct TimelineItemStatusView: View {
     let timelineItem: EventBasedTimelineItemProtocol
     let adjustedDeliveryStatus: TimelineItemDeliveryStatus?
     @EnvironmentObject private var context: TimelineViewModel.Context
+    @Environment(\.hidesTimelineDecorations) private var hidesTimelineDecorations
 
     private var isLastOutgoingMessage: Bool {
         timelineItem.isOutgoing && context.viewState.timelineState.uniqueIDs.last == timelineItem.id.uniqueID
@@ -25,9 +26,8 @@ struct TimelineItemStatusView: View {
     @ViewBuilder
     private var mainContent: some View {
         if context.viewState.timelineKind == .pinned {
-            // Do not display any status when is a pinned events timeline
             EmptyView()
-        } else if context.viewState.showReadReceipts, !timelineItem.properties.orderedReadReceipts.isEmpty {
+        } else if !hidesTimelineDecorations, context.viewState.showReadReceipts, !timelineItem.properties.orderedReadReceipts.isEmpty {
             readReceipts
         } else {
             deliveryStatusBadge

@@ -20,6 +20,10 @@ private struct TimelineMinimalMenuKey: EnvironmentKey {
     static let defaultValue = false
 }
 
+private struct HidesTimelineDecorationsKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
 extension EnvironmentValues {
     var timelineBackgroundColor: UIColor {
         get { self[TimelineBackgroundColorKey.self] }
@@ -29,6 +33,12 @@ extension EnvironmentValues {
     var isTimelineMenuMinimal: Bool {
         get { self[TimelineMinimalMenuKey.self] }
         set { self[TimelineMinimalMenuKey.self] = newValue }
+    }
+    
+    /// Hides timeline decorations like read receipts, date separators, read markers, and state events.
+    var hidesTimelineDecorations: Bool {
+        get { self[HidesTimelineDecorationsKey.self] }
+        set { self[HidesTimelineDecorationsKey.self] = newValue }
     }
 }
 

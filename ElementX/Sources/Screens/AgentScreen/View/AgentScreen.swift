@@ -25,6 +25,7 @@ struct AgentScreen: View {
         TimelineView(timelineContext: timelineContext)
             .environment(\.timelineBackgroundColor, .compound.bgCanvasClap)
             .environment(\.isTimelineMenuMinimal, true)
+            .environment(\.hidesTimelineDecorations, true)
             .background(.compound.bgCanvasClap)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
