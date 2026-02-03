@@ -810,7 +810,7 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
             palette: palette
         )
         
-        return DivKitRoomTimelineItem(
+        let item = DivKitRoomTimelineItem(
             id: eventItemProxy.id,
             timestamp: eventItemProxy.timestamp,
             isOutgoing: isOutgoing,
@@ -828,6 +828,12 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                 encryptionAuthenticity: buildEncryptionAuthenticity(eventItemProxy.shieldState)
             )
         )
+        
+        Task { @MainActor in
+            DivKitComponentsProvider.shared.preloadHeight(cardData: cardData, cardID: item.id.uniqueID.value)
+        }
+        
+        return item
     }
     
     private func parseDivKitPalette(from divKitDict: [String: Any]) -> DivKitPalette? {

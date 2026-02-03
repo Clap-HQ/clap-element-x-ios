@@ -13,6 +13,8 @@ struct AgentScreen: View {
     @ObservedObject private var timelineContext: TimelineViewModelType.Context
     private let composerToolbar: ComposerToolbar
     
+    @State private var isTimelineReady = false
+    
     init(context: AgentScreenViewModelType.Context,
          timelineContext: TimelineViewModelType.Context,
          composerToolbar: ComposerToolbar) {
@@ -23,6 +25,12 @@ struct AgentScreen: View {
         
     var body: some View {
         TimelineView(timelineContext: timelineContext)
+            .opacity(isTimelineReady ? 1 : 0)
+            .animation(.easeIn(duration: 0.15), value: isTimelineReady)
+            .task {
+                try? await Task.sleep(for: .milliseconds(100))
+                isTimelineReady = true
+            }
             .environment(\.timelineBackgroundColor, .compound.bgCanvasClap)
             .environment(\.isTimelineMenuMinimal, true)
             .environment(\.hidesTimelineDecorations, true)

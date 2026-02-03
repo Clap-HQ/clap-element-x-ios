@@ -36,6 +36,7 @@ struct DivKitRoomTimelineView: View {
             divKitContent
                 .frame(maxWidth: .infinity)
         }
+        .animation(nil, value: cardHeight)
     }
 
     @ViewBuilder
@@ -53,7 +54,9 @@ struct DivKitRoomTimelineView: View {
                 onFailure: { showFallback = true },
                 onHeightChanged: { height in
                     DivKitComponentsProvider.shared.cacheHeight(height, for: cardID)
-                    cardHeight = height
+                    DispatchQueue.main.async {
+                        cardHeight = height
+                    }
                 }
             )
             if let height = cardHeight ?? DivKitComponentsProvider.shared.cachedHeight(for: cardID) {
@@ -520,8 +523,12 @@ final class DivViewContainer: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         divView.frame = bounds
         divView.onVisibleBoundsChanged(to: bounds)
+        CATransaction.commit()
 
         let height = divView.intrinsicContentSize.height
         if height > 0, height != lastReportedHeight {

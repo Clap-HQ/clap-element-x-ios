@@ -7,6 +7,7 @@
 
 import DivKit
 import Foundation
+import UIKit
 
 @MainActor
 final class DivKitComponentsProvider {
@@ -72,7 +73,29 @@ final class DivKitComponentsProvider {
         cachedHeights[cardID] = height
     }
 
-    func resetAllCardState() {
+    /// Pre-calculates DivKit card height before the cell is displayed.
+    /// The estimated width is used only for initial height calculation.
+    /// Actual rendering uses the real parent bounds, same as other message bubbles.
+    func preloadHeight(cardData: Data, cardID: String) {
+        guard cachedHeights[cardID] == nil else { return }
+        
+        let sizingView = DivView(divKitComponents: components)
+        let estimatedBubbleWidth = UIScreen.main.bounds.width * 0.8
+        sizingView.frame = CGRect(x: 0, y: 0, width: estimatedBubbleWidth, height: 0)
+        
+        let source = DivViewSource(kind: .data(cardData), cardId: DivCardID(rawValue: "sizing-\(cardID)"))
+        Task {
+            await sizingView.setSource(source)
+            sizingView.layoutIfNeeded()
+            
+            let height = sizingView.intrinsicContentSize.height
+            if height > 0 {
+                cacheHeight(height, for: cardID)
+            }
+        }
+    }
+
+    func resetAllCardState(keepHeightCache: Bool = false) {
         for cardID in registeredCardIDs {
             components.reset(cardId: DivCardID(rawValue: cardID))
         }
@@ -80,7 +103,9 @@ final class DivKitComponentsProvider {
         errorReporter.handlers.removeAll()
         registeredCardIDs.removeAll()
         cachedDivViews.removeAll()
-        cachedHeights.removeAll()
+        if !keepHeightCache {
+            cachedHeights.removeAll()
+        }
     }
 }
 

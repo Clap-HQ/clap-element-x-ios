@@ -136,7 +136,7 @@ final class AgentScreenCoordinator: CoordinatorProtocol {
     func stop() {
         composerViewModel.stop()
         viewModel.stop()
-        DivKitComponentsProvider.shared.resetAllCardState()
+        DivKitComponentsProvider.shared.resetAllCardState(keepHeightCache: true)
     }
         
     func toPresentable() -> AnyView {
