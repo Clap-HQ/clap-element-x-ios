@@ -201,11 +201,13 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
         case .handleAudioPlayerAction(let audioPlayerAction):
             handleAudioPlayerAction(audioPlayerAction)
         case .handleDivKitAction(let message, let itemID):
-            if let eventID = itemID.eventID {
-                state.actedDivKitEventIDs.insert(eventID)
-                persistActedDivKitEventID(eventID)
+            Task {
+                await sendDivKitActionMessage(message)
+                if let eventID = itemID.eventID {
+                    state.actedDivKitEventIDs.insert(eventID)
+                    persistActedDivKitEventID(eventID)
+                }
             }
-            Task { await sendDivKitActionMessage(message) }
         case .focusOnEventID(let eventID):
             Task { await focusOnEvent(eventID: eventID) }
         case .focusLive:
@@ -718,11 +720,21 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
         scrollToBottom()
     }
     
+    private static let maxActedEventIDsPerRoom = 100
+    
     private func persistActedDivKitEventID(_ eventID: String) {
         let roomID = roomProxy.id
         var storage = appSettings.actedDivKitEventIDs
         var eventIDs = storage[roomID] ?? []
+        
+        guard !eventIDs.contains(eventID) else { return }
+        
         eventIDs.append(eventID)
+        
+        if eventIDs.count > Self.maxActedEventIDsPerRoom {
+            eventIDs = Array(eventIDs.suffix(Self.maxActedEventIDsPerRoom))
+        }
+        
         storage[roomID] = eventIDs
         appSettings.actedDivKitEventIDs = storage
     }

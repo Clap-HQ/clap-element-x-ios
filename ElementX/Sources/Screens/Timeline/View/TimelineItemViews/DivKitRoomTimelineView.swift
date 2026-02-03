@@ -139,9 +139,27 @@ struct DivKitRoomTimelineView_Previews: PreviewProvider, TestablePreview {
     private static func makeDivKitItem(json: String,
                                        messageType: DivKitMessageType,
                                        fallbackText: String) -> DivKitRoomTimelineItem {
-        let cardDict = try! JSONSerialization.jsonObject(with: json.data(using: .utf8)!) as! [String: Any]
-        let envelope: [String: Any] = ["card": cardDict]
-        let cardData = try! JSONSerialization.data(withJSONObject: envelope)
+        guard let jsonData = json.data(using: .utf8),
+              let cardDict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+              let cardData = try? JSONSerialization.data(withJSONObject: ["card": cardDict]) else {
+            return DivKitRoomTimelineItem(
+                id: .randomEvent,
+                timestamp: .mock,
+                isOutgoing: false,
+                isEditable: false,
+                canBeRepliedTo: false,
+                sender: .init(id: "ClapAI", displayName: "Clap AI"),
+                content: DivKitRoomTimelineItemContent(
+                    cardData: Data(),
+                    fallbackText: "Failed to parse DivKit card",
+                    messageType: .error,
+                    requestID: nil,
+                    version: "1.0",
+                    cardLogID: nil,
+                    palette: nil
+                )
+            )
+        }
 
         return DivKitRoomTimelineItem(
             id: .randomEvent,
@@ -459,9 +477,14 @@ struct DivKitViewRepresentable: UIViewRepresentable {
     func updateUIView(_ container: DivViewContainer, context: Context) {
         let coordinator = context.coordinator
         coordinator.onAction = onAction
+        coordinator.onFailure = onFailure
+        coordinator.onHeightChanged = onHeightChanged
 
         DivKitComponentsProvider.shared.setActionHandler(for: cardID) { url in
             coordinator.onAction(url)
+        }
+        DivKitComponentsProvider.shared.setErrorHandler(for: cardID) {
+            coordinator.onFailure()
         }
 
         if coordinator.currentCardData != cardData {
@@ -487,8 +510,8 @@ struct DivKitViewRepresentable: UIViewRepresentable {
     final class Coordinator {
         let cardID: String
         var onAction: (URL) -> Void
-        let onFailure: () -> Void
-        let onHeightChanged: (CGFloat) -> Void
+        var onFailure: () -> Void
+        var onHeightChanged: (CGFloat) -> Void
         var currentCardData: Data?
         var renderGeneration: UInt = 0
 

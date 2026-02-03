@@ -143,6 +143,7 @@ final class AgentScreenCoordinator: CoordinatorProtocol {
     }
     
     func stop() {
+        cancellables.removeAll()
         composerViewModel.stop()
         viewModel.stop()
         DivKitComponentsProvider.shared.resetAllCardState(keepHeightCache: true)

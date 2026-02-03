@@ -80,9 +80,8 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                           _ isOutgoing: Bool) -> RoomTimelineItemProtocol? {
         switch messageContent.msgType {
         case .text(content: let textMessageContent):
-            if hasDivKitContent(eventItemProxy) {
-                return buildDivKitTimelineItem(for: eventItemProxy, messageLikeContent, fallbackText: textMessageContent.body, isOutgoing: isOutgoing)
-                    ?? buildTextTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, textMessageContent, isOutgoing)
+            if let payload = parseDivKitPayload(eventItemProxy) {
+                return buildDivKitTimelineItem(for: eventItemProxy, messageLikeContent, payload: payload, fallbackText: textMessageContent.body, isOutgoing: isOutgoing)
             }
             return buildTextTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, textMessageContent, isOutgoing)
         case .image(content: let imageMessageContent):
@@ -106,8 +105,8 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
         case .gallery(let galleryMessageContent):
             return buildGalleryTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, galleryMessageContent, isOutgoing)
         case .other(_, let body):
-            if hasDivKitContent(eventItemProxy) {
-                return buildDivKitTimelineItem(for: eventItemProxy, messageLikeContent, fallbackText: body, isOutgoing: isOutgoing)
+            if let payload = parseDivKitPayload(eventItemProxy) {
+                return buildDivKitTimelineItem(for: eventItemProxy, messageLikeContent, payload: payload, fallbackText: body, isOutgoing: isOutgoing)
             }
             return nil
         }
@@ -760,57 +759,53 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
     // We must parse `debugInfo.originalJSON` to access DivKit card data.
     // This is a known limitation - if SDK adds proper custom content API, migrate to that.
     
-    private func hasDivKitContent(_ eventItemProxy: EventTimelineItemProxy) -> Bool {
+    private struct DivKitPayload {
+        let cardData: Data
+        let cardLogID: String?
+        let version: String
+        let messageType: DivKitMessageType
+        let requestID: String?
+        let palette: DivKitPalette?
+    }
+    
+    private func parseDivKitPayload(_ eventItemProxy: EventTimelineItemProxy) -> DivKitPayload? {
         guard let originalJSON = eventItemProxy.debugInfo.originalJSON,
               let jsonData = originalJSON.data(using: .utf8),
               let eventDict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
               let content = eventDict["content"] as? [String: Any],
-              let aiDict = content["ac.clap.ai"] as? [String: Any] else {
-            return false
+              let aiDict = content["ac.clap.ai"] as? [String: Any],
+              let cardDict = aiDict["card"] as? [String: Any] else {
+            return nil
         }
-        return aiDict["card"] is [String: Any]
+        
+        let divKitEnvelope: [String: Any] = ["card": cardDict]
+        guard let cardData = try? JSONSerialization.data(withJSONObject: divKitEnvelope) else {
+            return nil
+        }
+        
+        return DivKitPayload(
+            cardData: cardData,
+            cardLogID: cardDict["log_id"] as? String,
+            version: aiDict["version"] as? String ?? "1.0",
+            messageType: DivKitMessageType(rawValue: aiDict["message_type"] as? String ?? "unknown") ?? .unknown,
+            requestID: aiDict["request_id"] as? String,
+            palette: parseDivKitPalette(from: aiDict)
+        )
     }
     
     private func buildDivKitTimelineItem(for eventItemProxy: EventTimelineItemProxy,
                                          _ messageLikeContent: MsgLikeContent,
+                                         payload: DivKitPayload,
                                          fallbackText: String,
-                                         isOutgoing: Bool) -> RoomTimelineItemProtocol? {
-        guard let originalJSON = eventItemProxy.debugInfo.originalJSON,
-              let jsonData = originalJSON.data(using: .utf8),
-              let eventDict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
-              let content = eventDict["content"] as? [String: Any],
-              let aiDict = content["ac.clap.ai"] as? [String: Any] else {
-            MXLog.warning("DivKit: Failed to extract ac.clap.ai content from originalJSON")
-            return nil
-        }
-        
-        guard let cardDict = aiDict["card"] as? [String: Any] else {
-            MXLog.warning("DivKit: Failed to parse card field in ac.clap.ai")
-            return nil
-        }
-        
-        let version = aiDict["version"] as? String ?? "1.0"
-        let messageTypeString = aiDict["message_type"] as? String ?? "unknown"
-        let requestID = aiDict["request_id"] as? String
-        
-        let divKitEnvelope: [String: Any] = ["card": cardDict]
-        guard let cardData = try? JSONSerialization.data(withJSONObject: divKitEnvelope) else {
-            MXLog.warning("DivKit: Failed to serialize DivKit envelope")
-            return nil
-        }
-        
-        let cardLogID = cardDict["log_id"] as? String
-        let messageType = DivKitMessageType(rawValue: messageTypeString) ?? .unknown
-        let palette = parseDivKitPalette(from: aiDict)
-        
+                                         isOutgoing: Bool) -> RoomTimelineItemProtocol {
         let divKitContent = DivKitRoomTimelineItemContent(
-            cardData: cardData,
+            cardData: payload.cardData,
             fallbackText: fallbackText,
-            messageType: messageType,
-            requestID: requestID,
-            version: version,
-            cardLogID: cardLogID,
-            palette: palette
+            messageType: payload.messageType,
+            requestID: payload.requestID,
+            version: payload.version,
+            cardLogID: payload.cardLogID,
+            palette: payload.palette
         )
         
         let item = DivKitRoomTimelineItem(
@@ -833,7 +828,7 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
         )
         
         Task { @MainActor in
-            DivKitComponentsProvider.shared.preloadHeight(cardData: cardData, cardID: item.id.uniqueID.value)
+            DivKitComponentsProvider.shared.preloadHeight(cardData: payload.cardData, cardID: item.id.uniqueID.value)
         }
         
         return item

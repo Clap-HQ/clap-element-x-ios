@@ -255,6 +255,7 @@ class ClientProxy: ClientProxyProtocol {
                 return (joinedRoomID, invitedRoomID)
             }
             .removeDuplicates { $0 == $1 }
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 self?.clapAIRoomIDSubject.send(result.joined)
                 self?.clapAIInviteRoomIDSubject.send(result.invited)

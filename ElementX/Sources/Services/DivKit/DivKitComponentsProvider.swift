@@ -38,6 +38,7 @@ final class DivKitComponentsProvider {
     }
 
     func setErrorHandler(for cardID: String, handler: @escaping () -> Void) {
+        registeredCardIDs.insert(cardID)
         errorReporter.handlers[cardID] = handler
     }
 

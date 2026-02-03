@@ -118,6 +118,8 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
     
     func stop() {
         chatsFlowCoordinator.stop()
+        agentFlowCoordinator?.stop()
+        agentFlowCoordinator = nil
     }
     
     func handleAppRoute(_ appRoute: AppRoute, animated: Bool) {

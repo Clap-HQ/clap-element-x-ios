@@ -51,10 +51,7 @@ struct TextRoomTimelineItem: TextBasedRoomTimelineItem, Equatable {
             return run.link
         }
         
-        return links.reduce(into: [URL]()) { unique, url in
-            if !unique.contains(url) {
-                unique.append(url)
-            }
-        }
+        var seen = Set<URL>()
+        return links.filter { seen.insert($0).inserted }
     }
 }

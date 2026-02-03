@@ -407,7 +407,7 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
                     .toolbar(module.details.barVisibility(in: horizontalSizeClass), for: .tabBar)
             }
 
-            legacyBotTab
+            legacyAgentTab
         }
         .introspect(.tabView, on: .supportedVersions) { tabBarController in
             configureLegacyAgentTabInterception(tabBarController)
@@ -416,7 +416,7 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
     }
 
     @ViewBuilder
-    private var legacyBotTab: some View {
+    private var legacyAgentTab: some View {
         if let agentTag = navigationTabCoordinator.agentTag {
             Color.clear
                 .tabItem {
@@ -474,9 +474,9 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
             guard let agentButton = tabBar.subviews
                 .first(where: { String(describing: type(of: $0)).contains("AuxiliaryView") }) else { return }
             
-            dotSize = AgentBadge.iOS26.dotSize
-            dotX = agentButton.frame.midX - dotSize / 2 + AgentBadge.iOS26.offset
-            dotY = agentButton.frame.midY - dotSize / 2 - AgentBadge.iOS26.offset
+            dotSize = AgentBadge.IOS26.dotSize
+            dotX = agentButton.frame.midX - dotSize / 2 + AgentBadge.IOS26.offset
+            dotY = agentButton.frame.midY - dotSize / 2 - AgentBadge.IOS26.offset
         } else {
             // iOS 18 and below: Agent tab is a regular UITabBarButton
             let agentIndex = navigationTabCoordinator.tabModules.count
@@ -487,9 +487,9 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
             guard agentIndex < tabBarButtons.count else { return }
             
             let agentButton = tabBarButtons[agentIndex]
-            dotSize = AgentBadge.iOS18.dotSize
-            dotX = agentButton.frame.midX + AgentBadge.iOS18.offset
-            dotY = agentButton.frame.minY + AgentBadge.iOS18.offset / 2
+            dotSize = AgentBadge.IOS18.dotSize
+            dotX = agentButton.frame.midX + AgentBadge.IOS18.offset
+            dotY = agentButton.frame.minY + AgentBadge.IOS18.offset / 2
         }
         
         let dotView = UIView(frame: CGRect(x: dotX, y: dotY, width: dotSize, height: dotSize))
@@ -514,12 +514,12 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
 private enum AgentBadge {
     static let viewTag = 9999
     
-    enum iOS26 {
+    enum IOS26 {
         static let dotSize: CGFloat = 8
         static let offset: CGFloat = 14
     }
     
-    enum iOS18 {
+    enum IOS18 {
         static let dotSize: CGFloat = 6
         static let offset: CGFloat = 12
     }
