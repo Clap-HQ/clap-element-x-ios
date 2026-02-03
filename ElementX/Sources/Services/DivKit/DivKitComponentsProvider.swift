@@ -101,12 +101,22 @@ final class DivKitComponentsProvider {
 // are handled by DivKit's DivActionHandler internally and never reach this handler.
 // The clap:// scheme check in handleDivKitAction provides additional safety.
 private final class DivKitActionRouter: DivUrlHandler {
-    var handlers: [String: (URL) -> Void] = [:]
+    private let lock = NSLock()
+    private var _handlers: [String: (URL) -> Void] = [:]
+    
+    var handlers: [String: (URL) -> Void] {
+        get { lock.withLock { _handlers } }
+        set { lock.withLock { _handlers = newValue } }
+    }
 
     func handle(_ url: URL, info: DivActionInfo, sender: AnyObject?) {
         let cardID = info.cardId.rawValue
-        if let handler = handlers[cardID] {
-            handler(url)
+        let handler = lock.withLock { _handlers[cardID] }
+        
+        if let handler {
+            DispatchQueue.main.async {
+                handler(url)
+            }
         } else {
             MXLog.warning("DivKit: No action handler registered for card '\(cardID)', URL: \(url)")
         }
@@ -116,7 +126,13 @@ private final class DivKitActionRouter: DivUrlHandler {
 // MARK: - Error Reporter
 
 private final class DivKitErrorReporter: DivReporter {
-    var handlers: [String: () -> Void] = [:]
+    private let lock = NSLock()
+    private var _handlers: [String: () -> Void] = [:]
+    
+    var handlers: [String: () -> Void] {
+        get { lock.withLock { _handlers } }
+        set { lock.withLock { _handlers = newValue } }
+    }
 
     func reportError(cardId: DivCardID, error: DivError) {
         let cardIDString = cardId.rawValue
@@ -128,9 +144,16 @@ private final class DivKitErrorReporter: DivReporter {
             return
         }
 
-        if let handler = handlers[cardIDString] {
-            handler()
-            handlers.removeValue(forKey: cardIDString)
+        let handler = lock.withLock {
+            let h = _handlers[cardIDString]
+            _handlers.removeValue(forKey: cardIDString)
+            return h
+        }
+        
+        if let handler {
+            DispatchQueue.main.async {
+                handler()
+            }
         }
     }
 }
