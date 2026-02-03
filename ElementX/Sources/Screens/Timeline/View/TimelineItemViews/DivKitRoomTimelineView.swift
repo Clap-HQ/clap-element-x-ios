@@ -145,7 +145,7 @@ struct DivKitRoomTimelineView_Previews: PreviewProvider, TestablePreview {
             isOutgoing: false,
             isEditable: false,
             canBeRepliedTo: false,
-            sender: .init(id: "ClapBot", displayName: "ClapBot"),
+            sender: .init(id: "ClapAI", displayName: "Clap AI"),
             content: DivKitRoomTimelineItemContent(
                 cardData: cardData,
                 fallbackText: fallbackText,

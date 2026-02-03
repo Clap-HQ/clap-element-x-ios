@@ -109,7 +109,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         configureStateMachine()
 
         setupObservers()
-        setupClapBotTabHandler()
+        setupClapAITabHandler()
     }
     
     func start(animated: Bool) {
@@ -301,18 +301,18 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
             .store(in: &cancellables)
     }
     
-    // MARK: - ClapBot
+    // MARK: - Clap AI
 
-    private func setupClapBotTabHandler() {
+    private func setupClapAITabHandler() {
         navigationTabCoordinator.bottomAccessoryAction = { [weak self] in
             guard let self else { return }
             Task { @MainActor in
-                await self.openClapBotDM()
+                await self.openClapAIDM()
             }
         }
     }
 
-    private func openClapBotDM() async {
+    private func openClapAIDM() async {
         let provider = userSession.clientProxy.staticRoomSummaryProvider
         if !provider.statePublisher.value.isLoaded {
             _ = await provider.statePublisher.values.first { $0.isLoaded }
@@ -320,14 +320,14 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         
         try? await Task.sleep(for: .milliseconds(50))
         
-        if let roomID = userSession.clientProxy.clapBotRoomID {
-            MXLog.info("Found ClapBot DM room: \(roomID)")
+        if let roomID = userSession.clientProxy.clapAIRoomID {
+            MXLog.info("Found Clap AI DM room: \(roomID)")
             presentAgentFlow(roomID: roomID)
             return
         }
         
-        if let inviteRoomID = userSession.clientProxy.clapBotInviteRoomID {
-            MXLog.info("Found ClapBot DM invite, accepting: \(inviteRoomID)")
+        if let inviteRoomID = userSession.clientProxy.clapAIInviteRoomID {
+            MXLog.info("Found Clap AI DM invite, accepting: \(inviteRoomID)")
             showLoadingIndicator()
             defer { hideLoadingIndicator() }
             
@@ -337,7 +337,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                 await withTaskGroup(of: Void.self) { [weak self] group in
                     guard let self else { return }
                     group.addTask {
-                        _ = await self.userSession.clientProxy.clapBotRoomIDPublisher.values.first { $0 == inviteRoomID }
+                        _ = await self.userSession.clientProxy.clapAIRoomIDPublisher.values.first { $0 == inviteRoomID }
                     }
                     group.addTask {
                         try? await Task.sleep(for: .seconds(5))
@@ -347,14 +347,14 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                 }
                 presentAgentFlow(roomID: inviteRoomID)
             case .failure(let error):
-                MXLog.error("Failed to accept ClapBot DM invite: \(error)")
-                flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapBotNotFound)
+                MXLog.error("Failed to accept Clap AI DM invite: \(error)")
+                flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapAiNotFound)
             }
             return
         }
 
-        MXLog.warning("No ClapBot DM room found")
-        flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapBotNotFound)
+        MXLog.warning("No Clap AI DM room found")
+        flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapAiNotFound)
     }
 
     private func presentAgentFlow(roomID: String) {

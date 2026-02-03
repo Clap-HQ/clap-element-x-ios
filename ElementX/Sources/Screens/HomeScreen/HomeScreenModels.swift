@@ -130,7 +130,7 @@ struct HomeScreenViewState: BindableState {
 
     /// Returns items based on the current filter state
     private var filteredVisibleItems: [HomeScreenListItem] {
-        let displayableRooms = rooms.filter { !$0.isSpaceChild && !$0.isClapBotRoom }
+        let displayableRooms = rooms.filter { !$0.isSpaceChild && !$0.isClapAIRoom }
         let filtersState = bindings.filtersState
 
         // Spaces + Unreads: show only unread spaces
@@ -181,8 +181,8 @@ struct HomeScreenViewState: BindableState {
             return rooms
         }
 
-        // Otherwise, exclude space children and ClapBot room
-        return rooms.filter { !$0.isSpaceChild && !$0.isClapBotRoom }
+        // Otherwise, exclude space children and Clap AI room
+        return rooms.filter { !$0.isSpaceChild && !$0.isClapAIRoom }
     }
 
     var bindings: HomeScreenViewStateBindings
@@ -290,8 +290,8 @@ struct HomeScreenRoom: Identifiable, Equatable {
     /// Whether this room is a child of a joined space (used for filtering in UI when groupSpaceRooms is enabled)
     let isSpaceChild: Bool
     
-    /// Whether this room is a ClapBot DM (hidden from room list, accessible via Agent tab)
-    let isClapBotRoom: Bool
+    /// Whether this room is a Clap AI DM (hidden from room list, accessible via Agent tab)
+    let isClapAIRoom: Bool
     
     var displayedLastMessage: AttributedString? {
         if isTombstoned {
@@ -321,12 +321,12 @@ struct HomeScreenRoom: Identifiable, Equatable {
                        canonicalAlias: nil,
                        isTombstoned: false,
                        isSpaceChild: false,
-                       isClapBotRoom: false)
+                       isClapAIRoom: false)
     }
 }
 
 extension HomeScreenRoom {
-    init(summary: RoomSummary, hideUnreadMessagesBadge: Bool, seenInvites: Set<String> = [], isSpaceChild: Bool = false, isClapBotRoom: Bool = false) {
+    init(summary: RoomSummary, hideUnreadMessagesBadge: Bool, seenInvites: Set<String> = [], isSpaceChild: Bool = false, isClapAIRoom: Bool = false) {
         let roomID = summary.id
 
         let hasUnreadMessages = hideUnreadMessagesBadge ? false : summary.hasUnreadMessages
@@ -364,7 +364,7 @@ extension HomeScreenRoom {
                   canonicalAlias: summary.canonicalAlias,
                   isTombstoned: summary.isTombstoned,
                   isSpaceChild: isSpaceChild,
-                  isClapBotRoom: isClapBotRoom)
+                  isClapAIRoom: isClapAIRoom)
     }
 }
 

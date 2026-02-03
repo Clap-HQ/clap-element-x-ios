@@ -44,7 +44,7 @@ class AgentFlowCoordinator {
             guard agentScreenCoordinator == nil else { return }
             
             guard case let .joined(roomProxy) = await userSession.clientProxy.roomForIdentifier(roomID) else {
-                MXLog.error("Failed to resolve ClapBot room: \(roomID)")
+                MXLog.error("Failed to resolve Clap AI room: \(roomID)")
                 return
             }
             

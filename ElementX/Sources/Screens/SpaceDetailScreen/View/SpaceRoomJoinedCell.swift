@@ -167,7 +167,7 @@ struct SpaceRoomJoinedCell_Previews: PreviewProvider, TestablePreview {
                     canonicalAlias: nil,
                     isTombstoned: false,
                     isSpaceChild: true,
-                    isClapBotRoom: false
+                    isClapAIRoom: false
                 ),
                 isSelected: false,
                 mediaProvider: mediaProvider
@@ -192,7 +192,7 @@ struct SpaceRoomJoinedCell_Previews: PreviewProvider, TestablePreview {
                     canonicalAlias: nil,
                     isTombstoned: false,
                     isSpaceChild: true,
-                    isClapBotRoom: false
+                    isClapAIRoom: false
                 ),
                 isSelected: false,
                 mediaProvider: mediaProvider

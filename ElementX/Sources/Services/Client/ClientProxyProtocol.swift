@@ -184,14 +184,14 @@ protocol ClientProxyProtocol: AnyObject {
     /// Clap-specific REST API calls (/_clap/...)
     var clapAPI: ClapAPIServiceProtocol { get }
     
-    /// Room ID of the unencrypted ClapBot DM (used by Agent screen)
-    var clapBotRoomID: String? { get }
+    /// Room ID of the unencrypted Clap AI DM (used by Agent screen)
+    var clapAIRoomID: String? { get }
     
-    /// Room ID of the pending ClapBot DM invite
-    var clapBotInviteRoomID: String? { get }
+    /// Room ID of the pending Clap AI DM invite
+    var clapAIInviteRoomID: String? { get }
     
-    /// Publisher for clapBotRoomID changes
-    var clapBotRoomIDPublisher: CurrentValuePublisher<String?, Never> { get }
+    /// Publisher for clapAIRoomID changes
+    var clapAIRoomIDPublisher: CurrentValuePublisher<String?, Never> { get }
 
     var isReportRoomSupported: Bool { get async }
     

@@ -755,17 +755,17 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                          sender: eventItemProxy.sender)
     }
     
-    // MARK: - DivKit (ClapBot Server-Driven UI)
+    // MARK: - DivKit (Clap AI Server-Driven UI)
     
     private func hasDivKitContent(_ eventItemProxy: EventTimelineItemProxy) -> Bool {
         guard let originalJSON = eventItemProxy.debugInfo.originalJSON,
               let jsonData = originalJSON.data(using: .utf8),
               let eventDict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
               let content = eventDict["content"] as? [String: Any],
-              let botDict = content["ac.clap.bot"] as? [String: Any] else {
+              let aiDict = content["ac.clap.ai"] as? [String: Any] else {
             return false
         }
-        return botDict["card"] is [String: Any]
+        return aiDict["card"] is [String: Any]
     }
     
     private func buildDivKitTimelineItem(for eventItemProxy: EventTimelineItemProxy,
@@ -776,19 +776,19 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
               let jsonData = originalJSON.data(using: .utf8),
               let eventDict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
               let content = eventDict["content"] as? [String: Any],
-              let botDict = content["ac.clap.bot"] as? [String: Any] else {
-            MXLog.warning("DivKit: Failed to extract ac.clap.bot content from originalJSON")
+              let aiDict = content["ac.clap.ai"] as? [String: Any] else {
+            MXLog.warning("DivKit: Failed to extract ac.clap.ai content from originalJSON")
             return nil
         }
         
-        guard let cardDict = botDict["card"] as? [String: Any] else {
-            MXLog.warning("DivKit: Failed to parse card field in ac.clap.bot")
+        guard let cardDict = aiDict["card"] as? [String: Any] else {
+            MXLog.warning("DivKit: Failed to parse card field in ac.clap.ai")
             return nil
         }
         
-        let version = botDict["version"] as? String ?? "1.0"
-        let messageTypeString = botDict["message_type"] as? String ?? "unknown"
-        let requestID = botDict["request_id"] as? String
+        let version = aiDict["version"] as? String ?? "1.0"
+        let messageTypeString = aiDict["message_type"] as? String ?? "unknown"
+        let requestID = aiDict["request_id"] as? String
         
         let divKitEnvelope: [String: Any] = ["card": cardDict]
         guard let cardData = try? JSONSerialization.data(withJSONObject: divKitEnvelope) else {
@@ -798,7 +798,7 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
         
         let cardLogID = cardDict["log_id"] as? String
         let messageType = DivKitMessageType(rawValue: messageTypeString) ?? .unknown
-        let palette = parseDivKitPalette(from: botDict)
+        let palette = parseDivKitPalette(from: aiDict)
         
         let divKitContent = DivKitRoomTimelineItemContent(
             cardData: cardData,

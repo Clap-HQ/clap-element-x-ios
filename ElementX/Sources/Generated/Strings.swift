@@ -422,8 +422,8 @@ internal enum L10n {
   internal static var commonCallStarted: String { return L10n.tr("Localizable", "common_call_started") }
   /// Chat backup
   internal static var commonChatBackup: String { return L10n.tr("Localizable", "common_chat_backup") }
-  /// ClapBot room could not be found.
-  internal static var commonClapBotNotFound: String { return L10n.tr("Localizable", "common_clap_bot_not_found") }
+  /// Clap AI room could not be found.
+  internal static var commonClapAiNotFound: String { return L10n.tr("Localizable", "common_clap_ai_not_found") }
   /// Copied to clipboard
   internal static var commonCopiedToClipboard: String { return L10n.tr("Localizable", "common_copied_to_clipboard") }
   /// Copyright

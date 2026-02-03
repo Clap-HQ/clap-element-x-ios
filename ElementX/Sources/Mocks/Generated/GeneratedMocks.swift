@@ -2459,13 +2459,13 @@ class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
         set(value) { underlyingClapAPI = value }
     }
     var underlyingClapAPI: ClapAPIServiceProtocol!
-    var clapBotRoomID: String?
-    var clapBotInviteRoomID: String?
-    var clapBotRoomIDPublisher: CurrentValuePublisher<String?, Never> {
-        get { return underlyingClapBotRoomIDPublisher }
-        set(value) { underlyingClapBotRoomIDPublisher = value }
+    var clapAIRoomID: String?
+    var clapAIInviteRoomID: String?
+    var clapAIRoomIDPublisher: CurrentValuePublisher<String?, Never> {
+        get { return underlyingClapAIRoomIDPublisher }
+        set(value) { underlyingClapAIRoomIDPublisher = value }
     }
-    var underlyingClapBotRoomIDPublisher: CurrentValuePublisher<String?, Never>!
+    var underlyingClapAIRoomIDPublisher: CurrentValuePublisher<String?, Never>!
     var isReportRoomSupportedCallsCount = 0
     var isReportRoomSupportedCalled: Bool {
         return isReportRoomSupportedCallsCount > 0

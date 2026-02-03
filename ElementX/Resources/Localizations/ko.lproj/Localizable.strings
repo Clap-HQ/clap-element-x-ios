@@ -1550,4 +1550,4 @@
 "screen_join_all_rooms_confirmation_title" = "모든 방에 참여할까요?";
 "screen_join_all_rooms_confirmation_subtitle" = "%@의 모든 방에 참여하시겠습니까?";
 "screen_join_all_rooms_confirmation_action" = "모두 참여";
-"common_clap_bot_not_found" = "ClapBot 채팅방을 찾을 수 없습니다.";
+"common_clap_ai_not_found" = "Clap AI 채팅방을 찾을 수 없습니다.";

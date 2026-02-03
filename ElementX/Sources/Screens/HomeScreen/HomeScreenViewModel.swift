@@ -291,7 +291,7 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             }
             .store(in: &cancellables)
         
-        userSession.clientProxy.clapBotRoomIDPublisher
+        userSession.clientProxy.clapAIRoomIDPublisher
             .receive(on: DispatchQueue.main)
             .removeDuplicates()
             .sink { [weak self] _ in
@@ -576,19 +576,19 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             return
         }
 
-        let clapBotRoomID = userSession.clientProxy.clapBotRoomID
+        let clapAIRoomID = userSession.clientProxy.clapAIRoomID
         var rooms = [HomeScreenRoom]()
         let seenInvites = appSettings.seenInvites
         
         for summary in roomSummaryProvider.roomListPublisher.value {
             let isSpaceChild = spaceChildrenRoomIDs.contains(summary.id)
-            let isClapBotRoom = summary.id == clapBotRoomID
+            let isClapAIRoom = summary.id == clapAIRoomID
 
             let room = HomeScreenRoom(summary: summary,
                                       hideUnreadMessagesBadge: appSettings.hideUnreadMessagesBadge,
                                       seenInvites: seenInvites,
                                       isSpaceChild: isSpaceChild,
-                                      isClapBotRoom: isClapBotRoom)
+                                      isClapAIRoom: isClapAIRoom)
             rooms.append(room)
         }
         

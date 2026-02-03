@@ -220,7 +220,7 @@ class SpaceDetailScreenViewModel: SpaceDetailScreenViewModelType, SpaceDetailScr
                         canonicalAlias: nil,
                         isTombstoned: false,
                         isSpaceChild: true,
-                        isClapBotRoom: false
+                        isClapAIRoom: false
                     )
                     joinedItems.append(.joined(room))
                 }
