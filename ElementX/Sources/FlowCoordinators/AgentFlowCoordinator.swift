@@ -29,6 +29,7 @@ class AgentFlowCoordinator {
     }
     
     var navigationStack: NavigationStackCoordinator { navigationStackCoordinator }
+    var currentRoomID: String? { roomProxy?.id }
     
     init(userSession: UserSessionProtocol,
          flowParameters: CommonFlowParameters) {

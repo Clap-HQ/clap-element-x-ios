@@ -166,6 +166,9 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
     }
     
     func isDisplayingRoomScreen(withRoomID roomID: String) -> Bool {
+        if agentFlowCoordinator?.currentRoomID == roomID {
+            return true
+        }
         guard navigationTabCoordinator.selectedTab == .chats else { return false }
         return chatsFlowCoordinator.isDisplayingRoomScreen(withRoomID: roomID)
     }
