@@ -63,6 +63,17 @@ class ClientProxy: ClientProxyProtocol {
     let matrixAPI: MatrixAPIServiceProtocol
 
     let clapAPI: ClapAPIServiceProtocol
+    
+    private static let clapAIUserID = "@clap-ai:\(InfoPlistReader.main.clapHomeserver)"
+    private let clapAIRoomIDSubject = CurrentValueSubject<String?, Never>(nil)
+    private let clapAIInviteRoomIDSubject = CurrentValueSubject<String?, Never>(nil)
+    
+    var clapAIRoomID: String? { clapAIRoomIDSubject.value }
+    var clapAIInviteRoomID: String? { clapAIInviteRoomIDSubject.value }
+    
+    var clapAIRoomIDPublisher: CurrentValuePublisher<String?, Never> {
+        clapAIRoomIDSubject.asCurrentValuePublisher()
+    }
 
     private static var roomCreationPowerLevelOverrides: PowerLevels {
         .init(usersDefault: nil,
@@ -220,6 +231,34 @@ class ClientProxy: ClientProxyProtocol {
                 if reachability == .reachable {
                     self?.startSync()
                 }
+            }
+            .store(in: &cancellables)
+        
+        staticRoomSummaryProvider.roomListPublisher
+            .map { summaries -> (joined: String?, invited: String?) in
+                let clapAIRooms = summaries.filter { summary in
+                    guard summary.isDirect, summary.room.encryptionState() != .encrypted else { return false }
+                    
+                    if summary.heroes.contains(where: { $0.userID == Self.clapAIUserID }) {
+                        return true
+                    }
+                    
+                    if case .invite(let inviter) = summary.joinRequestType,
+                       inviter?.userID == Self.clapAIUserID {
+                        return true
+                    }
+                    
+                    return false
+                }
+                let joinedRoomID = clapAIRooms.first { $0.joinRequestType == nil }?.id
+                let invitedRoomID = clapAIRooms.first { $0.joinRequestType != nil }?.id
+                return (joinedRoomID, invitedRoomID)
+            }
+            .removeDuplicates { $0 == $1 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                self?.clapAIRoomIDSubject.send(result.joined)
+                self?.clapAIInviteRoomIDSubject.send(result.invited)
             }
             .store(in: &cancellables)
 

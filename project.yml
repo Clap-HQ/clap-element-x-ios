@@ -52,7 +52,7 @@ settings:
   ENABLE_BITCODE: false
   APP_NAME: ElementX
   KEYCHAIN_ACCESS_GROUP_IDENTIFIER: "$(DEVELOPMENT_TEAM).$(BASE_BUNDLE_IDENTIFIER)"
-  MARKETING_VERSION: 0.0.15
+  MARKETING_VERSION: 0.0.16
   CURRENT_PROJECT_VERSION: 1
   VERSIONING_SYSTEM: apple-generic
   SUPPORTS_MACCATALYST: false
@@ -97,6 +97,9 @@ packages:
     url: https://github.com/element-hq/matrix-rich-text-editor-swift
     exactVersion: 2.41.0
     # path: ../matrix-rich-text-editor/platforms/ios/lib/WysiwygComposer
+  DivKit:
+    url: https://github.com/divkit/divkit-ios
+    minorVersion: 32.35.0
   
   # External dependencies
   Algorithms:

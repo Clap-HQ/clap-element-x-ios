@@ -290,6 +290,14 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
                 self?.updateRooms()
             }
             .store(in: &cancellables)
+        
+        userSession.clientProxy.clapAIRoomIDPublisher
+            .receive(on: DispatchQueue.main)
+            .removeDuplicates()
+            .sink { [weak self] _ in
+                self?.updateRooms()
+            }
+            .store(in: &cancellables)
     }
 
     private func setupSpaceSubscriptions() {
@@ -568,17 +576,19 @@ class HomeScreenViewModel: HomeScreenViewModelType, HomeScreenViewModelProtocol 
             return
         }
 
+        let clapAIRoomID = userSession.clientProxy.clapAIRoomID
         var rooms = [HomeScreenRoom]()
         let seenInvites = appSettings.seenInvites
         
         for summary in roomSummaryProvider.roomListPublisher.value {
-            // Mark rooms that belong to any joined space (for filtering in UI)
             let isSpaceChild = spaceChildrenRoomIDs.contains(summary.id)
+            let isClapAIRoom = summary.id == clapAIRoomID
 
             let room = HomeScreenRoom(summary: summary,
                                       hideUnreadMessagesBadge: appSettings.hideUnreadMessagesBadge,
                                       seenInvites: seenInvites,
-                                      isSpaceChild: isSpaceChild)
+                                      isSpaceChild: isSpaceChild,
+                                      isClapAIRoom: isClapAIRoom)
             rooms.append(room)
         }
         

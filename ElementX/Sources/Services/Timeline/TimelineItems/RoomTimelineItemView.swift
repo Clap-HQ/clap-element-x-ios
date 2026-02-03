@@ -11,19 +11,34 @@ import OrderedCollections
 
 struct RoomTimelineItemView: View {
     @Environment(\.timelineContext) var context
+    @Environment(\.hidesTimelineDecorations) private var hidesTimelineDecorations
     @ObservedObject var viewState: RoomTimelineItemViewState
     
     var body: some View {
-        timelineView
-            .animation(.elementDefault, value: viewState.groupStyle)
-            .animation(.elementDefault, value: viewState.type)
-            .environment(\.timelineGroupStyle, viewState.groupStyle)
-            .onAppear {
-                context?.send(viewAction: .itemAppeared(itemID: viewState.identifier))
-            }
-            .onDisappear {
-                context?.send(viewAction: .itemDisappeared(itemID: viewState.identifier))
-            }
+        if shouldHideItem {
+            EmptyView()
+        } else {
+            timelineView
+                .animation(.elementDefault, value: viewState.groupStyle)
+                .animation(.elementDefault, value: viewState.type)
+                .environment(\.timelineGroupStyle, viewState.groupStyle)
+                .onAppear {
+                    context?.send(viewAction: .itemAppeared(itemID: viewState.identifier))
+                }
+                .onDisappear {
+                    context?.send(viewAction: .itemDisappeared(itemID: viewState.identifier))
+                }
+        }
+    }
+    
+    private var shouldHideItem: Bool {
+        guard hidesTimelineDecorations else { return false }
+        switch viewState.type {
+        case .readMarker, .state, .group:
+            return true
+        default:
+            return false
+        }
     }
 
     @ViewBuilder private var timelineView: some View {
@@ -75,6 +90,8 @@ struct RoomTimelineItemView: View {
             CallInviteRoomTimelineView(timelineItem: item)
         case .callNotification(let item):
             CallNotificationRoomTimelineView(timelineItem: item)
+        case .divKit(let item):
+            DivKitRoomTimelineView(timelineItem: item)
         }
     }
     

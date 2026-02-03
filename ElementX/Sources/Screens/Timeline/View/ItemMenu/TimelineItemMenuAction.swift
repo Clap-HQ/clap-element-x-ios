@@ -140,6 +140,15 @@ enum TimelineItemMenuAction: Identifiable, Hashable {
         }
     }
     
+    var canAppearInMinimalMenu: Bool {
+        switch self {
+        case .copy, .translate, .copyCaption, .copyPermalink, .redact, .forward, .viewSource:
+            true
+        default:
+            false
+        }
+    }
+    
     /// The action's label.
     @ViewBuilder
     var label: some View {

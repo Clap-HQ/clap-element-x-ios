@@ -1,0 +1,160 @@
+//
+// Copyright 2025 Clap Inc.
+//
+// SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Element-Commercial.
+// Please see LICENSE files in the repository root for full details.
+//
+
+import DivKit
+import Foundation
+import UIKit
+
+@MainActor
+final class DivKitComponentsProvider {
+    static let shared = DivKitComponentsProvider()
+
+    let components: DivKitComponents
+    private let actionRouter: DivKitActionRouter
+    private let errorReporter: DivKitErrorReporter
+    private var registeredCardIDs: Set<String> = []
+    private var cachedHeights: [String: CGFloat] = [:]
+
+    private init() {
+        let router = DivKitActionRouter()
+        let reporter = DivKitErrorReporter()
+        self.actionRouter = router
+        self.errorReporter = reporter
+        self.components = DivKitComponents(reporter: reporter, urlHandler: router)
+    }
+
+    func setActionHandler(for cardID: String, handler: @escaping (URL) -> Void) {
+        registeredCardIDs.insert(cardID)
+        actionRouter.handlers[cardID] = handler
+    }
+
+    func removeActionHandler(for cardID: String) {
+        actionRouter.handlers.removeValue(forKey: cardID)
+        removeCardIDIfFullyCleanedUp(cardID)
+    }
+
+    func setErrorHandler(for cardID: String, handler: @escaping () -> Void) {
+        registeredCardIDs.insert(cardID)
+        errorReporter.handlers[cardID] = handler
+    }
+
+    func removeErrorHandler(for cardID: String) {
+        errorReporter.handlers.removeValue(forKey: cardID)
+        removeCardIDIfFullyCleanedUp(cardID)
+    }
+
+    private func removeCardIDIfFullyCleanedUp(_ cardID: String) {
+        if actionRouter.handlers[cardID] == nil, errorReporter.handlers[cardID] == nil {
+            registeredCardIDs.remove(cardID)
+        }
+    }
+
+    func cachedHeight(for cardID: String) -> CGFloat? {
+        cachedHeights[cardID]
+    }
+
+    func cacheHeight(_ height: CGFloat, for cardID: String) {
+        cachedHeights[cardID] = height
+    }
+
+    /// Pre-calculates DivKit card height before the cell is displayed.
+    /// The estimated width is used only for initial height calculation.
+    /// Actual rendering uses the real parent bounds, same as other message bubbles.
+    func preloadHeight(cardData: Data, cardID: String) {
+        guard cachedHeights[cardID] == nil else { return }
+        
+        let sizingView = DivView(divKitComponents: components)
+        let estimatedBubbleWidth = UIScreen.main.bounds.width * 0.8
+        sizingView.frame = CGRect(x: 0, y: 0, width: estimatedBubbleWidth, height: 0)
+        
+        let source = DivViewSource(kind: .data(cardData), cardId: DivCardID(rawValue: "sizing-\(cardID)"))
+        Task {
+            await sizingView.setSource(source)
+            sizingView.layoutIfNeeded()
+            
+            let height = sizingView.intrinsicContentSize.height
+            if height > 0 {
+                cacheHeight(height, for: cardID)
+            }
+        }
+    }
+
+    func resetAllCardState(keepHeightCache: Bool = false) {
+        for cardID in registeredCardIDs {
+            components.reset(cardId: DivCardID(rawValue: cardID))
+        }
+        actionRouter.handlers.removeAll()
+        errorReporter.handlers.removeAll()
+        registeredCardIDs.removeAll()
+        if !keepHeightCache {
+            cachedHeights.removeAll()
+        }
+    }
+}
+
+// MARK: - Action Router
+
+// Note: div-action:// URLs (internal DivKit state changes like expand/collapse)
+// are handled by DivKit's DivActionHandler internally and never reach this handler.
+// The clap:// scheme check in handleDivKitAction provides additional safety.
+private final class DivKitActionRouter: DivUrlHandler {
+    private let lock = NSLock()
+    private var _handlers: [String: (URL) -> Void] = [:]
+    
+    var handlers: [String: (URL) -> Void] {
+        get { lock.withLock { _handlers } }
+        set { lock.withLock { _handlers = newValue } }
+    }
+
+    func handle(_ url: URL, info: DivActionInfo, sender: AnyObject?) {
+        let cardID = info.cardId.rawValue
+        let handler = lock.withLock { _handlers[cardID] }
+        
+        if let handler {
+            DispatchQueue.main.async {
+                handler(url)
+            }
+        } else {
+            MXLog.warning("DivKit: No action handler registered for card '\(cardID)', URL: \(url)")
+        }
+    }
+}
+
+// MARK: - Error Reporter
+
+private final class DivKitErrorReporter: DivReporter {
+    private let lock = NSLock()
+    private var _handlers: [String: () -> Void] = [:]
+    
+    var handlers: [String: () -> Void] {
+        get { lock.withLock { _handlers } }
+        set { lock.withLock { _handlers = newValue } }
+    }
+
+    func reportError(cardId: DivCardID, error: DivError) {
+        let cardIDString = cardId.rawValue
+        MXLog.warning("DivKit: Error for card '\(cardIDString)': \(error.message) (kind: \(error.kind), level: \(error.level))")
+
+        // Only trigger fallback for fatal errors (deserialization/block modeling), not warnings or expression errors
+        guard error.level == .error,
+              error.kind == .deserialization || error.kind == .blockModeling else {
+            return
+        }
+
+        let handler = lock.withLock {
+            let h = _handlers[cardIDString]
+            _handlers.removeValue(forKey: cardIDString)
+            return h
+        }
+        
+        if let handler {
+            DispatchQueue.main.async {
+                handler()
+            }
+        }
+    }
+}

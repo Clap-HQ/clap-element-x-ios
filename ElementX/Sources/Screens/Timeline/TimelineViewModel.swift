@@ -93,6 +93,8 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
         case .never:
             true
         }
+        let persistedDivKitEventIDs = Set(appSettings.actedDivKitEventIDs[roomProxy.id] ?? [])
+        
         super.init(initialViewState: TimelineViewState(timelineKind: timelineController.timelineKind,
                                                        roomID: roomProxy.id,
                                                        isDirectOneToOneRoom: roomProxy.isDirectOneToOneRoom,
@@ -104,6 +106,7 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
                                                        linkPreviewsEnabled: appSettings.linkPreviewsEnabled,
                                                        hasPredecessor: roomProxy.predecessorRoom != nil,
                                                        pinnedEventIDs: roomProxy.infoPublisher.value.pinnedEventIDs,
+                                                       actedDivKitEventIDs: persistedDivKitEventIDs,
                                                        emojiProvider: emojiProvider,
                                                        linkMetadataProvider: hideTimelineMedia ? nil : linkMetadataProvider,
                                                        mapTilerConfiguration: appSettings.mapTilerConfiguration,
@@ -197,6 +200,14 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
             handlePollAction(pollAction)
         case .handleAudioPlayerAction(let audioPlayerAction):
             handleAudioPlayerAction(audioPlayerAction)
+        case .handleDivKitAction(let message, let itemID):
+            Task {
+                await sendDivKitActionMessage(message)
+                if let eventID = itemID.eventID {
+                    state.actedDivKitEventIDs.insert(eventID)
+                    persistActedDivKitEventID(eventID)
+                }
+            }
         case .focusOnEventID(let eventID):
             Task { await focusOnEvent(eventID: eventID) }
         case .focusLive:
@@ -696,6 +707,36 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
         }
         
         actionsSubject.send(.displayRoom(roomID: resolvedAlias.roomId, via: resolvedAlias.servers))
+    }
+
+    private func sendDivKitActionMessage(_ message: String) async {
+        guard !message.isEmpty else {
+            return
+        }
+        await timelineController.sendMessage(message,
+                                             html: nil,
+                                             inReplyToEventID: nil,
+                                             intentionalMentions: .empty)
+        scrollToBottom()
+    }
+    
+    private static let maxActedEventIDsPerRoom = 100
+    
+    private func persistActedDivKitEventID(_ eventID: String) {
+        let roomID = roomProxy.id
+        var storage = appSettings.actedDivKitEventIDs
+        var eventIDs = storage[roomID] ?? []
+        
+        guard !eventIDs.contains(eventID) else { return }
+        
+        eventIDs.append(eventID)
+        
+        if eventIDs.count > Self.maxActedEventIDsPerRoom {
+            eventIDs = Array(eventIDs.suffix(Self.maxActedEventIDsPerRoom))
+        }
+        
+        storage[roomID] = eventIDs
+        appSettings.actedDivKitEventIDs = storage
     }
     
     private func sendCurrentMessage(_ message: String, html: String?, mode: ComposerMode, intentionalMentions: IntentionalMentions) async {

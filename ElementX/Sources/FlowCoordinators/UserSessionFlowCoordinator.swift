@@ -20,7 +20,9 @@ enum UserSessionFlowCoordinatorAction {
 }
 
 class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
-    enum HomeTab: Hashable { case chats, spaces }
+    private static let loadingIndicatorIdentifier = "\(UserSessionFlowCoordinator.self)-Loading"
+    
+    enum HomeTab: Hashable { case chats, spaces, search }
     
     private let navigationRootCoordinator: NavigationRootCoordinator
     private let navigationTabCoordinator: NavigationTabCoordinator<HomeTab>
@@ -38,7 +40,8 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
     
     // periphery:ignore - retaining purpose
     private var settingsFlowCoordinator: SettingsFlowCoordinator?
-    
+    private var agentFlowCoordinator: AgentFlowCoordinator?
+
     enum State: StateType {
         /// The state machine hasn't started.
         case initial
@@ -89,7 +92,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                                                                     flowParameters: flowParameters)
         spacesTabDetails = .init(tag: HomeTab.spaces, title: L10n.screenHomeTabSpaces, icon: \.space, selectedIcon: \.spaceSolid)
         spacesTabDetails.navigationSplitCoordinator = spacesSplitCoordinator
-        
+
         onboardingStackCoordinator = NavigationStackCoordinator()
         onboardingFlowCoordinator = OnboardingFlowCoordinator(isNewLogin: isNewLogin,
                                                               appLockService: appLockService,
@@ -100,11 +103,13 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
             .init(coordinator: chatsSplitCoordinator, details: chatsTabDetails),
             .init(coordinator: spacesSplitCoordinator, details: spacesTabDetails)
         ])
-        
+        navigationTabCoordinator.agentTag = .search
+
         stateMachine = flowParameters.stateMachineFactory.makeUserSessionFlowStateMachine(state: .initial)
         configureStateMachine()
-        
+
         setupObservers()
+        setupClapAITabHandler()
     }
     
     func start(animated: Bool) {
@@ -113,6 +118,8 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
     
     func stop() {
         chatsFlowCoordinator.stop()
+        agentFlowCoordinator?.stop()
+        agentFlowCoordinator = nil
     }
     
     func handleAppRoute(_ appRoute: AppRoute, animated: Bool) {
@@ -132,6 +139,7 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
              .roomDetails, .roomMemberDetails, .userProfile,
              .event, .eventOnRoomAlias, .childEvent, .childEventOnRoomAlias,
              .share, .transferOwnership, .thread:
+            dismissAgentScreen() // Dismiss if presented (e.g., navigating via push notification)
             clearPresentedSheets(animated: animated) // Make sure the presented route is visible.
             chatsFlowCoordinator.handleAppRoute(appRoute, animated: animated)
             if navigationTabCoordinator.selectedTab != .chats {
@@ -161,6 +169,9 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
     }
     
     func isDisplayingRoomScreen(withRoomID roomID: String) -> Bool {
+        if agentFlowCoordinator?.currentRoomID == roomID {
+            return true
+        }
         guard navigationTabCoordinator.selectedTab == .chats else { return false }
         return chatsFlowCoordinator.isDisplayingRoomScreen(withRoomID: roomID)
     }
@@ -203,6 +214,8 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                     presentSessionVerificationScreen(flow: flow)
                 case .showCallScreen(let roomProxy):
                     presentCallScreen(roomProxy: roomProxy)
+                case .showAgentScreen(let roomID):
+                    presentAgentScreen(roomID: roomID)
                 case .hideCallScreenOverlay:
                     hideCallScreenOverlay()
                 case .logout:
@@ -296,8 +309,110 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
             .store(in: &cancellables)
     }
     
+    // MARK: - Clap AI
+
+    private func setupClapAITabHandler() {
+        navigationTabCoordinator.bottomAccessoryAction = { [weak self] in
+            guard let self else { return }
+            Task { @MainActor in
+                await self.openClapAIDM()
+            }
+        }
+        
+        userSession.clientProxy.clapAIRoomIDPublisher
+            .combineLatest(userSession.clientProxy.roomSummaryProvider.roomListPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] clapAIRoomID, roomSummaries in
+                guard let self, let clapAIRoomID else {
+                    self?.navigationTabCoordinator.hasAgentUnread = false
+                    return
+                }
+                let hasUnread = roomSummaries
+                    .first { $0.id == clapAIRoomID }
+                    .map { $0.hasUnreadNotifications } ?? false
+                navigationTabCoordinator.hasAgentUnread = hasUnread
+            }
+            .store(in: &cancellables)
+    }
+
+    private func openClapAIDM() async {
+        let provider = userSession.clientProxy.staticRoomSummaryProvider
+        if !provider.statePublisher.value.isLoaded {
+            _ = await provider.statePublisher.values.first { $0.isLoaded }
+        }
+        
+        // Allow time for clapAIRoomID/clapAIInviteRoomID to be populated after room list loads.
+        // The staticRoomSummaryProvider.statePublisher emits before ClientProxy finishes scanning for Clap AI rooms.
+        try? await Task.sleep(for: .milliseconds(50))
+        
+        if let roomID = userSession.clientProxy.clapAIRoomID {
+            MXLog.info("Found Clap AI DM room: \(roomID)")
+            presentAgentScreen(roomID: roomID)
+            return
+        }
+        
+        if let inviteRoomID = userSession.clientProxy.clapAIInviteRoomID {
+            MXLog.info("Found Clap AI DM invite, accepting: \(inviteRoomID)")
+            showLoadingIndicator()
+            defer { hideLoadingIndicator() }
+            
+            let result = await userSession.clientProxy.joinRoom(inviteRoomID, via: [])
+            switch result {
+            case .success:
+                await withTaskGroup(of: Void.self) { [weak self] group in
+                    guard let self else { return }
+                    group.addTask {
+                        _ = await self.userSession.clientProxy.clapAIRoomIDPublisher.values.first { $0 == inviteRoomID }
+                    }
+                    group.addTask {
+                        try? await Task.sleep(for: .seconds(5))
+                    }
+                    await group.next()
+                    group.cancelAll()
+                }
+                presentAgentScreen(roomID: inviteRoomID)
+            case .failure(let error):
+                MXLog.error("Failed to accept Clap AI DM invite: \(error)")
+                flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapAiNotFound)
+            }
+            return
+        }
+
+        MXLog.warning("No Clap AI DM room found")
+        flowParameters.userIndicatorController.alertInfo = .init(id: .init(), title: L10n.commonError, message: L10n.commonClapAiNotFound)
+    }
+
+    private func presentAgentScreen(roomID: String) {
+        guard agentFlowCoordinator == nil else { return }
+        
+        let coordinator = AgentFlowCoordinator(userSession: userSession,
+                                                flowParameters: flowParameters)
+        
+        coordinator.actions.sink { [weak self] action in
+            guard let self else { return }
+            switch action {
+            case .dismiss:
+                dismissAgentScreen()
+            }
+        }
+        .store(in: &cancellables)
+        
+        coordinator.presentAgentScreen(roomID: roomID)
+        agentFlowCoordinator = coordinator
+        
+        navigationTabCoordinator.setFullScreenCoverCoordinator(coordinator.navigationStack, animated: true) { [weak self] in
+            self?.dismissAgentScreen()
+        }
+    }
+
+    private func dismissAgentScreen() {
+        agentFlowCoordinator?.stop()
+        navigationTabCoordinator.setFullScreenCoverCoordinator(nil)
+        agentFlowCoordinator = nil
+    }
+
     // MARK: - Onboarding
-    
+
     private func attemptStartingOnboarding() {
         MXLog.info("Attempting to start onboarding")
         
@@ -550,4 +665,17 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
         
         navigationTabCoordinator.setSheetCoordinator(coordinator, animated: true)
     }
+    
+    private func showLoadingIndicator(delay: Duration? = nil) {
+        flowParameters.userIndicatorController.submitIndicator(UserIndicator(id: Self.loadingIndicatorIdentifier,
+                                                                             type: .modal,
+                                                                             title: L10n.commonLoading,
+                                                                             persistent: true),
+                                                               delay: delay)
+    }
+    
+    private func hideLoadingIndicator() {
+        flowParameters.userIndicatorController.retractIndicatorWithId(Self.loadingIndicatorIdentifier)
+    }
 }
+

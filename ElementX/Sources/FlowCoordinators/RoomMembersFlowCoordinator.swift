@@ -360,6 +360,8 @@ final class RoomMembersFlowCoordinator: FlowCoordinatorProtocol {
                 switch action {
                 case .presentCallScreen(let roomProxy):
                     actionsSubject.send(.presentCallScreen(roomProxy: roomProxy))
+                case .presentAgentScreen:
+                    break
                 case .verifyUser(let userID):
                     actionsSubject.send(.verifyUser(userID: userID))
                 case .continueWithSpaceFlow, .continueWithSpaceDetailFlow:

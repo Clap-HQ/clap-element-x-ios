@@ -176,7 +176,8 @@ class TimelineTableViewController: UIViewController {
     
     init(coordinator: TimelineViewRepresentable.Coordinator,
          isScrolledToBottom: Binding<Bool>,
-         scrollToBottomPublisher: PassthroughSubject<Void, Never>) {
+         scrollToBottomPublisher: PassthroughSubject<Void, Never>,
+         backgroundColor: UIColor = .compound.bgCanvasClap) {
         self.coordinator = coordinator
         _isScrolledToBottom = isScrolledToBottom
         
@@ -187,7 +188,7 @@ class TimelineTableViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
         tableView.keyboardDismissMode = .onDrag
-        tableView.backgroundColor = .compound.bgCanvasClap
+        tableView.backgroundColor = backgroundColor
         
         // The tableview should be flipped to display the newest items at the top
         // the only exception is VoiceOver, where we want to keep the latest item at the top as Android.

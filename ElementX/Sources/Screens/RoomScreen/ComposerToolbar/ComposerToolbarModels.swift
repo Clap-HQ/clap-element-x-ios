@@ -59,7 +59,7 @@ enum ComposerToolbarViewAction {
     case selectedTextChanged
 }
 
-enum ComposerAttachmentType {
+enum ComposerAttachmentType: CaseIterable {
     case camera
     case photoLibrary
     case file
@@ -80,6 +80,10 @@ struct ComposerToolbarViewState: BindableState {
     
     var isRoomEncrypted: Bool
     var isLocationSharingEnabled: Bool
+    
+    var showVoiceMessageButton = true
+    var showTextFormattingOption = true
+    var availableAttachments: Set<ComposerAttachmentType> = Set(ComposerAttachmentType.allCases)
     
     var keyCommands: [WysiwygKeyCommand] = []
     

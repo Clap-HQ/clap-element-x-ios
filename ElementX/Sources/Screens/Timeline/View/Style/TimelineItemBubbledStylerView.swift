@@ -13,6 +13,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
     @EnvironmentObject private var context: TimelineViewModel.Context
     @Environment(\.timelineGroupStyle) private var timelineGroupStyle
     @Environment(\.focussedEventID) private var focussedEventID
+    @Environment(\.isTimelineMenuMinimal) private var isTimelineMenuMinimal
     
     let timelineItem: EventBasedTimelineItemProtocol
     let adjustedDeliveryStatus: TimelineItemDeliveryStatus?
@@ -135,7 +136,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
             .swipeRightAction {
                 SwipeToReplyView(timelineItem: timelineItem)
             } shouldStartAction: {
-                timelineItem.canBeRepliedTo
+                !isTimelineMenuMinimal && timelineItem.canBeRepliedTo
             } action: {
                 context.send(viewAction: .handleTimelineItemMenuAction(itemID: timelineItem.id,
                                                                        action: .reply(isThread: timelineItem.properties.isThreaded)))
@@ -151,6 +152,7 @@ struct TimelineItemBubbledStylerView<Content: View>: View {
                                                               isViewSourceEnabled: context.viewState.isViewSourceEnabled,
                                                               areThreadsEnabled: context.viewState.areThreadsEnabled,
                                                               timelineKind: context.viewState.timelineKind,
+                                                              isMenuMinimal: isTimelineMenuMinimal,
                                                               emojiProvider: context.viewState.emojiProvider)
                 TimelineItemMacContextMenu(item: timelineItem, actionProvider: provider) { action in
                     context.send(viewAction: .handleTimelineItemMenuAction(itemID: timelineItem.id, action: action))
@@ -246,7 +248,7 @@ private extension EventBasedTimelineItemProtocol {
         case is ImageRoomTimelineItem, is VideoRoomTimelineItem:
             // In case a reply detail or a thread decorator is present we render the color and the padding
             return properties.replyDetails != nil || properties.isThreaded || hasMediaCaption ? defaultColor : nil
-        case is StickerRoomTimelineItem:
+        case is StickerRoomTimelineItem, is DivKitRoomTimelineItem:
             return nil
         default:
             return defaultColor
@@ -259,7 +261,7 @@ private extension EventBasedTimelineItemProtocol {
         let defaultInsets: EdgeInsets = .init(top: 9, leading: 12, bottom: 9, trailing: 12)
 
         switch self {
-        case is StickerRoomTimelineItem:
+        case is StickerRoomTimelineItem, is DivKitRoomTimelineItem:
             return .zero
         case is PollRoomTimelineItem:
             return .init(top: 12, leading: 12, bottom: 4, trailing: 12)
@@ -274,7 +276,7 @@ private extension EventBasedTimelineItemProtocol {
             return defaultInsets
         }
     }
-    
+
     var contentCornerRadius: CGFloat {
         switch self {
         case is ImageRoomTimelineItem, is VideoRoomTimelineItem, is LocationRoomTimelineItem:

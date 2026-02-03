@@ -1550,3 +1550,4 @@
 "screen_join_all_rooms_confirmation_title" = "Join all rooms?";
 "screen_join_all_rooms_confirmation_subtitle" = "Would you like to join all rooms in %@?";
 "screen_join_all_rooms_confirmation_action" = "Join all rooms";
+"common_clap_ai_not_found" = "Clap AI room could not be found.";

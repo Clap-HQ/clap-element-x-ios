@@ -17,6 +17,7 @@ enum ChatsFlowCoordinatorAction {
     case showChatBackupSettings
     case sessionVerification(SessionVerificationScreenFlow)
     case showCallScreen(roomProxy: JoinedRoomProxyProtocol)
+    case showAgentScreen(roomID: String)
     case hideCallScreenOverlay
     case logout
 }
@@ -524,6 +525,8 @@ class ChatsFlowCoordinator: FlowCoordinatorProtocol {
             switch action {
             case .presentCallScreen(let roomProxy):
                 actionsSubject.send(.showCallScreen(roomProxy: roomProxy))
+            case .presentAgentScreen(let roomID):
+                actionsSubject.send(.showAgentScreen(roomID: roomID))
             case .verifyUser(let userID):
                 actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
             case .continueWithSpaceFlow(let spaceRoomListProxy):

@@ -13,6 +13,7 @@ import UserNotifications
 
 enum RoomFlowCoordinatorAction: Equatable {
     case presentCallScreen(roomProxy: JoinedRoomProxyProtocol)
+    case presentAgentScreen(roomID: String)
     case verifyUser(userID: String)
     /// The requested room was actually a space. The room flow has been dismissed
     /// and a space flow should be started to continue (upstream: SpaceScreen).
@@ -26,6 +27,8 @@ enum RoomFlowCoordinatorAction: Equatable {
         switch (lhs, rhs) {
         case (.presentCallScreen(let lhsRoomProxy), .presentCallScreen(let rhsRoomProxy)):
             lhsRoomProxy.id == rhsRoomProxy.id
+        case (.presentAgentScreen(let lhsRoomID), .presentAgentScreen(let rhsRoomID)):
+            lhsRoomID == rhsRoomID
         case (.continueWithSpaceFlow(let lhsProxy), .continueWithSpaceFlow(let rhsProxy)):
             lhsProxy.id == rhsProxy.id
         case (.continueWithSpaceDetailFlow(let lhsProxy), .continueWithSpaceDetailFlow(let rhsProxy)):
@@ -308,6 +311,12 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
                     stateMachine.tryEvent(.dismissFlow)
                 }
             } else {
+                if roomProxy.id == userSession.clientProxy.clapAIRoomID {
+                    actionsSubject.send(.presentAgentScreen(roomID: roomProxy.id))
+                    stateMachine.tryEvent(.dismissFlow)
+                    return
+                }
+                
                 await storeAndSubscribeToRoomProxy(roomProxy)
                 
                 guard case let .eventFocus(focusEvent) = presentationAction else {
@@ -1546,6 +1555,8 @@ class RoomFlowCoordinator: FlowCoordinatorProtocol {
             switch action {
             case .presentCallScreen(let roomProxy):
                 actionsSubject.send(.presentCallScreen(roomProxy: roomProxy))
+            case .presentAgentScreen(let roomID):
+                actionsSubject.send(.presentAgentScreen(roomID: roomID))
             case .verifyUser(let userID):
                 actionsSubject.send(.verifyUser(userID: userID))
             case .continueWithSpaceFlow(let spaceRoomListProxy),

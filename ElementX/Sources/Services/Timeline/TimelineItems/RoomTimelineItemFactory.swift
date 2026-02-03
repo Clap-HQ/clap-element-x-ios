@@ -80,6 +80,9 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                           _ isOutgoing: Bool) -> RoomTimelineItemProtocol? {
         switch messageContent.msgType {
         case .text(content: let textMessageContent):
+            if let payload = parseDivKitPayload(eventItemProxy) {
+                return buildDivKitTimelineItem(for: eventItemProxy, messageLikeContent, payload: payload, fallbackText: textMessageContent.body, isOutgoing: isOutgoing)
+            }
             return buildTextTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, textMessageContent, isOutgoing)
         case .image(content: let imageMessageContent):
             return buildImageTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, imageMessageContent, isOutgoing)
@@ -101,7 +104,10 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
             return buildLocationTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, locationMessageContent, isOutgoing)
         case .gallery(let galleryMessageContent):
             return buildGalleryTimelineItem(for: eventItemProxy, messageLikeContent, messageContent, galleryMessageContent, isOutgoing)
-        case .other:
+        case .other(_, let body):
+            if let payload = parseDivKitPayload(eventItemProxy) {
+                return buildDivKitTimelineItem(for: eventItemProxy, messageLikeContent, payload: payload, fallbackText: body, isOutgoing: isOutgoing)
+            }
             return nil
         }
     }
@@ -338,7 +344,11 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                           _ info: MatrixRustSDK.ImageInfo,
                                           _ mediaSource: MediaSource,
                                           _ isOutgoing: Bool) -> RoomTimelineItemProtocol {
-        let imageInfo = ImageInfoProxy(source: mediaSource, width: info.width, height: info.height, mimeType: info.mimetype, fileSize: info.size.map(UInt.init))
+        let imageInfo = ImageInfoProxy(source: mediaSource,
+                                       width: info.width,
+                                       height: info.height,
+                                       mimeType: info.mimetype,
+                                       fileSize: info.size.flatMap { UInt(exactly: $0) })
         
         return StickerRoomTimelineItem(id: eventItemProxy.id,
                                        body: body,
@@ -511,7 +521,7 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                             duration: messageContent.audio?.duration ?? 0,
                                             waveform: waveform,
                                             source: MediaSourceProxy(source: messageContent.source, mimeType: messageContent.info?.mimetype),
-                                            fileSize: messageContent.info?.size.map(UInt.init),
+                                            fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) },
                                             contentType: UTType(mimeType: messageContent.info?.mimetype, fallbackFilename: messageContent.filename))
     }
     
@@ -523,13 +533,13 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                            width: messageContent.info?.thumbnailInfo?.width,
                                            height: messageContent.info?.thumbnailInfo?.height,
                                            mimeType: messageContent.info?.thumbnailInfo?.mimetype,
-                                           fileSize: messageContent.info?.size.map(UInt.init))
+                                            fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) })
         
         let imageInfo = ImageInfoProxy(source: messageContent.source,
                                        width: messageContent.info?.width,
                                        height: messageContent.info?.height,
                                        mimeType: messageContent.info?.mimetype,
-                                       fileSize: messageContent.info?.size.map(UInt.init))
+                                        fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) })
         
         return .init(filename: messageContent.filename,
                      caption: messageContent.caption,
@@ -549,14 +559,14 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                            width: messageContent.info?.thumbnailInfo?.width,
                                            height: messageContent.info?.thumbnailInfo?.height,
                                            mimeType: messageContent.info?.thumbnailInfo?.mimetype,
-                                           fileSize: messageContent.info?.size.map(UInt.init))
+                      fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) })
         
         let videoInfo = VideoInfoProxy(source: messageContent.source,
                                        duration: messageContent.info?.duration ?? 0,
                                        width: messageContent.info?.width,
                                        height: messageContent.info?.height,
                                        mimeType: messageContent.info?.mimetype,
-                                       fileSize: messageContent.info?.size.map(UInt.init))
+                      fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) })
         
         return .init(filename: messageContent.filename,
                      caption: messageContent.caption,
@@ -585,7 +595,7 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                      formattedCaption: formattedCaption,
                      formattedCaptionHTMLString: htmlCaption,
                      source: MediaSourceProxy(source: messageContent.source, mimeType: messageContent.info?.mimetype),
-                     fileSize: messageContent.info?.size.map(UInt.init),
+                                            fileSize: messageContent.info?.size.flatMap { UInt(exactly: $0) },
                      thumbnailSource: thumbnailSource,
                      contentType: UTType(mimeType: messageContent.info?.mimetype, fallbackFilename: messageContent.filename))
     }
@@ -742,6 +752,106 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
                                          isEditable: eventItemProxy.isEditable,
                                          canBeRepliedTo: eventItemProxy.canBeRepliedTo,
                                          sender: eventItemProxy.sender)
+    }
+    
+    // MARK: - DivKit (Clap AI Server-Driven UI)
+    // MatrixRustSDK doesn't expose custom event content fields (like `ac.clap.ai`) through its public API.
+    // We must parse `debugInfo.originalJSON` to access DivKit card data.
+    // This is a known limitation - if SDK adds proper custom content API, migrate to that.
+    
+    private struct DivKitPayload {
+        let cardData: Data
+        let cardLogID: String?
+        let version: String
+        let messageType: DivKitMessageType
+        let requestID: String?
+        let palette: DivKitPalette?
+    }
+    
+    private func parseDivKitPayload(_ eventItemProxy: EventTimelineItemProxy) -> DivKitPayload? {
+        guard let originalJSON = eventItemProxy.debugInfo.originalJSON,
+              let jsonData = originalJSON.data(using: .utf8),
+              let eventDict = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+              let content = eventDict["content"] as? [String: Any],
+              let aiDict = content["ac.clap.ai"] as? [String: Any],
+              let cardDict = aiDict["card"] as? [String: Any] else {
+            return nil
+        }
+        
+        let divKitEnvelope: [String: Any] = ["card": cardDict]
+        guard let cardData = try? JSONSerialization.data(withJSONObject: divKitEnvelope) else {
+            return nil
+        }
+        
+        return DivKitPayload(
+            cardData: cardData,
+            cardLogID: cardDict["log_id"] as? String,
+            version: aiDict["version"] as? String ?? "1.0",
+            messageType: DivKitMessageType(rawValue: aiDict["message_type"] as? String ?? "unknown") ?? .unknown,
+            requestID: aiDict["request_id"] as? String,
+            palette: parseDivKitPalette(from: aiDict)
+        )
+    }
+    
+    private func buildDivKitTimelineItem(for eventItemProxy: EventTimelineItemProxy,
+                                         _ messageLikeContent: MsgLikeContent,
+                                         payload: DivKitPayload,
+                                         fallbackText: String,
+                                         isOutgoing: Bool) -> RoomTimelineItemProtocol {
+        let divKitContent = DivKitRoomTimelineItemContent(
+            cardData: payload.cardData,
+            fallbackText: fallbackText,
+            messageType: payload.messageType,
+            requestID: payload.requestID,
+            version: payload.version,
+            cardLogID: payload.cardLogID,
+            palette: payload.palette
+        )
+        
+        let item = DivKitRoomTimelineItem(
+            id: eventItemProxy.id,
+            timestamp: eventItemProxy.timestamp,
+            isOutgoing: isOutgoing,
+            isEditable: false,
+            canBeRepliedTo: false,
+            sender: eventItemProxy.sender,
+            content: divKitContent,
+            properties: .init(
+                replyDetails: buildTimelineItemReplyDetails(messageLikeContent.inReplyTo),
+                isThreaded: messageLikeContent.threadRoot != nil,
+                threadSummary: buildTimelineItemThreadSummary(messageLikeContent.threadSummary),
+                reactions: buildAggregatedReactions(messageLikeContent.reactions),
+                deliveryStatus: eventItemProxy.deliveryStatus,
+                orderedReadReceipts: buildOrderedReadReceipts(eventItemProxy.readReceipts),
+                encryptionAuthenticity: buildEncryptionAuthenticity(eventItemProxy.shieldState)
+            )
+        )
+        
+        Task { @MainActor in
+            DivKitComponentsProvider.shared.preloadHeight(cardData: payload.cardData, cardID: item.id.uniqueID.value)
+        }
+        
+        return item
+    }
+    
+    private func parseDivKitPalette(from divKitDict: [String: Any]) -> DivKitPalette? {
+        guard let paletteDict = divKitDict["palette"] as? [String: Any] else {
+            return nil
+        }
+        
+        func parseColors(_ array: [[String: Any]]) -> [DivKitPaletteColor] {
+            array.compactMap { entry in
+                guard let name = entry["name"] as? String,
+                      let color = entry["color"] as? String else { return nil }
+                return DivKitPaletteColor(name: name, color: color)
+            }
+        }
+        
+        let light = (paletteDict["light"] as? [[String: Any]]).map(parseColors) ?? []
+        let dark = (paletteDict["dark"] as? [[String: Any]]).map(parseColors) ?? []
+        
+        guard !light.isEmpty || !dark.isEmpty else { return nil }
+        return DivKitPalette(light: light, dark: dark)
     }
     
     // MARK: - State Events

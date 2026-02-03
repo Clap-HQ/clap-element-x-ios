@@ -2193,6 +2193,157 @@ class CXProviderMock: CXProviderProtocol, @unchecked Sendable {
         reportCallWithEndedAtReasonClosure?(uuid, endedAt, reason)
     }
 }
+class ClapAPIServiceMock: ClapAPIServiceProtocol, @unchecked Sendable {
+    var spaces: ClapSpaceAPIProtocol {
+        get { return underlyingSpaces }
+        set(value) { underlyingSpaces = value }
+    }
+    var underlyingSpaces: ClapSpaceAPIProtocol!
+
+}
+class ClapSpaceAPIMock: ClapSpaceAPIProtocol, @unchecked Sendable {
+
+    //MARK: - removeMemberFromAllChildRooms
+
+    var removeMemberFromAllChildRoomsSpaceIDUserIDUnderlyingCallsCount = 0
+    var removeMemberFromAllChildRoomsSpaceIDUserIDCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return removeMemberFromAllChildRoomsSpaceIDUserIDUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = removeMemberFromAllChildRoomsSpaceIDUserIDUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                removeMemberFromAllChildRoomsSpaceIDUserIDUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    removeMemberFromAllChildRoomsSpaceIDUserIDUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var removeMemberFromAllChildRoomsSpaceIDUserIDCalled: Bool {
+        return removeMemberFromAllChildRoomsSpaceIDUserIDCallsCount > 0
+    }
+    var removeMemberFromAllChildRoomsSpaceIDUserIDReceivedArguments: (spaceID: String, userID: String)?
+    var removeMemberFromAllChildRoomsSpaceIDUserIDReceivedInvocations: [(spaceID: String, userID: String)] = []
+
+    var removeMemberFromAllChildRoomsSpaceIDUserIDUnderlyingReturnValue: Result<ClapSpaceMemberRemovalResult, RESTAPIError>!
+    var removeMemberFromAllChildRoomsSpaceIDUserIDReturnValue: Result<ClapSpaceMemberRemovalResult, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return removeMemberFromAllChildRoomsSpaceIDUserIDUnderlyingReturnValue
+            } else {
+                var returnValue: Result<ClapSpaceMemberRemovalResult, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = removeMemberFromAllChildRoomsSpaceIDUserIDUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                removeMemberFromAllChildRoomsSpaceIDUserIDUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    removeMemberFromAllChildRoomsSpaceIDUserIDUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var removeMemberFromAllChildRoomsSpaceIDUserIDClosure: ((String, String) async -> Result<ClapSpaceMemberRemovalResult, RESTAPIError>)?
+
+    func removeMemberFromAllChildRooms(spaceID: String, userID: String) async -> Result<ClapSpaceMemberRemovalResult, RESTAPIError> {
+        removeMemberFromAllChildRoomsSpaceIDUserIDCallsCount += 1
+        removeMemberFromAllChildRoomsSpaceIDUserIDReceivedArguments = (spaceID: spaceID, userID: userID)
+        DispatchQueue.main.async {
+            self.removeMemberFromAllChildRoomsSpaceIDUserIDReceivedInvocations.append((spaceID: spaceID, userID: userID))
+        }
+        if let removeMemberFromAllChildRoomsSpaceIDUserIDClosure = removeMemberFromAllChildRoomsSpaceIDUserIDClosure {
+            return await removeMemberFromAllChildRoomsSpaceIDUserIDClosure(spaceID, userID)
+        } else {
+            return removeMemberFromAllChildRoomsSpaceIDUserIDReturnValue
+        }
+    }
+    //MARK: - joinAllChildRooms
+
+    var joinAllChildRoomsSpaceIDUnderlyingCallsCount = 0
+    var joinAllChildRoomsSpaceIDCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return joinAllChildRoomsSpaceIDUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = joinAllChildRoomsSpaceIDUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                joinAllChildRoomsSpaceIDUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    joinAllChildRoomsSpaceIDUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var joinAllChildRoomsSpaceIDCalled: Bool {
+        return joinAllChildRoomsSpaceIDCallsCount > 0
+    }
+    var joinAllChildRoomsSpaceIDReceivedSpaceID: String?
+    var joinAllChildRoomsSpaceIDReceivedInvocations: [String] = []
+
+    var joinAllChildRoomsSpaceIDUnderlyingReturnValue: Result<ClapSpaceJoinAllResult, RESTAPIError>!
+    var joinAllChildRoomsSpaceIDReturnValue: Result<ClapSpaceJoinAllResult, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return joinAllChildRoomsSpaceIDUnderlyingReturnValue
+            } else {
+                var returnValue: Result<ClapSpaceJoinAllResult, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = joinAllChildRoomsSpaceIDUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                joinAllChildRoomsSpaceIDUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    joinAllChildRoomsSpaceIDUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var joinAllChildRoomsSpaceIDClosure: ((String) async -> Result<ClapSpaceJoinAllResult, RESTAPIError>)?
+
+    func joinAllChildRooms(spaceID: String) async -> Result<ClapSpaceJoinAllResult, RESTAPIError> {
+        joinAllChildRoomsSpaceIDCallsCount += 1
+        joinAllChildRoomsSpaceIDReceivedSpaceID = spaceID
+        DispatchQueue.main.async {
+            self.joinAllChildRoomsSpaceIDReceivedInvocations.append(spaceID)
+        }
+        if let joinAllChildRoomsSpaceIDClosure = joinAllChildRoomsSpaceIDClosure {
+            return await joinAllChildRoomsSpaceIDClosure(spaceID)
+        } else {
+            return joinAllChildRoomsSpaceIDReturnValue
+        }
+    }
+}
 class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
     var actionsPublisher: AnyPublisher<ClientProxyAction, Never> {
         get { return underlyingActionsPublisher }
@@ -2308,6 +2459,13 @@ class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
         set(value) { underlyingClapAPI = value }
     }
     var underlyingClapAPI: ClapAPIServiceProtocol!
+    var clapAIRoomID: String?
+    var clapAIInviteRoomID: String?
+    var clapAIRoomIDPublisher: CurrentValuePublisher<String?, Never> {
+        get { return underlyingClapAIRoomIDPublisher }
+        set(value) { underlyingClapAIRoomIDPublisher = value }
+    }
+    var underlyingClapAIRoomIDPublisher: CurrentValuePublisher<String?, Never>!
     var isReportRoomSupportedCallsCount = 0
     var isReportRoomSupportedCalled: Bool {
         return isReportRoomSupportedCallsCount > 0
@@ -2937,6 +3095,7 @@ class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
                 DispatchQueue.main.sync {
                     returnValue = createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingCallsCount
                 }
+
                 return returnValue!
             }
         }
@@ -2966,6 +3125,7 @@ class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
                 DispatchQueue.main.sync {
                     returnValue = createRoomInSpaceSpaceIDNameTopicVisibilityIsEncryptedAvatarURLUnderlyingReturnValue
                 }
+
                 return returnValue!
             }
         }
@@ -11129,6 +11289,445 @@ class LinkNewDeviceServiceMock: LinkNewDeviceServiceProtocol, @unchecked Sendabl
             return linkDesktopDeviceWithClosure(scannedQRData)
         } else {
             return linkDesktopDeviceWithReturnValue
+        }
+    }
+}
+class MatrixAPIServiceMock: MatrixAPIServiceProtocol, @unchecked Sendable {
+    var spaces: MatrixSpaceAPIProtocol {
+        get { return underlyingSpaces }
+        set(value) { underlyingSpaces = value }
+    }
+    var underlyingSpaces: MatrixSpaceAPIProtocol!
+    var threads: MatrixThreadsAPIProtocol {
+        get { return underlyingThreads }
+        set(value) { underlyingThreads = value }
+    }
+    var underlyingThreads: MatrixThreadsAPIProtocol!
+
+}
+class MatrixSpaceAPIMock: MatrixSpaceAPIProtocol, @unchecked Sendable {
+
+    //MARK: - addChildToSpace
+
+    var addChildToSpaceSpaceIDChildRoomIDSuggestedUnderlyingCallsCount = 0
+    var addChildToSpaceSpaceIDChildRoomIDSuggestedCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return addChildToSpaceSpaceIDChildRoomIDSuggestedUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = addChildToSpaceSpaceIDChildRoomIDSuggestedUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                addChildToSpaceSpaceIDChildRoomIDSuggestedUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    addChildToSpaceSpaceIDChildRoomIDSuggestedUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var addChildToSpaceSpaceIDChildRoomIDSuggestedCalled: Bool {
+        return addChildToSpaceSpaceIDChildRoomIDSuggestedCallsCount > 0
+    }
+    var addChildToSpaceSpaceIDChildRoomIDSuggestedReceivedArguments: (spaceID: String, childRoomID: String, suggested: Bool)?
+    var addChildToSpaceSpaceIDChildRoomIDSuggestedReceivedInvocations: [(spaceID: String, childRoomID: String, suggested: Bool)] = []
+
+    var addChildToSpaceSpaceIDChildRoomIDSuggestedUnderlyingReturnValue: Result<Void, RESTAPIError>!
+    var addChildToSpaceSpaceIDChildRoomIDSuggestedReturnValue: Result<Void, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return addChildToSpaceSpaceIDChildRoomIDSuggestedUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Void, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = addChildToSpaceSpaceIDChildRoomIDSuggestedUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                addChildToSpaceSpaceIDChildRoomIDSuggestedUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    addChildToSpaceSpaceIDChildRoomIDSuggestedUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var addChildToSpaceSpaceIDChildRoomIDSuggestedClosure: ((String, String, Bool) async -> Result<Void, RESTAPIError>)?
+
+    func addChildToSpace(spaceID: String, childRoomID: String, suggested: Bool) async -> Result<Void, RESTAPIError> {
+        addChildToSpaceSpaceIDChildRoomIDSuggestedCallsCount += 1
+        addChildToSpaceSpaceIDChildRoomIDSuggestedReceivedArguments = (spaceID: spaceID, childRoomID: childRoomID, suggested: suggested)
+        DispatchQueue.main.async {
+            self.addChildToSpaceSpaceIDChildRoomIDSuggestedReceivedInvocations.append((spaceID: spaceID, childRoomID: childRoomID, suggested: suggested))
+        }
+        if let addChildToSpaceSpaceIDChildRoomIDSuggestedClosure = addChildToSpaceSpaceIDChildRoomIDSuggestedClosure {
+            return await addChildToSpaceSpaceIDChildRoomIDSuggestedClosure(spaceID, childRoomID, suggested)
+        } else {
+            return addChildToSpaceSpaceIDChildRoomIDSuggestedReturnValue
+        }
+    }
+    //MARK: - removeChildFromSpace
+
+    var removeChildFromSpaceSpaceIDChildRoomIDUnderlyingCallsCount = 0
+    var removeChildFromSpaceSpaceIDChildRoomIDCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return removeChildFromSpaceSpaceIDChildRoomIDUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = removeChildFromSpaceSpaceIDChildRoomIDUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                removeChildFromSpaceSpaceIDChildRoomIDUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    removeChildFromSpaceSpaceIDChildRoomIDUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var removeChildFromSpaceSpaceIDChildRoomIDCalled: Bool {
+        return removeChildFromSpaceSpaceIDChildRoomIDCallsCount > 0
+    }
+    var removeChildFromSpaceSpaceIDChildRoomIDReceivedArguments: (spaceID: String, childRoomID: String)?
+    var removeChildFromSpaceSpaceIDChildRoomIDReceivedInvocations: [(spaceID: String, childRoomID: String)] = []
+
+    var removeChildFromSpaceSpaceIDChildRoomIDUnderlyingReturnValue: Result<Void, RESTAPIError>!
+    var removeChildFromSpaceSpaceIDChildRoomIDReturnValue: Result<Void, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return removeChildFromSpaceSpaceIDChildRoomIDUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Void, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = removeChildFromSpaceSpaceIDChildRoomIDUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                removeChildFromSpaceSpaceIDChildRoomIDUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    removeChildFromSpaceSpaceIDChildRoomIDUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var removeChildFromSpaceSpaceIDChildRoomIDClosure: ((String, String) async -> Result<Void, RESTAPIError>)?
+
+    func removeChildFromSpace(spaceID: String, childRoomID: String) async -> Result<Void, RESTAPIError> {
+        removeChildFromSpaceSpaceIDChildRoomIDCallsCount += 1
+        removeChildFromSpaceSpaceIDChildRoomIDReceivedArguments = (spaceID: spaceID, childRoomID: childRoomID)
+        DispatchQueue.main.async {
+            self.removeChildFromSpaceSpaceIDChildRoomIDReceivedInvocations.append((spaceID: spaceID, childRoomID: childRoomID))
+        }
+        if let removeChildFromSpaceSpaceIDChildRoomIDClosure = removeChildFromSpaceSpaceIDChildRoomIDClosure {
+            return await removeChildFromSpaceSpaceIDChildRoomIDClosure(spaceID, childRoomID)
+        } else {
+            return removeChildFromSpaceSpaceIDChildRoomIDReturnValue
+        }
+    }
+    //MARK: - setSpaceParent
+
+    var setSpaceParentRoomIDSpaceIDCanonicalUnderlyingCallsCount = 0
+    var setSpaceParentRoomIDSpaceIDCanonicalCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return setSpaceParentRoomIDSpaceIDCanonicalUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = setSpaceParentRoomIDSpaceIDCanonicalUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                setSpaceParentRoomIDSpaceIDCanonicalUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    setSpaceParentRoomIDSpaceIDCanonicalUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var setSpaceParentRoomIDSpaceIDCanonicalCalled: Bool {
+        return setSpaceParentRoomIDSpaceIDCanonicalCallsCount > 0
+    }
+    var setSpaceParentRoomIDSpaceIDCanonicalReceivedArguments: (roomID: String, spaceID: String, canonical: Bool)?
+    var setSpaceParentRoomIDSpaceIDCanonicalReceivedInvocations: [(roomID: String, spaceID: String, canonical: Bool)] = []
+
+    var setSpaceParentRoomIDSpaceIDCanonicalUnderlyingReturnValue: Result<Void, RESTAPIError>!
+    var setSpaceParentRoomIDSpaceIDCanonicalReturnValue: Result<Void, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return setSpaceParentRoomIDSpaceIDCanonicalUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Void, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = setSpaceParentRoomIDSpaceIDCanonicalUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                setSpaceParentRoomIDSpaceIDCanonicalUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    setSpaceParentRoomIDSpaceIDCanonicalUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var setSpaceParentRoomIDSpaceIDCanonicalClosure: ((String, String, Bool) async -> Result<Void, RESTAPIError>)?
+
+    func setSpaceParent(roomID: String, spaceID: String, canonical: Bool) async -> Result<Void, RESTAPIError> {
+        setSpaceParentRoomIDSpaceIDCanonicalCallsCount += 1
+        setSpaceParentRoomIDSpaceIDCanonicalReceivedArguments = (roomID: roomID, spaceID: spaceID, canonical: canonical)
+        DispatchQueue.main.async {
+            self.setSpaceParentRoomIDSpaceIDCanonicalReceivedInvocations.append((roomID: roomID, spaceID: spaceID, canonical: canonical))
+        }
+        if let setSpaceParentRoomIDSpaceIDCanonicalClosure = setSpaceParentRoomIDSpaceIDCanonicalClosure {
+            return await setSpaceParentRoomIDSpaceIDCanonicalClosure(roomID, spaceID, canonical)
+        } else {
+            return setSpaceParentRoomIDSpaceIDCanonicalReturnValue
+        }
+    }
+    //MARK: - setRestrictedJoinRule
+
+    var setRestrictedJoinRuleRoomIDSpaceIDUnderlyingCallsCount = 0
+    var setRestrictedJoinRuleRoomIDSpaceIDCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return setRestrictedJoinRuleRoomIDSpaceIDUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = setRestrictedJoinRuleRoomIDSpaceIDUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                setRestrictedJoinRuleRoomIDSpaceIDUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    setRestrictedJoinRuleRoomIDSpaceIDUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var setRestrictedJoinRuleRoomIDSpaceIDCalled: Bool {
+        return setRestrictedJoinRuleRoomIDSpaceIDCallsCount > 0
+    }
+    var setRestrictedJoinRuleRoomIDSpaceIDReceivedArguments: (roomID: String, spaceID: String)?
+    var setRestrictedJoinRuleRoomIDSpaceIDReceivedInvocations: [(roomID: String, spaceID: String)] = []
+
+    var setRestrictedJoinRuleRoomIDSpaceIDUnderlyingReturnValue: Result<Void, RESTAPIError>!
+    var setRestrictedJoinRuleRoomIDSpaceIDReturnValue: Result<Void, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return setRestrictedJoinRuleRoomIDSpaceIDUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Void, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = setRestrictedJoinRuleRoomIDSpaceIDUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                setRestrictedJoinRuleRoomIDSpaceIDUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    setRestrictedJoinRuleRoomIDSpaceIDUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var setRestrictedJoinRuleRoomIDSpaceIDClosure: ((String, String) async -> Result<Void, RESTAPIError>)?
+
+    func setRestrictedJoinRule(roomID: String, spaceID: String) async -> Result<Void, RESTAPIError> {
+        setRestrictedJoinRuleRoomIDSpaceIDCallsCount += 1
+        setRestrictedJoinRuleRoomIDSpaceIDReceivedArguments = (roomID: roomID, spaceID: spaceID)
+        DispatchQueue.main.async {
+            self.setRestrictedJoinRuleRoomIDSpaceIDReceivedInvocations.append((roomID: roomID, spaceID: spaceID))
+        }
+        if let setRestrictedJoinRuleRoomIDSpaceIDClosure = setRestrictedJoinRuleRoomIDSpaceIDClosure {
+            return await setRestrictedJoinRuleRoomIDSpaceIDClosure(roomID, spaceID)
+        } else {
+            return setRestrictedJoinRuleRoomIDSpaceIDReturnValue
+        }
+    }
+    //MARK: - setPublicJoinRule
+
+    var setPublicJoinRuleRoomIDUnderlyingCallsCount = 0
+    var setPublicJoinRuleRoomIDCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return setPublicJoinRuleRoomIDUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = setPublicJoinRuleRoomIDUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                setPublicJoinRuleRoomIDUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    setPublicJoinRuleRoomIDUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var setPublicJoinRuleRoomIDCalled: Bool {
+        return setPublicJoinRuleRoomIDCallsCount > 0
+    }
+    var setPublicJoinRuleRoomIDReceivedRoomID: String?
+    var setPublicJoinRuleRoomIDReceivedInvocations: [String] = []
+
+    var setPublicJoinRuleRoomIDUnderlyingReturnValue: Result<Void, RESTAPIError>!
+    var setPublicJoinRuleRoomIDReturnValue: Result<Void, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return setPublicJoinRuleRoomIDUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Void, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = setPublicJoinRuleRoomIDUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                setPublicJoinRuleRoomIDUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    setPublicJoinRuleRoomIDUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var setPublicJoinRuleRoomIDClosure: ((String) async -> Result<Void, RESTAPIError>)?
+
+    func setPublicJoinRule(roomID: String) async -> Result<Void, RESTAPIError> {
+        setPublicJoinRuleRoomIDCallsCount += 1
+        setPublicJoinRuleRoomIDReceivedRoomID = roomID
+        DispatchQueue.main.async {
+            self.setPublicJoinRuleRoomIDReceivedInvocations.append(roomID)
+        }
+        if let setPublicJoinRuleRoomIDClosure = setPublicJoinRuleRoomIDClosure {
+            return await setPublicJoinRuleRoomIDClosure(roomID)
+        } else {
+            return setPublicJoinRuleRoomIDReturnValue
+        }
+    }
+}
+class MatrixThreadsAPIMock: MatrixThreadsAPIProtocol, @unchecked Sendable {
+
+    //MARK: - fetchThreads
+
+    var fetchThreadsRoomIDFromIncludeLimitUnderlyingCallsCount = 0
+    var fetchThreadsRoomIDFromIncludeLimitCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return fetchThreadsRoomIDFromIncludeLimitUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = fetchThreadsRoomIDFromIncludeLimitUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                fetchThreadsRoomIDFromIncludeLimitUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    fetchThreadsRoomIDFromIncludeLimitUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var fetchThreadsRoomIDFromIncludeLimitCalled: Bool {
+        return fetchThreadsRoomIDFromIncludeLimitCallsCount > 0
+    }
+    var fetchThreadsRoomIDFromIncludeLimitReceivedArguments: (roomID: String, from: String?, include: ThreadIncludeFilter, limit: Int)?
+    var fetchThreadsRoomIDFromIncludeLimitReceivedInvocations: [(roomID: String, from: String?, include: ThreadIncludeFilter, limit: Int)] = []
+
+    var fetchThreadsRoomIDFromIncludeLimitUnderlyingReturnValue: Result<ThreadListResponse, RESTAPIError>!
+    var fetchThreadsRoomIDFromIncludeLimitReturnValue: Result<ThreadListResponse, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return fetchThreadsRoomIDFromIncludeLimitUnderlyingReturnValue
+            } else {
+                var returnValue: Result<ThreadListResponse, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = fetchThreadsRoomIDFromIncludeLimitUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                fetchThreadsRoomIDFromIncludeLimitUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    fetchThreadsRoomIDFromIncludeLimitUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var fetchThreadsRoomIDFromIncludeLimitClosure: ((String, String?, ThreadIncludeFilter, Int) async -> Result<ThreadListResponse, RESTAPIError>)?
+
+    func fetchThreads(roomID: String, from: String?, include: ThreadIncludeFilter, limit: Int) async -> Result<ThreadListResponse, RESTAPIError> {
+        fetchThreadsRoomIDFromIncludeLimitCallsCount += 1
+        fetchThreadsRoomIDFromIncludeLimitReceivedArguments = (roomID: roomID, from: from, include: include, limit: limit)
+        DispatchQueue.main.async {
+            self.fetchThreadsRoomIDFromIncludeLimitReceivedInvocations.append((roomID: roomID, from: from, include: include, limit: limit))
+        }
+        if let fetchThreadsRoomIDFromIncludeLimitClosure = fetchThreadsRoomIDFromIncludeLimitClosure {
+            return await fetchThreadsRoomIDFromIncludeLimitClosure(roomID, from, include, limit)
+        } else {
+            return fetchThreadsRoomIDFromIncludeLimitReturnValue
         }
     }
 }

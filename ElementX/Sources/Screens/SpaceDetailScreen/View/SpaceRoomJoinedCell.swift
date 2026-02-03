@@ -166,7 +166,8 @@ struct SpaceRoomJoinedCell_Previews: PreviewProvider, TestablePreview {
                     avatar: .room(id: "!room1:matrix.org", name: "General", avatarURL: nil),
                     canonicalAlias: nil,
                     isTombstoned: false,
-                    isSpaceChild: true
+                    isSpaceChild: true,
+                    isClapAIRoom: false
                 ),
                 isSelected: false,
                 mediaProvider: mediaProvider
@@ -190,7 +191,8 @@ struct SpaceRoomJoinedCell_Previews: PreviewProvider, TestablePreview {
                     avatar: .room(id: "!room2:matrix.org", name: "Random", avatarURL: nil),
                     canonicalAlias: nil,
                     isTombstoned: false,
-                    isSpaceChild: true
+                    isSpaceChild: true,
+                    isClapAIRoom: false
                 ),
                 isSelected: false,
                 mediaProvider: mediaProvider

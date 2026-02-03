@@ -95,8 +95,28 @@ import SwiftUI
     }
     
     /// The currently selected tab's tag.
-    var selectedTab: Tag?
+    var selectedTab: Tag? {
+        didSet {
+            if selectedTab != oldValue {
+                selectedTabDidChange?(selectedTab)
+            }
+        }
+    }
+
+    /// Callback invoked when the selected tab changes.
+    var selectedTabDidChange: ((Tag?) -> Void)?
+
+    /// Action invoked when the bottom accessory button is tapped.
+    var bottomAccessoryAction: (() -> Void)?
+
+    /// Tag value for the agent tab. Must be set for the agent tab to work properly.
+    var agentTag: Tag?
     
+    var hasAgentUnread: Bool = false
+
+    /// Internal delegate for intercepting agent tab selection
+    fileprivate var agentTabBarDelegate: AgentTabBarDelegate?
+
     // MARK: Sheets
     
     fileprivate var sheetModule: NavigationModule? {
@@ -286,12 +306,91 @@ import SwiftUI
 
 private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    
+
     @Bindable var navigationTabCoordinator: NavigationTabCoordinator<Tag>
-    
+
     @State private var standardAppearance = UITabBarAppearance()
-    
+
     var body: some View {
+        tabViewContent
+            .backportTabBarMinimizeBehaviorOnScrollDown()
+            .introspect(.tabView, on: .supportedVersions, customize: configureAppearance)
+            .sheet(item: $navigationTabCoordinator.sheetModule) { module in
+                module.coordinator?.toPresentable()
+                    .id(module.id)
+            }
+            .fullScreenCover(item: $navigationTabCoordinator.fullScreenCoverModule) { module in
+                module.coordinator?.toPresentable()
+                    .id(module.id)
+            }
+            .accessibilityHidden(navigationTabCoordinator.overlayModule?.coordinator != nil && navigationTabCoordinator.overlayPresentationMode == .fullScreen)
+            .overlay {
+                Group {
+                    if let coordinator = navigationTabCoordinator.overlayModule?.coordinator {
+                        coordinator.toPresentable()
+                            .opacity(navigationTabCoordinator.overlayPresentationMode == .minimized ? 0 : 1)
+                            .transition(.opacity)
+                    }
+                }
+                .animation(.elementDefault, value: navigationTabCoordinator.overlayPresentationMode)
+                .animation(.elementDefault, value: navigationTabCoordinator.overlayModule)
+            }
+    }
+
+    @ViewBuilder
+    private var tabViewContent: some View {
+        if #available(iOS 26.0, *) {
+            iOS26TabView()
+        } else {
+            legacyTabView
+        }
+    }
+
+    @available(iOS 26.0, *)
+    @ViewBuilder
+    private func iOS26TabView() -> some View {
+        TabView(selection: $navigationTabCoordinator.selectedTab) {
+            ForEach(navigationTabCoordinator.tabModules) { module in
+                Tab(value: module.details.tag) {
+                    module.coordinator?.toPresentable()
+                        .id(module.id)
+                        .toolbar(module.details.barVisibility(in: horizontalSizeClass), for: .tabBar)
+                } label: {
+                    Label {
+                        Text(module.details.title)
+                    } icon: {
+                        CompoundIcon(module.details.tag == navigationTabCoordinator.selectedTab ? module.details.selectedIcon : module.details.icon)
+                    }
+                }
+                .badge(module.details.badgeCount)
+            }
+
+            if let agentTag = navigationTabCoordinator.agentTag {
+                Tab(value: agentTag, role: .search) {
+                    Color.clear
+                } label: {
+                    Label {
+                        Text("Agent")
+                    } icon: {
+                        Image(asset: Asset.Images.agentIcon)
+                    }
+                }
+            }
+        }
+        .introspect(.tabView, on: .supportedVersions) { tabBarController in
+            configureAgentTabInterception(tabBarController)
+        }
+        .id(navigationTabCoordinator.hasAgentUnread)
+    }
+
+    private func configureAgentTabInterception(_ tabBarController: UITabBarController) {
+        guard #available(iOS 26.0, *) else { return }
+        setupAgentTabBarDelegate()
+        tabBarController.delegate = navigationTabCoordinator.agentTabBarDelegate
+        updateAgentBadge(in: tabBarController.tabBar)
+    }
+
+    private var legacyTabView: some View {
         TabView(selection: $navigationTabCoordinator.selectedTab) {
             ForEach(navigationTabCoordinator.tabModules) { module in
                 module.coordinator?.toPresentable()
@@ -307,31 +406,100 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
                     .badge(module.details.badgeCount)
                     .toolbar(module.details.barVisibility(in: horizontalSizeClass), for: .tabBar)
             }
+
+            legacyAgentTab
         }
-        .backportTabBarMinimizeBehaviorOnScrollDown()
-        .introspect(.tabView, on: .supportedVersions, customize: configureAppearance)
-        .sheet(item: $navigationTabCoordinator.sheetModule) { module in
-            module.coordinator?.toPresentable()
-                .id(module.id)
+        .introspect(.tabView, on: .supportedVersions) { tabBarController in
+            configureLegacyAgentTabInterception(tabBarController)
         }
-        .fullScreenCover(item: $navigationTabCoordinator.fullScreenCoverModule) { module in
-            module.coordinator?.toPresentable()
-                .id(module.id)
-        }
-        .accessibilityHidden(navigationTabCoordinator.overlayModule?.coordinator != nil && navigationTabCoordinator.overlayPresentationMode == .fullScreen)
-        .overlay {
-            Group {
-                if let coordinator = navigationTabCoordinator.overlayModule?.coordinator {
-                    coordinator.toPresentable()
-                        .opacity(navigationTabCoordinator.overlayPresentationMode == .minimized ? 0 : 1)
-                        .transition(.opacity)
+        .id(navigationTabCoordinator.hasAgentUnread)
+    }
+
+    @ViewBuilder
+    private var legacyAgentTab: some View {
+        if let agentTag = navigationTabCoordinator.agentTag {
+            Color.clear
+                .tabItem {
+                    Label {
+                        Text("Agent")
+                    } icon: {
+                        Image(asset: Asset.Images.agentIcon)
+                    }
                 }
-            }
-            .animation(.elementDefault, value: navigationTabCoordinator.overlayPresentationMode)
-            .animation(.elementDefault, value: navigationTabCoordinator.overlayModule)
+                .tag(agentTag)
         }
     }
+
+    private func configureLegacyAgentTabInterception(_ tabBarController: UITabBarController) {
+        guard navigationTabCoordinator.agentTag != nil else { return }
+        setupAgentTabBarDelegate()
+        tabBarController.delegate = navigationTabCoordinator.agentTabBarDelegate
+        updateAgentBadge(in: tabBarController.tabBar)
+    }
     
+    private func setupAgentTabBarDelegate() {
+        guard navigationTabCoordinator.agentTabBarDelegate == nil else { return }
+        
+        let delegate = AgentTabBarDelegate()
+        delegate.agentTabIndex = navigationTabCoordinator.tabModules.count
+        delegate.onAgentTapped = { [weak navigationTabCoordinator] in
+            navigationTabCoordinator?.bottomAccessoryAction?()
+        }
+        delegate.onTabSelected = { [weak navigationTabCoordinator] index in
+            guard let navigationTabCoordinator,
+                  index < navigationTabCoordinator.tabModules.count else { return }
+            navigationTabCoordinator.selectedTab = navigationTabCoordinator.tabModules[index].details.tag
+        }
+        navigationTabCoordinator.agentTabBarDelegate = delegate
+    }
+    
+    // MARK: - Agent Badge (Private API)
+    // Uses private UIKit APIs to locate tab bar buttons for custom badge placement.
+    // - iOS 26+: `_UITabBarAuxiliaryView` for the search role tab (circular button)
+    // - iOS 18 and below: `UITabBarButton` for standard tab items
+    // Standard UITabBarItem.badgeValue only supports text badges, not custom dot indicators.
+    // If this breaks on future iOS versions, the badge will simply not appear (graceful degradation).
+    private func updateAgentBadge(in tabBar: UITabBar) {
+        tabBar.layoutIfNeeded()
+        tabBar.viewWithTag(AgentBadge.viewTag)?.removeFromSuperview()
+        
+        guard navigationTabCoordinator.hasAgentUnread else { return }
+        
+        let dotSize: CGFloat
+        let dotX: CGFloat
+        let dotY: CGFloat
+        
+        if #available(iOS 26.0, *) {
+            // iOS 26+: Agent tab is rendered as _UITabBarAuxiliaryView (circular button)
+            guard let agentButton = tabBar.subviews
+                .first(where: { String(describing: type(of: $0)).contains("AuxiliaryView") }) else { return }
+            
+            dotSize = AgentBadge.IOS26.dotSize
+            dotX = agentButton.frame.midX - dotSize / 2 + AgentBadge.IOS26.offset
+            dotY = agentButton.frame.midY - dotSize / 2 - AgentBadge.IOS26.offset
+        } else {
+            // iOS 18 and below: Agent tab is a regular UITabBarButton
+            let agentIndex = navigationTabCoordinator.tabModules.count
+            let tabBarButtons = tabBar.subviews
+                .filter { String(describing: type(of: $0)).contains("UITabBarButton") }
+                .sorted { $0.frame.minX < $1.frame.minX }
+            
+            guard agentIndex < tabBarButtons.count else { return }
+            
+            let agentButton = tabBarButtons[agentIndex]
+            dotSize = AgentBadge.IOS18.dotSize
+            dotX = agentButton.frame.midX + AgentBadge.IOS18.offset
+            dotY = agentButton.frame.minY + AgentBadge.IOS18.offset / 2
+        }
+        
+        let dotView = UIView(frame: CGRect(x: dotX, y: dotY, width: dotSize, height: dotSize))
+        dotView.tag = AgentBadge.viewTag
+        dotView.backgroundColor = .compound.iconAccentTertiary
+        dotView.layer.cornerRadius = dotSize / 2
+        
+        tabBar.addSubview(dotView)
+    }
+
     private func configureAppearance(_ tabBarController: UITabBarController) {
         standardAppearance.configureWithDefaultBackground()
         standardAppearance.stackedLayoutAppearance.normal.badgeBackgroundColor = .compound.iconAccentPrimary // iPhone Portrait
@@ -340,3 +508,48 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
         tabBarController.tabBar.standardAppearance = standardAppearance
     }
 }
+
+// MARK: - Agent Badge Constants
+
+private enum AgentBadge {
+    static let viewTag = 9999
+    
+    enum IOS26 {
+        static let dotSize: CGFloat = 8
+        static let offset: CGFloat = 14
+    }
+    
+    enum IOS18 {
+        static let dotSize: CGFloat = 6
+        static let offset: CGFloat = 12
+    }
+}
+
+// MARK: - Agent Tab Bar Delegate
+
+private class AgentTabBarDelegate: NSObject, UITabBarControllerDelegate {
+    var agentTabIndex: Int = 0
+    var onAgentTapped: (() -> Void)?
+    var onTabSelected: ((Int) -> Void)?
+
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        guard let index = tabBarController.viewControllers?.firstIndex(of: viewController) else {
+            return true
+        }
+
+        if index == agentTabIndex {
+            onAgentTapped?()
+            return false
+        }
+
+        return true
+    }
+
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        guard let index = tabBarController.viewControllers?.firstIndex(of: viewController) else {
+            return
+        }
+        onTabSelected?(index)
+    }
+}
+

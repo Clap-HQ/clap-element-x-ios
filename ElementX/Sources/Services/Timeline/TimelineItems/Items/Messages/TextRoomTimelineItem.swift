@@ -6,7 +6,6 @@
 // Please see LICENSE files in the repository root for full details.
 //
 
-import Algorithms
 import UIKit
 
 struct TextRoomTimelineItem: TextBasedRoomTimelineItem, Equatable {
@@ -52,6 +51,7 @@ struct TextRoomTimelineItem: TextBasedRoomTimelineItem, Equatable {
             return run.link
         }
         
-        return Array(links.uniqued())
+        var seen = Set<URL>()
+        return links.filter { seen.insert($0).inserted }
     }
 }

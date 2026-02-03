@@ -32,23 +32,31 @@ struct RoomAttachmentPicker: View {
         .accessibilityIdentifier(A11yIdentifiers.roomScreen.composerToolbar.openComposeOptions)
     }
     
+    private var available: Set<ComposerAttachmentType> {
+        context.viewState.availableAttachments
+    }
+    
     var menuContent: some View {
         VStack(alignment: .leading, spacing: 0.0) {
-            Button {
-                context.send(viewAction: .enableTextFormatting)
-            } label: {
-                Label(L10n.screenRoomAttachmentTextFormatting, icon: \.textFormatting)
+            if context.viewState.showTextFormattingOption {
+                Button {
+                    context.send(viewAction: .enableTextFormatting)
+                } label: {
+                    Label(L10n.screenRoomAttachmentTextFormatting, icon: \.textFormatting)
+                }
+                .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerTextFormatting)
             }
-            .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerTextFormatting)
             
-            Button {
-                context.send(viewAction: .attach(.poll))
-            } label: {
-                Label(L10n.screenRoomAttachmentSourcePoll, icon: \.polls)
+            if available.contains(.poll) {
+                Button {
+                    context.send(viewAction: .attach(.poll))
+                } label: {
+                    Label(L10n.screenRoomAttachmentSourcePoll, icon: \.polls)
+                }
+                .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerPoll)
             }
-            .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerPoll)
             
-            if context.viewState.isLocationSharingEnabled {
+            if available.contains(.location), context.viewState.isLocationSharingEnabled {
                 Button {
                     context.send(viewAction: .attach(.location))
                 } label: {
@@ -57,26 +65,32 @@ struct RoomAttachmentPicker: View {
                 .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerLocation)
             }
             
-            Button {
-                context.send(viewAction: .attach(.file))
-            } label: {
-                Label(L10n.screenRoomAttachmentSourceFiles, icon: \.attachment)
+            if available.contains(.file) {
+                Button {
+                    context.send(viewAction: .attach(.file))
+                } label: {
+                    Label(L10n.screenRoomAttachmentSourceFiles, icon: \.attachment)
+                }
+                .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerDocuments)
             }
-            .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerDocuments)
             
-            Button {
-                context.send(viewAction: .attach(.photoLibrary))
-            } label: {
-                Label(L10n.screenRoomAttachmentSourceGallery, icon: \.image)
+            if available.contains(.photoLibrary) {
+                Button {
+                    context.send(viewAction: .attach(.photoLibrary))
+                } label: {
+                    Label(L10n.screenRoomAttachmentSourceGallery, icon: \.image)
+                }
+                .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerPhotoLibrary)
             }
-            .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerPhotoLibrary)
             
-            Button {
-                context.send(viewAction: .attach(.camera))
-            } label: {
-                Label(L10n.screenRoomAttachmentSourceCamera, icon: \.takePhoto)
+            if available.contains(.camera) {
+                Button {
+                    context.send(viewAction: .attach(.camera))
+                } label: {
+                    Label(L10n.screenRoomAttachmentSourceCamera, icon: \.takePhoto)
+                }
+                .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerCamera)
             }
-            .accessibilityIdentifier(A11yIdentifiers.roomScreen.attachmentPickerCamera)
         }
     }
 }

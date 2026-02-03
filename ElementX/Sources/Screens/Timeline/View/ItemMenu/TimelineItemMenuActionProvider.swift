@@ -20,6 +20,7 @@ struct TimelineItemMenuActionProvider {
     let isViewSourceEnabled: Bool
     let areThreadsEnabled: Bool
     let timelineKind: TimelineKind
+    let isMenuMinimal: Bool
     let emojiProvider: EmojiProviderProtocol
     
     // swiftlint:disable:next cyclomatic_complexity
@@ -140,7 +141,16 @@ struct TimelineItemMenuActionProvider {
             secondaryActions = secondaryActions.filter(\.canAppearInRedacted)
         }
         
-        let isReactable = timelineKind == .live || timelineKind == .detached || timelineKind.isThread ? item.isReactable : false
+        if isMenuMinimal {
+            actions = actions.filter(\.canAppearInMinimalMenu)
+            secondaryActions = secondaryActions.filter(\.canAppearInMinimalMenu)
+        }
+        
+        let isReactable = if isMenuMinimal {
+            false
+        } else {
+            timelineKind == .live || timelineKind == .detached || timelineKind.isThread ? item.isReactable : false
+        }
 
         return .init(isReactable: isReactable, actions: actions, secondaryActions: secondaryActions, emojiProvider: emojiProvider)
     }

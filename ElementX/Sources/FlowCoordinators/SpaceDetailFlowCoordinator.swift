@@ -257,6 +257,8 @@ class SpaceDetailFlowCoordinator: FlowCoordinatorProtocol {
                 switch action {
                 case .presentCallScreen(let roomProxy):
                     actionsSubject.send(.presentCallScreen(roomProxy: roomProxy))
+                case .presentAgentScreen:
+                    break
                 case .verifyUser(let userID):
                     actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
                 case .continueWithSpaceFlow(let spaceRoomListProxy),
@@ -291,10 +293,12 @@ class SpaceDetailFlowCoordinator: FlowCoordinatorProtocol {
                 switch action {
                 case .presentCallScreen(let roomProxy):
                     actionsSubject.send(.presentCallScreen(roomProxy: roomProxy))
+                case .presentAgentScreen:
+                    break
                 case .verifyUser(let userID):
                     actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
                 case .continueWithSpaceFlow, .continueWithSpaceDetailFlow:
-                    break // Not applicable for room details
+                    break
                 case .finished:
                     roomDetailsCoordinator = nil
                 }
@@ -384,10 +388,12 @@ class SpaceDetailFlowCoordinator: FlowCoordinatorProtocol {
                 switch action {
                 case .presentCallScreen(let roomProxy):
                     actionsSubject.send(.presentCallScreen(roomProxy: roomProxy))
+                case .presentAgentScreen:
+                    break
                 case .verifyUser(let userID):
                     actionsSubject.send(.sessionVerification(.userInitiator(userID: userID)))
                 case .continueWithSpaceFlow, .continueWithSpaceDetailFlow:
-                    break // Not applicable for space settings
+                    break
                 case .finished:
                     spaceSettingsFlowCoordinator = nil
                 }
