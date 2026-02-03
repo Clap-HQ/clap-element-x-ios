@@ -111,6 +111,8 @@ import SwiftUI
 
     /// Tag value for the agent tab. Must be set for the agent tab to work properly.
     var agentTag: Tag?
+    
+    var hasAgentUnread: Bool = false
 
     /// Internal delegate for intercepting agent tab selection
     fileprivate var agentTabBarDelegate: AgentTabBarDelegate?
@@ -378,6 +380,7 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
         .introspect(.tabView, on: .supportedVersions) { tabBarController in
             configureAgentTabInterception(tabBarController)
         }
+        .id(navigationTabCoordinator.hasAgentUnread)
     }
 
     private func configureAgentTabInterception(_ tabBarController: UITabBarController) {
@@ -398,6 +401,7 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
         }
 
         tabBarController.delegate = navigationTabCoordinator.agentTabBarDelegate
+        updateAgentBadge(in: tabBarController.tabBar)
     }
 
     private var legacyTabView: some View {
@@ -422,6 +426,7 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
         .introspect(.tabView, on: .supportedVersions) { tabBarController in
             configureLegacyAgentTabInterception(tabBarController)
         }
+        .id(navigationTabCoordinator.hasAgentUnread)
     }
 
     @ViewBuilder
@@ -457,6 +462,49 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
         }
 
         tabBarController.delegate = navigationTabCoordinator.agentTabBarDelegate
+        updateAgentBadge(in: tabBarController.tabBar)
+    }
+    
+    // WARNING: Uses private UIKit APIs (`_UITabBarAuxiliaryView`, `UITabBarButton`) which may break on iOS updates.
+    private func updateAgentBadge(in tabBar: UITabBar) {
+        tabBar.layoutIfNeeded()
+        tabBar.viewWithTag(AgentBadge.viewTag)?.removeFromSuperview()
+        
+        guard navigationTabCoordinator.hasAgentUnread else { return }
+        
+        let dotSize: CGFloat
+        let dotX: CGFloat
+        let dotY: CGFloat
+        
+        if #available(iOS 26.0, *) {
+            // iOS 26+: Agent tab is rendered as _UITabBarAuxiliaryView (circular button)
+            guard let agentButton = tabBar.subviews
+                .first(where: { String(describing: type(of: $0)).contains("AuxiliaryView") }) else { return }
+            
+            dotSize = AgentBadge.iOS26.dotSize
+            dotX = agentButton.frame.midX - dotSize / 2 + AgentBadge.iOS26.offset
+            dotY = agentButton.frame.midY - dotSize / 2 - AgentBadge.iOS26.offset
+        } else {
+            // iOS 18 and below: Agent tab is a regular UITabBarButton
+            let agentIndex = navigationTabCoordinator.tabModules.count
+            let tabBarButtons = tabBar.subviews
+                .filter { String(describing: type(of: $0)).contains("UITabBarButton") }
+                .sorted { $0.frame.minX < $1.frame.minX }
+            
+            guard agentIndex < tabBarButtons.count else { return }
+            
+            let agentButton = tabBarButtons[agentIndex]
+            dotSize = AgentBadge.iOS18.dotSize
+            dotX = agentButton.frame.midX + AgentBadge.iOS18.offset
+            dotY = agentButton.frame.minY + AgentBadge.iOS18.offset / 2
+        }
+        
+        let dotView = UIView(frame: CGRect(x: dotX, y: dotY, width: dotSize, height: dotSize))
+        dotView.tag = AgentBadge.viewTag
+        dotView.backgroundColor = .compound.iconAccentTertiary
+        dotView.layer.cornerRadius = dotSize / 2
+        
+        tabBar.addSubview(dotView)
     }
 
     private func configureAppearance(_ tabBarController: UITabBarController) {
@@ -465,6 +513,22 @@ private struct NavigationTabCoordinatorView<Tag: Hashable>: View {
         standardAppearance.compactInlineLayoutAppearance.normal.badgeBackgroundColor = .compound.iconAccentPrimary // iPhone Landscape
         standardAppearance.inlineLayoutAppearance.normal.badgeBackgroundColor = .compound.iconAccentPrimary // iPadOS 17 (doesn't work for 18+)
         tabBarController.tabBar.standardAppearance = standardAppearance
+    }
+}
+
+// MARK: - Agent Badge Constants
+
+private enum AgentBadge {
+    static let viewTag = 9999
+    
+    enum iOS26 {
+        static let dotSize: CGFloat = 8
+        static let offset: CGFloat = 14
+    }
+    
+    enum iOS18 {
+        static let dotSize: CGFloat = 6
+        static let offset: CGFloat = 12
     }
 }
 

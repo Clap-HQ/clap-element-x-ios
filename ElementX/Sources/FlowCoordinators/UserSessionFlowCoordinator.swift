@@ -315,6 +315,21 @@ class UserSessionFlowCoordinator: FlowCoordinatorProtocol {
                 await self.openClapAIDM()
             }
         }
+        
+        userSession.clientProxy.clapAIRoomIDPublisher
+            .combineLatest(userSession.clientProxy.roomSummaryProvider.roomListPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] clapAIRoomID, roomSummaries in
+                guard let self, let clapAIRoomID else {
+                    self?.navigationTabCoordinator.hasAgentUnread = false
+                    return
+                }
+                let hasUnread = roomSummaries
+                    .first { $0.id == clapAIRoomID }
+                    .map { $0.hasUnreadNotifications } ?? false
+                navigationTabCoordinator.hasAgentUnread = hasUnread
+            }
+            .store(in: &cancellables)
     }
 
     private func openClapAIDM() async {
