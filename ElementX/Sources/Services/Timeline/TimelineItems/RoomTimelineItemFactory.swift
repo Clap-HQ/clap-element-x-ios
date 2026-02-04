@@ -827,10 +827,6 @@ struct RoomTimelineItemFactory: RoomTimelineItemFactoryProtocol {
             )
         )
         
-        Task { @MainActor in
-            DivKitComponentsProvider.shared.preloadHeight(cardData: payload.cardData, cardID: item.id.uniqueID.value)
-        }
-        
         return item
     }
     

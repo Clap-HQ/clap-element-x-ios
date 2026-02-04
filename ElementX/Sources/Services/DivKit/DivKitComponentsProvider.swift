@@ -61,26 +61,20 @@ final class DivKitComponentsProvider {
         cachedHeights[cardID] = height
     }
 
-    /// Pre-calculates DivKit card height before the cell is displayed.
-    /// The estimated width is used only for initial height calculation.
-    /// Actual rendering uses the real parent bounds, same as other message bubbles.
-    func preloadHeight(cardData: Data, cardID: String) {
-        guard cachedHeights[cardID] == nil else { return }
+    func resolvePaletteExpressions(cardData: Data, palette: DivKitPalette?) -> Data {
+        guard let palette else { return cardData }
         
-        let sizingView = DivView(divKitComponents: components)
-        let estimatedBubbleWidth = UIScreen.main.bounds.width * 0.8
-        sizingView.frame = CGRect(x: 0, y: 0, width: estimatedBubbleWidth, height: 0)
+        let isDarkMode = UITraitCollection.current.userInterfaceStyle == .dark
+        let colors = isDarkMode ? palette.dark : palette.light
         
-        let source = DivViewSource(kind: .data(cardData), cardId: DivCardID(rawValue: "sizing-\(cardID)"))
-        Task {
-            await sizingView.setSource(source)
-            sizingView.layoutIfNeeded()
-            
-            let height = sizingView.intrinsicContentSize.height
-            if height > 0 {
-                cacheHeight(height, for: cardID)
-            }
+        guard !colors.isEmpty, var jsonString = String(data: cardData, encoding: .utf8) else {
+            return cardData
         }
+        
+        for color in colors {
+            jsonString = jsonString.replacingOccurrences(of: "@{\(color.name)}", with: color.color)
+        }
+        return Data(jsonString.utf8)
     }
 
     func resetAllCardState(keepHeightCache: Bool = false) {

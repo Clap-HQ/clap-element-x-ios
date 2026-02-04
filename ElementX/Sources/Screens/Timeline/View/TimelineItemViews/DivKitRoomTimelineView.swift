@@ -12,7 +12,6 @@ import SwiftUI
 
 struct DivKitRoomTimelineView: View {
     @Environment(\.timelineContext) private var context
-    @Environment(\.colorScheme) private var colorScheme
     let timelineItem: DivKitRoomTimelineItem
 
     @State private var showFallback = false
@@ -24,11 +23,10 @@ struct DivKitRoomTimelineView: View {
     }
 
     private var resolvedCardData: Data {
-        guard let palette = timelineItem.content.palette else {
-            return timelineItem.content.cardData
-        }
-        let colors = colorScheme == .dark ? palette.dark : palette.light
-        return resolvePaletteExpressions(colors, in: timelineItem.content.cardData)
+        DivKitComponentsProvider.shared.resolvePaletteExpressions(
+            cardData: timelineItem.content.cardData,
+            palette: timelineItem.content.palette
+        )
     }
 
     var body: some View {
@@ -54,25 +52,20 @@ struct DivKitRoomTimelineView: View {
                 onFailure: { showFallback = true },
                 onHeightChanged: { height in
                     DivKitComponentsProvider.shared.cacheHeight(height, for: cardID)
-                    DispatchQueue.main.async {
-                        cardHeight = height
+                    if cardHeight != height {
+                        DispatchQueue.main.async {
+                            cardHeight = height
+                        }
                     }
                 }
             )
-            if let height = cardHeight ?? DivKitComponentsProvider.shared.cachedHeight(for: cardID) {
+            let usedHeight = cardHeight ?? DivKitComponentsProvider.shared.cachedHeight(for: cardID)
+            if let height = usedHeight {
                 representable.frame(height: height)
             } else {
                 representable.fixedSize(horizontal: false, vertical: true)
             }
         }
-    }
-
-    private func resolvePaletteExpressions(_ colors: [DivKitPaletteColor], in cardData: Data) -> Data {
-        guard var jsonString = String(data: cardData, encoding: .utf8) else { return cardData }
-        for color in colors {
-            jsonString = jsonString.replacingOccurrences(of: "@{\(color.name)}", with: color.color)
-        }
-        return Data(jsonString.utf8)
     }
 
     private func handleDivKitAction(url: URL) {
@@ -530,7 +523,7 @@ final class DivViewContainer: UIView {
     private var lastReportedHeight: CGFloat = 0
     private var lastVisibleBounds: CGRect = .zero
     private var isSourceLoaded = false
-
+    
     init(divView: DivView, onHeightChanged: @escaping (CGFloat) -> Void) {
         self.divView = divView
         self.onHeightChanged = onHeightChanged
@@ -547,6 +540,12 @@ final class DivViewContainer: UIView {
             lastVisibleBounds = bounds
             divView.onVisibleBoundsChanged(to: bounds)
             invalidateIntrinsicContentSize()
+            
+            let actualHeight = divView.intrinsicContentSize.height
+            if actualHeight > 0, abs(actualHeight - bounds.height) > 1 {
+                lastReportedHeight = actualHeight
+                onHeightChanged(actualHeight)
+            }
         }
     }
 
