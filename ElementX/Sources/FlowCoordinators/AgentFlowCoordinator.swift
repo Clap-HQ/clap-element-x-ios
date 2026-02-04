@@ -19,6 +19,7 @@ class AgentFlowCoordinator {
     private let navigationStackCoordinator: NavigationStackCoordinator
     
     private var agentScreenCoordinator: AgentScreenCoordinator?
+    private var scheduleFlowCoordinator: ScheduleFlowCoordinator?
     private var roomProxy: JoinedRoomProxyProtocol?
     private var timelineController: TimelineControllerProtocol?
     private var cancellables = Set<AnyCancellable>()
@@ -115,6 +116,8 @@ class AgentFlowCoordinator {
             presentMediaUploadPreview(for: mediaURLs)
         case .presentMessageForwarding(let forwardingItem):
             presentMessageForwarding(with: forwardingItem)
+        case .presentSchedules:
+            presentSchedules()
         }
     }
     
@@ -189,5 +192,28 @@ class AgentFlowCoordinator {
         let stackCoordinator = NavigationStackCoordinator()
         stackCoordinator.setRootCoordinator(previewCoordinator)
         navigationStackCoordinator.setSheetCoordinator(stackCoordinator)
+    }
+    
+    // MARK: - Schedules
+    
+    private func presentSchedules() {
+        let coordinator = ScheduleFlowCoordinator(
+            userSession: userSession,
+            userIndicatorController: flowParameters.userIndicatorController,
+            navigationStackCoordinator: navigationStackCoordinator
+        )
+        
+        coordinator.actions
+            .sink { [weak self] action in
+                guard let self else { return }
+                switch action {
+                case .dismiss:
+                    scheduleFlowCoordinator = nil
+                }
+            }
+            .store(in: &cancellables)
+        
+        coordinator.start()
+        scheduleFlowCoordinator = coordinator
     }
 }

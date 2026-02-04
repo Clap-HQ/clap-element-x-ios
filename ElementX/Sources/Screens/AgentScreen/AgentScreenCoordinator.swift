@@ -30,6 +30,7 @@ enum AgentScreenCoordinatorAction {
     case presentMediaUploadPicker(mode: MediaPickerScreenMode)
     case presentMediaUploadPreviewScreen(mediaURLs: [URL])
     case presentMessageForwarding(forwardingItem: MessageForwardingItem)
+    case presentSchedules
 }
 
 final class AgentScreenCoordinator: CoordinatorProtocol {
@@ -90,6 +91,8 @@ final class AgentScreenCoordinator: CoordinatorProtocol {
                 switch action {
                 case .dismiss:
                     actionsSubject.send(.dismiss)
+                case .showSchedules:
+                    actionsSubject.send(.presentSchedules)
                 }
             }
             .store(in: &cancellables)

@@ -1551,3 +1551,80 @@
 "screen_join_all_rooms_confirmation_subtitle" = "Would you like to join all rooms in %@?";
 "screen_join_all_rooms_confirmation_action" = "Join all rooms";
 "common_clap_ai_not_found" = "Clap AI room could not be found.";
+
+// MARK: - Schedule
+"screen_schedule_list_title" = "Scheduled Tasks";
+"screen_schedule_list_empty_title" = "No scheduled tasks";
+"screen_schedule_list_filter_empty" = "No tasks match this filter";
+"screen_schedule_list_filter_all" = "All";
+"screen_schedule_list_filter_active" = "Active";
+"screen_schedule_list_filter_cancelled" = "Cancelled";
+
+"screen_schedule_detail_title" = "Task Details";
+"screen_schedule_detail_action_run" = "Run Now";
+"screen_schedule_detail_action_pause" = "Pause";
+"screen_schedule_detail_action_resume" = "Resume";
+"screen_schedule_detail_cron_expression" = "Cron Expression";
+"screen_schedule_detail_timezone" = "Timezone";
+"screen_schedule_detail_room_id" = "Room ID";
+"screen_schedule_detail_created_by" = "Created by";
+"screen_schedule_detail_target_user" = "Target User";
+"screen_schedule_detail_run_count" = "Run Count";
+"screen_schedule_detail_run_count_value" = "%d times";
+"screen_schedule_detail_last_run" = "Last Run";
+"screen_schedule_detail_created_at" = "Created";
+"screen_schedule_detail_updated_at" = "Updated";
+"screen_schedule_detail_section_prompt" = "Prompt";
+"screen_schedule_detail_section_history" = "Execution History";
+"screen_schedule_detail_history_empty" = "No execution history";
+
+"screen_schedule_create_title" = "Create Task";
+"screen_schedule_create_name_header" = "Name";
+"screen_schedule_create_name_placeholder" = "e.g., Daily morning news summary";
+"screen_schedule_create_cron_header" = "Cron Expression";
+"screen_schedule_create_cron_placeholder" = "e.g., 0 9 * * * (daily at 9am)";
+"screen_schedule_create_cron_footer" = "Format: minute hour day month weekday\n(e.g., 0 9 * * 1-5 = weekdays at 9am)";
+"screen_schedule_create_timezone_header" = "Timezone";
+"screen_schedule_create_room_header" = "Target Room";
+"screen_schedule_create_room_placeholder" = "Select";
+"screen_schedule_create_room_footer" = "Select the room where the task will run";
+"screen_schedule_create_prompt_header" = "Prompt";
+"screen_schedule_create_prompt_placeholder" = "e.g., Summarize today's top news";
+"screen_schedule_create_prompt_footer" = "Describe in natural language what the AI agent should do";
+
+"screen_schedule_room_picker_title" = "Select Room";
+"screen_schedule_room_picker_section_rooms" = "Rooms";
+"screen_schedule_room_picker_section_dm" = "Direct Messages";
+
+"common_schedule_status_active" = "Active";
+"common_schedule_status_paused" = "Paused";
+"common_schedule_status_pending" = "Pending";
+"common_schedule_status_cancelled" = "Cancelled";
+
+// Schedule Actions
+"screen_schedule_delete_title" = "Delete Task";
+"screen_schedule_delete_message" = "Delete '%@'?";
+"screen_schedule_delete_action" = "Delete";
+
+// Schedule Loading
+"screen_schedule_loading_delete" = "Deleting...";
+"screen_schedule_loading_run" = "Running...";
+"screen_schedule_loading_pause" = "Pausing...";
+"screen_schedule_loading_resume" = "Resuming...";
+"screen_schedule_loading_create" = "Creating...";
+
+// Schedule Success
+"screen_schedule_success_deleted" = "Task deleted";
+"screen_schedule_success_run" = "Task triggered";
+"screen_schedule_success_paused" = "Task paused";
+"screen_schedule_success_resumed" = "Task resumed";
+"screen_schedule_success_created" = "Task created";
+
+// Schedule Errors
+"common_error_title" = "Error";
+"screen_schedule_error_load_failed" = "Failed to load tasks";
+"screen_schedule_error_delete_failed" = "Failed to delete task";
+"screen_schedule_error_run_failed" = "Failed to run task";
+"screen_schedule_error_pause_failed" = "Failed to pause task";
+"screen_schedule_error_resume_failed" = "Failed to resume task";
+"screen_schedule_error_create_failed" = "Failed to create task";

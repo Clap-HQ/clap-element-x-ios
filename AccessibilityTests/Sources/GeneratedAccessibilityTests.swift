@@ -583,6 +583,26 @@ extension AccessibilityTests {
         try await performAccessibilityAudit(named: "SFNumberedListView_Previews")
     }
 
+    func testScheduleFilterButton() async throws {
+        try await performAccessibilityAudit(named: "ScheduleFilterButton_Previews")
+    }
+
+    func testScheduleHistoryRow() async throws {
+        try await performAccessibilityAudit(named: "ScheduleHistoryRow_Previews")
+    }
+
+    func testScheduleInfoRow() async throws {
+        try await performAccessibilityAudit(named: "ScheduleInfoRow_Previews")
+    }
+
+    func testScheduleListCell() async throws {
+        try await performAccessibilityAudit(named: "ScheduleListCell_Previews")
+    }
+
+    func testScheduleStatusBadge() async throws {
+        try await performAccessibilityAudit(named: "ScheduleStatusBadge_Previews")
+    }
+
     func testSecureBackupKeyBackupScreen() async throws {
         try await performAccessibilityAudit(named: "SecureBackupKeyBackupScreen_Previews")
     }

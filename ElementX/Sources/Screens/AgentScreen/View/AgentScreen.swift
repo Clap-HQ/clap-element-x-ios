@@ -78,6 +78,12 @@ struct AgentScreen: View {
                            mediaProvider: context.mediaProvider)
                 .contentShape(.rect)
         }
+        
+        ToolbarItem(placement: .primaryAction) {
+            Button { context.send(viewAction: .showSchedules) } label: {
+                Image(systemName: "calendar.badge.clock")
+            }
+        }
     }
     
     private var isAtBottomAndLive: Bool {

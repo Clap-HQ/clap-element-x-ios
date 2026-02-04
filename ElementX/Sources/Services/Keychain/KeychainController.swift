@@ -32,6 +32,7 @@ final class KeychainController: KeychainControllerProtocol {
     private enum Key: String {
         case appLockPINCode
         case appLockBiometricState
+        case clapAITokenPrefix = "clapAIToken."
     }
 
     init(service: KeychainControllerService, accessGroup: String) {
@@ -59,6 +60,7 @@ final class KeychainController: KeychainControllerProtocol {
             return try JSONDecoder().decode(RestorationToken.self, from: tokenData)
         } catch RestorationTokenError.slidingSyncProxyNotSupported {
             MXLog.error("Unsupported user restore token (contains sliding sync proxy). Deleting token.")
+            removeClapAIToken(forUsername: username)
             removeRestorationTokenForUsername(username)
             return nil
         } catch {
@@ -119,6 +121,37 @@ final class KeychainController: KeychainControllerProtocol {
                                                 passphrase: oldToken.passphrase,
                                                 pusherNotificationClientIdentifier: oldToken.pusherNotificationClientIdentifier)
         setRestorationToken(restorationToken, forUsername: session.userId)
+    }
+    
+    // MARK: - Clap AI Token
+    
+    func setClapAIToken(_ token: ClapAIToken, forUsername username: String) {
+        do {
+            let tokenData = try JSONEncoder().encode(token)
+            try mainKeychain.set(tokenData, key: Key.clapAITokenPrefix.rawValue + username)
+        } catch {
+            MXLog.error("Failed storing Clap AI token with error: \(error)")
+        }
+    }
+    
+    func clapAIToken(forUsername username: String) -> ClapAIToken? {
+        do {
+            guard let tokenData = try mainKeychain.getData(Key.clapAITokenPrefix.rawValue + username) else {
+                return nil
+            }
+            return try JSONDecoder().decode(ClapAIToken.self, from: tokenData)
+        } catch {
+            MXLog.error("Failed retrieving Clap AI token: \(error)")
+            return nil
+        }
+    }
+    
+    func removeClapAIToken(forUsername username: String) {
+        do {
+            try mainKeychain.remove(Key.clapAITokenPrefix.rawValue + username)
+        } catch {
+            MXLog.error("Failed removing Clap AI token: \(error)")
+        }
     }
     
     // MARK: - App Secrets

@@ -484,6 +484,8 @@ internal enum L10n {
   internal static var commonEnterYourPin: String { return L10n.tr("Localizable", "common_enter_your_pin") }
   /// Error
   internal static var commonError: String { return L10n.tr("Localizable", "common_error") }
+  /// Error
+  internal static var commonErrorTitle: String { return L10n.tr("Localizable", "common_error_title") }
   /// Everyone
   internal static var commonEveryone: String { return L10n.tr("Localizable", "common_everyone") }
   /// Face ID
@@ -654,6 +656,14 @@ internal enum L10n {
   internal static var commonSavedChanges: String { return L10n.tr("Localizable", "common_saved_changes") }
   /// Saving
   internal static var commonSaving: String { return L10n.tr("Localizable", "common_saving") }
+  /// Active
+  internal static var commonScheduleStatusActive: String { return L10n.tr("Localizable", "common_schedule_status_active") }
+  /// Cancelled
+  internal static var commonScheduleStatusCancelled: String { return L10n.tr("Localizable", "common_schedule_status_cancelled") }
+  /// Paused
+  internal static var commonScheduleStatusPaused: String { return L10n.tr("Localizable", "common_schedule_status_paused") }
+  /// Pending
+  internal static var commonScheduleStatusPending: String { return L10n.tr("Localizable", "common_schedule_status_pending") }
   /// Screen lock
   internal static var commonScreenLock: String { return L10n.tr("Localizable", "common_screen_lock") }
   /// Search for someone
@@ -2902,6 +2912,127 @@ internal enum L10n {
   internal static var screenRoomlistMarkAsUnread: String { return L10n.tr("Localizable", "screen_roomlist_mark_as_unread") }
   /// This room has been upgraded
   internal static var screenRoomlistTombstonedRoomDescription: String { return L10n.tr("Localizable", "screen_roomlist_tombstoned_room_description") }
+  /// Format: minute hour day month weekday
+  /// (e.g., 0 9 * * 1-5 = weekdays at 9am)
+  internal static var screenScheduleCreateCronFooter: String { return L10n.tr("Localizable", "screen_schedule_create_cron_footer") }
+  /// Cron Expression
+  internal static var screenScheduleCreateCronHeader: String { return L10n.tr("Localizable", "screen_schedule_create_cron_header") }
+  /// e.g., 0 9 * * * (daily at 9am)
+  internal static var screenScheduleCreateCronPlaceholder: String { return L10n.tr("Localizable", "screen_schedule_create_cron_placeholder") }
+  /// Name
+  internal static var screenScheduleCreateNameHeader: String { return L10n.tr("Localizable", "screen_schedule_create_name_header") }
+  /// e.g., Daily morning news summary
+  internal static var screenScheduleCreateNamePlaceholder: String { return L10n.tr("Localizable", "screen_schedule_create_name_placeholder") }
+  /// Describe in natural language what the AI agent should do
+  internal static var screenScheduleCreatePromptFooter: String { return L10n.tr("Localizable", "screen_schedule_create_prompt_footer") }
+  /// Prompt
+  internal static var screenScheduleCreatePromptHeader: String { return L10n.tr("Localizable", "screen_schedule_create_prompt_header") }
+  /// e.g., Summarize today's top news
+  internal static var screenScheduleCreatePromptPlaceholder: String { return L10n.tr("Localizable", "screen_schedule_create_prompt_placeholder") }
+  /// Select the room where the task will run
+  internal static var screenScheduleCreateRoomFooter: String { return L10n.tr("Localizable", "screen_schedule_create_room_footer") }
+  /// Target Room
+  internal static var screenScheduleCreateRoomHeader: String { return L10n.tr("Localizable", "screen_schedule_create_room_header") }
+  /// Select
+  internal static var screenScheduleCreateRoomPlaceholder: String { return L10n.tr("Localizable", "screen_schedule_create_room_placeholder") }
+  /// Timezone
+  internal static var screenScheduleCreateTimezoneHeader: String { return L10n.tr("Localizable", "screen_schedule_create_timezone_header") }
+  /// Create Task
+  internal static var screenScheduleCreateTitle: String { return L10n.tr("Localizable", "screen_schedule_create_title") }
+  /// Delete
+  internal static var screenScheduleDeleteAction: String { return L10n.tr("Localizable", "screen_schedule_delete_action") }
+  /// Delete '%@'?
+  internal static func screenScheduleDeleteMessage(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "screen_schedule_delete_message", String(describing: p1))
+  }
+  /// Delete Task
+  internal static var screenScheduleDeleteTitle: String { return L10n.tr("Localizable", "screen_schedule_delete_title") }
+  /// Pause
+  internal static var screenScheduleDetailActionPause: String { return L10n.tr("Localizable", "screen_schedule_detail_action_pause") }
+  /// Resume
+  internal static var screenScheduleDetailActionResume: String { return L10n.tr("Localizable", "screen_schedule_detail_action_resume") }
+  /// Run Now
+  internal static var screenScheduleDetailActionRun: String { return L10n.tr("Localizable", "screen_schedule_detail_action_run") }
+  /// Created
+  internal static var screenScheduleDetailCreatedAt: String { return L10n.tr("Localizable", "screen_schedule_detail_created_at") }
+  /// Created by
+  internal static var screenScheduleDetailCreatedBy: String { return L10n.tr("Localizable", "screen_schedule_detail_created_by") }
+  /// Cron Expression
+  internal static var screenScheduleDetailCronExpression: String { return L10n.tr("Localizable", "screen_schedule_detail_cron_expression") }
+  /// No execution history
+  internal static var screenScheduleDetailHistoryEmpty: String { return L10n.tr("Localizable", "screen_schedule_detail_history_empty") }
+  /// Last Run
+  internal static var screenScheduleDetailLastRun: String { return L10n.tr("Localizable", "screen_schedule_detail_last_run") }
+  /// Room ID
+  internal static var screenScheduleDetailRoomId: String { return L10n.tr("Localizable", "screen_schedule_detail_room_id") }
+  /// Run Count
+  internal static var screenScheduleDetailRunCount: String { return L10n.tr("Localizable", "screen_schedule_detail_run_count") }
+  /// %d times
+  internal static func screenScheduleDetailRunCountValue(_ p1: Int) -> String {
+    return L10n.tr("Localizable", "screen_schedule_detail_run_count_value", p1)
+  }
+  /// Execution History
+  internal static var screenScheduleDetailSectionHistory: String { return L10n.tr("Localizable", "screen_schedule_detail_section_history") }
+  /// Prompt
+  internal static var screenScheduleDetailSectionPrompt: String { return L10n.tr("Localizable", "screen_schedule_detail_section_prompt") }
+  /// Target User
+  internal static var screenScheduleDetailTargetUser: String { return L10n.tr("Localizable", "screen_schedule_detail_target_user") }
+  /// Timezone
+  internal static var screenScheduleDetailTimezone: String { return L10n.tr("Localizable", "screen_schedule_detail_timezone") }
+  /// Task Details
+  internal static var screenScheduleDetailTitle: String { return L10n.tr("Localizable", "screen_schedule_detail_title") }
+  /// Updated
+  internal static var screenScheduleDetailUpdatedAt: String { return L10n.tr("Localizable", "screen_schedule_detail_updated_at") }
+  /// Failed to create task
+  internal static var screenScheduleErrorCreateFailed: String { return L10n.tr("Localizable", "screen_schedule_error_create_failed") }
+  /// Failed to delete task
+  internal static var screenScheduleErrorDeleteFailed: String { return L10n.tr("Localizable", "screen_schedule_error_delete_failed") }
+  /// Failed to load tasks
+  internal static var screenScheduleErrorLoadFailed: String { return L10n.tr("Localizable", "screen_schedule_error_load_failed") }
+  /// Failed to pause task
+  internal static var screenScheduleErrorPauseFailed: String { return L10n.tr("Localizable", "screen_schedule_error_pause_failed") }
+  /// Failed to resume task
+  internal static var screenScheduleErrorResumeFailed: String { return L10n.tr("Localizable", "screen_schedule_error_resume_failed") }
+  /// Failed to run task
+  internal static var screenScheduleErrorRunFailed: String { return L10n.tr("Localizable", "screen_schedule_error_run_failed") }
+  /// No scheduled tasks
+  internal static var screenScheduleListEmptyTitle: String { return L10n.tr("Localizable", "screen_schedule_list_empty_title") }
+  /// Active
+  internal static var screenScheduleListFilterActive: String { return L10n.tr("Localizable", "screen_schedule_list_filter_active") }
+  /// All
+  internal static var screenScheduleListFilterAll: String { return L10n.tr("Localizable", "screen_schedule_list_filter_all") }
+  /// Cancelled
+  internal static var screenScheduleListFilterCancelled: String { return L10n.tr("Localizable", "screen_schedule_list_filter_cancelled") }
+  /// No tasks match this filter
+  internal static var screenScheduleListFilterEmpty: String { return L10n.tr("Localizable", "screen_schedule_list_filter_empty") }
+  /// Scheduled Tasks
+  internal static var screenScheduleListTitle: String { return L10n.tr("Localizable", "screen_schedule_list_title") }
+  /// Creating...
+  internal static var screenScheduleLoadingCreate: String { return L10n.tr("Localizable", "screen_schedule_loading_create") }
+  /// Deleting...
+  internal static var screenScheduleLoadingDelete: String { return L10n.tr("Localizable", "screen_schedule_loading_delete") }
+  /// Pausing...
+  internal static var screenScheduleLoadingPause: String { return L10n.tr("Localizable", "screen_schedule_loading_pause") }
+  /// Resuming...
+  internal static var screenScheduleLoadingResume: String { return L10n.tr("Localizable", "screen_schedule_loading_resume") }
+  /// Running...
+  internal static var screenScheduleLoadingRun: String { return L10n.tr("Localizable", "screen_schedule_loading_run") }
+  /// Direct Messages
+  internal static var screenScheduleRoomPickerSectionDm: String { return L10n.tr("Localizable", "screen_schedule_room_picker_section_dm") }
+  /// Rooms
+  internal static var screenScheduleRoomPickerSectionRooms: String { return L10n.tr("Localizable", "screen_schedule_room_picker_section_rooms") }
+  /// Select Room
+  internal static var screenScheduleRoomPickerTitle: String { return L10n.tr("Localizable", "screen_schedule_room_picker_title") }
+  /// Task created
+  internal static var screenScheduleSuccessCreated: String { return L10n.tr("Localizable", "screen_schedule_success_created") }
+  /// Task deleted
+  internal static var screenScheduleSuccessDeleted: String { return L10n.tr("Localizable", "screen_schedule_success_deleted") }
+  /// Task paused
+  internal static var screenScheduleSuccessPaused: String { return L10n.tr("Localizable", "screen_schedule_success_paused") }
+  /// Task resumed
+  internal static var screenScheduleSuccessResumed: String { return L10n.tr("Localizable", "screen_schedule_success_resumed") }
+  /// Task triggered
+  internal static var screenScheduleSuccessRun: String { return L10n.tr("Localizable", "screen_schedule_success_run") }
   /// Add address
   internal static var screenSecurityAndPrivacyAddRoomAddressAction: String { return L10n.tr("Localizable", "screen_security_and_privacy_add_room_address_action") }
   /// Anyone in authorised spaces can join, but everyone else must request access.
