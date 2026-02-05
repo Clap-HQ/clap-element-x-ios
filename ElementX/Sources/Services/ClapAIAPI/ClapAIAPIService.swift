@@ -7,6 +7,27 @@
 
 import Foundation
 
+// MARK: - Token Exchange Coordinator
+
+private actor TokenExchangeCoordinator {
+    private var inFlightTask: Task<Result<Void, RESTAPIError>, Never>?
+    
+    func getOrStartTask(_ work: @escaping () async -> Result<Void, RESTAPIError>) async -> Result<Void, RESTAPIError> {
+        if let task = inFlightTask {
+            return await task.value
+        }
+        
+        let task = Task { await work() }
+        inFlightTask = task
+        
+        let result = await task.value
+        inFlightTask = nil
+        return result
+    }
+}
+
+// MARK: - ClapAIAPIService
+
 class ClapAIAPIService: ClapAIAPIServiceProtocol {
     private let clapAIServerURL: String
     private let userID: String
@@ -14,7 +35,7 @@ class ClapAIAPIService: ClapAIAPIServiceProtocol {
     private let keychainController: KeychainControllerProtocol
     private let session: URLSession
     
-    private var isExchangingToken = false
+    private let exchangeCoordinator = TokenExchangeCoordinator()
     private let tokenRefreshMargin: TimeInterval = 300
     
     private(set) var currentUser: ClapAIUser?
@@ -39,7 +60,13 @@ class ClapAIAPIService: ClapAIAPIServiceProtocol {
     private(set) lazy var schedules: ClapAIScheduleAPIProtocol = ClapAIScheduleAPI(
         homeserverURL: clapAIServerURL,
         accessTokenProvider: { [weak self] in self?.jwtToken },
-        tokenRefresher: { [weak self] in await self?.exchangeToken() ?? .failure(.unauthorized) },
+        tokenRefresher: { [weak self] in
+            guard let self else { return .failure(.unauthorized) }
+            return await self.exchangeCoordinator.getOrStartTask { [weak self] in
+                guard let self else { return .failure(.unauthorized) }
+                return await self.exchangeToken()
+            }
+        },
         session: session
     )
 
@@ -60,11 +87,10 @@ class ClapAIAPIService: ClapAIAPIServiceProtocol {
             return .success(())
         }
         
-        guard !isExchangingToken else {
-            return .failure(.unauthorized)
+        return await exchangeCoordinator.getOrStartTask { [weak self] in
+            guard let self else { return .failure(.unauthorized) }
+            return await self.exchangeToken()
         }
-        
-        return await exchangeToken()
     }
     
     func invalidateToken() {
@@ -120,9 +146,6 @@ class ClapAIAPIService: ClapAIAPIServiceProtocol {
             MXLog.error("No Matrix access token available for token exchange")
             return .failure(.unauthorized)
         }
-        
-        isExchangingToken = true
-        defer { isExchangingToken = false }
         
         guard let url = URL(string: "\(baseURL)/api/auth/token-exchange") else {
             return .failure(.invalidURL)
@@ -184,7 +207,6 @@ class ClapAIAPIService: ClapAIAPIServiceProtocol {
 
 class ClapAIRESTAPIClient: RESTAPIClient {
     private let tokenRefresher: () async -> Result<Void, RESTAPIError>
-    private var isRefreshing = false
     
     init(homeserverURL: String,
          accessTokenProvider: @escaping () -> String?,
@@ -213,13 +235,11 @@ class ClapAIRESTAPIClient: RESTAPIClient {
         request: RESTAPIRequest,
         retry: () async -> Result<T, RESTAPIError>
     ) async -> Result<T, RESTAPIError> {
-        guard case .failure(.unauthorized) = result, !isRefreshing else {
+        guard case .failure(.unauthorized) = result else {
             return result
         }
         
-        isRefreshing = true
         let refreshResult = await tokenRefresher()
-        isRefreshing = false
         
         guard case .success = refreshResult else {
             return result
