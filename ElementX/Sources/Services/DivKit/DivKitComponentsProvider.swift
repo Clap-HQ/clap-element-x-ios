@@ -27,7 +27,7 @@ final class DivKitComponentsProvider {
         self.components = DivKitComponents(reporter: reporter, urlHandler: router)
     }
 
-    func setActionHandler(for cardID: String, handler: @escaping (URL) -> Void) {
+    func setActionHandler(for cardID: String, handler: @escaping (URL, DivActionInfo) -> Void) {
         registeredCardIDs.insert(cardID)
         actionRouter.handlers[cardID] = handler
     }
@@ -97,9 +97,9 @@ final class DivKitComponentsProvider {
 // The clap:// scheme check in handleDivKitAction provides additional safety.
 private final class DivKitActionRouter: DivUrlHandler {
     private let lock = NSLock()
-    private var _handlers: [String: (URL) -> Void] = [:]
+    private var _handlers: [String: (URL, DivActionInfo) -> Void] = [:]
     
-    var handlers: [String: (URL) -> Void] {
+    var handlers: [String: (URL, DivActionInfo) -> Void] {
         get { lock.withLock { _handlers } }
         set { lock.withLock { _handlers = newValue } }
     }
@@ -110,7 +110,7 @@ private final class DivKitActionRouter: DivUrlHandler {
         
         if let handler {
             DispatchQueue.main.async {
-                handler(url)
+                handler(url, info)
             }
         } else {
             MXLog.warning("DivKit: No action handler registered for card '\(cardID)', URL: \(url)")

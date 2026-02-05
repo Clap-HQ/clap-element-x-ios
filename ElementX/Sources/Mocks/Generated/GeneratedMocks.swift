@@ -10190,6 +10190,76 @@ class JoinedRoomProxyMock: JoinedRoomProxyProtocol, @unchecked Sendable {
             return clearDraftThreadRootEventIDReturnValue
         }
     }
+    //MARK: - sendRaw
+
+    var sendRawEventTypeContentUnderlyingCallsCount = 0
+    var sendRawEventTypeContentCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return sendRawEventTypeContentUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = sendRawEventTypeContentUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                sendRawEventTypeContentUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    sendRawEventTypeContentUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var sendRawEventTypeContentCalled: Bool {
+        return sendRawEventTypeContentCallsCount > 0
+    }
+    var sendRawEventTypeContentReceivedArguments: (eventType: String, content: String)?
+    var sendRawEventTypeContentReceivedInvocations: [(eventType: String, content: String)] = []
+
+    var sendRawEventTypeContentUnderlyingReturnValue: Result<Void, RoomProxyError>!
+    var sendRawEventTypeContentReturnValue: Result<Void, RoomProxyError>! {
+        get {
+            if Thread.isMainThread {
+                return sendRawEventTypeContentUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Void, RoomProxyError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = sendRawEventTypeContentUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                sendRawEventTypeContentUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    sendRawEventTypeContentUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var sendRawEventTypeContentClosure: ((String, String) async -> Result<Void, RoomProxyError>)?
+
+    func sendRaw(eventType: String, content: String) async -> Result<Void, RoomProxyError> {
+        sendRawEventTypeContentCallsCount += 1
+        sendRawEventTypeContentReceivedArguments = (eventType: eventType, content: content)
+        DispatchQueue.main.async {
+            self.sendRawEventTypeContentReceivedInvocations.append((eventType: eventType, content: content))
+        }
+        if let sendRawEventTypeContentClosure = sendRawEventTypeContentClosure {
+            return await sendRawEventTypeContentClosure(eventType, content)
+        } else {
+            return sendRawEventTypeContentReturnValue
+        }
+    }
 }
 class KeychainControllerMock: KeychainControllerProtocol, @unchecked Sendable {
 

@@ -436,17 +436,27 @@ class JoinedRoomProxy: JoinedRoomProxyProtocol {
         }
     }
     
-    func sendTypingNotification(isTyping: Bool) async -> Result<Void, RoomProxyError> {
-        do {
-            try await room.typingNotice(isTyping: isTyping)
-            return .success(())
-        } catch {
-            MXLog.error("Failed sending typing notice with error: \(error)")
-            return .failure(.sdkError(error))
-        }
-    }
-    
-    func ignoreDeviceTrustAndResend(devices: [String: [String]], sendHandle: SendHandleProxy) async -> Result<Void, RoomProxyError> {
+     func sendTypingNotification(isTyping: Bool) async -> Result<Void, RoomProxyError> {
+         do {
+             try await room.typingNotice(isTyping: isTyping)
+             return .success(())
+         } catch {
+             MXLog.error("Failed sending typing notice with error: \(error)")
+             return .failure(.sdkError(error))
+         }
+     }
+     
+     func sendRaw(eventType: String, content: String) async -> Result<Void, RoomProxyError> {
+         do {
+             try await room.sendRaw(eventType: eventType, content: content)
+             return .success(())
+         } catch {
+             MXLog.error("Failed sending raw event with type \(eventType) with error: \(error)")
+             return .failure(.sdkError(error))
+         }
+     }
+     
+     func ignoreDeviceTrustAndResend(devices: [String: [String]], sendHandle: SendHandleProxy) async -> Result<Void, RoomProxyError> {
         do {
             try await room.ignoreDeviceTrustAndResend(devices: devices, sendHandle: sendHandle.underlyingHandle)
             return .success(())

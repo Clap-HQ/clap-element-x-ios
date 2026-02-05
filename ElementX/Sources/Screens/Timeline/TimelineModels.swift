@@ -68,7 +68,7 @@ enum TimelineViewAction {
     case handlePasteOrDrop(providers: [NSItemProvider])
     case handlePollAction(TimelineViewPollAction)
     case handleAudioPlayerAction(TimelineAudioPlayerAction)
-    case handleDivKitAction(message: String, itemID: TimelineItemIdentifier)
+     case handleDivKitAction(body: String, url: URL, logId: String, itemID: TimelineItemIdentifier)
     
     /// Focus the timeline onto the specified event ID (switching to a detached timeline if needed).
     case focusOnEventID(String)

@@ -68,7 +68,7 @@ struct DivKitRoomTimelineView: View {
         }
     }
 
-    private func handleDivKitAction(url: URL) {
+    private func handleDivKitAction(url: URL, info: DivActionInfo) {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               components.scheme == "clap",
               let host = components.host else {
@@ -76,22 +76,76 @@ struct DivKitRoomTimelineView: View {
             return
         }
 
-        let message: String
-        if host == "action", let type = components.queryItems?.first(where: { $0.name == "type" })?.value {
-            message = type
+        // Extract button text from DivKit JSON by matching log_id, fallback to URL parsing
+        let buttonText = extractButtonText(from: timelineItem.content.cardData, matchingLogId: info.logId)
+        
+        let body: String
+        if let buttonText, !buttonText.isEmpty {
+            body = buttonText
         } else {
-            message = host
+            let queryItems = components.queryItems ?? []
+            let type = queryItems.first { $0.name == "type" }?.value
+            
+            if type == "select", let value = queryItems.first(where: { $0.name == "value" })?.value {
+                body = value
+            } else if let type {
+                body = type
+            } else {
+                body = host
+            }
         }
 
         guard isActionable else {
             let isLast = context?.viewState.timelineState.uniqueIDs.last == timelineItem.id.uniqueID
             let alreadyActed = timelineItem.id.eventID.map { context?.viewState.actedDivKitEventIDs.contains($0) == true } ?? false
-            MXLog.info("DivKit action: ignored '\(message)' (isLastItem=\(isLast), alreadyActed=\(alreadyActed))")
+            MXLog.info("DivKit action: ignored '\(body)' (isLastItem=\(isLast), alreadyActed=\(alreadyActed))")
             return
         }
 
-        MXLog.info("DivKit action: sending '\(message)' (url: \(url))")
-        context?.send(viewAction: .handleDivKitAction(message: message, itemID: timelineItem.id))
+        MXLog.info("DivKit action: sending '\(body)' (url: \(url), logId: \(info.logId))")
+        context?.send(viewAction: .handleDivKitAction(body: body, url: url, logId: info.logId, itemID: timelineItem.id))
+    }
+    
+    private func extractButtonText(from cardData: Data, matchingLogId logId: String) -> String? {
+        guard let jsonDict = try? JSONSerialization.jsonObject(with: cardData) as? [String: Any] else {
+            return nil
+        }
+        
+        func searchForText(in dict: [String: Any]) -> String? {
+            if let actions = dict["actions"] as? [[String: Any]] {
+                for action in actions {
+                    if let actionLogId = action["log_id"] as? String, actionLogId == logId {
+                        return dict["text"] as? String
+                    }
+                }
+            }
+            
+            if let items = dict["items"] as? [[String: Any]] {
+                for item in items {
+                    if let text = searchForText(in: item) {
+                        return text
+                    }
+                }
+            }
+            
+            for value in dict.values {
+                if let nestedDict = value as? [String: Any],
+                   let text = searchForText(in: nestedDict) {
+                    return text
+                }
+                if let nestedArray = value as? [[String: Any]] {
+                    for nestedDict in nestedArray {
+                        if let text = searchForText(in: nestedDict) {
+                            return text
+                        }
+                    }
+                }
+            }
+            
+            return nil
+        }
+        
+        return searchForText(in: jsonDict)
     }
 }
 
@@ -436,7 +490,7 @@ struct DivKitRoomTimelineView_Previews: PreviewProvider, TestablePreview {
 struct DivKitViewRepresentable: UIViewRepresentable {
     let cardData: Data
     let cardID: String
-    let onAction: (URL) -> Void
+    let onAction: (URL, DivActionInfo) -> Void
     let onFailure: () -> Void
     let onHeightChanged: (CGFloat) -> Void
 
@@ -448,8 +502,8 @@ struct DivKitViewRepresentable: UIViewRepresentable {
         let provider = DivKitComponentsProvider.shared
         let coordinator = context.coordinator
 
-        provider.setActionHandler(for: cardID) { url in
-            coordinator.onAction(url)
+        provider.setActionHandler(for: cardID) { url, info in
+            coordinator.onAction(url, info)
         }
 
         provider.setErrorHandler(for: cardID) {
@@ -473,8 +527,8 @@ struct DivKitViewRepresentable: UIViewRepresentable {
         coordinator.onFailure = onFailure
         coordinator.onHeightChanged = onHeightChanged
 
-        DivKitComponentsProvider.shared.setActionHandler(for: cardID) { url in
-            coordinator.onAction(url)
+        DivKitComponentsProvider.shared.setActionHandler(for: cardID) { url, info in
+            coordinator.onAction(url, info)
         }
         DivKitComponentsProvider.shared.setErrorHandler(for: cardID) {
             coordinator.onFailure()
@@ -502,13 +556,13 @@ struct DivKitViewRepresentable: UIViewRepresentable {
 
     final class Coordinator {
         let cardID: String
-        var onAction: (URL) -> Void
+        var onAction: (URL, DivActionInfo) -> Void
         var onFailure: () -> Void
         var onHeightChanged: (CGFloat) -> Void
         var currentCardData: Data?
         var renderGeneration: UInt = 0
 
-        init(cardID: String, onAction: @escaping (URL) -> Void, onFailure: @escaping () -> Void, onHeightChanged: @escaping (CGFloat) -> Void) {
+        init(cardID: String, onAction: @escaping (URL, DivActionInfo) -> Void, onFailure: @escaping () -> Void, onHeightChanged: @escaping (CGFloat) -> Void) {
             self.cardID = cardID
             self.onAction = onAction
             self.onFailure = onFailure

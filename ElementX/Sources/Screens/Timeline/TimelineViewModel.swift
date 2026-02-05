@@ -200,14 +200,14 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
             handlePollAction(pollAction)
         case .handleAudioPlayerAction(let audioPlayerAction):
             handleAudioPlayerAction(audioPlayerAction)
-        case .handleDivKitAction(let message, let itemID):
-            Task {
-                await sendDivKitActionMessage(message)
-                if let eventID = itemID.eventID {
-                    state.actedDivKitEventIDs.insert(eventID)
-                    persistActedDivKitEventID(eventID)
-                }
-            }
+         case .handleDivKitAction(let body, let url, let logId, let itemID):
+             Task {
+                 await sendDivKitActionMessage(body: body, url: url, logId: logId)
+                 if let eventID = itemID.eventID {
+                     state.actedDivKitEventIDs.insert(eventID)
+                     persistActedDivKitEventID(eventID)
+                 }
+             }
         case .focusOnEventID(let eventID):
             Task { await focusOnEvent(eventID: eventID) }
         case .focusLive:
@@ -709,14 +709,36 @@ class TimelineViewModel: TimelineViewModelType, TimelineViewModelProtocol {
         actionsSubject.send(.displayRoom(roomID: resolvedAlias.roomId, via: resolvedAlias.servers))
     }
 
-    private func sendDivKitActionMessage(_ message: String) async {
-        guard !message.isEmpty else {
+    private func sendDivKitActionMessage(body: String, url: URL, logId: String) async {
+        guard !body.isEmpty else {
             return
         }
-        await timelineController.sendMessage(message,
-                                             html: nil,
-                                             inReplyToEventID: nil,
-                                             intentionalMentions: .empty)
+        
+        let content: [String: Any] = [
+            "msgtype": "m.text",
+            "body": body,
+            "ac.clap.action": [
+                "url": url.absoluteString,
+                "log_id": logId
+            ]
+        ]
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: content),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            MXLog.error("Failed to serialize DivKit action message")
+            return
+        }
+        
+        if let prettyData = try? JSONSerialization.data(withJSONObject: content, options: .prettyPrinted),
+           let prettyString = String(data: prettyData, encoding: .utf8) {
+            MXLog.info("DivKit action request body:\n\(prettyString)")
+        }
+        
+        let result = await roomProxy.sendRaw(eventType: "m.room.message", content: jsonString)
+        if case .failure(let error) = result {
+            MXLog.error("Failed to send DivKit action message: \(error)")
+        }
+        
         scrollToBottom()
     }
     
