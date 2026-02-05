@@ -37,7 +37,9 @@ class RESTAPIClient {
         switch result {
         case .success(let data):
             do {
-                let decoded = try JSONDecoder().decode(T.self, from: data)
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .iso8601
+                let decoded = try decoder.decode(T.self, from: data)
                 return .success(decoded)
             } catch {
                 MXLog.error("Failed to decode response: \(error)")

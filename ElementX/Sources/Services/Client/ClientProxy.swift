@@ -63,6 +63,7 @@ class ClientProxy: ClientProxyProtocol {
     let matrixAPI: MatrixAPIServiceProtocol
 
     let clapAPI: ClapAPIServiceProtocol
+    let clapAIAPI: ClapAIAPIServiceProtocol
     
     private static let clapAIUserID = "@clap-ai:\(InfoPlistReader.main.clapHomeserver)"
     private let clapAIRoomIDSubject = CurrentValueSubject<String?, Never>(nil)
@@ -174,7 +175,8 @@ class ClientProxy: ClientProxyProtocol {
     
     init(client: ClientProtocol,
          networkMonitor: NetworkMonitorProtocol,
-         appSettings: AppSettings) async throws {
+         appSettings: AppSettings,
+         keychainController: KeychainControllerProtocol) async throws {
         self.client = client
         self.networkMonitor = networkMonitor
         self.appSettings = appSettings
@@ -196,11 +198,19 @@ class ClientProxy: ClientProxyProtocol {
             return try? client.session().accessToken
         }
 
-        // Initialize ClapAPIService for Clap-specific REST API calls
         clapAPI = ClapAPIService(homeserverURL: client.homeserver()) { [weak client] in
             guard let client else { return nil }
             return try? client.session().accessToken
         }
+        
+        let userID = try client.userId()
+        clapAIAPI = ClapAIAPIService(clapAIServerURL: "https://\(InfoPlistReader.main.clapAIServer)",
+                                     userID: userID,
+                                     matrixAccessTokenProvider: { [weak client] in
+            guard let client else { return nil }
+            return try? client.session().accessToken
+        },
+                                     keychainController: keychainController)
 
         let configuredAppService = try await ClientProxyServices(client: client,
                                                                  actionsSubject: actionsSubject,

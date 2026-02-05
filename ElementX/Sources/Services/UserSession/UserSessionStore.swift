@@ -53,6 +53,7 @@ class UserSessionStore: UserSessionStoreProtocol {
             MXLog.error("Failed restoring login with error: \(error)")
             
             // On any restoration failure reset the token and restart
+            keychainController.removeClapAIToken(forUsername: credentials.userID)
             keychainController.removeRestorationTokenForUsername(credentials.userID)
             credentials.restorationToken.sessionDirectories.delete()
             
@@ -83,6 +84,7 @@ class UserSessionStore: UserSessionStoreProtocol {
     
     func logout(userSession: UserSessionProtocol) {
         let userID = userSession.clientProxy.userID
+        keychainController.removeClapAIToken(forUsername: userID)
         let credentials = keychainController.restorationTokens().first { $0.userID == userID }
         keychainController.removeRestorationTokenForUsername(userID)
         
@@ -152,7 +154,8 @@ class UserSessionStore: UserSessionStoreProtocol {
         do {
             return try await ClientProxy(client: client,
                                          networkMonitor: networkMonitor,
-                                         appSettings: appSettings)
+                                         appSettings: appSettings,
+                                         keychainController: keychainController)
         } catch {
             throw UserSessionStoreError.failedSettingUpClientProxy(error)
         }

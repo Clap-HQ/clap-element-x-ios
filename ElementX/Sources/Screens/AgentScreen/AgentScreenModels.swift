@@ -9,6 +9,7 @@ import Foundation
 
 enum AgentScreenViewModelAction {
     case dismiss
+    case showSchedules
 }
 
 struct AgentScreenViewState: BindableState {
@@ -26,4 +27,5 @@ struct AgentScreenViewStateBindings {
 
 enum AgentScreenViewAction {
     case dismiss
+    case showSchedules
 }

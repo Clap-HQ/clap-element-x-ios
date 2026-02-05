@@ -14,6 +14,11 @@ struct KeychainCredentials {
     let restorationToken: RestorationToken
 }
 
+struct ClapAIToken: Codable {
+    let accessToken: String
+    let expiresAt: Date
+}
+
 // sourcery: AutoMockable
 protocol KeychainControllerProtocol: ClientSessionDelegate {
     // MARK: Restoration Tokens
@@ -22,6 +27,12 @@ protocol KeychainControllerProtocol: ClientSessionDelegate {
     func restorationTokens() -> [KeychainCredentials]
     func removeRestorationTokenForUsername(_ username: String)
     func removeAllRestorationTokens()
+    
+    // MARK: Clap AI Token
+    
+    func setClapAIToken(_ token: ClapAIToken, forUsername username: String)
+    func clapAIToken(forUsername username: String) -> ClapAIToken?
+    func removeClapAIToken(forUsername username: String)
     
     // MARK: App Secrets
     

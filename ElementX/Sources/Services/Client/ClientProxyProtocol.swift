@@ -184,6 +184,9 @@ protocol ClientProxyProtocol: AnyObject {
     /// Clap-specific REST API calls (/_clap/...)
     var clapAPI: ClapAPIServiceProtocol { get }
     
+    /// Clap AI server REST API calls (/api/...)
+    var clapAIAPI: ClapAIAPIServiceProtocol { get }
+    
     /// Room ID of the unencrypted Clap AI DM (used by Agent screen)
     var clapAIRoomID: String? { get }
     

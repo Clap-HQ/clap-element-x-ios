@@ -1551,3 +1551,80 @@
 "screen_join_all_rooms_confirmation_subtitle" = "%@의 모든 방에 참여하시겠습니까?";
 "screen_join_all_rooms_confirmation_action" = "모두 참여";
 "common_clap_ai_not_found" = "Clap AI 채팅방을 찾을 수 없습니다.";
+
+// MARK: - Schedule
+"screen_schedule_list_title" = "스케줄";
+"screen_schedule_list_empty_title" = "등록된 스케줄이 없습니다";
+"screen_schedule_list_filter_empty" = "해당 조건의 스케줄이 없습니다";
+"screen_schedule_list_filter_all" = "전체";
+"screen_schedule_list_filter_active" = "활성";
+"screen_schedule_list_filter_cancelled" = "취소됨";
+
+"screen_schedule_detail_title" = "스케줄 상세";
+"screen_schedule_detail_action_run" = "즉시 실행";
+"screen_schedule_detail_action_pause" = "일시정지";
+"screen_schedule_detail_action_resume" = "재개";
+"screen_schedule_detail_cron_expression" = "Cron 표현식";
+"screen_schedule_detail_timezone" = "시간대";
+"screen_schedule_detail_room_id" = "등록 방 ID";
+"screen_schedule_detail_created_by" = "생성자";
+"screen_schedule_detail_target_user" = "대상 사용자";
+"screen_schedule_detail_run_count" = "실행 횟수";
+"screen_schedule_detail_run_count_value" = "%d회";
+"screen_schedule_detail_last_run" = "마지막 실행";
+"screen_schedule_detail_created_at" = "생성일";
+"screen_schedule_detail_updated_at" = "수정일";
+"screen_schedule_detail_section_prompt" = "프롬프트";
+"screen_schedule_detail_section_history" = "실행 히스토리";
+"screen_schedule_detail_history_empty" = "실행 기록이 없습니다";
+
+"screen_schedule_create_title" = "스케줄 생성";
+"screen_schedule_create_name_header" = "이름";
+"screen_schedule_create_name_placeholder" = "예: 매일 아침 뉴스 요약 전송";
+"screen_schedule_create_cron_header" = "Cron 표현식";
+"screen_schedule_create_cron_placeholder" = "예: 0 9 * * * (매일 9시)";
+"screen_schedule_create_cron_footer" = "형식: 분 시 일 월 요일 (예: 0 9 * * 1-5 = 평일 9시)";
+"screen_schedule_create_timezone_header" = "시간대";
+"screen_schedule_create_room_header" = "대상 방";
+"screen_schedule_create_room_placeholder" = "선택하세요";
+"screen_schedule_create_room_footer" = "스케줄이 실행될 방을 선택하세요";
+"screen_schedule_create_prompt_header" = "실행할 프롬프트";
+"screen_schedule_create_prompt_placeholder" = "예: 오늘의 주요 뉴스를 요약해서 알려줘";
+"screen_schedule_create_prompt_footer" = "스케줄 실행 시 AI 에이전트가 수행할 작업을 자연어로 설명하세요";
+
+"screen_schedule_room_picker_title" = "방 선택";
+"screen_schedule_room_picker_section_rooms" = "방";
+"screen_schedule_room_picker_section_dm" = "DM";
+
+"common_schedule_status_active" = "활성";
+"common_schedule_status_paused" = "일시정지";
+"common_schedule_status_pending" = "대기중";
+"common_schedule_status_cancelled" = "취소됨";
+
+// Schedule Actions
+"screen_schedule_delete_title" = "스케줄 삭제";
+"screen_schedule_delete_message" = "'%@'을(를) 삭제하시겠습니까?";
+"screen_schedule_delete_action" = "삭제";
+
+// Schedule Loading
+"screen_schedule_loading_delete" = "삭제 중...";
+"screen_schedule_loading_run" = "실행 중...";
+"screen_schedule_loading_pause" = "일시정지 중...";
+"screen_schedule_loading_resume" = "재개 중...";
+"screen_schedule_loading_create" = "생성 중...";
+
+// Schedule Success
+"screen_schedule_success_deleted" = "스케줄이 삭제되었습니다";
+"screen_schedule_success_run" = "스케줄 실행이 트리거되었습니다";
+"screen_schedule_success_paused" = "스케줄이 일시정지되었습니다";
+"screen_schedule_success_resumed" = "스케줄이 재개되었습니다";
+"screen_schedule_success_created" = "스케줄이 생성되었습니다";
+
+// Schedule Errors
+"common_error_title" = "오류";
+"screen_schedule_error_load_failed" = "스케줄 목록을 불러오는데 실패했습니다";
+"screen_schedule_error_delete_failed" = "스케줄 삭제에 실패했습니다";
+"screen_schedule_error_run_failed" = "스케줄 실행에 실패했습니다";
+"screen_schedule_error_pause_failed" = "스케줄 일시정지에 실패했습니다";
+"screen_schedule_error_resume_failed" = "스케줄 재개에 실패했습니다";
+"screen_schedule_error_create_failed" = "스케줄 생성에 실패했습니다";

@@ -2193,6 +2193,735 @@ class CXProviderMock: CXProviderProtocol, @unchecked Sendable {
         reportCallWithEndedAtReasonClosure?(uuid, endedAt, reason)
     }
 }
+class ClapAIAPIServiceMock: ClapAIAPIServiceProtocol, @unchecked Sendable {
+    var schedules: ClapAIScheduleAPIProtocol {
+        get { return underlyingSchedules }
+        set(value) { underlyingSchedules = value }
+    }
+    var underlyingSchedules: ClapAIScheduleAPIProtocol!
+    var currentUser: ClapAIUser?
+
+    //MARK: - ensureAuthenticated
+
+    var ensureAuthenticatedUnderlyingCallsCount = 0
+    var ensureAuthenticatedCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return ensureAuthenticatedUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = ensureAuthenticatedUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                ensureAuthenticatedUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    ensureAuthenticatedUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var ensureAuthenticatedCalled: Bool {
+        return ensureAuthenticatedCallsCount > 0
+    }
+
+    var ensureAuthenticatedUnderlyingReturnValue: Result<Void, RESTAPIError>!
+    var ensureAuthenticatedReturnValue: Result<Void, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return ensureAuthenticatedUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Void, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = ensureAuthenticatedUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                ensureAuthenticatedUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    ensureAuthenticatedUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var ensureAuthenticatedClosure: (() async -> Result<Void, RESTAPIError>)?
+
+    func ensureAuthenticated() async -> Result<Void, RESTAPIError> {
+        ensureAuthenticatedCallsCount += 1
+        if let ensureAuthenticatedClosure = ensureAuthenticatedClosure {
+            return await ensureAuthenticatedClosure()
+        } else {
+            return ensureAuthenticatedReturnValue
+        }
+    }
+    //MARK: - fetchCurrentUser
+
+    var fetchCurrentUserUnderlyingCallsCount = 0
+    var fetchCurrentUserCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return fetchCurrentUserUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = fetchCurrentUserUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                fetchCurrentUserUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    fetchCurrentUserUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var fetchCurrentUserCalled: Bool {
+        return fetchCurrentUserCallsCount > 0
+    }
+
+    var fetchCurrentUserUnderlyingReturnValue: Result<ClapAIUser, RESTAPIError>!
+    var fetchCurrentUserReturnValue: Result<ClapAIUser, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return fetchCurrentUserUnderlyingReturnValue
+            } else {
+                var returnValue: Result<ClapAIUser, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = fetchCurrentUserUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                fetchCurrentUserUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    fetchCurrentUserUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var fetchCurrentUserClosure: (() async -> Result<ClapAIUser, RESTAPIError>)?
+
+    func fetchCurrentUser() async -> Result<ClapAIUser, RESTAPIError> {
+        fetchCurrentUserCallsCount += 1
+        if let fetchCurrentUserClosure = fetchCurrentUserClosure {
+            return await fetchCurrentUserClosure()
+        } else {
+            return fetchCurrentUserReturnValue
+        }
+    }
+    //MARK: - invalidateToken
+
+    var invalidateTokenUnderlyingCallsCount = 0
+    var invalidateTokenCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return invalidateTokenUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = invalidateTokenUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                invalidateTokenUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    invalidateTokenUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var invalidateTokenCalled: Bool {
+        return invalidateTokenCallsCount > 0
+    }
+    var invalidateTokenClosure: (() -> Void)?
+
+    func invalidateToken() {
+        invalidateTokenCallsCount += 1
+        invalidateTokenClosure?()
+    }
+}
+class ClapAIScheduleAPIMock: ClapAIScheduleAPIProtocol, @unchecked Sendable {
+
+    //MARK: - listSchedules
+
+    var listSchedulesUnderlyingCallsCount = 0
+    var listSchedulesCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return listSchedulesUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = listSchedulesUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                listSchedulesUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    listSchedulesUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var listSchedulesCalled: Bool {
+        return listSchedulesCallsCount > 0
+    }
+
+    var listSchedulesUnderlyingReturnValue: Result<[Schedule], RESTAPIError>!
+    var listSchedulesReturnValue: Result<[Schedule], RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return listSchedulesUnderlyingReturnValue
+            } else {
+                var returnValue: Result<[Schedule], RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = listSchedulesUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                listSchedulesUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    listSchedulesUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var listSchedulesClosure: (() async -> Result<[Schedule], RESTAPIError>)?
+
+    func listSchedules() async -> Result<[Schedule], RESTAPIError> {
+        listSchedulesCallsCount += 1
+        if let listSchedulesClosure = listSchedulesClosure {
+            return await listSchedulesClosure()
+        } else {
+            return listSchedulesReturnValue
+        }
+    }
+    //MARK: - getSchedule
+
+    var getScheduleIdUnderlyingCallsCount = 0
+    var getScheduleIdCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return getScheduleIdUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = getScheduleIdUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                getScheduleIdUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    getScheduleIdUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var getScheduleIdCalled: Bool {
+        return getScheduleIdCallsCount > 0
+    }
+    var getScheduleIdReceivedId: Int64?
+    var getScheduleIdReceivedInvocations: [Int64] = []
+
+    var getScheduleIdUnderlyingReturnValue: Result<Schedule, RESTAPIError>!
+    var getScheduleIdReturnValue: Result<Schedule, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return getScheduleIdUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Schedule, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = getScheduleIdUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                getScheduleIdUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    getScheduleIdUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var getScheduleIdClosure: ((Int64) async -> Result<Schedule, RESTAPIError>)?
+
+    func getSchedule(id: Int64) async -> Result<Schedule, RESTAPIError> {
+        getScheduleIdCallsCount += 1
+        getScheduleIdReceivedId = id
+        DispatchQueue.main.async {
+            self.getScheduleIdReceivedInvocations.append(id)
+        }
+        if let getScheduleIdClosure = getScheduleIdClosure {
+            return await getScheduleIdClosure(id)
+        } else {
+            return getScheduleIdReturnValue
+        }
+    }
+    //MARK: - createSchedule
+
+    var createScheduleNameRoomIDCronExpressionTimezonePromptUserIDUnderlyingCallsCount = 0
+    var createScheduleNameRoomIDCronExpressionTimezonePromptUserIDCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return createScheduleNameRoomIDCronExpressionTimezonePromptUserIDUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = createScheduleNameRoomIDCronExpressionTimezonePromptUserIDUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                createScheduleNameRoomIDCronExpressionTimezonePromptUserIDUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    createScheduleNameRoomIDCronExpressionTimezonePromptUserIDUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var createScheduleNameRoomIDCronExpressionTimezonePromptUserIDCalled: Bool {
+        return createScheduleNameRoomIDCronExpressionTimezonePromptUserIDCallsCount > 0
+    }
+    var createScheduleNameRoomIDCronExpressionTimezonePromptUserIDReceivedArguments: (name: String, roomID: String, cronExpression: String, timezone: String, prompt: String, userID: String)?
+    var createScheduleNameRoomIDCronExpressionTimezonePromptUserIDReceivedInvocations: [(name: String, roomID: String, cronExpression: String, timezone: String, prompt: String, userID: String)] = []
+
+    var createScheduleNameRoomIDCronExpressionTimezonePromptUserIDUnderlyingReturnValue: Result<Schedule, RESTAPIError>!
+    var createScheduleNameRoomIDCronExpressionTimezonePromptUserIDReturnValue: Result<Schedule, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return createScheduleNameRoomIDCronExpressionTimezonePromptUserIDUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Schedule, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = createScheduleNameRoomIDCronExpressionTimezonePromptUserIDUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                createScheduleNameRoomIDCronExpressionTimezonePromptUserIDUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    createScheduleNameRoomIDCronExpressionTimezonePromptUserIDUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var createScheduleNameRoomIDCronExpressionTimezonePromptUserIDClosure: ((String, String, String, String, String, String) async -> Result<Schedule, RESTAPIError>)?
+
+    func createSchedule(name: String, roomID: String, cronExpression: String, timezone: String, prompt: String, userID: String) async -> Result<Schedule, RESTAPIError> {
+        createScheduleNameRoomIDCronExpressionTimezonePromptUserIDCallsCount += 1
+        createScheduleNameRoomIDCronExpressionTimezonePromptUserIDReceivedArguments = (name: name, roomID: roomID, cronExpression: cronExpression, timezone: timezone, prompt: prompt, userID: userID)
+        DispatchQueue.main.async {
+            self.createScheduleNameRoomIDCronExpressionTimezonePromptUserIDReceivedInvocations.append((name: name, roomID: roomID, cronExpression: cronExpression, timezone: timezone, prompt: prompt, userID: userID))
+        }
+        if let createScheduleNameRoomIDCronExpressionTimezonePromptUserIDClosure = createScheduleNameRoomIDCronExpressionTimezonePromptUserIDClosure {
+            return await createScheduleNameRoomIDCronExpressionTimezonePromptUserIDClosure(name, roomID, cronExpression, timezone, prompt, userID)
+        } else {
+            return createScheduleNameRoomIDCronExpressionTimezonePromptUserIDReturnValue
+        }
+    }
+    //MARK: - deleteSchedule
+
+    var deleteScheduleIdUnderlyingCallsCount = 0
+    var deleteScheduleIdCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return deleteScheduleIdUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = deleteScheduleIdUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                deleteScheduleIdUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    deleteScheduleIdUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var deleteScheduleIdCalled: Bool {
+        return deleteScheduleIdCallsCount > 0
+    }
+    var deleteScheduleIdReceivedId: Int64?
+    var deleteScheduleIdReceivedInvocations: [Int64] = []
+
+    var deleteScheduleIdUnderlyingReturnValue: Result<Void, RESTAPIError>!
+    var deleteScheduleIdReturnValue: Result<Void, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return deleteScheduleIdUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Void, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = deleteScheduleIdUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                deleteScheduleIdUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    deleteScheduleIdUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var deleteScheduleIdClosure: ((Int64) async -> Result<Void, RESTAPIError>)?
+
+    func deleteSchedule(id: Int64) async -> Result<Void, RESTAPIError> {
+        deleteScheduleIdCallsCount += 1
+        deleteScheduleIdReceivedId = id
+        DispatchQueue.main.async {
+            self.deleteScheduleIdReceivedInvocations.append(id)
+        }
+        if let deleteScheduleIdClosure = deleteScheduleIdClosure {
+            return await deleteScheduleIdClosure(id)
+        } else {
+            return deleteScheduleIdReturnValue
+        }
+    }
+    //MARK: - runSchedule
+
+    var runScheduleIdUnderlyingCallsCount = 0
+    var runScheduleIdCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return runScheduleIdUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = runScheduleIdUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                runScheduleIdUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    runScheduleIdUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var runScheduleIdCalled: Bool {
+        return runScheduleIdCallsCount > 0
+    }
+    var runScheduleIdReceivedId: Int64?
+    var runScheduleIdReceivedInvocations: [Int64] = []
+
+    var runScheduleIdUnderlyingReturnValue: Result<RunScheduleResponse, RESTAPIError>!
+    var runScheduleIdReturnValue: Result<RunScheduleResponse, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return runScheduleIdUnderlyingReturnValue
+            } else {
+                var returnValue: Result<RunScheduleResponse, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = runScheduleIdUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                runScheduleIdUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    runScheduleIdUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var runScheduleIdClosure: ((Int64) async -> Result<RunScheduleResponse, RESTAPIError>)?
+
+    func runSchedule(id: Int64) async -> Result<RunScheduleResponse, RESTAPIError> {
+        runScheduleIdCallsCount += 1
+        runScheduleIdReceivedId = id
+        DispatchQueue.main.async {
+            self.runScheduleIdReceivedInvocations.append(id)
+        }
+        if let runScheduleIdClosure = runScheduleIdClosure {
+            return await runScheduleIdClosure(id)
+        } else {
+            return runScheduleIdReturnValue
+        }
+    }
+    //MARK: - pauseSchedule
+
+    var pauseScheduleIdUnderlyingCallsCount = 0
+    var pauseScheduleIdCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return pauseScheduleIdUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = pauseScheduleIdUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                pauseScheduleIdUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    pauseScheduleIdUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var pauseScheduleIdCalled: Bool {
+        return pauseScheduleIdCallsCount > 0
+    }
+    var pauseScheduleIdReceivedId: Int64?
+    var pauseScheduleIdReceivedInvocations: [Int64] = []
+
+    var pauseScheduleIdUnderlyingReturnValue: Result<Schedule, RESTAPIError>!
+    var pauseScheduleIdReturnValue: Result<Schedule, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return pauseScheduleIdUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Schedule, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = pauseScheduleIdUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                pauseScheduleIdUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    pauseScheduleIdUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var pauseScheduleIdClosure: ((Int64) async -> Result<Schedule, RESTAPIError>)?
+
+    func pauseSchedule(id: Int64) async -> Result<Schedule, RESTAPIError> {
+        pauseScheduleIdCallsCount += 1
+        pauseScheduleIdReceivedId = id
+        DispatchQueue.main.async {
+            self.pauseScheduleIdReceivedInvocations.append(id)
+        }
+        if let pauseScheduleIdClosure = pauseScheduleIdClosure {
+            return await pauseScheduleIdClosure(id)
+        } else {
+            return pauseScheduleIdReturnValue
+        }
+    }
+    //MARK: - resumeSchedule
+
+    var resumeScheduleIdUnderlyingCallsCount = 0
+    var resumeScheduleIdCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return resumeScheduleIdUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = resumeScheduleIdUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                resumeScheduleIdUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    resumeScheduleIdUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var resumeScheduleIdCalled: Bool {
+        return resumeScheduleIdCallsCount > 0
+    }
+    var resumeScheduleIdReceivedId: Int64?
+    var resumeScheduleIdReceivedInvocations: [Int64] = []
+
+    var resumeScheduleIdUnderlyingReturnValue: Result<Schedule, RESTAPIError>!
+    var resumeScheduleIdReturnValue: Result<Schedule, RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return resumeScheduleIdUnderlyingReturnValue
+            } else {
+                var returnValue: Result<Schedule, RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = resumeScheduleIdUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                resumeScheduleIdUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    resumeScheduleIdUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var resumeScheduleIdClosure: ((Int64) async -> Result<Schedule, RESTAPIError>)?
+
+    func resumeSchedule(id: Int64) async -> Result<Schedule, RESTAPIError> {
+        resumeScheduleIdCallsCount += 1
+        resumeScheduleIdReceivedId = id
+        DispatchQueue.main.async {
+            self.resumeScheduleIdReceivedInvocations.append(id)
+        }
+        if let resumeScheduleIdClosure = resumeScheduleIdClosure {
+            return await resumeScheduleIdClosure(id)
+        } else {
+            return resumeScheduleIdReturnValue
+        }
+    }
+    //MARK: - getScheduleHistory
+
+    var getScheduleHistoryScheduleIDLimitUnderlyingCallsCount = 0
+    var getScheduleHistoryScheduleIDLimitCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return getScheduleHistoryScheduleIDLimitUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = getScheduleHistoryScheduleIDLimitUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                getScheduleHistoryScheduleIDLimitUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    getScheduleHistoryScheduleIDLimitUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var getScheduleHistoryScheduleIDLimitCalled: Bool {
+        return getScheduleHistoryScheduleIDLimitCallsCount > 0
+    }
+    var getScheduleHistoryScheduleIDLimitReceivedArguments: (scheduleID: Int64, limit: Int)?
+    var getScheduleHistoryScheduleIDLimitReceivedInvocations: [(scheduleID: Int64, limit: Int)] = []
+
+    var getScheduleHistoryScheduleIDLimitUnderlyingReturnValue: Result<[ScheduleHistoryEntry], RESTAPIError>!
+    var getScheduleHistoryScheduleIDLimitReturnValue: Result<[ScheduleHistoryEntry], RESTAPIError>! {
+        get {
+            if Thread.isMainThread {
+                return getScheduleHistoryScheduleIDLimitUnderlyingReturnValue
+            } else {
+                var returnValue: Result<[ScheduleHistoryEntry], RESTAPIError>? = nil
+                DispatchQueue.main.sync {
+                    returnValue = getScheduleHistoryScheduleIDLimitUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                getScheduleHistoryScheduleIDLimitUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    getScheduleHistoryScheduleIDLimitUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var getScheduleHistoryScheduleIDLimitClosure: ((Int64, Int) async -> Result<[ScheduleHistoryEntry], RESTAPIError>)?
+
+    func getScheduleHistory(scheduleID: Int64, limit: Int) async -> Result<[ScheduleHistoryEntry], RESTAPIError> {
+        getScheduleHistoryScheduleIDLimitCallsCount += 1
+        getScheduleHistoryScheduleIDLimitReceivedArguments = (scheduleID: scheduleID, limit: limit)
+        DispatchQueue.main.async {
+            self.getScheduleHistoryScheduleIDLimitReceivedInvocations.append((scheduleID: scheduleID, limit: limit))
+        }
+        if let getScheduleHistoryScheduleIDLimitClosure = getScheduleHistoryScheduleIDLimitClosure {
+            return await getScheduleHistoryScheduleIDLimitClosure(scheduleID, limit)
+        } else {
+            return getScheduleHistoryScheduleIDLimitReturnValue
+        }
+    }
+}
 class ClapAPIServiceMock: ClapAPIServiceProtocol, @unchecked Sendable {
     var spaces: ClapSpaceAPIProtocol {
         get { return underlyingSpaces }
@@ -2459,6 +3188,11 @@ class ClientProxyMock: ClientProxyProtocol, @unchecked Sendable {
         set(value) { underlyingClapAPI = value }
     }
     var underlyingClapAPI: ClapAPIServiceProtocol!
+    var clapAIAPI: ClapAIAPIServiceProtocol {
+        get { return underlyingClapAIAPI }
+        set(value) { underlyingClapAIAPI = value }
+    }
+    var underlyingClapAIAPI: ClapAIAPIServiceProtocol!
     var clapAIRoomID: String?
     var clapAIInviteRoomID: String?
     var clapAIRoomIDPublisher: CurrentValuePublisher<String?, Never> {
@@ -10444,6 +11178,158 @@ class KeychainControllerMock: KeychainControllerProtocol, @unchecked Sendable {
         removeAllRestorationTokensCallsCount += 1
         removeAllRestorationTokensClosure?()
     }
+    //MARK: - setClapAIToken
+
+    var setClapAITokenForUsernameUnderlyingCallsCount = 0
+    var setClapAITokenForUsernameCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return setClapAITokenForUsernameUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = setClapAITokenForUsernameUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                setClapAITokenForUsernameUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    setClapAITokenForUsernameUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var setClapAITokenForUsernameCalled: Bool {
+        return setClapAITokenForUsernameCallsCount > 0
+    }
+    var setClapAITokenForUsernameReceivedArguments: (token: ClapAIToken, username: String)?
+    var setClapAITokenForUsernameReceivedInvocations: [(token: ClapAIToken, username: String)] = []
+    var setClapAITokenForUsernameClosure: ((ClapAIToken, String) -> Void)?
+
+    func setClapAIToken(_ token: ClapAIToken, forUsername username: String) {
+        setClapAITokenForUsernameCallsCount += 1
+        setClapAITokenForUsernameReceivedArguments = (token: token, username: username)
+        DispatchQueue.main.async {
+            self.setClapAITokenForUsernameReceivedInvocations.append((token: token, username: username))
+        }
+        setClapAITokenForUsernameClosure?(token, username)
+    }
+    //MARK: - clapAIToken
+
+    var clapAITokenForUsernameUnderlyingCallsCount = 0
+    var clapAITokenForUsernameCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return clapAITokenForUsernameUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = clapAITokenForUsernameUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                clapAITokenForUsernameUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    clapAITokenForUsernameUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var clapAITokenForUsernameCalled: Bool {
+        return clapAITokenForUsernameCallsCount > 0
+    }
+    var clapAITokenForUsernameReceivedUsername: String?
+    var clapAITokenForUsernameReceivedInvocations: [String] = []
+
+    var clapAITokenForUsernameUnderlyingReturnValue: ClapAIToken?
+    var clapAITokenForUsernameReturnValue: ClapAIToken? {
+        get {
+            if Thread.isMainThread {
+                return clapAITokenForUsernameUnderlyingReturnValue
+            } else {
+                var returnValue: ClapAIToken?? = nil
+                DispatchQueue.main.sync {
+                    returnValue = clapAITokenForUsernameUnderlyingReturnValue
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                clapAITokenForUsernameUnderlyingReturnValue = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    clapAITokenForUsernameUnderlyingReturnValue = newValue
+                }
+            }
+        }
+    }
+    var clapAITokenForUsernameClosure: ((String) -> ClapAIToken?)?
+
+    func clapAIToken(forUsername username: String) -> ClapAIToken? {
+        clapAITokenForUsernameCallsCount += 1
+        clapAITokenForUsernameReceivedUsername = username
+        DispatchQueue.main.async {
+            self.clapAITokenForUsernameReceivedInvocations.append(username)
+        }
+        if let clapAITokenForUsernameClosure = clapAITokenForUsernameClosure {
+            return clapAITokenForUsernameClosure(username)
+        } else {
+            return clapAITokenForUsernameReturnValue
+        }
+    }
+    //MARK: - removeClapAIToken
+
+    var removeClapAITokenForUsernameUnderlyingCallsCount = 0
+    var removeClapAITokenForUsernameCallsCount: Int {
+        get {
+            if Thread.isMainThread {
+                return removeClapAITokenForUsernameUnderlyingCallsCount
+            } else {
+                var returnValue: Int? = nil
+                DispatchQueue.main.sync {
+                    returnValue = removeClapAITokenForUsernameUnderlyingCallsCount
+                }
+
+                return returnValue!
+            }
+        }
+        set {
+            if Thread.isMainThread {
+                removeClapAITokenForUsernameUnderlyingCallsCount = newValue
+            } else {
+                DispatchQueue.main.sync {
+                    removeClapAITokenForUsernameUnderlyingCallsCount = newValue
+                }
+            }
+        }
+    }
+    var removeClapAITokenForUsernameCalled: Bool {
+        return removeClapAITokenForUsernameCallsCount > 0
+    }
+    var removeClapAITokenForUsernameReceivedUsername: String?
+    var removeClapAITokenForUsernameReceivedInvocations: [String] = []
+    var removeClapAITokenForUsernameClosure: ((String) -> Void)?
+
+    func removeClapAIToken(forUsername username: String) {
+        removeClapAITokenForUsernameCallsCount += 1
+        removeClapAITokenForUsernameReceivedUsername = username
+        DispatchQueue.main.async {
+            self.removeClapAITokenForUsernameReceivedInvocations.append(username)
+        }
+        removeClapAITokenForUsernameClosure?(username)
+    }
     //MARK: - containsPINCode
 
     var containsPINCodeThrowableError: Error?
@@ -16625,6 +17511,45 @@ class RoomSummaryProviderMock: RoomSummaryProviderProtocol, @unchecked Sendable 
         }
         setRoomListClosure?(roomList)
     }
+}
+class ScheduleCreateScreenViewModelMock: ScheduleCreateScreenViewModelProtocol, @unchecked Sendable {
+    var actions: AnyPublisher<ScheduleCreateScreenViewModelAction, Never> {
+        get { return underlyingActions }
+        set(value) { underlyingActions = value }
+    }
+    var underlyingActions: AnyPublisher<ScheduleCreateScreenViewModelAction, Never>!
+    var context: ScheduleCreateScreenViewModelType.Context {
+        get { return underlyingContext }
+        set(value) { underlyingContext = value }
+    }
+    var underlyingContext: ScheduleCreateScreenViewModelType.Context!
+
+}
+class ScheduleDetailScreenViewModelMock: ScheduleDetailScreenViewModelProtocol, @unchecked Sendable {
+    var actions: AnyPublisher<ScheduleDetailScreenViewModelAction, Never> {
+        get { return underlyingActions }
+        set(value) { underlyingActions = value }
+    }
+    var underlyingActions: AnyPublisher<ScheduleDetailScreenViewModelAction, Never>!
+    var context: ScheduleDetailScreenViewModelType.Context {
+        get { return underlyingContext }
+        set(value) { underlyingContext = value }
+    }
+    var underlyingContext: ScheduleDetailScreenViewModelType.Context!
+
+}
+class ScheduleListScreenViewModelMock: ScheduleListScreenViewModelProtocol, @unchecked Sendable {
+    var actions: AnyPublisher<ScheduleListScreenViewModelAction, Never> {
+        get { return underlyingActions }
+        set(value) { underlyingActions = value }
+    }
+    var underlyingActions: AnyPublisher<ScheduleListScreenViewModelAction, Never>!
+    var context: ScheduleListScreenViewModelType.Context {
+        get { return underlyingContext }
+        set(value) { underlyingContext = value }
+    }
+    var underlyingContext: ScheduleListScreenViewModelType.Context!
+
 }
 class SecureBackupControllerMock: SecureBackupControllerProtocol, @unchecked Sendable {
     var recoveryState: CurrentValuePublisher<SecureBackupRecoveryState, Never> {

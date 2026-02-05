@@ -875,6 +875,36 @@ extension PreviewTests {
         }
     }
 
+    func testScheduleFilterButton() async throws {
+        for (index, preview) in ScheduleFilterButton_Previews._allPreviews.enumerated() {
+            try await assertSnapshots(matching: preview, step: index)
+        }
+    }
+
+    func testScheduleHistoryRow() async throws {
+        for (index, preview) in ScheduleHistoryRow_Previews._allPreviews.enumerated() {
+            try await assertSnapshots(matching: preview, step: index)
+        }
+    }
+
+    func testScheduleInfoRow() async throws {
+        for (index, preview) in ScheduleInfoRow_Previews._allPreviews.enumerated() {
+            try await assertSnapshots(matching: preview, step: index)
+        }
+    }
+
+    func testScheduleListCell() async throws {
+        for (index, preview) in ScheduleListCell_Previews._allPreviews.enumerated() {
+            try await assertSnapshots(matching: preview, step: index)
+        }
+    }
+
+    func testScheduleStatusBadge() async throws {
+        for (index, preview) in ScheduleStatusBadge_Previews._allPreviews.enumerated() {
+            try await assertSnapshots(matching: preview, step: index)
+        }
+    }
+
     func testSecureBackupKeyBackupScreen() async throws {
         for (index, preview) in SecureBackupKeyBackupScreen_Previews._allPreviews.enumerated() {
             try await assertSnapshots(matching: preview, step: index)

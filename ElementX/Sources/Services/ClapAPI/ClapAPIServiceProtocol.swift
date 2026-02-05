@@ -9,6 +9,5 @@ import Foundation
 
 // sourcery: AutoMockable
 protocol ClapAPIServiceProtocol {
-    /// Space-related Clap API endpoints
     var spaces: ClapSpaceAPIProtocol { get }
 }

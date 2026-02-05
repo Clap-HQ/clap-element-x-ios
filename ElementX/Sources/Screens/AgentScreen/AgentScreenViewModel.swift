@@ -44,6 +44,8 @@ class AgentScreenViewModel: AgentScreenViewModelType, AgentScreenViewModelProtoc
         switch viewAction {
         case .dismiss:
             actionsSubject.send(.dismiss)
+        case .showSchedules:
+            actionsSubject.send(.showSchedules)
         }
     }
     
