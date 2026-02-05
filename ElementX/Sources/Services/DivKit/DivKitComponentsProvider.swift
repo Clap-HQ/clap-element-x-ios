@@ -7,7 +7,6 @@
 
 import DivKit
 import Foundation
-import UIKit
 
 @MainActor
 final class DivKitComponentsProvider {
@@ -59,22 +58,6 @@ final class DivKitComponentsProvider {
 
     func cacheHeight(_ height: CGFloat, for cardID: String) {
         cachedHeights[cardID] = height
-    }
-
-    func resolvePaletteExpressions(cardData: Data, palette: DivKitPalette?) -> Data {
-        guard let palette else { return cardData }
-        
-        let isDarkMode = UITraitCollection.current.userInterfaceStyle == .dark
-        let colors = isDarkMode ? palette.dark : palette.light
-        
-        guard !colors.isEmpty, var jsonString = String(data: cardData, encoding: .utf8) else {
-            return cardData
-        }
-        
-        for color in colors {
-            jsonString = jsonString.replacingOccurrences(of: "@{\(color.name)}", with: color.color)
-        }
-        return Data(jsonString.utf8)
     }
 
     func resetAllCardState(keepHeightCache: Bool = false) {

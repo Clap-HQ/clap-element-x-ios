@@ -22,13 +22,6 @@ struct DivKitRoomTimelineView: View {
         return !context.viewState.actedDivKitEventIDs.contains(eventID)
     }
 
-    private var resolvedCardData: Data {
-        DivKitComponentsProvider.shared.resolvePaletteExpressions(
-            cardData: timelineItem.content.cardData,
-            palette: timelineItem.content.palette
-        )
-    }
-
     var body: some View {
         TimelineStyler(timelineItem: timelineItem) {
             divKitContent
@@ -46,8 +39,9 @@ struct DivKitRoomTimelineView: View {
         } else {
             let cardID = timelineItem.id.uniqueID.value
             let representable = DivKitViewRepresentable(
-                cardData: resolvedCardData,
+                cardData: timelineItem.content.cardData,
                 cardID: cardID,
+                palette: timelineItem.content.palette,
                 onAction: handleDivKitAction,
                 onFailure: { showFallback = true },
                 onHeightChanged: { height in
@@ -490,6 +484,7 @@ struct DivKitRoomTimelineView_Previews: PreviewProvider, TestablePreview {
 struct DivKitViewRepresentable: UIViewRepresentable {
     let cardData: Data
     let cardID: String
+    let palette: DivKitPalette?
     let onAction: (URL, DivActionInfo) -> Void
     let onFailure: () -> Void
     let onHeightChanged: (CGFloat) -> Void
@@ -512,11 +507,17 @@ struct DivKitViewRepresentable: UIViewRepresentable {
 
         let divView = DivView(divKitComponents: provider.components)
 
-        let container = DivViewContainer(divView: divView) { height in
-            coordinator.onHeightChanged(height)
-        }
+        let container = DivViewContainer(
+            divView: divView,
+            cardID: cardID,
+            cardData: cardData,
+            palette: palette,
+            onHeightChanged: { height in
+                coordinator.onHeightChanged(height)
+            }
+        )
         coordinator.currentCardData = cardData
-        applySource(cardData, cardID: cardID, divView: divView, container: container, coordinator: coordinator)
+        container.applySource()
 
         return container
     }
@@ -536,21 +537,7 @@ struct DivKitViewRepresentable: UIViewRepresentable {
 
         if coordinator.currentCardData != cardData {
             coordinator.currentCardData = cardData
-            applySource(cardData, cardID: cardID, divView: container.divView, container: container, coordinator: coordinator)
-        }
-    }
-
-    private func applySource(_ data: Data, cardID: String, divView: DivView, container: DivViewContainer, coordinator: Coordinator) {
-        coordinator.renderGeneration &+= 1
-        let generation = coordinator.renderGeneration
-        let divCardID = DivCardID(rawValue: cardID)
-
-        Task { @MainActor in
-            guard coordinator.renderGeneration == generation else { return }
-            let source = DivViewSource(kind: .data(data), cardId: divCardID)
-            await divView.setSource(source)
-            guard coordinator.renderGeneration == generation else { return }
-            container.sourceDidLoad()
+            container.updateCardData(cardData, palette: palette)
         }
     }
 
@@ -560,7 +547,6 @@ struct DivKitViewRepresentable: UIViewRepresentable {
         var onFailure: () -> Void
         var onHeightChanged: (CGFloat) -> Void
         var currentCardData: Data?
-        var renderGeneration: UInt = 0
 
         init(cardID: String, onAction: @escaping (URL, DivActionInfo) -> Void, onFailure: @escaping () -> Void, onHeightChanged: @escaping (CGFloat) -> Void) {
             self.cardID = cardID
@@ -573,13 +559,21 @@ struct DivKitViewRepresentable: UIViewRepresentable {
 
 final class DivViewContainer: UIView {
     let divView: DivView
+    private let cardID: String
+    private var cardData: Data
+    private var palette: DivKitPalette?
     private let onHeightChanged: (CGFloat) -> Void
     private var lastReportedHeight: CGFloat = 0
     private var lastVisibleBounds: CGRect = .zero
     private var isSourceLoaded = false
+    private var lastAppliedInterfaceStyle: UIUserInterfaceStyle?
+    private var isPaletteOnlyUpdate = false
     
-    init(divView: DivView, onHeightChanged: @escaping (CGFloat) -> Void) {
+    init(divView: DivView, cardID: String, cardData: Data, palette: DivKitPalette?, onHeightChanged: @escaping (CGFloat) -> Void) {
         self.divView = divView
+        self.cardID = cardID
+        self.cardData = cardData
+        self.palette = palette
         self.onHeightChanged = onHeightChanged
         super.init(frame: .zero)
         addSubview(divView)
@@ -588,8 +582,62 @@ final class DivViewContainer: UIView {
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError() }
     
-    func sourceDidLoad() {
+    func updateCardData(_ newCardData: Data, palette newPalette: DivKitPalette?) {
+        cardData = newCardData
+        palette = newPalette
+        applySource()
+    }
+    
+    func applySource() {
+        lastAppliedInterfaceStyle = traitCollection.userInterfaceStyle
+        let resolvedData = resolveCurrentPalette()
+        let divCardID = DivCardID(rawValue: cardID)
+        
+        Task { @MainActor in
+            let source = DivViewSource(kind: .data(resolvedData), cardId: divCardID)
+            await divView.setSource(source)
+            sourceDidLoad()
+        }
+    }
+    
+    private func resolveCurrentPalette() -> Data {
+        guard let palette else { return cardData }
+        
+        let isDarkMode = traitCollection.userInterfaceStyle == .dark
+        let colors = isDarkMode ? palette.dark : palette.light
+        
+        guard !colors.isEmpty, var jsonString = String(data: cardData, encoding: .utf8) else {
+            return cardData
+        }
+        
+        for color in colors {
+            jsonString = jsonString.replacingOccurrences(of: "@{\(color.name)}", with: color.color)
+        }
+        return Data(jsonString.utf8)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        guard traitCollection.userInterfaceStyle != previousTraitCollection?.userInterfaceStyle,
+              traitCollection.userInterfaceStyle != lastAppliedInterfaceStyle,
+              palette != nil else {
+            return
+        }
+        
+        isPaletteOnlyUpdate = true
+        applySource()
+    }
+    
+    private func sourceDidLoad() {
         isSourceLoaded = true
+        
+        // Skip height reporting for palette-only updates
+        if isPaletteOnlyUpdate {
+            isPaletteOnlyUpdate = false
+            return
+        }
+        
         if bounds != .zero {
             lastVisibleBounds = bounds
             divView.onVisibleBoundsChanged(to: bounds)
