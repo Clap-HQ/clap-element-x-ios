@@ -14,7 +14,7 @@ struct ScheduleHistoryRow: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
+            HStack(spacing: 8) {
                 Text(entry.createdAt.formatted(date: .abbreviated, time: .shortened))
                     .font(.compound.bodySM)
                     .foregroundColor(.compound.textSecondary)

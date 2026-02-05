@@ -32,7 +32,7 @@ struct ScheduleDetailScreen: View {
     
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
+            HStack(spacing: 8) {
                 Text("#\(schedule.id)")
                     .font(.compound.bodySMSemibold)
                     .foregroundColor(.compound.textSecondary)

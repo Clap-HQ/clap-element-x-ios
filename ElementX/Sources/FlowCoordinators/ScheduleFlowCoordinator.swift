@@ -38,16 +38,22 @@ class ScheduleFlowCoordinator {
     func start() {
         Task {
             let authResult = await userSession.clientProxy.clapAIAPI.ensureAuthenticated()
-            if case .failure(let error) = authResult {
+            
+            switch authResult {
+            case .success:
+                let userResult = await userSession.clientProxy.clapAIAPI.fetchCurrentUser()
+                if case .success(let user) = userResult {
+                    isAdmin = user.isAdmin
+                }
+                presentScheduleList()
+                
+            case .failure(let error):
                 MXLog.error("Failed to authenticate with Clap AI: \(error)")
+                userIndicatorController.submitIndicator(
+                    UserIndicator(id: "scheduleAuthError", type: .toast, title: L10n.commonError)
+                )
+                actionsSubject.send(.dismiss)
             }
-            
-            let userResult = await userSession.clientProxy.clapAIAPI.fetchCurrentUser()
-            if case .success(let user) = userResult {
-                isAdmin = user.isAdmin
-            }
-            
-            presentScheduleList()
         }
     }
     

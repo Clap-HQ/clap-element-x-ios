@@ -34,6 +34,8 @@ class ScheduleDetailScreenViewModel: ScheduleDetailScreenViewModelType, Schedule
     }
     
     private func loadHistory() async {
+        state.isLoadingHistory = true
+        
         let result = await scheduleAPI.getScheduleHistory(scheduleID: state.schedule.id, limit: 20)
         
         switch result {

@@ -59,7 +59,7 @@ struct ScheduleRoomPickerView: View {
         Button {
             onSelect(room)
         } label: {
-            HStack {
+            HStack(spacing: 8) {
                 Text(room.name)
                     .foregroundColor(.compound.textPrimary)
                 

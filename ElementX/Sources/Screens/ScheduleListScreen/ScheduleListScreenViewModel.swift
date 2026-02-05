@@ -58,15 +58,16 @@ class ScheduleListScreenViewModel: ScheduleListScreenViewModelType, ScheduleList
     }
     
     private func loadSchedules() async {
+        state.isLoading = true
+        defer { state.isLoading = false }
+        
         let result = await scheduleAPI.listSchedules()
         
         switch result {
         case .success(let schedules):
             state.schedules = schedules
-            state.isLoading = false
         case .failure(let error):
             MXLog.error("Failed to load schedules: \(error)")
-            state.isLoading = false
             showError(L10n.screenScheduleErrorLoadFailed)
         }
     }

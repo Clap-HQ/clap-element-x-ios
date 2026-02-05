@@ -87,7 +87,7 @@ struct ScheduleCreateScreen: View {
             Button {
                 context.send(viewAction: .showRoomPicker)
             } label: {
-                HStack {
+                HStack(spacing: 8) {
                     Text(L10n.screenScheduleCreateRoomHeader)
                         .foregroundColor(.compound.textPrimary)
                     

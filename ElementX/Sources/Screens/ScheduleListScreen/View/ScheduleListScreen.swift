@@ -58,10 +58,9 @@ struct ScheduleListScreen: View {
                     filteredEmptyStateView
                 } else {
                     ForEach(context.viewState.filteredSchedules) { schedule in
-                        ScheduleListCell(
-                            schedule: schedule,
-                            onTap: { context.send(viewAction: .selectSchedule(schedule)) }
-                        )
+                        ScheduleListCell(schedule: schedule) {
+                            context.send(viewAction: .selectSchedule(schedule))
+                        }
                     }
                 }
             }
